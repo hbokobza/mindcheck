@@ -274,7 +274,7 @@ async function callAPI(messages, sys) {
   const r = await fetch('/api/chat', {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:1000, system:sys, messages})
+    body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:1500, system:sys, messages})
   });
   const d = await r.json();
   if (d.error) throw new Error(d.error.message||'Erreur API');
@@ -306,7 +306,11 @@ async function processInput(text, src) {
       if (src==='voice') speak(clean);
     }
   } catch(e) {
-    rmDots(); showErr('Erreur de connexion — réessayez');
+    rmDots();
+    showErr('Erreur de connexion — réessayez dans quelques secondes');
+    // Re-enable input
+    document.getElementById('inp').disabled = false;
+    document.getElementById('sbtn').disabled = false;
   }
 }
 
