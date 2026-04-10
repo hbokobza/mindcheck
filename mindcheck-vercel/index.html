@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mindcheck</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#F7F4EF;--ink:#1A1A18;--ink-l:#6B6B65;--ink-f:#AEADA7;--green:#2D6A4F;--green-l:#52B788;--green-p:#D8F3DC;--bdr:rgba(26,26,24,0.1);--shd:0 2px 20px rgba(26,26,24,0.06)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+header{width:100%;max-width:780px;padding:1.5rem 2rem 0.5rem;display:flex;align-items:baseline;gap:14px}
+.logo{font-family:'DM Serif Display',serif;font-size:22px;letter-spacing:-0.5px}
+.logo-dot{color:var(--green-l)}
+.tag{font-size:12px;color:var(--ink-f);font-weight:300}
+main{width:100%;max-width:780px;padding:0 2rem 2rem;flex:1}
+.panel{background:white;border:1px solid var(--bdr);border-radius:20px;padding:1.75rem;box-shadow:var(--shd)}
+.hidden{display:none!important}
+
+/* CONSENT */
+.code-box{background:var(--cream);border-radius:12px;padding:1rem 1.25rem;margin:1rem 0;font-size:13px;color:var(--ink-l);line-height:1.8;font-weight:300}
+#session-code{font-family:monospace;background:#E8F5E9;color:var(--green);padding:3px 10px;border-radius:6px;border:1px solid var(--green-p);letter-spacing:2px;font-weight:500;font-size:14px}
+.chk-label{display:flex;align-items:flex-start;gap:10px;margin:.6rem 0;font-size:13px;color:var(--ink-l);font-weight:300;line-height:1.6;cursor:pointer}
+.chk-label input{margin-top:3px;accent-color:var(--green);cursor:pointer;flex-shrink:0;width:16px;height:16px}
+.warn-box{margin-top:1rem;padding:.75rem 1rem;background:#FFF8E7;border-radius:10px;border:1px solid #F0D060;font-size:12px;color:#7A5C00;line-height:1.6}
+#consent-btn{margin-top:1.25rem;padding:12px 28px;border-radius:30px;border:none;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:not-allowed;background:var(--green);color:white;opacity:.35;transition:all .2s}
+
+/* INTRO */
+.reperes{background:var(--cream);border-radius:12px;padding:1rem 1.25rem;margin:.75rem 0;font-size:13px;color:var(--ink-l);line-height:1.9;font-weight:300}
+.btn-green{background:var(--green);color:white;border:none;border-radius:30px;padding:12px 26px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer}
+.btn-outline{background:transparent;color:var(--green);border:1.5px solid var(--green);border-radius:30px;padding:11px 24px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer}
+
+/* SESSION */
+#session-panel{display:none;flex-direction:column;gap:1rem;margin-top:1rem}
+.top-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.mode-toggle{display:flex;background:white;border:1px solid var(--bdr);border-radius:30px;padding:4px;gap:2px}
+.mb{padding:7px 20px;border-radius:24px;border:none;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;background:transparent;color:var(--ink-l);transition:all .2s}
+.mb.on{background:var(--ink);color:white;font-weight:500}
+.err-bar{display:none;background:#FDE8E8;color:#C0392B;font-size:12px;padding:8px 14px;border-radius:10px}
+.axes{display:flex;gap:6px;flex-wrap:wrap}
+.ax{font-size:11px;padding:3px 10px;border-radius:20px;border:1px solid var(--bdr);background:white;color:var(--ink-f);transition:all .5s}
+.ax.lit{background:var(--green-p);color:var(--green);border-color:var(--green-l);font-weight:500}
+.chat{background:white;border:1px solid var(--bdr);border-radius:20px;padding:1.5rem;display:flex;flex-direction:column;gap:1rem;min-height:300px;max-height:440px;overflow-y:auto;box-shadow:var(--shd)}
+.chat::-webkit-scrollbar{width:4px}.chat::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:2px}
+.msg{display:flex;gap:10px;align-items:flex-start}.msg.u{flex-direction:row-reverse}
+.av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0}
+.av.ai{background:var(--green-p);color:var(--green);font-family:'DM Serif Display',serif;font-size:13px}
+.av.u{background:var(--ink);color:white;font-size:10px}
+.bub{max-width:85%;padding:10px 14px;font-size:15px;line-height:1.7;font-weight:300}
+.bub.ai{background:var(--cream);border-radius:4px 16px 16px 16px;color:var(--ink)}
+.bub.u{background:var(--ink);color:white;border-radius:16px 4px 16px 16px;font-weight:400}
+.bub.ok{background:var(--green-p);border:1px solid var(--green-l);border-radius:4px 16px 16px 16px;color:var(--ink)}
+.dots-w{display:flex;gap:5px;align-items:center;padding:12px 14px;background:var(--cream);border-radius:4px 16px 16px 16px}
+.d{width:6px;height:6px;border-radius:50%;background:var(--ink-f);animation:pulse 1.3s infinite}
+.d:nth-child(2){animation-delay:.18s}.d:nth-child(3){animation-delay:.36s}
+@keyframes pulse{0%,80%,100%{opacity:.25;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+.irow{display:flex;gap:10px;align-items:flex-end;background:white;border:1px solid var(--bdr);border-radius:20px;padding:10px 10px 10px 18px;box-shadow:var(--shd)}
+#inp{flex:1;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:300;color:var(--ink);background:transparent;resize:none;min-height:26px;max-height:120px;line-height:1.6}
+#inp::placeholder{color:var(--ink-f)}
+#sbtn{width:40px;height:40px;border-radius:50%;background:var(--green);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.varea{display:none;flex-direction:column;align-items:center;gap:14px;padding:.5rem 0}
+.tts-row{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-l);background:white;border:1px solid var(--bdr);border-radius:20px;padding:6px 14px;cursor:pointer;font-weight:300}
+.tts-row input{accent-color:var(--green);cursor:pointer}
+#mic{width:76px;height:76px;border-radius:50%;border:1.5px solid var(--bdr);background:white;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s;box-shadow:var(--shd)}
+#mic.listening{background:var(--green);border-color:var(--green);animation:breathe 2s infinite}
+#mic.speaking{background:var(--green-l);border-color:var(--green-l)}
+@keyframes breathe{0%,100%{box-shadow:0 0 0 0 rgba(45,106,79,.25)}50%{box-shadow:0 0 0 18px rgba(45,106,79,0)}}
+.disc{font-size:11px;color:var(--ink-f);text-align:center;line-height:1.6;font-weight:300}
+</style>
+</head>
+<body>
+<header style="background:#2D6A4F;padding:16px 24px;max-width:100%;display:flex;flex-direction:column">
+  <svg width="190" height="38" viewBox="0 0 190 38" style="display:block">
+    <polygon points="15,2 28,9 28,27 15,34 2,27 2,9" fill="white"/>
+    <text x="15" y="23" font-family="Georgia,serif" font-size="14" fill="#2D6A4F" text-anchor="middle">M</text>
+    <text x="42" y="26" font-family="Georgia,serif" font-size="21" fill="white" letter-spacing="-0.5">MindCheck</text>
+  </svg>
+  <div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:5px;font-family:Arial,sans-serif">Bilan de santé psychique — confidentiel, sans jugement</div>
+</header>
+<main>
+
+<!-- CONSENT -->
+<div class="panel" id="consent-panel">
+  <h2 style="font-family:'DM Serif Display',serif;font-size:18px;font-weight:400;margin-bottom:1rem">Consentement éclairé</h2>
+  <div class="code-box">
+    <strong style="color:var(--ink);display:block;margin-bottom:.5rem">Votre identifiant anonyme de session</strong>
+    Votre bilan est lié à un code aléatoire unique. Aucun nom, aucune donnée personnelle n'est collectée.
+    <div style="margin-top:.75rem">Code de session : <span id="session-code">—</span></div>
+    <div style="margin-top:.4rem;font-size:12px;color:var(--ink-f)">Notez ce code pour un bilan comparatif ultérieur.</div>
+  </div>
+  <div style="font-size:13px;color:var(--ink-l);margin-bottom:.5rem">Veuillez lire et accepter les points suivants :</div>
+  <label class="chk-label"><input type="checkbox" id="c1" onchange="checkC()"><span>Je comprends que ce bilan est un <strong>outil de dépistage et d'orientation</strong>, pas un diagnostic médical.</span></label>
+  <label class="chk-label"><input type="checkbox" id="c2" onchange="checkC()"><span>Je consens au traitement <strong>anonymisé et confidentiel</strong> de mon récit pour générer mon bilan.</span></label>
+  <label class="chk-label"><input type="checkbox" id="c3" onchange="checkC()"><span>Je sais que mon récit est analysé par une <strong>IA</strong>. Ce service n'est pas un dispositif médical certifié.</span></label>
+  <label class="chk-label"><input type="checkbox" id="c4" onchange="checkC()"><span>Je suis majeur(e) et participe <strong>librement et volontairement</strong>. Je peux arrêter à tout moment.</span></label>
+  <div class="warn-box"><strong>Important :</strong> En cas de détresse sévère ou pensées suicidaires, appelez le <strong>3114</strong> (disponible 24h/24).</div>
+  <button id="consent-btn" onclick="goIntro()">J'accepte et je continue</button>
+</div>
+
+<!-- INTRO -->
+<div class="panel hidden" id="intro-panel" style="margin-top:1rem">
+  <h2 style="font-family:'DM Serif Display',serif;font-size:18px;font-weight:400;margin-bottom:.75rem">Comment raconter ?</h2>
+  <p style="font-size:14px;color:var(--ink-l);line-height:1.7;font-weight:300">Exprimez tout ce qui vous semble lié à votre équilibre intérieur. <strong>L'objectif n'est pas de "bien répondre" — mais de raconter votre histoire au plus juste.</strong></p>
+  <div class="reperes">
+    <strong style="color:var(--ink)">Repères pour guider votre récit :</strong><br>
+    • <strong style="color:var(--ink)">Événements marquants</strong> : pertes, séparations, ruptures, maladies, changements<br>
+    • <strong style="color:var(--ink)">Émotions récurrentes</strong> : peur, tristesse, colère, honte, culpabilité, vide<br>
+    • <strong style="color:var(--ink)">Relations</strong> : familiale, affective, sociale, professionnelle (soutiens, conflits)<br>
+    • <strong style="color:var(--ink)">Corps</strong> : sommeil, fatigue, douleurs, tensions, appétit, digestion<br>
+    • <strong style="color:var(--ink)">Comportements</strong> : évitements, excès, addictions, isolement, agitation<br>
+    • <strong style="color:var(--ink)">Ressources</strong> : ce qui vous apaise, vous soutient, vous aide
+  </div>
+  <p style="font-size:13px;color:var(--ink-f);line-height:1.6;margin-bottom:1.25rem">Plus votre récit est riche, plus la cartographie sera précise. MindCheck relancera si une zone reste floue.</p>
+  <div style="display:flex;gap:12px;flex-wrap:wrap">
+    <button class="btn-green" onclick="startSession('text')">Commencer par écrit</button>
+    <button class="btn-outline" onclick="startSession('voice')">Commencer à l'oral</button>
+  </div>
+</div>
+
+<!-- SESSION -->
+<div id="session-panel">
+  <div class="top-row">
+    <div class="mode-toggle">
+      <button class="mb on" onclick="setMode('text')">Écrit</button>
+      <button class="mb" onclick="setMode('voice')">Vocal</button>
+    </div>
+    <div class="err-bar" id="err"></div>
+  </div>
+  <div class="axes">
+    <span class="ax" id="a1">Régulation mentale</span>
+    <span class="ax" id="a2">Énergie vitale</span>
+    <span class="ax" id="a3">Vie émotionnelle</span>
+    <span class="ax" id="a4">Corps & équilibre</span>
+    <span class="ax" id="a5">Relations</span>
+    <span class="ax" id="a6">Contexte de vie</span>
+  </div>
+  <div class="chat" id="chat"></div>
+  <div class="irow" id="tarea">
+    <textarea id="inp" placeholder="Racontez librement… prenez le temps qu'il vous faut." rows="1"></textarea>
+    <button id="sbtn" onclick="submitText()"><svg width="17" height="17" viewBox="0 0 24 24" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
+  </div>
+  <div class="varea" id="varea">
+    <label class="tts-row"><input type="checkbox" id="tts" checked> Réponse vocale</label>
+    <button id="mic" onclick="toggleMic()">
+      <svg id="msvg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2D6A4F" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/>
+        <line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/>
+      </svg>
+    </button>
+    <div style="font-size:13px;color:var(--ink-l);font-weight:300;text-align:center" id="vs">Appuyez pour parler</div>
+    <div style="font-size:14px;color:var(--ink-l);font-style:italic;text-align:center;max-width:460px;line-height:1.5;font-weight:300" id="vt"></div>
+  </div>
+  <p class="disc">Ce bilan est un outil de dépistage et d'orientation. Il ne constitue pas un diagnostic médical.</p>
+</div>
+
+</main>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// PROMPTS
+// ═══════════════════════════════════════════════════════════════
+const SYS = `Tu es l'assistant de collecte MindCheck. Tu recueilles le récit d'une personne pour remplir une matrice psychosomatique à 6 axes (modèle Stora). Tu n'es PAS un thérapeute. Tu ne traites pas. Tu collectes.
+
+PHILOSOPHIE : Laisser la personne parler librement. Intervenir le moins possible. N'analyser pas pendant l'entretien.
+
+LES 6 AXES À RENSEIGNER :
+1. Processus psychiques — mécanismes de défense, conflits internes, ruminations, élaboration
+2. Ressources psychiques — énergie, plaisir, motivation, capacités adaptatives
+3. Comportements — évitements, excès, addictions, impulsivité, inhibition
+4. Expression des affects — nommer, ressentir, exprimer les émotions, alexithymie
+5. Risque somatique — sommeil, douleurs, tensions, troubles fonctionnels
+6. Environnement — relations familiales, professionnelles, sociales, événements récents
+
+DÉROULEMENT :
+Phase 1 — ÉCOUTE : La personne raconte. Si elle s'arrête : "Je vous écoute." ou "Continuez..." ou silence.
+Phase 2 — RELANCES : Si un axe reste vide, UNE question ciblée :
+- Axe 1 : "Comment gérez-vous les pensées qui reviennent ?"
+- Axe 2 : "Qu'est-ce qui vous donne encore de l'énergie ?"
+- Axe 3 : "Y a-t-il des choses que vous évitez en ce moment ?"
+- Axe 4 : "Comment nommeriez-vous ce que vous ressentez ?"
+- Axe 5 : "Comment dort-on ? Y a-t-il des signaux dans votre corps ?"
+- Axe 6 : "Comment ça se passe autour de vous — au travail, en famille ?"
+
+RÈGLES ABSOLUES :
+- Maximum 1-2 phrases par réponse
+- Ne jamais analyser, commenter, rassurer longuement
+- UNE seule question à la fois
+- Après 12 échanges ou axes couverts : "Merci. Je prépare votre bilan."
+
+LANGUE : Détection automatique.
+Dernière ligne : AXES:[processus,ressources,comportements,affects,somatique,environnement] COMPLET:[oui/non]`;
+
+const BILAN_SYS = `Tu es un assistant clinique MindCheck. Génère un bilan JSON à partir du récit. RÉPONDS UNIQUEMENT AVEC DU JSON VALIDE, rien d'autre, pas de markdown.
+
+{
+  "synthese": "2-3 phrases cliniques sur l'ensemble du profil, les tensions majeures, le registre dominant",
+  "axes": [
+    {"num":1,"label_public":"Régulation mentale","label_clinique":"Processus psychiques","score":2,"manifestations":"Ce qui ressort du récit","lecture":"Lecture clinique Stora"},
+    {"num":2,"label_public":"Énergie vitale","label_clinique":"Ressources psychiques","score":2,"manifestations":"...","lecture":"..."},
+    {"num":3,"label_public":"Habitudes & comportements","label_clinique":"Prévalence des comportements","score":2,"manifestations":"...","lecture":"..."},
+    {"num":4,"label_public":"Vie émotionnelle","label_clinique":"Expression des affects","score":2,"manifestations":"...","lecture":"..."},
+    {"num":5,"label_public":"Corps & équilibre","label_clinique":"Risque somatique","score":2,"manifestations":"...","lecture":"..."},
+    {"num":6,"label_public":"Contexte & pressions","label_clinique":"Risque environnemental","score":2,"manifestations":"...","lecture":"..."}
+  ],
+  "signaux": [
+    {"domaine":"Physiques","intensite":2,"detail":"..."},
+    {"domaine":"Émotionnels","intensite":3,"detail":"..."},
+    {"domaine":"Cognitifs","intensite":2,"detail":"..."},
+    {"domaine":"Événementiels","intensite":1,"detail":"..."},
+    {"domaine":"Épuisement","intensite":2,"detail":"..."}
+  ],
+  "forces": ["Force 1","Force 2","Force 3"],
+  "vigilance": ["Point 1","Point 2"],
+  "orientation": "Recommandation thérapeutique bienveillante, 2-3 phrases"
+}
+
+Scores axes : 0=absent, 1=faible, 2=modéré, 3=solide. Intensité signaux : 0-1=vert, 2=jaune, 3-4=orange/rouge.`;
+
+// ═══════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════
+let hist=[], count=0, mode='text', recog=null, listening=false, speaking=false, ttsOn=true;
+let axesCovered={processus:false,ressources:false,comportements:false,affects:false,somatique:false,environnement:false};
+const axMap={processus:'a1',ressources:'a2',comportements:'a3',affects:'a4',somatique:'a5',environnement:'a6'};
+let sessionCode='', lastBilan=null;
+
+// ═══════════════════════════════════════════════════════════════
+// CONSENT
+// ═══════════════════════════════════════════════════════════════
+function checkC() {
+  const all = ['c1','c2','c3','c4'].every(id => document.getElementById(id).checked);
+  const btn = document.getElementById('consent-btn');
+  btn.disabled = !all;
+  btn.style.opacity = all ? '1' : '.35';
+  btn.style.cursor = all ? 'pointer' : 'not-allowed';
+}
+
+function goIntro() {
+  document.getElementById('consent-panel').classList.add('hidden');
+  document.getElementById('intro-panel').classList.remove('hidden');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SESSION
+// ═══════════════════════════════════════════════════════════════
+function startSession(m) {
+  document.getElementById('intro-panel').classList.add('hidden');
+  document.getElementById('session-panel').style.display = 'flex';
+  setMode(m);
+  addMsg('ai', "Je vous écoute. Prenez le temps qu'il vous faut — racontez ce qui vous amène, dans vos propres mots.");
+  hist.push({role:'assistant',content:"Je vous écoute.\nAXES:[] COMPLET:[non]"});
+}
+
+function setMode(m) {
+  mode = m;
+  document.querySelectorAll('.mb').forEach((b,i)=>b.classList.toggle('on',(m==='text'&&i===0)||(m==='voice'&&i===1)));
+  document.getElementById('tarea').style.display = m==='text'?'flex':'none';
+  document.getElementById('varea').style.display = m==='voice'?'flex':'none';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MESSAGES
+// ═══════════════════════════════════════════════════════════════
+function addMsg(role, text, cls='') {
+  const c = document.getElementById('chat');
+  const d = document.createElement('div');
+  d.className = 'msg'+(role==='u'?' u':'');
+  const bubCls = role==='u'?'u':(cls||'ai');
+  d.innerHTML = `<div class="av ${role==='u'?'u':'ai'}">${role==='u'?'Vous':'M'}</div><div class="bub ${bubCls}">${text.replace(/\n/g,'<br>')}</div>`;
+  c.appendChild(d); c.scrollTop=c.scrollHeight;
+}
+
+function showDots() {
+  const c=document.getElementById('chat');
+  const d=document.createElement('div'); d.className='msg'; d.id='typ';
+  d.innerHTML='<div class="av ai">M</div><div class="dots-w"><div class="d"></div><div class="d"></div><div class="d"></div></div>';
+  c.appendChild(d); c.scrollTop=c.scrollHeight;
+}
+function rmDots(){const e=document.getElementById('typ');if(e)e.remove();}
+
+function showErr(t){const e=document.getElementById('err');e.textContent=t;e.style.display='block';setTimeout(()=>e.style.display='none',5000);}
+
+// ═══════════════════════════════════════════════════════════════
+// AXES
+// ═══════════════════════════════════════════════════════════════
+function updateAxes(s) {
+  if(!s) return;
+  s.split(',').forEach(a=>{const k=a.trim();if(axMap[k]){document.getElementById(axMap[k]).classList.add('lit');axesCovered[k]=true;}});
+}
+
+// ═══════════════════════════════════════════════════════════════
+// API
+// ═══════════════════════════════════════════════════════════════
+async function callAPI(messages, sys) {
+  const r = await fetch('/api/chat',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,system:sys,messages})
+  });
+  const d = await r.json();
+  if(d.error) throw new Error(d.error.message||'Erreur API');
+  return d.content?.[0]?.text||'';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PROCESS INPUT
+// ═══════════════════════════════════════════════════════════════
+function anonymize(t) {
+  return t.replace(/[A-Z][a-zéèê]+\s[A-Z][a-zéèê]+/g,'[PERSONNE]')
+          .replace(/\d{2}\/\d{2}\/\d{4}/g,'[DATE]')
+          .replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g,'[EMAIL]');
+}
+
+async function processInput(text, src) {
+  if(!text.trim()) return;
+  addMsg('u', text);
+  hist.push({role:'user',content:anonymize(text)});
+  count++;
+  if(src==='voice'){document.getElementById('vt').textContent='';document.getElementById('vs').textContent='Réflexion…';}
+  else showDots();
+  try {
+    const raw = await callAPI(hist, SYS);
+    const axM = raw.match(/AXES:\[([^\]]*)\]/);
+    const cpM = raw.match(/COMPLET:\[(oui|non)\]/);
+    const clean = raw.replace(/AXES:\[[^\]]*\]/g,'').replace(/COMPLET:\[[^\]]*\]/g,'').trim();
+    rmDots();
+    if(axM) updateAxes(axM[1]);
+    const done = cpM?.[1]==='oui' || Object.values(axesCovered).every(v=>v) || count>=14;
+    if(done || clean.toLowerCase().includes('je prépare votre bilan')) {
+      addMsg('ai',"Merci. J'ai recueilli suffisamment d'éléments. Je prépare votre bilan…");
+      hist.push({role:'assistant',content:raw});
+      if(src==='voice') speak("Merci. Je prépare votre bilan.");
+      setTimeout(generateBilan, 1200);
+    } else {
+      addMsg('ai', clean);
+      hist.push({role:'assistant',content:raw});
+      if(src==='voice'){document.getElementById('vs').textContent='Appuyez pour parler';speak(clean);}
+    }
+  } catch(e) {
+    rmDots(); showErr('Erreur de connexion');
+    if(src==='voice') document.getElementById('vs').textContent='Appuyez pour parler';
+  }
+}
+
+async function submitText() {
+  const el=document.getElementById('inp');
+  const t=el.value.trim(); if(!t) return;
+  el.value=''; el.style.height='auto';
+  await processInput(t,'text');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// BILAN
+// ═══════════════════════════════════════════════════════════════
+async function generateBilan() {
+  showDots();
+  try {
+    const raw = await callAPI([...hist,{role:'user',content:'Génère le bilan JSON.'}], BILAN_SYS);
+    rmDots();
+    let data;
+    try {
+      const m = raw.match(/\{[\s\S]*\}/);
+      data = JSON.parse(m ? m[0] : raw.replace(/```json|```/g,'').trim());
+    } catch(e) {
+      addMsg('ai','Erreur de format du bilan. Réessai automatique…');
+      setTimeout(generateBilan, 1500);
+      return;
+    }
+    lastBilan = data;
+    // Add button in chat
+    const c = document.getElementById('chat');
+    const d = document.createElement('div'); d.className='msg';
+    d.innerHTML='<div class="av ai">M</div><div class="bub ok"><strong style="color:var(--green)">Votre bilan MindCheck est prêt.</strong><br><span style="font-size:13px;color:var(--ink-l)">Profil généré sur les 6 axes psychosomatiques.</span></div>';
+    c.appendChild(d);
+    const btn = document.createElement('button');
+    btn.textContent='Voir & télécharger le bilan PDF';
+    btn.style.cssText='background:#2D6A4F;color:white;border:none;border-radius:20px;padding:10px 22px;font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;margin:8px 0 0 40px';
+    btn.onclick = ()=>showBilan(lastBilan);
+    c.appendChild(btn);
+    c.scrollTop=c.scrollHeight;
+    if(mode==='voice') speak("Votre bilan est prêt.");
+  } catch(e) {
+    rmDots(); showErr('Erreur bilan : '+e.message);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// BILAN DISPLAY
+// ═══════════════════════════════════════════════════════════════
+function buildRadar(axes) {
+  const S=280, cx=140, cy=140, r=95, n=6;
+  // Axes order: top, top-right, bot-right, bottom, bot-left, top-left
+  // angle[i] = -90 + i*60 degrees
+  function pt(i,v){
+    const a = (i*2*Math.PI/n) - Math.PI/2;
+    const d = (v/3)*r;
+    return [cx + d*Math.cos(a), cy + d*Math.sin(a)];
+  }
+  function ptLabel(i){
+    const a = (i*2*Math.PI/n) - Math.PI/2;
+    const d = r + 28;
+    return [cx + d*Math.cos(a), cy + d*Math.sin(a)];
+  }
+  let grid='', lines='';
+  for(let ring=1;ring<=3;ring++){
+    const pts=axes.map((_,i)=>pt(i,ring).join(',')).join(' ');
+    grid+=`<polygon points="${pts}" fill="none" stroke="#E0DDD8" stroke-width="${ring===3?1.2:0.8}"/>`;
+  }
+  for(let i=0;i<n;i++){
+    const[x,y]=pt(i,3);
+    lines+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#E0DDD8" stroke-width="0.8"/>`;
+  }
+  const dataPts=axes.map((ax,i)=>pt(i,ax.score).join(',')).join(' ');
+  const scoreColors=['#2D6A4F','#E9C46A','#E76F51'];
+  function scoreColor(s){ return s>=3?'#2D6A4F':s===2?'#E9C46A':'#E76F51'; }
+
+  let labels='', dots='';
+  axes.forEach((ax,i)=>{
+    const[x,y]=pt(i,ax.score);
+    const col = scoreColor(ax.score);
+    dots+=`<circle cx="${x}" cy="${y}" r="5" fill="${col}"/>`;
+    const[lx,ly]=ptLabel(i);
+    const words=ax.label_clinique.split(' ');
+    // Split into max 2 lines
+    let line1=words[0], line2=words.slice(1).join(' ');
+    const anchor = lx < cx-10 ? 'end' : lx > cx+10 ? 'start' : 'middle';
+    const dyOffset = ly < cy ? -6 : 6;
+    if(line2){
+      labels+=`<text text-anchor="${anchor}" font-size="10.5" font-family="Arial" fill="${col}" font-weight="600">
+        <tspan x="${lx}" y="${ly-5}">${line1}</tspan>
+        <tspan x="${lx}" dy="13">${line2}</tspan>
+      </text>`;
+    } else {
+      labels+=`<text x="${lx}" y="${ly+4}" text-anchor="${anchor}" font-size="10.5" font-family="Arial" fill="${col}" font-weight="600">${line1}</text>`;
+    }
+  });
+
+  return`<svg width="${S}" height="${S}" viewBox="0 0 ${S} ${S}" overflow="visible">
+    ${grid}${lines}
+    <polygon points="${dataPts}" fill="rgba(45,106,79,0.15)" stroke="#2D6A4F" stroke-width="2.5" stroke-linejoin="round"/>
+    ${dots}${labels}
+  </svg>`;
+}
+
+function showBilan(data) {
+  const date = new Date().toLocaleDateString('fr-FR');
+  const radar = buildRadar(data.axes);
+
+  // Logo SVG
+  const logoSVG = `<svg width="200" height="40" viewBox="0 0 200 40">
+    <polygon points="16,2 30,10 30,26 16,34 2,26 2,10" fill="white"/>
+    <text x="16" y="24" font-family="Georgia,serif" font-size="16" fill="#2D6A4F" text-anchor="middle">M</text>
+    <text x="44" y="28" font-family="Georgia,serif" font-size="24" fill="white" letter-spacing="-0.5">MindCheck</text>
+  </svg>`;
+
+  // Signaux
+  const sigHTML = data.signaux.map(s => {
+    const pct = Math.round((s.intensite/4)*100);
+    const col = s.intensite<=1?'#52B788':s.intensite===2?'#E9C46A':'#E76F51';
+    const label = s.intensite<=1?'Équilibré':s.intensite===2?'Vigilance':'Attention';
+    return `<div style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+        <span style="font-size:13px;font-weight:500;color:#1A1A18">${s.domaine}</span>
+        <span style="font-size:11px;font-weight:500;color:${col};background:${col}18;padding:2px 8px;border-radius:10px">${label}</span>
+      </div>
+      <div style="background:#EEECE8;border-radius:6px;height:8px;overflow:hidden">
+        <div style="width:${pct}%;height:100%;background:${col};border-radius:6px"></div>
+      </div>
+      <div style="font-size:11px;color:#AEADA7;margin-top:3px">${s.detail}</div>
+    </div>`;
+  }).join('');
+
+  // Dimensions B2C
+  const dimLabels = [
+    {pub:'Monde intérieur', sub:'Comment vous gérez vos pensées et tensions internes'},
+    {pub:'Réservoir d'énergie', sub:'Ce qui vous nourrit, vous motive, vous permet de tenir'},
+    {pub:'Vos automatismes', sub:'Ce que vous faites sous pression sans y réfléchir'},
+    {pub:'Vie émotionnelle', sub:'Comment vous vivez et exprimez vos émotions'},
+    {pub:'Les signaux du corps', sub:'Ce que votre corps exprime à la place des mots'},
+    {pub:'Votre environnement', sub:'Ce qui vous entoure et vous influence'}
+  ];
+  function scoreColor(s){ return s>=3?'#2D6A4F':s===2?'#E9C46A':'#E76F51'; }
+  function scoreLabel(s){ return s>=3?'Solide':s===2?'En tension':'Attention'; }
+  function scoreBg(s){ return s>=3?'#E8F4ED':s===2?'#FFF8E7':'#FDE8E8'; }
+
+  const dimHTML = data.axes.map((ax,i) => {
+    const dim = dimLabels[i] || {pub: ax.label_public, sub: ''};
+    const col = scoreColor(ax.score);
+    const pct = Math.round((ax.score/3)*100);
+    return `<div style="background:white;border-radius:12px;padding:16px 18px;border:.5px solid rgba(0,0,0,.08)">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+        <div>
+          <div style="font-size:14px;font-weight:500;color:#1A1A18">${dim.pub}</div>
+          <div style="font-size:11px;color:#AEADA7;margin-top:2px">${dim.sub}</div>
+        </div>
+        <span style="font-size:11px;font-weight:500;color:${col};background:${scoreBg(ax.score)};padding:3px 10px;border-radius:20px;flex-shrink:0;margin-left:10px">${scoreLabel(ax.score)}</span>
+      </div>
+      <div style="background:#EEECE8;border-radius:4px;height:6px;margin:8px 0">
+        <div style="width:${pct}%;height:100%;background:${col};border-radius:4px"></div>
+      </div>
+      <div style="font-size:13px;color:#555;line-height:1.65">${ax.manifestations}</div>
+      <div style="font-size:12px;color:#2D6A4F;font-style:italic;margin-top:6px;border-left:2px solid #95D5B2;padding-left:8px">${ax.lecture}</div>
+    </div>`;
+  }).join('');
+
+  const html = `<div id="bov" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(26,26,24,0.6);z-index:9999;overflow-y:auto;padding:20px 12px" onclick="if(event.target===this)this.remove()">
+  <div id="bdoc" style="background:#F7F4EF;max-width:740px;margin:auto;border-radius:20px;overflow:hidden;font-family:Arial,sans-serif">
+
+    <!-- HEADER -->
+    <div style="background:#2D6A4F;padding:26px 32px">
+      ${logoSVG}
+      <div style="font-size:12px;color:rgba(255,255,255,.6);margin-top:10px;font-family:Arial,sans-serif">Bilan de santé psychique — confidentiel</div>
+      <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+        <span style="background:rgba(255,255,255,.15);padding:3px 12px;border-radius:20px;font-size:11px;color:white">Code : ${sessionCode}</span>
+        <span style="background:rgba(255,255,255,.15);padding:3px 12px;border-radius:20px;font-size:11px;color:white">Date : ${date}</span>
+        <span style="background:rgba(255,255,255,.15);padding:3px 12px;border-radius:20px;font-size:11px;color:white">Dispositif de prévention</span>
+      </div>
+    </div>
+
+    <div style="padding:26px 32px;display:flex;flex-direction:column;gap:18px">
+
+      <!-- SYNTHÈSE -->
+      <div style="background:#E8F4ED;border-radius:14px;padding:20px 22px;border-left:4px solid #2D6A4F">
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#2D6A4F;margin-bottom:8px">Ce que votre récit nous dit</div>
+        <div style="font-size:15px;color:#1A2E22;line-height:1.8;font-family:Georgia,serif;font-style:italic">${data.synthese}</div>
+      </div>
+
+      <!-- RADAR + SIGNAUX -->
+      <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:16px">
+        <div style="background:white;border-radius:14px;padding:18px;border:.5px solid rgba(0,0,0,.08)">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin-bottom:10px">Profil psychosomatique</div>
+          <div style="display:flex;justify-content:center;overflow:visible">${radar}</div>
+          <div style="font-size:10px;color:#AEADA7;text-align:center;margin-top:8px">Plus la surface est grande, plus l'équilibre est solide</div>
+        </div>
+        <div style="background:white;border-radius:14px;padding:18px;border:.5px solid rgba(0,0,0,.08)">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin-bottom:12px">Zones d'attention</div>
+          ${sigHTML}
+          <div style="font-size:10px;color:#AEADA7;margin-top:4px">● vert = équilibré &nbsp;● jaune = vigilance &nbsp;● orange = attention</div>
+        </div>
+      </div>
+
+      <!-- ÉCOSYSTÈME INTRO -->
+      <div style="background:white;border-radius:14px;padding:18px 20px;border:.5px solid rgba(0,0,0,.08)">
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin-bottom:8px">Vos 6 dimensions</div>
+        <div style="font-size:13px;color:#888;line-height:1.7;margin-bottom:14px">Votre équilibre psychique fonctionne comme un écosystème — 6 systèmes interconnectés. Quand l'un se déséquilibre, les autres compensent. Jusqu'à un certain point.</div>
+        <div style="display:flex;flex-direction:column;gap:10px">${dimHTML}</div>
+      </div>
+
+      <!-- FORCES + VIGILANCE -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div style="background:#E8F4ED;border-radius:14px;padding:16px 18px">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#2D6A4F;margin-bottom:10px">Ce qui vous soutient</div>
+          ${data.forces.map(f=>`<div style="font-size:13px;margin-bottom:6px;display:flex;gap:8px;align-items:flex-start"><span style="color:#2D6A4F;font-size:15px;flex-shrink:0">✓</span>${f}</div>`).join('')}
+        </div>
+        <div style="background:#FFF8E7;border-radius:14px;padding:16px 18px;border:1px solid #F0D060">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#7A5C00;margin-bottom:10px">Ce qui demande attention</div>
+          ${data.vigilance.map(v=>`<div style="font-size:13px;margin-bottom:6px;display:flex;gap:8px;align-items:flex-start"><span style="color:#E9C46A;font-size:15px;flex-shrink:0">◆</span>${v}</div>`).join('')}
+        </div>
+      </div>
+
+      <!-- ALERTE DÉSÉQUILIBRE -->
+      <div style="background:#FFF4F0;border:1px solid #E76F51;border-radius:14px;padding:18px 20px">
+        <div style="font-size:13px;font-weight:500;color:#C0392B;margin-bottom:8px;display:flex;align-items:center;gap:8px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Un accompagnement préventif est conseillé
+        </div>
+        <div style="font-size:13px;color:#555;line-height:1.65;margin-bottom:14px">Plusieurs dimensions sont en tension simultanément. Agir maintenant, c'est éviter que ce déséquilibre s'installe durablement. Il existe de nombreuses façons d'être accompagné.</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          ${['Psychothérapie','TCC / EMDR','Hypnose','Sophrologie','Coaching psychologique','Thérapie de groupe'].map(t=>`<span style="background:white;border:1px solid rgba(231,111,81,.25);border-radius:8px;padding:6px 12px;font-size:12px;color:#444">${t}</span>`).join('')}
+        </div>
+      </div>
+
+      <!-- ORIENTATION -->
+      <div style="background:white;border-radius:14px;padding:18px;border-left:4px solid #2D6A4F;border-top:.5px solid rgba(0,0,0,.08);border-right:.5px solid rgba(0,0,0,.08);border-bottom:.5px solid rgba(0,0,0,.08)">
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin-bottom:8px">Orientation & prévention</div>
+        <div style="font-size:14px;color:#1A1A18;line-height:1.75">${data.orientation}</div>
+      </div>
+
+      <!-- 3 ACTIONS -->
+      <div style="background:#2D6A4F;border-radius:14px;padding:22px 24px;color:white">
+        <div style="font-size:16px;font-family:Georgia,serif;margin-bottom:8px">3 choses concrètes à faire maintenant</div>
+        <div style="font-size:13px;opacity:.8;margin-bottom:16px">Pas de grands changements. Trois petits pas qui font une vraie différence.</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <div style="background:rgba(255,255,255,.15);border-radius:10px;padding:12px 14px;font-size:12px;flex:1;min-width:150px;line-height:1.6"><strong style="display:block;color:#95D5B2;margin-bottom:3px">Cette semaine</strong>10 min par jour sans écran, sans obligation — juste pour vous.</div>
+          <div style="background:rgba(255,255,255,.15);border-radius:10px;padding:12px 14px;font-size:12px;flex:1;min-width:150px;line-height:1.6"><strong style="display:block;color:#95D5B2;margin-bottom:3px">Ce mois-ci</strong>Parlez à quelqu'un de confiance. Pas pour trouver des solutions — juste pour être entendu.</div>
+          <div style="background:rgba(255,255,255,.15);border-radius:10px;padding:12px 14px;font-size:12px;flex:1;min-width:150px;line-height:1.6"><strong style="display:block;color:#95D5B2;margin-bottom:3px">Dans 3 mois</strong>Refaites ce bilan. Voir l'évolution de votre cartographie, c'est déjà agir dessus.</div>
+        </div>
+      </div>
+
+      <!-- MATCHING -->
+      <div style="border:2px solid #2D6A4F;border-radius:14px;padding:22px 24px;text-align:center">
+        <div style="font-size:16px;font-family:Georgia,serif;color:#2D6A4F;margin-bottom:8px">Vous souhaitez être accompagné(e) ?</div>
+        <div style="font-size:13px;color:#555;line-height:1.7;margin-bottom:14px">MindCheck vous met en relation avec des thérapeutes adaptés à votre profil exact.<br>C'est le thérapeute qui vient vers vous — pas l'inverse. Vous choisissez librement.</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:16px">
+          ${['En cabinet','En ligne','Par messagerie','Séances courtes','Suivi long terme','Hypnose','Groupe de parole'].map(f=>`<span style="background:#E8F4ED;color:#2D6A4F;border-radius:20px;padding:5px 14px;font-size:12px">${f}</span>`).join('')}
+        </div>
+        <button onclick="alert('Fonctionnalité bientôt disponible')" style="background:#2D6A4F;color:white;border:none;border-radius:30px;padding:12px 28px;font-family:Arial,sans-serif;font-size:13px;font-weight:500;cursor:pointer">Recevoir des propositions de thérapeutes →</button>
+        <div style="font-size:11px;color:#AEADA7;margin-top:10px">Réponse sous 24–48h · 100% anonymisé · Sans engagement</div>
+      </div>
+
+      <!-- DISCLAIMER -->
+      <div style="font-size:10px;color:#BBB;text-align:center;line-height:1.6;padding-bottom:4px">
+        Ce bilan est généré à partir d'un récit auto-déclaré. Il ne constitue pas un diagnostic médical ou psychologique.<br>
+        Son objectif : vous aider à mieux vous comprendre et à trouver le bon soutien, au bon moment.
+      </div>
+
+      <!-- BUTTONS -->
+      <div style="display:flex;gap:10px;justify-content:center;padding-bottom:8px">
+        <button onclick="printBilan()" style="background:#2D6A4F;color:white;border:none;border-radius:30px;padding:11px 26px;font-family:Arial,sans-serif;font-size:13px;font-weight:500;cursor:pointer">Télécharger en PDF</button>
+        <button onclick="document.getElementById('bov').remove()" style="background:transparent;color:#2D6A4F;border:1.5px solid #2D6A4F;border-radius:30px;padding:11px 26px;font-family:Arial,sans-serif;font-size:13px;font-weight:500;cursor:pointer">Fermer</button>
+      </div>
+    </div>
+  </div></div>`;
+
+  document.body.insertAdjacentHTML('beforeend', html);
+}
+
+function printBilan() {
+  const inner = document.getElementById('bdoc').innerHTML;
+  const w = window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Bilan MindCheck — ${sessionCode}</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>body{margin:0;background:#F7F4EF;font-family:'DM Sans',sans-serif}@media print{@page{margin:.5cm}}</style>
+  </head><body><div style="max-width:740px;margin:auto;border-radius:20px;overflow:hidden">${inner}</div></body></html>`);
+  w.document.close();
+  setTimeout(()=>w.print(),900);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// VOICE
+// ═══════════════════════════════════════════════════════════════
+function speak(text) {
+  if(!ttsOn||!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const vv=window.speechSynthesis.getVoices();
+  const v=vv.find(x=>x.lang==='fr-FR'&&x.localService)||vv.find(x=>x.lang==='fr-FR')||vv.find(x=>x.lang.startsWith('fr'));
+  const sents=text.split(/(?<=[.!?])\s+/).filter(s=>s.trim());
+  let i=0; speaking=true; micSt('speaking'); document.getElementById('vs').textContent='MindCheck parle…';
+  function next(){
+    if(i>=sents.length){speaking=false;micSt('');document.getElementById('vs').textContent='Appuyez pour parler';return;}
+    const u=new SpeechSynthesisUtterance(sents[i].trim());
+    u.lang='fr-FR';u.rate=0.86;u.pitch=1.08;if(v)u.voice=v;
+    u.onend=()=>{i++;setTimeout(next,80);};u.onerror=()=>{i++;next();};
+    window.speechSynthesis.speak(u);
+  }
+  next();
+}
+
+function micSt(s){
+  const m=document.getElementById('mic');m.className=s||'';m.id='mic';
+  document.getElementById('msvg').setAttribute('stroke',s?'white':'#2D6A4F');
+}
+
+function toggleMic(){
+  if(speaking){window.speechSynthesis.cancel();speaking=false;micSt('');document.getElementById('vs').textContent='Appuyez pour parler';return;}
+  if(listening){stopRec();return;}
+  startRec();
+}
+
+function startRec(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){showErr('Reconnaissance vocale non disponible');return;}
+  recog=new SR();recog.continuous=true;recog.interimResults=true;recog.lang='fr-FR';
+  let acc='',timer=null;
+  function resetTimer(){
+    if(timer)clearTimeout(timer);
+    timer=setTimeout(()=>{if(acc.trim()){const t=acc.trim();acc='';document.getElementById('vt').textContent='';recog.stop();processInput(t,'voice');}},30000);
+  }
+  recog.onstart=()=>{listening=true;micSt('listening');document.getElementById('vs').textContent='Je vous écoute… (appuyez pour envoyer)';document.getElementById('vt').textContent='';};
+  recog.onresult=e=>{
+    let interim='',final='';
+    for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal)final+=e.results[i][0].transcript+' ';else interim+=e.results[i][0].transcript;}
+    if(final){acc+=final;resetTimer();}
+    document.getElementById('vt').textContent=acc+interim;
+  };
+  recog.onerror=e=>{if(e.error==='no-speech'){resetTimer();return;}if(timer)clearTimeout(timer);listening=false;micSt('');if(e.error==='not-allowed')showErr('Micro refusé — autorisez dans Chrome');};
+  recog.onend=()=>{if(listening&&!acc.trim()){try{recog.start();}catch(e){}}else{listening=false;if(!speaking)micSt('');}};
+  recog.start();
+}
+
+function stopRec(){
+  if(recog)recog.stop();
+  listening=false;micSt('');document.getElementById('vs').textContent='Appuyez pour parler';
+  const acc=document.getElementById('vt').textContent;
+  if(acc.trim()){document.getElementById('vt').textContent='';processInput(acc.trim(),'voice');}
+}
+
+// ═══════════════════════════════════════════════════════════════
+// EVENTS + INIT
+// ═══════════════════════════════════════════════════════════════
+document.getElementById('inp').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submitText();}});
+document.getElementById('inp').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px';});
+document.getElementById('tts').addEventListener('change',function(){ttsOn=this.checked;if(!ttsOn&&window.speechSynthesis)window.speechSynthesis.cancel();});
+
+// INIT — runs last, all DOM elements exist
+(function(){
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code='MC-';
+  for(let i=0;i<4;i++)code+=chars[Math.floor(Math.random()*chars.length)];
+  code+='-';
+  for(let i=0;i<4;i++)code+=chars[Math.floor(Math.random()*chars.length)];
+  sessionCode=code;
+  document.getElementById('session-code').textContent=code;
+  document.getElementById('consent-btn').disabled=true;
+  if(window.speechSynthesis)window.speechSynthesis.getVoices();
+})();
+</script>
+</body>
+</html>
