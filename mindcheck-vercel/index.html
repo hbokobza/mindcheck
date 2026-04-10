@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -90,12 +89,12 @@ main{width:100%;max-width:780px;padding:0 2rem 2rem;flex:1}
     <div style="margin-top:.4rem;font-size:12px;color:var(--ink-f)">Notez ce code pour un bilan comparatif ultérieur.</div>
   </div>
   <div style="font-size:13px;color:var(--ink-l);margin-bottom:.5rem">Veuillez lire et accepter les points suivants :</div>
-  <label class="chk-label"><input type="checkbox" id="c1" onchange="checkC()"><span>Je comprends que ce bilan est un <strong>outil de dépistage et d'orientation</strong>, pas un diagnostic médical.</span></label>
-  <label class="chk-label"><input type="checkbox" id="c2" onchange="checkC()"><span>Je consens au traitement <strong>anonymisé et confidentiel</strong> de mon récit pour générer mon bilan.</span></label>
-  <label class="chk-label"><input type="checkbox" id="c3" onchange="checkC()"><span>Je sais que mon récit est analysé par une <strong>IA</strong>. Ce service n'est pas un dispositif médical certifié.</span></label>
-  <label class="chk-label"><input type="checkbox" id="c4" onchange="checkC()"><span>Je suis majeur(e) et participe <strong>librement et volontairement</strong>. Je peux arrêter à tout moment.</span></label>
+  <label class="chk-label"><input type="checkbox" id="c1"><span>Je comprends que ce bilan est un <strong>outil de dépistage et d'orientation</strong>, pas un diagnostic médical.</span></label>
+  <label class="chk-label"><input type="checkbox" id="c2"><span>Je consens au traitement <strong>anonymisé et confidentiel</strong> de mon récit pour générer mon bilan.</span></label>
+  <label class="chk-label"><input type="checkbox" id="c3"><span>Je sais que mon récit est analysé par une <strong>IA</strong>. Ce service n'est pas un dispositif médical certifié.</span></label>
+  <label class="chk-label"><input type="checkbox" id="c4"><span>Je suis majeur(e) et participe <strong>librement et volontairement</strong>. Je peux arrêter à tout moment.</span></label>
   <div class="warn-box"><strong>Important :</strong> En cas de détresse sévère ou pensées suicidaires, appelez le <strong>3114</strong> (disponible 24h/24).</div>
-  <button id="consent-btn" onclick="goIntro()" style="margin-top:1.25rem;padding:12px 28px;border-radius:30px;border:none;font-family:Arial,sans-serif;font-size:14px;font-weight:500;cursor:not-allowed;background:#2D6A4F;color:white;opacity:.35;transition:all .2s">J'accepte et je continue</button>
+  <button onclick="goIntro()" style="margin-top:1.25rem;padding:12px 28px;border-radius:30px;border:none;font-family:Arial,sans-serif;font-size:14px;font-weight:500;cursor:pointer;background:#2D6A4F;color:white;opacity:1">J'accepte et je continuer</button>
 </div>
 
 <!-- INTRO -->
@@ -236,8 +235,6 @@ function checkC() {
 }
 
 function goIntro() {
-  const all = ['c1','c2','c3','c4'].every(id => document.getElementById(id).checked);
-  if(!all) return;
   document.getElementById('consent-panel').classList.add('hidden');
   document.getElementById('intro-panel').classList.remove('hidden');
 }
