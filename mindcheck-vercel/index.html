@@ -23,7 +23,7 @@ main{width:100%;max-width:780px;padding:0 2rem 2rem;flex:1}
 .chk-label{display:flex;align-items:flex-start;gap:10px;margin:.6rem 0;font-size:13px;color:var(--ink-l);font-weight:300;line-height:1.6;cursor:pointer}
 .chk-label input{margin-top:3px;accent-color:var(--green);cursor:pointer;flex-shrink:0;width:16px;height:16px}
 .warn-box{margin-top:1rem;padding:.75rem 1rem;background:#FFF8E7;border-radius:10px;border:1px solid #F0D060;font-size:12px;color:#7A5C00;line-height:1.6}
-#consent-btn{margin-top:1.25rem;padding:12px 28px;border-radius:30px;border:none;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:not-allowed;background:var(--green);color:white;opacity:.35;transition:all .2s}
+/* consent-btn styled inline */
 
 /* INTRO */
 .reperes{background:var(--cream);border-radius:12px;padding:1rem 1.25rem;margin:.75rem 0;font-size:13px;color:var(--ink-l);line-height:1.9;font-weight:300}
@@ -94,7 +94,7 @@ main{width:100%;max-width:780px;padding:0 2rem 2rem;flex:1}
   <label class="chk-label"><input type="checkbox" id="c3" onchange="checkC()"><span>Je sais que mon récit est analysé par une <strong>IA</strong>. Ce service n'est pas un dispositif médical certifié.</span></label>
   <label class="chk-label"><input type="checkbox" id="c4" onchange="checkC()"><span>Je suis majeur(e) et participe <strong>librement et volontairement</strong>. Je peux arrêter à tout moment.</span></label>
   <div class="warn-box"><strong>Important :</strong> En cas de détresse sévère ou pensées suicidaires, appelez le <strong>3114</strong> (disponible 24h/24).</div>
-  <button id="consent-btn" onclick="goIntro()">J'accepte et je continue</button>
+  <button id="consent-btn" onclick="goIntro()" disabled style="margin-top:1.25rem;padding:12px 28px;border-radius:30px;border:none;font-family:Arial,sans-serif;font-size:14px;font-weight:500;cursor:not-allowed;background:#2D6A4F;color:white;opacity:.35;transition:all .2s">J'accepte et je continue</button>
 </div>
 
 <!-- INTRO -->
@@ -233,6 +233,7 @@ function checkC() {
   btn.disabled = !all;
   btn.style.opacity = all ? '1' : '.35';
   btn.style.cursor = all ? 'pointer' : 'not-allowed';
+  btn.style.pointerEvents = all ? 'auto' : 'none';
 }
 
 function goIntro() {
