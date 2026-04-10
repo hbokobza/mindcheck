@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -94,7 +95,7 @@ main{width:100%;max-width:780px;padding:0 2rem 2rem;flex:1}
   <label class="chk-label"><input type="checkbox" id="c3" onchange="checkC()"><span>Je sais que mon récit est analysé par une <strong>IA</strong>. Ce service n'est pas un dispositif médical certifié.</span></label>
   <label class="chk-label"><input type="checkbox" id="c4" onchange="checkC()"><span>Je suis majeur(e) et participe <strong>librement et volontairement</strong>. Je peux arrêter à tout moment.</span></label>
   <div class="warn-box"><strong>Important :</strong> En cas de détresse sévère ou pensées suicidaires, appelez le <strong>3114</strong> (disponible 24h/24).</div>
-  <button id="consent-btn" onclick="goIntro()" disabled style="margin-top:1.25rem;padding:12px 28px;border-radius:30px;border:none;font-family:Arial,sans-serif;font-size:14px;font-weight:500;cursor:not-allowed;background:#2D6A4F;color:white;opacity:.35;transition:all .2s">J'accepte et je continue</button>
+  <button id="consent-btn" onclick="goIntro()" style="margin-top:1.25rem;padding:12px 28px;border-radius:30px;border:none;font-family:Arial,sans-serif;font-size:14px;font-weight:500;cursor:not-allowed;background:#2D6A4F;color:white;opacity:.35;transition:all .2s">J'accepte et je continue</button>
 </div>
 
 <!-- INTRO -->
@@ -230,13 +231,13 @@ let sessionCode='', lastBilan=null;
 function checkC() {
   const all = ['c1','c2','c3','c4'].every(id => document.getElementById(id).checked);
   const btn = document.getElementById('consent-btn');
-  btn.disabled = !all;
   btn.style.opacity = all ? '1' : '.35';
   btn.style.cursor = all ? 'pointer' : 'not-allowed';
-  btn.style.pointerEvents = all ? 'auto' : 'none';
 }
 
 function goIntro() {
+  const all = ['c1','c2','c3','c4'].every(id => document.getElementById(id).checked);
+  if(!all) return;
   document.getElementById('consent-panel').classList.add('hidden');
   document.getElementById('intro-panel').classList.remove('hidden');
 }
@@ -698,8 +699,7 @@ window.addEventListener('load', function() {
   // Read the code already rendered inline
   const el = document.getElementById('session-code');
   if(el) sessionCode = el.textContent.trim();
-  const btn = document.getElementById('consent-btn');
-  if(btn) { btn.disabled = true; btn.style.opacity = '0.35'; }
+  // button starts visually disabled via inline style
   if(window.speechSynthesis) window.speechSynthesis.getVoices();
 });
 </script>
