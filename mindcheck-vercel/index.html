@@ -692,17 +692,20 @@ document.getElementById('inp').addEventListener('input',function(){this.style.he
 document.getElementById('tts').addEventListener('change',function(){ttsOn=this.checked;if(!ttsOn&&window.speechSynthesis)window.speechSynthesis.cancel();});
 
 // INIT — runs last, all DOM elements exist
-(function(){
+// Init — runs after full page load
+window.addEventListener('load', function() {
   const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let code='MC-';
-  for(let i=0;i<4;i++)code+=chars[Math.floor(Math.random()*chars.length)];
+  for(let i=0;i<4;i++) code+=chars[Math.floor(Math.random()*chars.length)];
   code+='-';
-  for(let i=0;i<4;i++)code+=chars[Math.floor(Math.random()*chars.length)];
-  sessionCode=code;
-  document.getElementById('session-code').textContent=code;
-  document.getElementById('consent-btn').disabled=true;
-  if(window.speechSynthesis)window.speechSynthesis.getVoices();
-})();
+  for(let i=0;i<4;i++) code+=chars[Math.floor(Math.random()*chars.length)];
+  sessionCode = code;
+  const el = document.getElementById('session-code');
+  if(el) el.textContent = code;
+  const btn = document.getElementById('consent-btn');
+  if(btn) { btn.disabled = true; btn.style.opacity = '0.35'; }
+  if(window.speechSynthesis) window.speechSynthesis.getVoices();
+});
 </script>
 </body>
 </html>
