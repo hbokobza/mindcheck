@@ -12,11 +12,9 @@ header{background:#2D6A4F;padding:16px 24px}
 main{max-width:760px;margin:0 auto;padding:24px 20px}
 .panel{background:white;border-radius:16px;padding:28px;margin-bottom:20px;border:1px solid rgba(0,0,0,0.08)}
 .hidden{display:none}
-/* LOGO */
 .logo-wrap{display:flex;align-items:center;gap:12px}
 .logo-text{font-family:Georgia,serif;font-size:22px;color:white;letter-spacing:-0.3px}
 .logo-sub{font-size:11px;color:rgba(255,255,255,0.6);margin-top:4px}
-/* CONSENT */
 .code-box{background:#F0F7F4;border-radius:10px;padding:14px 16px;margin:14px 0}
 .code-box strong{display:block;margin-bottom:6px;font-size:14px}
 .code-val{font-family:monospace;background:#D8F3DC;color:#2D6A4F;padding:3px 10px;border-radius:6px;font-size:15px;font-weight:600;letter-spacing:2px}
@@ -27,10 +25,8 @@ main{max-width:760px;margin:0 auto;padding:24px 20px}
 .btn-green:hover{background:#245c43}
 .btn-outline{background:white;color:#2D6A4F;border:2px solid #2D6A4F;border-radius:30px;padding:11px 26px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit}
 .btn-outline:hover{background:#F0F7F4}
-/* INTRO */
 .reperes{background:#F7F4EF;border-radius:10px;padding:14px 16px;margin:12px 0;font-size:13px;color:#555;line-height:1.9}
 .btn-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
-/* SESSION */
 .axes{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
 .ax{font-size:11px;padding:3px 10px;border-radius:20px;border:1px solid #D8F3DC;background:white;color:#AEADA7}
 .ax.lit{background:#D8F3DC;color:#2D6A4F;font-weight:500;border-color:#95D5B2}
@@ -57,6 +53,16 @@ main{max-width:760px;margin:0 auto;padding:24px 20px}
 #sbtn{width:36px;height:36px;border-radius:50%;background:#2D6A4F;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .disc{font-size:11px;color:#AEADA7;text-align:center;margin-top:12px;line-height:1.6}
 .err{background:#FDE8E8;color:#C0392B;font-size:12px;padding:8px 12px;border-radius:8px;margin-bottom:8px;display:none}
+/* Bilan tables */
+.clin-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
+.clin-table th{background:#2D6A4F;color:white;padding:7px 10px;text-align:left;font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.8px}
+.clin-table td{padding:7px 10px;border-bottom:1px solid #EEECE8;vertical-align:top;line-height:1.5}
+.clin-table tr:last-child td{border-bottom:none}
+.clin-table tr:nth-child(even) td{background:#F7F4EF}
+.sys-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}
+.sys-card{background:#F0F7F4;border-radius:8px;padding:10px 8px;text-align:center;border:1px solid #D8F3DC}
+.sys-card .sys-name{font-size:10px;font-weight:600;color:#2D6A4F;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.sys-card .sys-desc{font-size:10px;color:#666;line-height:1.4}
 </style>
 </head>
 <body>
@@ -121,12 +127,12 @@ main{max-width:760px;margin:0 auto;padding:24px 20px}
     <button class="mb" id="mb-voice" onclick="setMode('voice')">Vocal</button>
   </div>
   <div class="axes">
-    <span class="ax" id="a1">Régulation mentale</span>
-    <span class="ax" id="a2">Énergie vitale</span>
-    <span class="ax" id="a3">Vie émotionnelle</span>
-    <span class="ax" id="a4">Corps & équilibre</span>
-    <span class="ax" id="a5">Relations</span>
-    <span class="ax" id="a6">Contexte de vie</span>
+    <span class="ax" id="a1">Processus psychiques</span>
+    <span class="ax" id="a2">Ressources psychiques</span>
+    <span class="ax" id="a3">Régulation émotionnelle</span>
+    <span class="ax" id="a4">Corps & risque somatique</span>
+    <span class="ax" id="a5">Comportements & conduites</span>
+    <span class="ax" id="a6">Environnement</span>
   </div>
   <div class="err" id="err"></div>
   <div class="chat" id="chat"></div>
@@ -162,15 +168,15 @@ main{max-width:760px;margin:0 auto;padding:24px 20px}
 
 <script>
 // ── PROMPTS ──────────────────────────────────────────────────────
-const SYS = `Tu es l'assistant de collecte MindCheck. Tu recueilles le récit d'une personne pour remplir une matrice psychosomatique à 6 axes. Tu n'es PAS un thérapeute. Tu collectes.
+const SYS = `Tu es l'assistant de collecte MindCheck. Tu recueilles le récit d'une personne pour remplir une matrice psychosomatique à 6 axes cliniques. Tu n'es PAS un thérapeute. Tu collectes.
 
-6 AXES À RENSEIGNER :
-1. Processus psychiques — mécanismes de défense, conflits, ruminations
-2. Ressources psychiques — énergie, motivation, capacités
-3. Comportements — évitements, excès, addictions, inhibition
-4. Expression des affects — nommer et ressentir les émotions
-5. Risque somatique — sommeil, douleurs, tensions, troubles fonctionnels
-6. Environnement — relations, travail, événements récents
+6 AXES CLINIQUES À RENSEIGNER :
+1. Processus psychiques — mécanismes de défense, conflits intrapsychiques, ruminations, représentations
+2. Ressources psychiques — énergie psychique, motivation, capacités adaptatives
+3. Comportements & conduites — évitements, conduites addictives, inhibition, compulsions
+4. Régulation émotionnelle — identification, expression et régulation des affects
+5. Corps & risque somatique — sommeil, douleurs, troubles fonctionnels, somatisations
+6. Environnement — relations, travail, événements de vie récents, contexte socio-familial
 
 RÈGLES :
 - Laisser parler librement. Max 1-2 phrases par réponse.
@@ -178,33 +184,51 @@ RÈGLES :
 - Après 12 échanges ou axes couverts : "Merci. Je prépare votre bilan."
 - Dernière ligne : AXES:[liste] COMPLET:[oui/non]`;
 
-const BILAN_SYS = `Tu es un assistant clinique MindCheck. Génère un bilan JSON. RÉPONDS UNIQUEMENT AVEC DU JSON VALIDE, rien d'autre.
+const BILAN_SYS = `Tu es un assistant clinique MindCheck. Génère un bilan JSON structuré selon les axes psychosomatiques de Stora (2001) et le modèle bio-psycho-social. RÉPONDS UNIQUEMENT AVEC DU JSON VALIDE, rien d'autre, sans markdown.
 
 {
-  "synthese": "2-3 phrases cliniques sur le profil",
+  "synthese": "2-3 phrases cliniques précises sur le profil psychosomatique",
   "axes": [
-    {"num":1,"label_public":"Monde intérieur","label_clinique":"Processus psychiques","score":2,"manifestations":"Ce qui ressort du récit","lecture":"Lecture clinique"},
-    {"num":2,"label_public":"Énergie vitale","label_clinique":"Ressources psychiques","score":2,"manifestations":"...","lecture":"..."},
-    {"num":3,"label_public":"Habitudes & comportements","label_clinique":"Prévalence des comportements","score":2,"manifestations":"...","lecture":"..."},
-    {"num":4,"label_public":"Vie émotionnelle","label_clinique":"Expression des affects","score":2,"manifestations":"...","lecture":"..."},
-    {"num":5,"label_public":"Corps & équilibre","label_clinique":"Risque somatique","score":2,"manifestations":"...","lecture":"..."},
-    {"num":6,"label_public":"Contexte & pressions","label_clinique":"Risque environnemental","score":2,"manifestations":"...","lecture":"..."}
+    {"num":1,"label_clinique":"Processus psychiques","score":2.5,"manifestations":"Éléments cliniques observés dans le récit","lecture":"Lecture psychodynamique/cognitive"},
+    {"num":2,"label_clinique":"Ressources psychiques","score":2.5,"manifestations":"...","lecture":"..."},
+    {"num":3,"label_clinique":"Comportements & conduites","score":2.5,"manifestations":"...","lecture":"..."},
+    {"num":4,"label_clinique":"Régulation émotionnelle","score":2.5,"manifestations":"...","lecture":"..."},
+    {"num":5,"label_clinique":"Corps & risque somatique","score":2.5,"manifestations":"...","lecture":"..."},
+    {"num":6,"label_clinique":"Environnement","score":2.5,"manifestations":"...","lecture":"..."}
   ],
   "signaux": [
-    {"domaine":"Physiques","intensite":2,"detail":"..."},
-    {"domaine":"Émotionnels","intensite":3,"detail":"..."},
-    {"domaine":"Cognitifs","intensite":2,"detail":"..."},
-    {"domaine":"Événementiels","intensite":1,"detail":"..."},
-    {"domaine":"Épuisement","intensite":2,"detail":"..."}
+    {"domaine":"État psychique général","intensite":2,"detail":"Humeur, anxiété, stress, rapport au plaisir"},
+    {"domaine":"Fonction cognitive & attentionnelle","intensite":2,"detail":"Concentration, mémoire, ruminations, charge mentale"},
+    {"domaine":"Régulation émotionnelle","intensite":2,"detail":"Identifier, contenir et symboliser les émotions"},
+    {"domaine":"Somatisation & corps vécu","intensite":2,"detail":"Sommeil, douleurs, troubles fonctionnels, tension"},
+    {"domaine":"Fonction relationnelle & affective","intensite":2,"detail":"Qualité du lien, solitude, conflits, attachement"},
+    {"domaine":"Idées noires & épuisement","intensite":1,"detail":"Vide, retrait, perte d'élan, risque dépressif"}
   ],
-  "forces": ["Force 1","Force 2","Force 3"],
-  "vigilance": ["Point 1","Point 2"],
-  "orientation": "Recommandation thérapeutique, 2-3 phrases"
-}`;
+  "systemes": [
+    {"nom":"Psychique","fonction":"Représentations & conflits internes","impact":"..."},
+    {"nom":"Nerveux central","fonction":"Fonctions cognitives","impact":"..."},
+    {"nom":"Nerveux autonome","fonction":"Régulation émotionnelle & tension","impact":"..."},
+    {"nom":"Immunitaire","fonction":"Interface psyché-corps","impact":"..."},
+    {"nom":"Génétique","fonction":"Vulnérabilité & résilience","impact":"..."}
+  ],
+  "orientation_table": [
+    {"objectif":"Régulation du SNA","cible":"Anxiété, stress chronique","indication":"Travail corps-émotion ; cohérence cardiaque ; repérage des déclencheurs"},
+    {"objectif":"Symbolisation","cible":"Traumatismes non élaborés","indication":"Psychothérapie psychodynamique ; EMDR ; élaboration narrative"},
+    {"objectif":"Désaturation cognitive","cible":"Charge mentale, ruminations","indication":"TCC ; mindfulness ; rééquilibrage travail/vie personnelle"},
+    {"objectif":"Prévention somatique","cible":"Risque somatique identifié","indication":"Coordination psy-somatique ; médecine psychosomatique"},
+    {"objectif":"Renforcement des ressources","cible":"Appuis protecteurs","indication":"Soutien des liens existants ; thérapie de groupe"}
+  ],
+  "forces": ["Force clinique 1","Force clinique 2","Force clinique 3"],
+  "vigilance": ["Point de vigilance clinique 1","Point de vigilance clinique 2"],
+  "orientation": "Recommandation thérapeutique précise, 2-3 phrases avec références aux approches validées"
+}
+
+IMPORTANT : Les scores sont sur une échelle de 0 à 4 (par pas de 0.5). 0=critique, 4=optimal. Sois précis et cliniquement rigoureux.`;
 
 // ── STATE ─────────────────────────────────────────────────────────
 let hist = [], count = 0, mode = 'text', sessionCode = '';
 let listening = false, speaking = false, ttsOn = true, recog = null;
+let baselineData = null; // pour comparaison radar
 
 // ── INIT ──────────────────────────────────────────────────────────
 (function initCode() {
@@ -215,6 +239,11 @@ let listening = false, speaking = false, ttsOn = true, recog = null;
   for (let i = 0; i < 4; i++) c += chars[Math.floor(Math.random() * chars.length)];
   sessionCode = c;
   document.getElementById('scode').textContent = c;
+  // Charger baseline si session précédente
+  try {
+    const prev = localStorage.getItem('mindcheck_last_scores');
+    if (prev) baselineData = JSON.parse(prev);
+  } catch(e) {}
 })();
 
 // ── NAVIGATION ────────────────────────────────────────────────────
@@ -274,7 +303,7 @@ async function callAPI(messages, sys) {
   const r = await fetch('/api/chat', {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:1500, system:sys, messages})
+    body: JSON.stringify({system:sys, messages})
   });
   const d = await r.json();
   if (d.error) throw new Error(d.error.message||'Erreur API');
@@ -308,7 +337,6 @@ async function processInput(text, src) {
   } catch(e) {
     rmDots();
     showErr('Erreur de connexion — réessayez dans quelques secondes');
-    // Re-enable input
     document.getElementById('inp').disabled = false;
     document.getElementById('sbtn').disabled = false;
   }
@@ -325,7 +353,7 @@ async function submitText() {
 async function generateBilan() {
   showDots();
   try {
-    const raw = await callAPI([...hist,{role:'user',content:'Génère le bilan JSON.'}], BILAN_SYS);
+    const raw = await callAPI([...hist,{role:'user',content:'Génère le bilan JSON complet maintenant.'}], BILAN_SYS);
     rmDots();
     let data;
     try {
@@ -335,6 +363,14 @@ async function generateBilan() {
       addMsg('ai','Erreur de format. Réessai…');
       setTimeout(generateBilan,1500); return;
     }
+    // Sauvegarder scores pour prochaine session (baseline)
+    try {
+      localStorage.setItem('mindcheck_last_scores', JSON.stringify({
+        date: new Date().toLocaleDateString('fr-FR'),
+        scores: data.axes.map(a=>a.score)
+      }));
+    } catch(e) {}
+
     const c = document.getElementById('chat');
     const d = document.createElement('div'); d.className='msg';
     d.innerHTML='<div class="av ai">M</div><div class="bub ok"><strong style="color:#2D6A4F">Votre bilan est prêt.</strong><br><span style="font-size:13px;color:#555">Profil généré sur les 6 axes psychosomatiques.</span></div>';
@@ -352,104 +388,228 @@ async function generateBilan() {
   }
 }
 
-// ── BILAN DISPLAY ─────────────────────────────────────────────────
-function scoreColor(s){ return s>=3?'#2D6A4F':s===2?'#E9C46A':'#E76F51'; }
-function scoreLabel(s){ return s>=3?'Solide':s===2?'En tension':'Attention'; }
-function scoreBg(s){ return s>=3?'#E8F4ED':s===2?'#FFF8E7':'#FDE8E8'; }
+// ── RADAR (échelle 0-4 par 0.5, double baseline/suivi) ────────────
+function buildRadar(axes, baseline) {
+  const S=300, cx=150, cy=150, maxR=105, n=6, maxVal=4;
+  function pt(i,v){
+    const a=(i*2*Math.PI/n)-Math.PI/2;
+    const d=(v/maxVal)*maxR;
+    return[cx+d*Math.cos(a), cy+d*Math.sin(a)];
+  }
+  let grid='', gridLabels='', lines='', dots='', labels='', baseShape='', baselineDots='';
 
-function buildRadar(axes) {
-  const S=280,cx=140,cy=140,r=95,n=6;
-  function pt(i,v){const a=(i*2*Math.PI/n)-Math.PI/2,d=(v/3)*r;return[cx+d*Math.cos(a),cy+d*Math.sin(a)];}
-  let grid='',lines='',dots='',labels='';
-  for(let ring=1;ring<=3;ring++){const pts=axes.map((_,i)=>pt(i,ring).join(',')).join(' ');grid+=`<polygon points="${pts}" fill="none" stroke="#E0DDD8" stroke-width="${ring===3?1.2:.8}"/>`;}
-  for(let i=0;i<n;i++){const[x,y]=pt(i,3);lines+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#E0DDD8" stroke-width=".8"/>`;}
-  const dataPts=axes.map((ax,i)=>pt(i,ax.score).join(',')).join(' ');
+  // Grilles 0.5 à 4
+  const rings = [0.5,1,1.5,2,2.5,3,3.5,4];
+  rings.forEach(ring => {
+    const pts = axes.map((_,i)=>pt(i,ring).join(',')).join(' ');
+    const isMain = Number.isInteger(ring);
+    grid += `<polygon points="${pts}" fill="none" stroke="${isMain?'#C8C4BE':'#E5E2DC'}" stroke-width="${isMain?1:.5}" stroke-dasharray="${isMain?'none':'3,3'}"/>`;
+    if(isMain) {
+      const [lx,ly] = pt(0, ring);
+      gridLabels += `<text x="${lx+5}" y="${ly}" font-size="9" fill="#AEADA7" font-family="Arial">${ring}</text>`;
+    }
+  });
+
+  for(let i=0;i<n;i++){
+    const[x,y]=pt(i,maxVal);
+    lines+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#D8D4CE" stroke-width=".8"/>`;
+  }
+
+  // Baseline (session précédente) en bleu transparent
+  if(baseline && baseline.scores && baseline.scores.length === n) {
+    const bPts = baseline.scores.map((s,i)=>pt(i,Math.min(s,maxVal)).join(',')).join(' ');
+    baseShape = `<polygon points="${bPts}" fill="rgba(59,130,246,0.08)" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="5,3" stroke-linejoin="round"/>`;
+    baseline.scores.forEach((s,i)=>{
+      const [bx,by]=pt(i,Math.min(s,maxVal));
+      baselineDots+=`<circle cx="${bx}" cy="${by}" r="3.5" fill="#3B82F6" opacity=".7"/>`;
+    });
+  }
+
+  // Profil actuel
+  const dataPts = axes.map((ax,i)=>pt(i,Math.min(ax.score,maxVal)).join(',')).join(' ');
   axes.forEach((ax,i)=>{
-    const[x,y]=pt(i,ax.score); const col=scoreColor(ax.score);
-    dots+=`<circle cx="${x}" cy="${y}" r="5" fill="${col}"/>`;
-    const a=(i*2*Math.PI/n)-Math.PI/2,lx=cx+(r+30)*Math.cos(a),ly=cy+(r+30)*Math.sin(a);
+    const[x,y]=pt(i,Math.min(ax.score,maxVal));
+    const col=scoreColor(ax.score);
+    dots+=`<circle cx="${x}" cy="${y}" r="5" fill="${col}" stroke="white" stroke-width="1.5"/>`;
+    const a=(i*2*Math.PI/n)-Math.PI/2;
+    const lx=cx+(maxR+32)*Math.cos(a), ly=cy+(maxR+32)*Math.sin(a);
     const anch=lx<cx-10?'end':lx>cx+10?'start':'middle';
     const words=ax.label_clinique.split(' ');
-    const l1=words[0],l2=words.slice(1).join(' ');
+    const mid=Math.ceil(words.length/2);
+    const l1=words.slice(0,mid).join(' '), l2=words.slice(mid).join(' ');
     labels+=l2
-      ?`<text text-anchor="${anch}" font-size="10.5" font-family="Arial" fill="${col}" font-weight="600"><tspan x="${lx}" y="${ly-5}">${l1}</tspan><tspan x="${lx}" dy="13">${l2}</tspan></text>`
-      :`<text x="${lx}" y="${ly+4}" text-anchor="${anch}" font-size="10.5" font-family="Arial" fill="${col}" font-weight="600">${l1}</text>`;
+      ?`<text text-anchor="${anch}" font-size="9.5" font-family="Arial" fill="${col}" font-weight="600"><tspan x="${lx}" y="${ly-5}">${l1}</tspan><tspan x="${lx}" dy="12">${l2}</tspan></text>`
+      :`<text x="${lx}" y="${ly+4}" text-anchor="${anch}" font-size="9.5" font-family="Arial" fill="${col}" font-weight="600">${l1}</text>`;
   });
-  return`<svg width="${S}" height="${S}" viewBox="0 0 ${S} ${S}" overflow="visible">${grid}${lines}<polygon points="${dataPts}" fill="rgba(45,106,79,0.15)" stroke="#2D6A4F" stroke-width="2.5" stroke-linejoin="round"/>${dots}${labels}</svg>`;
+
+  let legend = '';
+  if(baseline) {
+    legend = `<g>
+      <line x1="10" y1="285" x2="28" y2="285" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <circle cx="19" cy="285" r="3" fill="#3B82F6" opacity=".7"/>
+      <text x="32" y="289" font-size="9" fill="#666" font-family="Arial">Session précédente (${baseline.date})</text>
+      <line x1="140" y1="285" x2="158" y2="285" stroke="#2D6A4F" stroke-width="2"/>
+      <circle cx="149" cy="285" r="3.5" fill="#2D6A4F"/>
+      <text x="162" y="289" font-size="9" fill="#666" font-family="Arial">Session actuelle</text>
+    </g>`;
+  }
+
+  return `<svg width="${S}" height="${baseline?300:S}" viewBox="0 0 ${S} ${baseline?300:S}" overflow="visible">
+    ${grid}${gridLabels}${lines}
+    ${baseShape}
+    <polygon points="${dataPts}" fill="rgba(45,106,79,0.12)" stroke="#2D6A4F" stroke-width="2.5" stroke-linejoin="round"/>
+    ${baselineDots}${dots}${labels}${legend}
+  </svg>`;
 }
 
+// ── COULEURS & LABELS ─────────────────────────────────────────────
+function scoreColor(s){ return s>=3?'#2D6A4F':s>=2?'#E9A820':'#E76F51'; }
+function scoreLabel(s){ return s>=3?'Solide':s>=2?'En tension':'Attention'; }
+function scoreBg(s){ return s>=3?'#E8F4ED':s>=2?'#FFF3D6':'#FDE8E8'; }
+function intensiteLabel(i){ return i<=1?'Équilibré':i<=2?'Vigilance':'Attention'; }
+function intensiteColor(i){ return i<=1?'#52B788':i<=2?'#E9A820':'#E76F51'; }
+
+// ── AFFICHAGE BILAN ───────────────────────────────────────────────
 function showBilan(data) {
   const date = new Date().toLocaleDateString('fr-FR');
-  const radar = buildRadar(data.axes);
+  const radar = buildRadar(data.axes, baselineData);
   const logoSVG = `<svg width="180" height="36" viewBox="0 0 180 36"><polygon points="14,2 26,9 26,25 14,32 2,25 2,9" fill="white"/><text x="14" y="21" font-family="Georgia,serif" font-size="13" fill="#2D6A4F" text-anchor="middle">M</text><text x="40" y="25" font-family="Georgia,serif" font-size="21" fill="white" letter-spacing="-0.3">MindCheck</text></svg>`;
+
+  // Zones d'attention (tableau clinique)
   const sigHTML = data.signaux.map(s=>{
-    const pct=Math.round((s.intensite/4)*100),col=s.intensite<=1?'#52B788':s.intensite===2?'#E9C46A':'#E76F51';
-    const lbl=s.intensite<=1?'Équilibré':s.intensite===2?'Vigilance':'Attention';
-    return`<div style="margin-bottom:11px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px"><span style="font-size:13px;font-weight:500">${s.domaine}</span><span style="font-size:11px;color:${col};background:${col}18;padding:2px 8px;border-radius:10px;font-weight:500">${lbl}</span></div><div style="background:#EEECE8;border-radius:5px;height:7px"><div style="width:${pct}%;height:100%;background:${col};border-radius:5px"></div></div><div style="font-size:11px;color:#AEADA7;margin-top:2px">${s.detail}</div></div>`;
-  }).join('');
-  const dimHTML = data.axes.map((ax,i)=>{
-    const col=scoreColor(ax.score),pct=Math.round((ax.score/3)*100);
-    return`<div style="background:white;border-radius:12px;padding:14px 16px;border:.5px solid rgba(0,0,0,.08)"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px"><div><div style="font-size:14px;font-weight:500">${ax.label_public}</div><div style="font-size:11px;color:#AEADA7;margin-top:1px">${ax.label_clinique}</div></div><span style="font-size:11px;font-weight:500;color:${col};background:${scoreBg(ax.score)};padding:3px 10px;border-radius:20px;flex-shrink:0;margin-left:10px">${scoreLabel(ax.score)}</span></div><div style="background:#EEECE8;border-radius:4px;height:6px;margin:7px 0"><div style="width:${pct}%;height:100%;background:${col};border-radius:4px"></div></div><div style="font-size:13px;color:#555;line-height:1.6">${ax.manifestations}</div><div style="font-size:12px;color:#2D6A4F;font-style:italic;margin-top:5px;padding-left:8px;border-left:2px solid #95D5B2">${ax.lecture}</div></div>`;
+    const pct=Math.round((s.intensite/4)*100);
+    const col=intensiteColor(s.intensite);
+    const lbl=intensiteLabel(s.intensite);
+    return`<tr>
+      <td style="font-weight:500;font-size:12px">${s.domaine}</td>
+      <td style="font-size:11px;color:#555">${s.detail}</td>
+      <td style="text-align:center"><span style="font-size:10px;color:${col};background:${col}18;padding:2px 8px;border-radius:10px;font-weight:600;white-space:nowrap">${lbl}</span></td>
+      <td style="min-width:70px"><div style="background:#EEECE8;border-radius:5px;height:6px"><div style="width:${pct}%;height:100%;background:${col};border-radius:5px"></div></div></td>
+    </tr>`;
   }).join('');
 
+  // 5 systèmes
+  const sysHTML = (data.systemes||[]).map(s=>`
+    <div class="sys-card">
+      <div class="sys-name">${s.nom}</div>
+      <div class="sys-desc" style="color:#2D6A4F;font-size:9px;margin-bottom:3px">${s.fonction}</div>
+      <div class="sys-desc">${s.impact}</div>
+    </div>`).join('');
+
+  // 6 dimensions
+  const dimHTML = data.axes.map(ax=>{
+    const col=scoreColor(ax.score), pct=Math.round((ax.score/4)*100);
+    const prev = baselineData ? baselineData.scores[ax.num-1] : null;
+    const diff = prev !== null ? (ax.score - prev).toFixed(1) : null;
+    const diffHTML = diff !== null ? `<span style="font-size:10px;margin-left:6px;color:${parseFloat(diff)>=0?'#52B788':'#E76F51'}">${parseFloat(diff)>=0?'↑':'↓'}${Math.abs(diff)}</span>` : '';
+    return`<div style="background:white;border-radius:12px;padding:14px 16px;border:.5px solid rgba(0,0,0,.08)">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+        <div style="font-size:14px;font-weight:500">${ax.label_clinique}${diffHTML}</div>
+        <span style="font-size:10px;font-weight:600;color:${col};background:${scoreBg(ax.score)};padding:3px 10px;border-radius:20px;flex-shrink:0;margin-left:10px">${scoreLabel(ax.score)} — ${ax.score}/4</span>
+      </div>
+      <div style="background:#EEECE8;border-radius:4px;height:5px;margin:7px 0">
+        <div style="width:${pct}%;height:100%;background:${col};border-radius:4px"></div>
+      </div>
+      <div style="font-size:13px;color:#555;line-height:1.6">${ax.manifestations}</div>
+      <div style="font-size:12px;color:#2D6A4F;font-style:italic;margin-top:5px;padding-left:8px;border-left:2px solid #95D5B2">${ax.lecture}</div>
+    </div>`;
+  }).join('');
+
+  // Tableau d'orientation
+  const orHTML = (data.orientation_table||[]).map(o=>`
+    <tr>
+      <td style="font-weight:600;font-size:12px;color:#2D6A4F">${o.objectif}</td>
+      <td style="font-size:12px">${o.cible}</td>
+      <td style="font-size:12px;color:#555">${o.indication}</td>
+    </tr>`).join('');
+
   const html=`<div id="bov" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(26,26,24,.6);z-index:9999;overflow-y:auto;padding:16px" onclick="if(event.target===this)this.remove()">
-  <div id="bdoc" style="background:#F7F4EF;max-width:740px;margin:auto;border-radius:20px;overflow:hidden;font-family:Arial,sans-serif">
+  <div id="bdoc" style="background:#F7F4EF;max-width:760px;margin:auto;border-radius:20px;overflow:hidden;font-family:Arial,sans-serif">
     <div style="background:#2D6A4F;padding:24px 30px">${logoSVG}
       <div style="font-size:12px;color:rgba(255,255,255,.6);margin-top:8px">Bilan de santé psychique — confidentiel</div>
       <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap">
         <span style="background:rgba(255,255,255,.15);padding:3px 12px;border-radius:20px;font-size:11px;color:white">Code : ${sessionCode}</span>
         <span style="background:rgba(255,255,255,.15);padding:3px 12px;border-radius:20px;font-size:11px;color:white">Date : ${date}</span>
-        <span style="background:rgba(255,255,255,.15);padding:3px 12px;border-radius:20px;font-size:11px;color:white">Dispositif de prévention</span>
+        <span style="background:rgba(255,255,255,.15);padding:3px 12px;border-radius:20px;font-size:11px;color:white">Dispositif de prévention psychosomatique</span>
       </div>
     </div>
     <div style="padding:24px 30px;display:flex;flex-direction:column;gap:16px">
+
+      <!-- SYNTHÈSE -->
       <div style="background:#E8F4ED;border-radius:14px;padding:18px 20px;border-left:4px solid #2D6A4F">
-        <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#2D6A4F;margin-bottom:8px">Ce que votre récit nous dit</div>
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#2D6A4F;margin-bottom:8px">Synthèse clinique</div>
         <div style="font-size:15px;color:#1A2E22;line-height:1.8;font-family:Georgia,serif;font-style:italic">${data.synthese}</div>
       </div>
-      <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:14px">
+
+      <!-- RADAR + ZONES D'ATTENTION -->
+      <div style="display:grid;grid-template-columns:1fr 1.2fr;gap:14px">
         <div style="background:white;border-radius:14px;padding:16px;border:.5px solid rgba(0,0,0,.08)">
-          <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin-bottom:10px">Profil psychosomatique</div>
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin-bottom:4px">Profil psychosomatique</div>
+          <div style="font-size:10px;color:#AEADA7;margin-bottom:8px">Échelle 0–4 · Modèle Stora (2001)</div>
           <div style="display:flex;justify-content:center;overflow:visible">${radar}</div>
-          <div style="font-size:10px;color:#AEADA7;text-align:center;margin-top:6px">Plus la surface est grande, plus l'équilibre est solide</div>
         </div>
         <div style="background:white;border-radius:14px;padding:16px;border:.5px solid rgba(0,0,0,.08)">
-          <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin-bottom:10px">Zones d'attention</div>
-          ${sigHTML}
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin-bottom:10px">Zones d'attention cliniques</div>
+          <table class="clin-table">
+            <thead><tr><th>Domaine</th><th>Items</th><th>Niveau</th><th>Intensité</th></tr></thead>
+            <tbody>${sigHTML}</tbody>
+          </table>
         </div>
       </div>
+
+      <!-- 5 SYSTÈMES -->
       <div style="background:white;border-radius:14px;padding:16px;border:.5px solid rgba(0,0,0,.08)">
-        <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin-bottom:8px">Vos 6 dimensions</div>
-        <div style="font-size:13px;color:#888;margin-bottom:12px;line-height:1.6">Votre équilibre psychique fonctionne comme un écosystème — 6 systèmes interconnectés. Quand l'un se déséquilibre, les autres compensent.</div>
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin-bottom:4px">Lecture par systèmes (modèle bio-psycho-social)</div>
+        <div style="font-size:11px;color:#888;margin-bottom:10px">5 systèmes interconnectés : une dysrégulation dans l'un affecte les autres</div>
+        <div class="sys-grid">${sysHTML}</div>
+      </div>
+
+      <!-- 6 DIMENSIONS -->
+      <div style="background:white;border-radius:14px;padding:16px;border:.5px solid rgba(0,0,0,.08)">
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin-bottom:4px">Les 6 axes psychosomatiques</div>
+        <div style="font-size:11px;color:#888;margin-bottom:12px">Matrice d'évaluation clinique — échelle 0 (critique) à 4 (optimal)</div>
         <div style="display:flex;flex-direction:column;gap:10px">${dimHTML}</div>
       </div>
+
+      <!-- FORCES / VIGILANCE -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
         <div style="background:#E8F4ED;border-radius:14px;padding:16px">
-          <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#2D6A4F;margin-bottom:8px">Ce qui vous soutient</div>
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#2D6A4F;margin-bottom:8px">Facteurs de protection</div>
           ${data.forces.map(f=>`<div style="font-size:13px;margin-bottom:5px;display:flex;gap:8px"><span style="color:#2D6A4F;flex-shrink:0">✓</span>${f}</div>`).join('')}
         </div>
         <div style="background:#FFF8E7;border-radius:14px;padding:16px;border:1px solid #F0D060">
-          <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#7A5C00;margin-bottom:8px">Ce qui demande attention</div>
-          ${data.vigilance.map(v=>`<div style="font-size:13px;margin-bottom:5px;display:flex;gap:8px"><span style="color:#E9C46A;flex-shrink:0">◆</span>${v}</div>`).join('')}
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#7A5C00;margin-bottom:8px">Points de vigilance clinique</div>
+          ${data.vigilance.map(v=>`<div style="font-size:13px;margin-bottom:5px;display:flex;gap:8px"><span style="color:#E9A820;flex-shrink:0">◆</span>${v}</div>`).join('')}
         </div>
       </div>
+
+      <!-- TABLEAU D'ORIENTATION -->
+      <div style="background:white;border-radius:14px;padding:16px;border:.5px solid rgba(0,0,0,.08)">
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin-bottom:4px">Plan d'orientation thérapeutique</div>
+        <div style="font-size:11px;color:#888;margin-bottom:10px">Objectifs cliniques personnalisés selon le profil</div>
+        <table class="clin-table">
+          <thead><tr><th>Objectif</th><th>Cible principale</th><th>Indications</th></tr></thead>
+          <tbody>${orHTML}</tbody>
+        </table>
+      </div>
+
+      <!-- ORIENTATION NARRATIVE -->
       <div style="background:white;border-radius:14px;padding:16px;border-left:4px solid #2D6A4F;border-top:.5px solid rgba(0,0,0,.08);border-right:.5px solid rgba(0,0,0,.08);border-bottom:.5px solid rgba(0,0,0,.08)">
-        <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin-bottom:8px">Orientation & prévention</div>
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin-bottom:8px">Recommandation clinique</div>
         <div style="font-size:14px;color:#1A1A18;line-height:1.75">${data.orientation}</div>
       </div>
-      <div style="background:#FFF4F0;border:1px solid #E76F51;border-radius:14px;padding:16px 18px">
-        <div style="font-size:13px;font-weight:500;color:#C0392B;margin-bottom:8px">Un accompagnement préventif est conseillé</div>
-        <div style="font-size:13px;color:#555;line-height:1.6;margin-bottom:12px">Plusieurs approches existent — chacune adaptée à un profil et un moment de vie.</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">${['Psychothérapie','TCC / EMDR','Hypnose','Sophrologie','Coaching psychologique','Thérapie de groupe'].map(t=>`<span style="background:white;border:1px solid rgba(231,111,81,.25);border-radius:8px;padding:5px 12px;font-size:12px">${t}</span>`).join('')}</div>
-      </div>
+
+      <!-- CTA ACCOMPAGNEMENT -->
       <div style="background:#2D6A4F;border-radius:14px;padding:20px 22px;color:white;text-align:center">
         <div style="font-size:16px;font-family:Georgia,serif;margin-bottom:8px">Vous souhaitez être accompagné(e) ?</div>
         <div style="font-size:13px;opacity:.85;line-height:1.7;margin-bottom:14px">MindCheck vous met en relation avec des thérapeutes adaptés à votre profil. C'est le thérapeute qui vient vers vous.</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:14px">${['En cabinet','En ligne','Par messagerie','Hypnose','Groupe de parole','Sophrologie'].map(f=>`<span style="background:rgba(255,255,255,.2);color:white;border-radius:20px;padding:5px 14px;font-size:12px">${f}</span>`).join('')}</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:14px">${['En cabinet','En ligne','Par messagerie','EMDR','Groupe de parole','Psychosomatique'].map(f=>`<span style="background:rgba(255,255,255,.2);color:white;border-radius:20px;padding:5px 14px;font-size:12px">${f}</span>`).join('')}</div>
         <button onclick="alert('Bientôt disponible')" style="background:white;color:#2D6A4F;border:none;border-radius:30px;padding:11px 26px;font-size:13px;font-weight:500;cursor:pointer">Recevoir des propositions →</button>
         <div style="font-size:11px;opacity:.6;margin-top:10px">Réponse sous 24–48h · Anonymisé · Sans engagement</div>
       </div>
-      <div style="font-size:10px;color:#BBB;text-align:center;line-height:1.6">Ce bilan est généré à partir d'un récit auto-déclaré. Il ne constitue pas un diagnostic médical.<br>Objectif : prévention, conscience de soi, orientation vers le professionnel adapté.</div>
+
+      <div style="font-size:10px;color:#BBB;text-align:center;line-height:1.6">Ce bilan est généré à partir d'un récit auto-déclaré par IA. Il ne constitue pas un diagnostic médical.<br>Référentiel : modèle psychosomatique de Stora (2001) — approche bio-psycho-sociale. Objectif : prévention et orientation.</div>
+
       <div style="display:flex;gap:10px;justify-content:center;padding-bottom:8px">
         <button onclick="printBilan()" style="background:#2D6A4F;color:white;border:none;border-radius:30px;padding:11px 26px;font-family:Arial;font-size:13px;font-weight:500;cursor:pointer">Télécharger en PDF</button>
         <button onclick="document.getElementById('bov').remove()" style="background:transparent;color:#2D6A4F;border:1.5px solid #2D6A4F;border-radius:30px;padding:11px 26px;font-family:Arial;font-size:13px;font-weight:500;cursor:pointer">Fermer</button>
@@ -462,7 +622,7 @@ function showBilan(data) {
 function printBilan() {
   const inner = document.getElementById('bdoc').innerHTML;
   const w = window.open('','_blank');
-  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Bilan MindCheck — ${sessionCode}</title><link href="https://fonts.googleapis.com/css2?family=Georgia&display=swap" rel="stylesheet"><style>body{margin:0;background:#F7F4EF;font-family:Arial,sans-serif}@media print{@page{margin:.5cm}}</style></head><body><div style="max-width:740px;margin:auto">${inner}</div></body></html>`);
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Bilan MindCheck — ${sessionCode}</title><link href="https://fonts.googleapis.com/css2?family=Georgia&display=swap" rel="stylesheet"><style>body{margin:0;background:#F7F4EF;font-family:Arial,sans-serif}.sys-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}.sys-card{background:#F0F7F4;border-radius:8px;padding:10px 8px;text-align:center;border:1px solid #D8F3DC}.sys-card .sys-name{font-size:10px;font-weight:600;color:#2D6A4F;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}.sys-card .sys-desc{font-size:10px;color:#666;line-height:1.4}.clin-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}.clin-table th{background:#2D6A4F;color:white;padding:7px 10px;text-align:left;font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.8px}.clin-table td{padding:7px 10px;border-bottom:1px solid #EEECE8;vertical-align:top;line-height:1.5}.clin-table tr:last-child td{border-bottom:none}.clin-table tr:nth-child(even) td{background:#F7F4EF}@media print{@page{margin:.5cm}}</style></head><body><div style="max-width:760px;margin:auto">${inner}</div></body></html>`);
   w.document.close();
   setTimeout(()=>w.print(),900);
 }
@@ -517,6 +677,8 @@ function stopRec() {
 document.getElementById('inp').addEventListener('keydown', e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submitText();}});
 document.getElementById('inp').addEventListener('input', function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px';});
 document.getElementById('tts').addEventListener('change', function(){ttsOn=this.checked;});
+
+// Raccourci dev : Ctrl+Shift+B pour forcer le bilan
 document.addEventListener('keydown', e => {
   if (e.ctrlKey && e.shiftKey && e.key === 'B') generateBilan();
 });
