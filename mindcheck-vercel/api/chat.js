@@ -13,9 +13,9 @@ export default async function handler(req, res) {
         'x-api-key': process.env.ANTHROPIC_API_KEY,
         'anthropic-version': '2023-06-01'
       },
-model: 'claude-haiku-4-5-20251001',
-max_tokens: 8000,
-    });
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 8000,
+      system: system,
 
     const data = await response.json();
 
