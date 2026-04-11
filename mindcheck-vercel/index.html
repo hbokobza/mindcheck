@@ -53,16 +53,11 @@ main{max-width:760px;margin:0 auto;padding:24px 20px}
 #sbtn{width:36px;height:36px;border-radius:50%;background:#2D6A4F;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .disc{font-size:11px;color:#AEADA7;text-align:center;margin-top:12px;line-height:1.6}
 .err{background:#FDE8E8;color:#C0392B;font-size:12px;padding:8px 12px;border-radius:8px;margin-bottom:8px;display:none}
-/* Bilan tables */
-.clin-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
-.clin-table th{background:#2D6A4F;color:white;padding:7px 10px;text-align:left;font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.8px}
-.clin-table td{padding:7px 10px;border-bottom:1px solid #EEECE8;vertical-align:top;line-height:1.5}
+.clin-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+.clin-table th{background:#2D6A4F;color:white;padding:6px 10px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.8px}
+.clin-table td{padding:6px 10px;border-bottom:1px solid #EEECE8;vertical-align:top;line-height:1.5}
 .clin-table tr:last-child td{border-bottom:none}
 .clin-table tr:nth-child(even) td{background:#F7F4EF}
-.sys-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}
-.sys-card{background:#F0F7F4;border-radius:8px;padding:10px 8px;text-align:center;border:1px solid #D8F3DC}
-.sys-card .sys-name{font-size:10px;font-weight:600;color:#2D6A4F;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
-.sys-card .sys-desc{font-size:10px;color:#666;line-height:1.4}
 </style>
 </head>
 <body>
@@ -82,7 +77,6 @@ main{max-width:760px;margin:0 auto;padding:24px 20px}
 
 <main>
 
-<!-- ÉCRAN 1 : CONSENTEMENT -->
 <div id="s1" class="panel">
   <h2 style="font-size:20px;font-weight:500;margin-bottom:16px">Consentement éclairé</h2>
   <div class="code-box">
@@ -100,7 +94,6 @@ main{max-width:760px;margin:0 auto;padding:24px 20px}
   <button class="btn-green" onclick="showS2()">J'accepte et je continue</button>
 </div>
 
-<!-- ÉCRAN 2 : INTRO -->
 <div id="s2" class="panel hidden">
   <h2 style="font-size:20px;font-weight:500;margin-bottom:12px">Comment raconter ?</h2>
   <p style="font-size:14px;color:#555;line-height:1.7">Exprimez ce qui vous semble lié à votre équilibre intérieur. L'objectif n'est pas de "bien répondre" — mais de raconter votre histoire au plus juste.</p>
@@ -113,14 +106,12 @@ main{max-width:760px;margin:0 auto;padding:24px 20px}
     • <strong>Comportements</strong> : évitements, excès, isolement, agitation<br>
     • <strong>Ressources</strong> : ce qui vous apaise, vous aide, vous soutient
   </div>
-  <p style="font-size:13px;color:#AEADA7;margin-bottom:4px">Plus votre récit est riche, plus le bilan sera précis.</p>
   <div class="btn-row">
     <button class="btn-green" onclick="startSession('text')">Commencer par écrit</button>
     <button class="btn-outline" onclick="startSession('voice')">Commencer à l'oral</button>
   </div>
 </div>
 
-<!-- ÉCRAN 3 : SESSION -->
 <div id="s3" class="hidden">
   <div class="mode-row">
     <button class="mb on" id="mb-text" onclick="setMode('text')">Écrit</button>
@@ -167,496 +158,296 @@ main{max-width:760px;margin:0 auto;padding:24px 20px}
 </main>
 
 <script>
-// ── PROMPTS ──────────────────────────────────────────────────────
-const SYS = `Tu es l'assistant de collecte MindCheck. Tu recueilles le récit d'une personne pour remplir une matrice psychosomatique à 6 axes cliniques. Tu n'es PAS un thérapeute. Tu collectes.
+const SYS = `Tu es l'assistant de collecte MindCheck. Tu recueilles le récit pour une matrice psychosomatique à 6 axes. Tu n'es PAS un thérapeute.
 
-6 AXES CLINIQUES À RENSEIGNER :
-1. Processus psychiques — mécanismes de défense, conflits intrapsychiques, ruminations, représentations
-2. Ressources psychiques — énergie psychique, motivation, capacités adaptatives
-3. Comportements & conduites — évitements, conduites addictives, inhibition, compulsions
-4. Régulation émotionnelle — identification, expression et régulation des affects
-5. Corps & risque somatique — sommeil, douleurs, troubles fonctionnels, somatisations
-6. Environnement — relations, travail, événements de vie récents, contexte socio-familial
+6 AXES : 1.Processus psychiques 2.Ressources psychiques 3.Comportements & conduites 4.Régulation émotionnelle 5.Corps & risque somatique 6.Environnement
 
-RÈGLES :
-- Laisser parler librement. Max 1-2 phrases par réponse.
-- Phase écoute puis relances ciblées si axe manquant
-- Après 12 échanges ou axes couverts : "Merci. Je prépare votre bilan."
-- Dernière ligne : AXES:[liste] COMPLET:[oui/non]`;
+RÈGLES : Max 1-2 phrases par réponse. Après 12 échanges ou axes couverts : "Merci. Je prépare votre bilan."
+Dernière ligne : AXES:[liste] COMPLET:[oui/non]`;
 
-const BILAN_SYS = `Tu es un assistant clinique MindCheck. Génère un bilan JSON structuré selon les axes psychosomatiques de Stora (2001) et le modèle bio-psycho-social. RÉPONDS UNIQUEMENT AVEC DU JSON VALIDE, rien d'autre, sans markdown.
+const BILAN_SYS = `Assistant clinique MindCheck. Réponds UNIQUEMENT avec du JSON valide, sans aucun texte avant ou après, sans markdown.
 
-{
-  "synthese": "2-3 phrases cliniques précises sur le profil psychosomatique",
-  "axes": [
-    {"num":1,"label_clinique":"Processus psychiques","score":2.5,"manifestations":"Éléments cliniques observés dans le récit","lecture":"Lecture psychodynamique/cognitive"},
-    {"num":2,"label_clinique":"Ressources psychiques","score":2.5,"manifestations":"...","lecture":"..."},
-    {"num":3,"label_clinique":"Comportements & conduites","score":2.5,"manifestations":"...","lecture":"..."},
-    {"num":4,"label_clinique":"Régulation émotionnelle","score":2.5,"manifestations":"...","lecture":"..."},
-    {"num":5,"label_clinique":"Corps & risque somatique","score":2.5,"manifestations":"...","lecture":"..."},
-    {"num":6,"label_clinique":"Environnement","score":2.5,"manifestations":"...","lecture":"..."}
-  ],
-  "signaux": [
-    {"domaine":"État psychique général","intensite":2,"detail":"Humeur, anxiété, stress, rapport au plaisir"},
-    {"domaine":"Fonction cognitive & attentionnelle","intensite":2,"detail":"Concentration, mémoire, ruminations, charge mentale"},
-    {"domaine":"Régulation émotionnelle","intensite":2,"detail":"Identifier, contenir et symboliser les émotions"},
-    {"domaine":"Somatisation & corps vécu","intensite":2,"detail":"Sommeil, douleurs, troubles fonctionnels, tension"},
-    {"domaine":"Fonction relationnelle & affective","intensite":2,"detail":"Qualité du lien, solitude, conflits, attachement"},
-    {"domaine":"Idées noires & épuisement","intensite":1,"detail":"Vide, retrait, perte d'élan, risque dépressif"}
-  ],
-  "systemes": [
-    {"nom":"Psychique","fonction":"Représentations & conflits internes","impact":"..."},
-    {"nom":"Nerveux central","fonction":"Fonctions cognitives","impact":"..."},
-    {"nom":"Nerveux autonome","fonction":"Régulation émotionnelle & tension","impact":"..."},
-    {"nom":"Immunitaire","fonction":"Interface psyché-corps","impact":"..."},
-    {"nom":"Génétique","fonction":"Vulnérabilité & résilience","impact":"..."}
-  ],
-  "orientation_table": [
-    {"objectif":"Régulation du SNA","cible":"Anxiété, stress chronique","indication":"Travail corps-émotion ; cohérence cardiaque ; repérage des déclencheurs"},
-    {"objectif":"Symbolisation","cible":"Traumatismes non élaborés","indication":"Psychothérapie psychodynamique ; EMDR ; élaboration narrative"},
-    {"objectif":"Désaturation cognitive","cible":"Charge mentale, ruminations","indication":"TCC ; mindfulness ; rééquilibrage travail/vie personnelle"},
-    {"objectif":"Prévention somatique","cible":"Risque somatique identifié","indication":"Coordination psy-somatique ; médecine psychosomatique"},
-    {"objectif":"Renforcement des ressources","cible":"Appuis protecteurs","indication":"Soutien des liens existants ; thérapie de groupe"}
-  ],
-  "forces": ["Force clinique 1","Force clinique 2","Force clinique 3"],
-  "vigilance": ["Point de vigilance clinique 1","Point de vigilance clinique 2"],
-  "orientation": "Recommandation thérapeutique précise, 2-3 phrases avec références aux approches validées"
-}
+{"synthese":"2 phrases cliniques","axes":[{"num":1,"label":"Processus psychiques","score":2.5,"obs":"observation clinique","lecture":"lecture psychodynamique"},{"num":2,"label":"Ressources psychiques","score":2.5,"obs":"...","lecture":"..."},{"num":3,"label":"Comportements & conduites","score":2.5,"obs":"...","lecture":"..."},{"num":4,"label":"Régulation émotionnelle","score":2.5,"obs":"...","lecture":"..."},{"num":5,"label":"Corps & risque somatique","score":2.5,"obs":"...","lecture":"..."},{"num":6,"label":"Environnement","score":2.5,"obs":"...","lecture":"..."}],"zones":[{"dom":"État psychique général","niv":2,"detail":"observation"},{"dom":"Fonction cognitive","niv":2,"detail":"..."},{"dom":"Régulation émotionnelle","niv":2,"detail":"..."},{"dom":"Somatisation","niv":2,"detail":"..."},{"dom":"Fonction relationnelle","niv":2,"detail":"..."},{"dom":"Épuisement","niv":1,"detail":"..."}],"forces":["f1","f2","f3"],"vigilance":["v1","v2"],"orientation":"recommandation 2 phrases"}
 
-IMPORTANT : Les scores sont sur une échelle de 0 à 4 (par pas de 0.5). 0=critique, 4=optimal. Sois précis et cliniquement rigoureux.`;
+Scores 0-4 (pas 0.5). Niveaux zones: 0-1=équilibré, 2=vigilance, 3-4=attention.`;
 
-// ── STATE ─────────────────────────────────────────────────────────
-let hist = [], count = 0, mode = 'text', sessionCode = '';
-let listening = false, speaking = false, ttsOn = true, recog = null;
-let baselineData = null; // pour comparaison radar
+let hist=[],count=0,mode='text',sessionCode='';
+let listening=false,ttsOn=true,recog=null,baselineData=null;
 
-// ── INIT ──────────────────────────────────────────────────────────
-(function initCode() {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let c = 'MC-';
-  for (let i = 0; i < 4; i++) c += chars[Math.floor(Math.random() * chars.length)];
-  c += '-';
-  for (let i = 0; i < 4; i++) c += chars[Math.floor(Math.random() * chars.length)];
-  sessionCode = c;
-  document.getElementById('scode').textContent = c;
-  // Charger baseline si session précédente
-  try {
-    const prev = localStorage.getItem('mindcheck_last_scores');
-    if (prev) baselineData = JSON.parse(prev);
-  } catch(e) {}
+(function(){
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let c='MC-';
+  for(let i=0;i<4;i++) c+=chars[Math.floor(Math.random()*chars.length)];
+  c+='-';
+  for(let i=0;i<4;i++) c+=chars[Math.floor(Math.random()*chars.length)];
+  sessionCode=c;
+  document.getElementById('scode').textContent=c;
+  try{const p=localStorage.getItem('mc_last');if(p)baselineData=JSON.parse(p);}catch(e){}
 })();
 
-// ── NAVIGATION ────────────────────────────────────────────────────
-function showS2() {
-  document.getElementById('s1').classList.add('hidden');
-  document.getElementById('s2').classList.remove('hidden');
-}
+function showS2(){document.getElementById('s1').classList.add('hidden');document.getElementById('s2').classList.remove('hidden');}
 
-function startSession(m) {
+function startSession(m){
   document.getElementById('s2').classList.add('hidden');
   document.getElementById('s3').classList.remove('hidden');
   setMode(m);
-  addMsg('ai', "Je vous écoute. Prenez le temps qu'il vous faut — racontez ce qui vous amène.");
-  hist.push({role:'assistant', content:"Je vous écoute.\nAXES:[] COMPLET:[non]"});
+  addMsg('ai',"Je vous écoute. Prenez le temps qu'il vous faut — racontez ce qui vous amène.");
+  hist.push({role:'assistant',content:"Je vous écoute.\nAXES:[] COMPLET:[non]"});
 }
 
-function setMode(m) {
-  mode = m;
-  document.getElementById('mb-text').className = 'mb' + (m === 'text' ? ' on' : '');
-  document.getElementById('mb-voice').className = 'mb' + (m === 'voice' ? ' on' : '');
-  document.getElementById('text-area').className = m === 'text' ? '' : 'hidden';
-  document.getElementById('voice-area').className = m === 'voice' ? '' : 'hidden';
+function setMode(m){
+  mode=m;
+  document.getElementById('mb-text').className='mb'+(m==='text'?' on':'');
+  document.getElementById('mb-voice').className='mb'+(m==='voice'?' on':'');
+  document.getElementById('text-area').className=m==='text'?'':'hidden';
+  document.getElementById('voice-area').className=m==='voice'?'':'hidden';
 }
 
-// ── MESSAGES ──────────────────────────────────────────────────────
-function addMsg(role, text, cls) {
-  const c = document.getElementById('chat');
-  const d = document.createElement('div');
-  d.className = 'msg' + (role === 'u' ? ' u' : '');
-  const bCls = role === 'u' ? 'u' : (cls || 'ai');
-  d.innerHTML = `<div class="av ${role==='u'?'u':'ai'}">${role==='u'?'Vous':'M'}</div><div class="bub ${bCls}">${text.replace(/\n/g,'<br>')}</div>`;
-  c.appendChild(d);
-  c.scrollTop = c.scrollHeight;
+function addMsg(role,text,cls){
+  const c=document.getElementById('chat');
+  const d=document.createElement('div');
+  d.className='msg'+(role==='u'?' u':'');
+  const bCls=role==='u'?'u':(cls||'ai');
+  d.innerHTML=`<div class="av ${role==='u'?'u':'ai'}">${role==='u'?'Vous':'M'}</div><div class="bub ${bCls}">${text.replace(/\n/g,'<br>')}</div>`;
+  c.appendChild(d);c.scrollTop=c.scrollHeight;
 }
 
-function showDots() {
-  const c = document.getElementById('chat');
-  const d = document.createElement('div'); d.className='msg'; d.id='typ';
+function showDots(){
+  const c=document.getElementById('chat');
+  const d=document.createElement('div');d.className='msg';d.id='typ';
   d.innerHTML='<div class="av ai">M</div><div class="dots"><div class="d"></div><div class="d"></div><div class="d"></div></div>';
-  c.appendChild(d); c.scrollTop=c.scrollHeight;
+  c.appendChild(d);c.scrollTop=c.scrollHeight;
 }
-function rmDots() { const e=document.getElementById('typ'); if(e) e.remove(); }
-function showErr(t) { const e=document.getElementById('err'); e.textContent=t; e.style.display='block'; setTimeout(()=>e.style.display='none',5000); }
+function rmDots(){const e=document.getElementById('typ');if(e)e.remove();}
+function showErr(t){const e=document.getElementById('err');e.textContent=t;e.style.display='block';setTimeout(()=>e.style.display='none',6000);}
 
-// ── AXES ─────────────────────────────────────────────────────────
-const axMap = {processus:'a1',ressources:'a2',affects:'a3',somatique:'a4',environnement:'a5',comportements:'a6'};
-function updateAxes(s) {
-  if (!s) return;
-  s.split(',').forEach(a => {
-    const k = a.trim();
-    if (axMap[k]) document.getElementById(axMap[k]).classList.add('lit');
-  });
-}
+const axMap={processus:'a1',ressources:'a2',affects:'a3',somatique:'a4',environnement:'a5',comportements:'a6'};
+function updateAxes(s){if(!s)return;s.split(',').forEach(a=>{const k=a.trim();if(axMap[k])document.getElementById(axMap[k]).classList.add('lit');});}
 
-// ── API ───────────────────────────────────────────────────────────
-async function callAPI(messages, sys) {
-  const r = await fetch('/api/chat', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({system:sys, messages})
-  });
-  const d = await r.json();
-  if (d.error) throw new Error(d.error.message||'Erreur API');
-  return d.content?.[0]?.text || '';
+async function callAPI(messages,sys){
+  const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:sys,messages})});
+  const d=await r.json();
+  if(d.error)throw new Error(d.error.message||'Erreur API');
+  return d.content?.[0]?.text||'';
 }
 
-// ── PROCESS INPUT ─────────────────────────────────────────────────
-async function processInput(text, src) {
-  if (!text.trim()) return;
-  addMsg('u', text);
-  hist.push({role:'user', content:text});
+async function processInput(text,src){
+  if(!text.trim())return;
+  addMsg('u',text);
+  hist.push({role:'user',content:text});
   count++;
   showDots();
-  try {
-    const raw = await callAPI(hist, SYS);
+  try{
+    const raw=await callAPI(hist,SYS);
     rmDots();
-    const axM = raw.match(/AXES:\[([^\]]*)\]/);
-    const cpM = raw.match(/COMPLET:\[(oui|non)\]/);
-    const clean = raw.replace(/AXES:\[[^\]]*\]/g,'').replace(/COMPLET:\[[^\]]*\]/g,'').trim();
-    if (axM) updateAxes(axM[1]);
-    const done = cpM?.[1]==='oui' || count >= 14;
-    if (done || clean.toLowerCase().includes('je prépare')) {
-      addMsg('ai', "Merci. J'ai recueilli suffisamment d'éléments. Je prépare votre bilan…");
-      hist.push({role:'assistant', content:raw});
-      setTimeout(generateBilan, 1200);
+    const axM=raw.match(/AXES:\[([^\]]*)\]/);
+    const cpM=raw.match(/COMPLET:\[(oui|non)\]/);
+    const clean=raw.replace(/AXES:\[[^\]]*\]/g,'').replace(/COMPLET:\[[^\]]*\]/g,'').trim();
+    if(axM)updateAxes(axM[1]);
+    const done=cpM?.[1]==='oui'||count>=14;
+    if(done||clean.toLowerCase().includes('je prépare')){
+      addMsg('ai',"Merci. J'ai recueilli suffisamment d'éléments. Je prépare votre bilan…");
+      hist.push({role:'assistant',content:raw});
+      setTimeout(generateBilan,1200);
     } else {
-      addMsg('ai', clean);
-      hist.push({role:'assistant', content:raw});
-      if (src==='voice') speak(clean);
+      addMsg('ai',clean);
+      hist.push({role:'assistant',content:raw});
+      if(src==='voice')speak(clean);
     }
-  } catch(e) {
-    rmDots();
-    showErr('Erreur de connexion — réessayez dans quelques secondes');
-    document.getElementById('inp').disabled = false;
-    document.getElementById('sbtn').disabled = false;
-  }
+  }catch(e){rmDots();showErr('Erreur de connexion — réessayez dans quelques secondes');}
 }
 
-async function submitText() {
-  const el = document.getElementById('inp');
-  const t = el.value.trim(); if (!t) return;
-  el.value=''; el.style.height='auto';
+async function submitText(){
+  const el=document.getElementById('inp');
+  const t=el.value.trim();if(!t)return;
+  el.value='';el.style.height='auto';
   await processInput(t,'text');
 }
 
-// ── BILAN ─────────────────────────────────────────────────────────
-async function generateBilan() {
+async function generateBilan(){
   showDots();
-  try {
-    const raw = await callAPI([...hist,{role:'user',content:'Génère le bilan JSON complet maintenant.'}], BILAN_SYS);
+  try{
+    const raw=await callAPI([...hist,{role:'user',content:'Génère le bilan JSON maintenant.'}],BILAN_SYS);
     rmDots();
     let data;
-    try {
-      const m = raw.match(/\{[\s\S]*\}/);
-      data = JSON.parse(m ? m[0] : raw.replace(/```json|```/g,'').trim());
-    } catch(e) {
+    try{
+      const m=raw.match(/\{[\s\S]*\}/);
+      data=JSON.parse(m?m[0]:raw.replace(/```json|```/g,'').trim());
+    }catch(e){
       addMsg('ai','Erreur de format. Réessai…');
-      setTimeout(generateBilan,1500); return;
+      setTimeout(generateBilan,2000);return;
     }
-    // Sauvegarder scores pour prochaine session (baseline)
-    try {
-      localStorage.setItem('mindcheck_last_scores', JSON.stringify({
-        date: new Date().toLocaleDateString('fr-FR'),
-        scores: data.axes.map(a=>a.score)
-      }));
-    } catch(e) {}
-
-    const c = document.getElementById('chat');
-    const d = document.createElement('div'); d.className='msg';
+    try{localStorage.setItem('mc_last',JSON.stringify({date:new Date().toLocaleDateString('fr-FR'),scores:data.axes.map(a=>a.score)}));}catch(e){}
+    const c=document.getElementById('chat');
+    const d=document.createElement('div');d.className='msg';
     d.innerHTML='<div class="av ai">M</div><div class="bub ok"><strong style="color:#2D6A4F">Votre bilan est prêt.</strong><br><span style="font-size:13px;color:#555">Profil généré sur les 6 axes psychosomatiques.</span></div>';
     c.appendChild(d);
-    const btn = document.createElement('button');
-    btn.className = 'btn-green';
-    btn.style.margin = '8px 0 0 36px';
-    btn.textContent = 'Voir & télécharger le bilan →';
-    btn.onclick = () => showBilan(data);
-    c.appendChild(btn);
-    c.scrollTop = c.scrollHeight;
-    if (mode==='voice') speak("Votre bilan est prêt.");
-  } catch(e) {
-    rmDots(); showErr('Erreur bilan : '+e.message);
-  }
+    const btn=document.createElement('button');
+    btn.className='btn-green';btn.style.margin='8px 0 0 36px';
+    btn.textContent='Voir & télécharger le bilan →';
+    btn.onclick=()=>showBilan(data);
+    c.appendChild(btn);c.scrollTop=c.scrollHeight;
+  }catch(e){rmDots();showErr('Erreur bilan : '+e.message);}
 }
 
-// ── RADAR (échelle 0-4 par 0.5, double baseline/suivi) ────────────
-function buildRadar(axes, baseline) {
-  const S=300, cx=150, cy=150, maxR=105, n=6, maxVal=4;
-  function pt(i,v){
-    const a=(i*2*Math.PI/n)-Math.PI/2;
-    const d=(v/maxVal)*maxR;
-    return[cx+d*Math.cos(a), cy+d*Math.sin(a)];
-  }
-  let grid='', gridLabels='', lines='', dots='', labels='', baseShape='', baselineDots='';
+function scoreColor(s){return s>=3?'#2D6A4F':s>=2?'#E9A820':'#E76F51';}
+function scoreLabel(s){return s>=3?'Solide':s>=2?'En tension':'Attention';}
+function scoreBg(s){return s>=3?'#E8F4ED':s>=2?'#FFF3D6':'#FDE8E8';}
+function nivColor(n){return n<=1?'#52B788':n<=2?'#E9A820':'#E76F51';}
+function nivLabel(n){return n<=1?'Équilibré':n<=2?'Vigilance':'Attention';}
 
-  // Grilles 0.5 à 4
-  const rings = [0.5,1,1.5,2,2.5,3,3.5,4];
-  rings.forEach(ring => {
-    const pts = axes.map((_,i)=>pt(i,ring).join(',')).join(' ');
-    const isMain = Number.isInteger(ring);
-    grid += `<polygon points="${pts}" fill="none" stroke="${isMain?'#C8C4BE':'#E5E2DC'}" stroke-width="${isMain?1:.5}" stroke-dasharray="${isMain?'none':'3,3'}"/>`;
-    if(isMain) {
-      const [lx,ly] = pt(0, ring);
-      gridLabels += `<text x="${lx+5}" y="${ly}" font-size="9" fill="#AEADA7" font-family="Arial">${ring}</text>`;
-    }
+function buildRadar(axes,baseline){
+  const S=280,cx=140,cy=140,maxR=95,n=6,maxVal=4;
+  function pt(i,v){const a=(i*2*Math.PI/n)-Math.PI/2,d=(Math.min(v,maxVal)/maxVal)*maxR;return[cx+d*Math.cos(a),cy+d*Math.sin(a)];}
+  let grid='',lines='',dots='',labels='',baseSh='',baseDots='';
+  [1,2,3,4].forEach(ring=>{
+    const pts=axes.map((_,i)=>pt(i,ring).join(',')).join(' ');
+    grid+=`<polygon points="${pts}" fill="none" stroke="#D8D4CE" stroke-width="${ring===4?1.2:.6}"/>`;
+    const[lx,ly]=pt(1,ring);
+    grid+=`<text x="${lx+3}" y="${ly}" font-size="8" fill="#AEADA7" font-family="Arial">${ring}</text>`;
   });
-
-  for(let i=0;i<n;i++){
-    const[x,y]=pt(i,maxVal);
-    lines+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#D8D4CE" stroke-width=".8"/>`;
+  [0.5,1.5,2.5,3.5].forEach(ring=>{
+    const pts=axes.map((_,i)=>pt(i,ring).join(',')).join(' ');
+    grid+=`<polygon points="${pts}" fill="none" stroke="#E8E4DE" stroke-width=".4" stroke-dasharray="2,2"/>`;
+  });
+  for(let i=0;i<n;i++){const[x,y]=pt(i,maxVal);lines+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#D8D4CE" stroke-width=".8"/>`;}
+  if(baseline&&baseline.scores&&baseline.scores.length===n){
+    const bPts=baseline.scores.map((s,i)=>pt(i,s).join(',')).join(' ');
+    baseSh=`<polygon points="${bPts}" fill="rgba(59,130,246,0.08)" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="4,3" stroke-linejoin="round"/>`;
+    baseline.scores.forEach((s,i)=>{const[bx,by]=pt(i,s);baseDots+=`<circle cx="${bx}" cy="${by}" r="3" fill="#3B82F6" opacity=".7"/>`;});
   }
-
-  // Baseline (session précédente) en bleu transparent
-  if(baseline && baseline.scores && baseline.scores.length === n) {
-    const bPts = baseline.scores.map((s,i)=>pt(i,Math.min(s,maxVal)).join(',')).join(' ');
-    baseShape = `<polygon points="${bPts}" fill="rgba(59,130,246,0.08)" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="5,3" stroke-linejoin="round"/>`;
-    baseline.scores.forEach((s,i)=>{
-      const [bx,by]=pt(i,Math.min(s,maxVal));
-      baselineDots+=`<circle cx="${bx}" cy="${by}" r="3.5" fill="#3B82F6" opacity=".7"/>`;
-    });
-  }
-
-  // Profil actuel
-  const dataPts = axes.map((ax,i)=>pt(i,Math.min(ax.score,maxVal)).join(',')).join(' ');
+  const dataPts=axes.map((ax,i)=>pt(i,ax.score).join(',')).join(' ');
   axes.forEach((ax,i)=>{
-    const[x,y]=pt(i,Math.min(ax.score,maxVal));
-    const col=scoreColor(ax.score);
+    const[x,y]=pt(i,ax.score),col=scoreColor(ax.score);
     dots+=`<circle cx="${x}" cy="${y}" r="5" fill="${col}" stroke="white" stroke-width="1.5"/>`;
-    const a=(i*2*Math.PI/n)-Math.PI/2;
-    const lx=cx+(maxR+32)*Math.cos(a), ly=cy+(maxR+32)*Math.sin(a);
+    const a=(i*2*Math.PI/n)-Math.PI/2,lx=cx+(maxR+28)*Math.cos(a),ly=cy+(maxR+28)*Math.sin(a);
     const anch=lx<cx-10?'end':lx>cx+10?'start':'middle';
-    const words=ax.label_clinique.split(' ');
-    const mid=Math.ceil(words.length/2);
-    const l1=words.slice(0,mid).join(' '), l2=words.slice(mid).join(' ');
-    labels+=l2
-      ?`<text text-anchor="${anch}" font-size="9.5" font-family="Arial" fill="${col}" font-weight="600"><tspan x="${lx}" y="${ly-5}">${l1}</tspan><tspan x="${lx}" dy="12">${l2}</tspan></text>`
-      :`<text x="${lx}" y="${ly+4}" text-anchor="${anch}" font-size="9.5" font-family="Arial" fill="${col}" font-weight="600">${l1}</text>`;
+    const words=ax.label.split(' ');const mid=Math.ceil(words.length/2);
+    const l1=words.slice(0,mid).join(' '),l2=words.slice(mid).join(' ');
+    labels+=l2?`<text text-anchor="${anch}" font-size="9" font-family="Arial" fill="${col}" font-weight="600"><tspan x="${lx}" y="${ly-4}">${l1}</tspan><tspan x="${lx}" dy="11">${l2}</tspan></text>`
+      :`<text x="${lx}" y="${ly+4}" text-anchor="${anch}" font-size="9" font-family="Arial" fill="${col}" font-weight="600">${l1}</text>`;
   });
-
-  let legend = '';
-  if(baseline) {
-    legend = `<g>
-      <line x1="10" y1="285" x2="28" y2="285" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="5,3"/>
-      <circle cx="19" cy="285" r="3" fill="#3B82F6" opacity=".7"/>
-      <text x="32" y="289" font-size="9" fill="#666" font-family="Arial">Session précédente (${baseline.date})</text>
-      <line x1="140" y1="285" x2="158" y2="285" stroke="#2D6A4F" stroke-width="2"/>
-      <circle cx="149" cy="285" r="3.5" fill="#2D6A4F"/>
-      <text x="162" y="289" font-size="9" fill="#666" font-family="Arial">Session actuelle</text>
-    </g>`;
-  }
-
-  return `<svg width="${S}" height="${baseline?300:S}" viewBox="0 0 ${S} ${baseline?300:S}" overflow="visible">
-    ${grid}${gridLabels}${lines}
-    ${baseShape}
-    <polygon points="${dataPts}" fill="rgba(45,106,79,0.12)" stroke="#2D6A4F" stroke-width="2.5" stroke-linejoin="round"/>
-    ${baselineDots}${dots}${labels}${legend}
-  </svg>`;
+  let legend='';
+  if(baseline)legend=`<g><line x1="8" y1="${S-8}" x2="22" y2="${S-8}" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="4,3"/><text x="26" y="${S-4}" font-size="8" fill="#666" font-family="Arial">Précédent (${baseline.date})</text><line x1="115" y1="${S-8}" x2="129" y2="${S-8}" stroke="#2D6A4F" stroke-width="2"/><circle cx="122" cy="${S-8}" r="3" fill="#2D6A4F"/><text x="133" y="${S-4}" font-size="8" fill="#666" font-family="Arial">Actuel</text></g>`;
+  return`<svg width="${S}" height="${S}" viewBox="0 0 ${S} ${S}" overflow="visible">${grid}${lines}${baseSh}<polygon points="${dataPts}" fill="rgba(45,106,79,0.12)" stroke="#2D6A4F" stroke-width="2.5" stroke-linejoin="round"/>${baseDots}${dots}${labels}${legend}</svg>`;
 }
 
-// ── COULEURS & LABELS ─────────────────────────────────────────────
-function scoreColor(s){ return s>=3?'#2D6A4F':s>=2?'#E9A820':'#E76F51'; }
-function scoreLabel(s){ return s>=3?'Solide':s>=2?'En tension':'Attention'; }
-function scoreBg(s){ return s>=3?'#E8F4ED':s>=2?'#FFF3D6':'#FDE8E8'; }
-function intensiteLabel(i){ return i<=1?'Équilibré':i<=2?'Vigilance':'Attention'; }
-function intensiteColor(i){ return i<=1?'#52B788':i<=2?'#E9A820':'#E76F51'; }
+function showBilan(data){
+  const date=new Date().toLocaleDateString('fr-FR');
+  const radar=buildRadar(data.axes,baselineData);
+  const logoSVG=`<svg width="160" height="32" viewBox="0 0 160 32"><polygon points="12,2 22,8 22,22 12,28 2,22 2,8" fill="white"/><text x="12" y="19" font-family="Georgia,serif" font-size="12" fill="#2D6A4F" text-anchor="middle">M</text><text x="34" y="22" font-family="Georgia,serif" font-size="19" fill="white">MindCheck</text></svg>`;
 
-// ── AFFICHAGE BILAN ───────────────────────────────────────────────
-function showBilan(data) {
-  const date = new Date().toLocaleDateString('fr-FR');
-  const radar = buildRadar(data.axes, baselineData);
-  const logoSVG = `<svg width="180" height="36" viewBox="0 0 180 36"><polygon points="14,2 26,9 26,25 14,32 2,25 2,9" fill="white"/><text x="14" y="21" font-family="Georgia,serif" font-size="13" fill="#2D6A4F" text-anchor="middle">M</text><text x="40" y="25" font-family="Georgia,serif" font-size="21" fill="white" letter-spacing="-0.3">MindCheck</text></svg>`;
-
-  // Zones d'attention (tableau clinique)
-  const sigHTML = data.signaux.map(s=>{
-    const pct=Math.round((s.intensite/4)*100);
-    const col=intensiteColor(s.intensite);
-    const lbl=intensiteLabel(s.intensite);
-    return`<tr>
-      <td style="font-weight:500;font-size:12px">${s.domaine}</td>
-      <td style="font-size:11px;color:#555">${s.detail}</td>
-      <td style="text-align:center"><span style="font-size:10px;color:${col};background:${col}18;padding:2px 8px;border-radius:10px;font-weight:600;white-space:nowrap">${lbl}</span></td>
-      <td style="min-width:70px"><div style="background:#EEECE8;border-radius:5px;height:6px"><div style="width:${pct}%;height:100%;background:${col};border-radius:5px"></div></div></td>
-    </tr>`;
+  const zonesHTML=data.zones.map(z=>{
+    const pct=Math.round((z.niv/4)*100),col=nivColor(z.niv);
+    return`<tr><td style="font-weight:500">${z.dom}</td><td style="font-size:11px;color:#555">${z.detail}</td><td style="text-align:center"><span style="font-size:10px;color:${col};background:${col}18;padding:2px 8px;border-radius:10px;font-weight:600">${nivLabel(z.niv)}</span></td><td style="min-width:60px"><div style="background:#EEECE8;border-radius:4px;height:5px"><div style="width:${pct}%;height:100%;background:${col};border-radius:4px"></div></div></td></tr>`;
   }).join('');
 
-  // 5 systèmes
-  const sysHTML = (data.systemes||[]).map(s=>`
-    <div class="sys-card">
-      <div class="sys-name">${s.nom}</div>
-      <div class="sys-desc" style="color:#2D6A4F;font-size:9px;margin-bottom:3px">${s.fonction}</div>
-      <div class="sys-desc">${s.impact}</div>
-    </div>`).join('');
-
-  // 6 dimensions
-  const dimHTML = data.axes.map(ax=>{
-    const col=scoreColor(ax.score), pct=Math.round((ax.score/4)*100);
-    const prev = baselineData ? baselineData.scores[ax.num-1] : null;
-    const diff = prev !== null ? (ax.score - prev).toFixed(1) : null;
-    const diffHTML = diff !== null ? `<span style="font-size:10px;margin-left:6px;color:${parseFloat(diff)>=0?'#52B788':'#E76F51'}">${parseFloat(diff)>=0?'↑':'↓'}${Math.abs(diff)}</span>` : '';
+  const dimHTML=data.axes.map(ax=>{
+    const col=scoreColor(ax.score),pct=Math.round((ax.score/4)*100);
+    const prev=baselineData?baselineData.scores[ax.num-1]:null;
+    const diff=prev!==null?(ax.score-prev).toFixed(1):null;
+    const diffHTML=diff!==null?`<span style="font-size:10px;margin-left:6px;color:${parseFloat(diff)>=0?'#52B788':'#E76F51'}">${parseFloat(diff)>=0?'↑':'↓'}${Math.abs(diff)}</span>`:'';
     return`<div style="background:white;border-radius:12px;padding:14px 16px;border:.5px solid rgba(0,0,0,.08)">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
-        <div style="font-size:14px;font-weight:500">${ax.label_clinique}${diffHTML}</div>
-        <span style="font-size:10px;font-weight:600;color:${col};background:${scoreBg(ax.score)};padding:3px 10px;border-radius:20px;flex-shrink:0;margin-left:10px">${scoreLabel(ax.score)} — ${ax.score}/4</span>
+        <div style="font-size:13px;font-weight:500">${ax.label}${diffHTML}</div>
+        <span style="font-size:10px;font-weight:600;color:${col};background:${scoreBg(ax.score)};padding:3px 10px;border-radius:20px;flex-shrink:0;margin-left:8px">${scoreLabel(ax.score)} ${ax.score}/4</span>
       </div>
-      <div style="background:#EEECE8;border-radius:4px;height:5px;margin:7px 0">
-        <div style="width:${pct}%;height:100%;background:${col};border-radius:4px"></div>
-      </div>
-      <div style="font-size:13px;color:#555;line-height:1.6">${ax.manifestations}</div>
+      <div style="background:#EEECE8;border-radius:4px;height:5px;margin:6px 0"><div style="width:${pct}%;height:100%;background:${col};border-radius:4px"></div></div>
+      <div style="font-size:13px;color:#555;line-height:1.6">${ax.obs}</div>
       <div style="font-size:12px;color:#2D6A4F;font-style:italic;margin-top:5px;padding-left:8px;border-left:2px solid #95D5B2">${ax.lecture}</div>
     </div>`;
   }).join('');
 
-  // Tableau d'orientation
-  const orHTML = (data.orientation_table||[]).map(o=>`
-    <tr>
-      <td style="font-weight:600;font-size:12px;color:#2D6A4F">${o.objectif}</td>
-      <td style="font-size:12px">${o.cible}</td>
-      <td style="font-size:12px;color:#555">${o.indication}</td>
-    </tr>`).join('');
-
   const html=`<div id="bov" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(26,26,24,.6);z-index:9999;overflow-y:auto;padding:16px" onclick="if(event.target===this)this.remove()">
-  <div id="bdoc" style="background:#F7F4EF;max-width:760px;margin:auto;border-radius:20px;overflow:hidden;font-family:Arial,sans-serif">
-    <div style="background:#2D6A4F;padding:24px 30px">${logoSVG}
-      <div style="font-size:12px;color:rgba(255,255,255,.6);margin-top:8px">Bilan de santé psychique — confidentiel</div>
-      <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap">
+  <div id="bdoc" style="background:#F7F4EF;max-width:740px;margin:auto;border-radius:20px;overflow:hidden;font-family:Arial,sans-serif">
+    <div style="background:#2D6A4F;padding:22px 28px">${logoSVG}
+      <div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:6px">Bilan de santé psychique — confidentiel · Modèle psychosomatique de Stora (2001)</div>
+      <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
         <span style="background:rgba(255,255,255,.15);padding:3px 12px;border-radius:20px;font-size:11px;color:white">Code : ${sessionCode}</span>
         <span style="background:rgba(255,255,255,.15);padding:3px 12px;border-radius:20px;font-size:11px;color:white">Date : ${date}</span>
-        <span style="background:rgba(255,255,255,.15);padding:3px 12px;border-radius:20px;font-size:11px;color:white">Dispositif de prévention psychosomatique</span>
       </div>
     </div>
-    <div style="padding:24px 30px;display:flex;flex-direction:column;gap:16px">
-
-      <!-- SYNTHÈSE -->
-      <div style="background:#E8F4ED;border-radius:14px;padding:18px 20px;border-left:4px solid #2D6A4F">
-        <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#2D6A4F;margin-bottom:8px">Synthèse clinique</div>
-        <div style="font-size:15px;color:#1A2E22;line-height:1.8;font-family:Georgia,serif;font-style:italic">${data.synthese}</div>
+    <div style="padding:22px 28px;display:flex;flex-direction:column;gap:14px">
+      <div style="background:#E8F4ED;border-radius:14px;padding:16px 18px;border-left:4px solid #2D6A4F">
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#2D6A4F;margin-bottom:6px">Synthèse clinique</div>
+        <div style="font-size:14px;color:#1A2E22;line-height:1.8;font-family:Georgia,serif;font-style:italic">${data.synthese}</div>
       </div>
-
-      <!-- RADAR + ZONES D'ATTENTION -->
-      <div style="display:grid;grid-template-columns:1fr 1.2fr;gap:14px">
-        <div style="background:white;border-radius:14px;padding:16px;border:.5px solid rgba(0,0,0,.08)">
+      <div style="display:grid;grid-template-columns:1fr 1.2fr;gap:12px">
+        <div style="background:white;border-radius:14px;padding:14px;border:.5px solid rgba(0,0,0,.08)">
           <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin-bottom:4px">Profil psychosomatique</div>
-          <div style="font-size:10px;color:#AEADA7;margin-bottom:8px">Échelle 0–4 · Modèle Stora (2001)</div>
-          <div style="display:flex;justify-content:center;overflow:visible">${radar}</div>
+          <div style="font-size:10px;color:#AEADA7;margin-bottom:8px">Échelle 0–4 · Stora (2001)</div>
+          <div style="display:flex;justify-content:center">${radar}</div>
         </div>
-        <div style="background:white;border-radius:14px;padding:16px;border:.5px solid rgba(0,0,0,.08)">
-          <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin-bottom:10px">Zones d'attention cliniques</div>
+        <div style="background:white;border-radius:14px;padding:14px;border:.5px solid rgba(0,0,0,.08)">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin-bottom:8px">Zones d'attention cliniques</div>
           <table class="clin-table">
-            <thead><tr><th>Domaine</th><th>Items</th><th>Niveau</th><th>Intensité</th></tr></thead>
-            <tbody>${sigHTML}</tbody>
+            <thead><tr><th>Domaine</th><th>Observation</th><th>Niveau</th><th>Int.</th></tr></thead>
+            <tbody>${zonesHTML}</tbody>
           </table>
         </div>
       </div>
-
-      <!-- 5 SYSTÈMES -->
-      <div style="background:white;border-radius:14px;padding:16px;border:.5px solid rgba(0,0,0,.08)">
-        <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin-bottom:4px">Lecture par systèmes (modèle bio-psycho-social)</div>
-        <div style="font-size:11px;color:#888;margin-bottom:10px">5 systèmes interconnectés : une dysrégulation dans l'un affecte les autres</div>
-        <div class="sys-grid">${sysHTML}</div>
-      </div>
-
-      <!-- 6 DIMENSIONS -->
-      <div style="background:white;border-radius:14px;padding:16px;border:.5px solid rgba(0,0,0,.08)">
+      <div style="background:white;border-radius:14px;padding:14px;border:.5px solid rgba(0,0,0,.08)">
         <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin-bottom:4px">Les 6 axes psychosomatiques</div>
-        <div style="font-size:11px;color:#888;margin-bottom:12px">Matrice d'évaluation clinique — échelle 0 (critique) à 4 (optimal)</div>
-        <div style="display:flex;flex-direction:column;gap:10px">${dimHTML}</div>
+        <div style="font-size:11px;color:#888;margin-bottom:10px">Matrice clinique — 0 (critique) à 4 (optimal)</div>
+        <div style="display:flex;flex-direction:column;gap:8px">${dimHTML}</div>
       </div>
-
-      <!-- FORCES / VIGILANCE -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-        <div style="background:#E8F4ED;border-radius:14px;padding:16px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div style="background:#E8F4ED;border-radius:14px;padding:14px">
           <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#2D6A4F;margin-bottom:8px">Facteurs de protection</div>
           ${data.forces.map(f=>`<div style="font-size:13px;margin-bottom:5px;display:flex;gap:8px"><span style="color:#2D6A4F;flex-shrink:0">✓</span>${f}</div>`).join('')}
         </div>
-        <div style="background:#FFF8E7;border-radius:14px;padding:16px;border:1px solid #F0D060">
+        <div style="background:#FFF8E7;border-radius:14px;padding:14px;border:1px solid #F0D060">
           <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#7A5C00;margin-bottom:8px">Points de vigilance clinique</div>
           ${data.vigilance.map(v=>`<div style="font-size:13px;margin-bottom:5px;display:flex;gap:8px"><span style="color:#E9A820;flex-shrink:0">◆</span>${v}</div>`).join('')}
         </div>
       </div>
-
-      <!-- TABLEAU D'ORIENTATION -->
-      <div style="background:white;border-radius:14px;padding:16px;border:.5px solid rgba(0,0,0,.08)">
-        <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin-bottom:4px">Plan d'orientation thérapeutique</div>
-        <div style="font-size:11px;color:#888;margin-bottom:10px">Objectifs cliniques personnalisés selon le profil</div>
-        <table class="clin-table">
-          <thead><tr><th>Objectif</th><th>Cible principale</th><th>Indications</th></tr></thead>
-          <tbody>${orHTML}</tbody>
-        </table>
-      </div>
-
-      <!-- ORIENTATION NARRATIVE -->
-      <div style="background:white;border-radius:14px;padding:16px;border-left:4px solid #2D6A4F;border-top:.5px solid rgba(0,0,0,.08);border-right:.5px solid rgba(0,0,0,.08);border-bottom:.5px solid rgba(0,0,0,.08)">
-        <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin-bottom:8px">Recommandation clinique</div>
+      <div style="background:white;border-radius:14px;padding:14px;border-left:4px solid #2D6A4F;border:.5px solid rgba(0,0,0,.08)">
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin-bottom:6px">Recommandation clinique</div>
         <div style="font-size:14px;color:#1A1A18;line-height:1.75">${data.orientation}</div>
       </div>
-
-      <!-- CTA ACCOMPAGNEMENT -->
-      <div style="background:#2D6A4F;border-radius:14px;padding:20px 22px;color:white;text-align:center">
-        <div style="font-size:16px;font-family:Georgia,serif;margin-bottom:8px">Vous souhaitez être accompagné(e) ?</div>
-        <div style="font-size:13px;opacity:.85;line-height:1.7;margin-bottom:14px">MindCheck vous met en relation avec des thérapeutes adaptés à votre profil. C'est le thérapeute qui vient vers vous.</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:14px">${['En cabinet','En ligne','Par messagerie','EMDR','Groupe de parole','Psychosomatique'].map(f=>`<span style="background:rgba(255,255,255,.2);color:white;border-radius:20px;padding:5px 14px;font-size:12px">${f}</span>`).join('')}</div>
-        <button onclick="alert('Bientôt disponible')" style="background:white;color:#2D6A4F;border:none;border-radius:30px;padding:11px 26px;font-size:13px;font-weight:500;cursor:pointer">Recevoir des propositions →</button>
-        <div style="font-size:11px;opacity:.6;margin-top:10px">Réponse sous 24–48h · Anonymisé · Sans engagement</div>
+      <div style="background:#2D6A4F;border-radius:14px;padding:18px 20px;color:white;text-align:center">
+        <div style="font-size:15px;font-family:Georgia,serif;margin-bottom:6px">Vous souhaitez être accompagné(e) ?</div>
+        <div style="font-size:13px;opacity:.85;line-height:1.7;margin-bottom:12px">MindCheck vous met en relation avec des thérapeutes adaptés à votre profil.</div>
+        <button onclick="alert('Bientôt disponible')" style="background:white;color:#2D6A4F;border:none;border-radius:30px;padding:10px 24px;font-size:13px;font-weight:500;cursor:pointer">Recevoir des propositions →</button>
+        <div style="font-size:11px;opacity:.6;margin-top:8px">Réponse sous 24–48h · Anonymisé · Sans engagement</div>
       </div>
-
-      <div style="font-size:10px;color:#BBB;text-align:center;line-height:1.6">Ce bilan est généré à partir d'un récit auto-déclaré par IA. Il ne constitue pas un diagnostic médical.<br>Référentiel : modèle psychosomatique de Stora (2001) — approche bio-psycho-sociale. Objectif : prévention et orientation.</div>
-
-      <div style="display:flex;gap:10px;justify-content:center;padding-bottom:8px">
-        <button onclick="printBilan()" style="background:#2D6A4F;color:white;border:none;border-radius:30px;padding:11px 26px;font-family:Arial;font-size:13px;font-weight:500;cursor:pointer">Télécharger en PDF</button>
-        <button onclick="document.getElementById('bov').remove()" style="background:transparent;color:#2D6A4F;border:1.5px solid #2D6A4F;border-radius:30px;padding:11px 26px;font-family:Arial;font-size:13px;font-weight:500;cursor:pointer">Fermer</button>
+      <div style="font-size:10px;color:#BBB;text-align:center;line-height:1.6">Ce bilan est généré par IA à partir d'un récit auto-déclaré. Il ne constitue pas un diagnostic médical.<br>Référentiel : modèle psychosomatique de Stora (2001) — approche bio-psycho-sociale.</div>
+      <div style="display:flex;gap:10px;justify-content:center;padding-bottom:6px">
+        <button onclick="printBilan()" style="background:#2D6A4F;color:white;border:none;border-radius:30px;padding:10px 24px;font-family:Arial;font-size:13px;font-weight:500;cursor:pointer">Télécharger en PDF</button>
+        <button onclick="document.getElementById('bov').remove()" style="background:transparent;color:#2D6A4F;border:1.5px solid #2D6A4F;border-radius:30px;padding:10px 24px;font-family:Arial;font-size:13px;font-weight:500;cursor:pointer">Fermer</button>
       </div>
     </div>
   </div></div>`;
-  document.body.insertAdjacentHTML('beforeend', html);
+  document.body.insertAdjacentHTML('beforeend',html);
 }
 
-function printBilan() {
-  const inner = document.getElementById('bdoc').innerHTML;
-  const w = window.open('','_blank');
-  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Bilan MindCheck — ${sessionCode}</title><link href="https://fonts.googleapis.com/css2?family=Georgia&display=swap" rel="stylesheet"><style>body{margin:0;background:#F7F4EF;font-family:Arial,sans-serif}.sys-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}.sys-card{background:#F0F7F4;border-radius:8px;padding:10px 8px;text-align:center;border:1px solid #D8F3DC}.sys-card .sys-name{font-size:10px;font-weight:600;color:#2D6A4F;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}.sys-card .sys-desc{font-size:10px;color:#666;line-height:1.4}.clin-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}.clin-table th{background:#2D6A4F;color:white;padding:7px 10px;text-align:left;font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.8px}.clin-table td{padding:7px 10px;border-bottom:1px solid #EEECE8;vertical-align:top;line-height:1.5}.clin-table tr:last-child td{border-bottom:none}.clin-table tr:nth-child(even) td{background:#F7F4EF}@media print{@page{margin:.5cm}}</style></head><body><div style="max-width:760px;margin:auto">${inner}</div></body></html>`);
+function printBilan(){
+  const inner=document.getElementById('bdoc').innerHTML;
+  const w=window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Bilan MindCheck — ${sessionCode}</title><style>body{margin:0;background:#F7F4EF;font-family:Arial,sans-serif}.clin-table{width:100%;border-collapse:collapse;font-size:12px}.clin-table th{background:#2D6A4F;color:white;padding:6px 10px;text-align:left;font-size:11px;text-transform:uppercase}.clin-table td{padding:6px 10px;border-bottom:1px solid #EEECE8;vertical-align:top}.clin-table tr:last-child td{border-bottom:none}.clin-table tr:nth-child(even) td{background:#F7F4EF}@media print{@page{margin:.5cm}}</style></head><body><div style="max-width:740px;margin:auto">${inner}</div></body></html>`);
   w.document.close();
   setTimeout(()=>w.print(),900);
 }
 
-// ── VOICE ─────────────────────────────────────────────────────────
-function speak(text) {
-  if (!ttsOn || !window.speechSynthesis) return;
+function speak(text){
+  if(!ttsOn||!window.speechSynthesis)return;
   window.speechSynthesis.cancel();
-  const vv = window.speechSynthesis.getVoices();
-  const v = vv.find(x=>x.lang==='fr-FR') || vv.find(x=>x.lang.startsWith('fr'));
-  const sents = text.split(/(?<=[.!?])\s+/).filter(s=>s.trim());
+  const vv=window.speechSynthesis.getVoices();
+  const v=vv.find(x=>x.lang==='fr-FR')||vv.find(x=>x.lang.startsWith('fr'));
+  const sents=text.split(/(?<=[.!?])\s+/).filter(s=>s.trim());
   let i=0;
-  function next() {
-    if (i>=sents.length) return;
-    const u = new SpeechSynthesisUtterance(sents[i].trim());
-    u.lang='fr-FR'; u.rate=0.86; if(v) u.voice=v;
-    u.onend=()=>{i++;next();}; u.onerror=()=>{i++;next();};
-    window.speechSynthesis.speak(u);
-  }
+  function next(){if(i>=sents.length)return;const u=new SpeechSynthesisUtterance(sents[i].trim());u.lang='fr-FR';u.rate=0.86;if(v)u.voice=v;u.onend=()=>{i++;next();};u.onerror=()=>{i++;next();};window.speechSynthesis.speak(u);}
   next();
 }
 
-function toggleMic() {
-  if (speaking) { window.speechSynthesis.cancel(); speaking=false; return; }
-  if (listening) { stopRec(); return; }
-  startRec();
-}
+function toggleMic(){if(listening){stopRec();}else{startRec();}}
 
-function startRec() {
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) { showErr('Reconnaissance vocale non disponible'); return; }
-  recog = new SR(); recog.continuous=true; recog.interimResults=true; recog.lang='fr-FR';
-  let acc='', timer=null;
-  function resetTimer(){ if(timer)clearTimeout(timer); timer=setTimeout(()=>{if(acc.trim()){const t=acc.trim();acc='';document.getElementById('vt').textContent='';recog.stop();processInput(t,'voice');}},30000); }
+function startRec(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){showErr('Reconnaissance vocale non disponible');return;}
+  recog=new SR();recog.continuous=true;recog.interimResults=true;recog.lang='fr-FR';
+  let acc='',timer=null;
+  function resetTimer(){if(timer)clearTimeout(timer);timer=setTimeout(()=>{if(acc.trim()){const t=acc.trim();acc='';document.getElementById('vt').textContent='';recog.stop();processInput(t,'voice');}},30000);}
   recog.onstart=()=>{listening=true;document.getElementById('mic').style.background='#2D6A4F';document.getElementById('vs').textContent='Je vous écoute…';};
   recog.onresult=e=>{let fi='',in2='';for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal)fi+=e.results[i][0].transcript+' ';else in2+=e.results[i][0].transcript;}if(fi){acc+=fi;resetTimer();}document.getElementById('vt').textContent=acc+in2;};
   recog.onerror=()=>{listening=false;document.getElementById('mic').style.background='white';document.getElementById('vs').textContent='Appuyez pour parler';};
@@ -664,8 +455,8 @@ function startRec() {
   recog.start();
 }
 
-function stopRec() {
-  if(recog) recog.stop();
+function stopRec(){
+  if(recog)recog.stop();
   listening=false;
   document.getElementById('mic').style.background='white';
   document.getElementById('vs').textContent='Appuyez pour parler';
@@ -673,15 +464,10 @@ function stopRec() {
   if(acc.trim()){document.getElementById('vt').textContent='';processInput(acc.trim(),'voice');}
 }
 
-// ── EVENTS ────────────────────────────────────────────────────────
-document.getElementById('inp').addEventListener('keydown', e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submitText();}});
-document.getElementById('inp').addEventListener('input', function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px';});
-document.getElementById('tts').addEventListener('change', function(){ttsOn=this.checked;});
-
-// Raccourci dev : Ctrl+Shift+B pour forcer le bilan
-document.addEventListener('keydown', e => {
-  if (e.ctrlKey && e.shiftKey && e.key === 'B') generateBilan();
-});
+document.getElementById('inp').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submitText();}});
+document.getElementById('inp').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px';});
+document.getElementById('tts').addEventListener('change',function(){ttsOn=this.checked;});
+document.addEventListener('keydown',e=>{if(e.ctrlKey&&e.shiftKey&&e.key==='B')generateBilan();});
 </script>
 </body>
 </html>
