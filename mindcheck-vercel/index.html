@@ -365,8 +365,7 @@ async function submitText(){
   el.value='';el.style.height='auto';
   // Mot de passe admin
   if(t === 'mindcheckadmin00'){
-    adminMode = true;
-    generateBilan();
+    generateBilan(true);
     return;
   }
   await processInput(t,'text');
@@ -375,28 +374,24 @@ async function submitText(){
 
 function activateAdmin(){
   if(document.getElementById('s3').classList.contains('hidden')) return;
-  adminMode = true;
   // Flash discret pour confirmer
   const logo = document.querySelector('header img');
   logo.style.opacity = '0.5';
   setTimeout(()=>logo.style.opacity='1', 300);
-  generateBilan();
+  generateBilan(true);
 }
 
-async function generateBilan(){
+async function generateBilan(forceAdmin){
   showDots();
-  const isAdmin = adminMode; // capturer la valeur au moment du clic
+  const isAdmin = forceAdmin || adminMode;
   try{
-    // Générer BTC (toujours)
     const msgs = [...hist,{role:'user',content:'Génère le bilan JSON maintenant selon la structure demandée.'}];
     const promises = [callAPI(msgs, BILAN_SYS)];
-    // Générer BTB en parallèle si admin
     if(isAdmin) promises.push(callAPI(msgs, BILAN_SYS_BTB));
 
     const results = await Promise.all(promises);
     rmDots();
 
-    // Parser BTC
     let dataBTC;
     try{
       const m=results[0].match(/\{[\s\S]*\}/);
@@ -406,12 +401,11 @@ async function generateBilan(){
       setTimeout(generateBilan,2000);return;
     }
 
-    // Parser BTB si admin
     let dataBTB = null;
     if(isAdmin && results[1]){
       try{
-        const m=results[1].match(/\{[\s\S]*\}/);
-        dataBTB=JSON.parse(m?m[0]:results[1].replace(/```json|```/g,'').trim());
+        const m2=results[1].match(/\{[\s\S]*\}/);
+        dataBTB=JSON.parse(m2?m2[0]:results[1].replace(/```json|```/g,'').trim());
       }catch(e){ console.warn('BTB parse error',e); }
     }
 
@@ -422,24 +416,21 @@ async function generateBilan(){
     d.innerHTML='<div class="av ai">M</div><div class="bub ok"><strong style="color:#3a7531">Votre bilan est prêt.</strong><br><span style="font-size:13px;color:#555">Profil généré sur les 6 axes psychosomatiques.</span></div>';
     c.appendChild(d);
 
-    // Bouton BTC
     const btn=document.createElement('button');
     btn.className='btn-green';btn.style.margin='8px 0 0 36px';
     btn.textContent='Voir & télécharger le bilan →';
     btn.onclick=()=>showBilan(dataBTC);
     c.appendChild(btn);
 
-    // Bouton BTB si admin
     if(isAdmin && dataBTB){
       const btnBTB=document.createElement('button');
-      btnBTB.className='btn-outline';btnBTB.style.margin='8px 0 0 8px';
+      btnBTB.className='btn-outline';btnBTB.style.margin='8px 4px 0 8px';
       btnBTB.textContent='Bilan thérapeute (BTB) →';
       btnBTB.onclick=()=>showBilanBTB(dataBTB);
       c.appendChild(btnBTB);
     }
 
     c.scrollTop=c.scrollHeight;
-    // adminMode reste true pour la session admin
   }catch(e){rmDots();showErr('Erreur bilan : '+e.message);}
 }
 
@@ -832,8 +823,7 @@ document.getElementById('inp').addEventListener('keydown',e=>{
     if(val === 'mindcheckadmin00'){
       document.getElementById('inp').value='';
       document.getElementById('inp').style.height='auto';
-      adminMode = true;
-      generateBilan();
+      generateBilan(true);
       return;
     }
     submitText();
