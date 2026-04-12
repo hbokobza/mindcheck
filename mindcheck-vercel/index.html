@@ -350,7 +350,7 @@ async function processInput(text,src){
     if(done||clean.toLowerCase().includes('je prépare')){
       addMsg('ai',"Merci pour ce partage. Je prépare votre bilan personnalisé…");
       hist.push({role:'assistant',content:raw});
-      setTimeout(generateBilan,1200);
+      setTimeout(()=>generateBilan(false),1200);
     } else {
       addMsg('ai',clean);
       hist.push({role:'assistant',content:raw});
@@ -381,14 +381,12 @@ function activateAdmin(){
   generateBilan(true);
 }
 
-async function generateBilan(forceAdmin){
+async function generateBilan(avecBTB){
   showDots();
-  const isAdmin = forceAdmin || adminMode;
   try{
     const msgs = [...hist,{role:'user',content:'Génère le bilan JSON maintenant selon la structure demandée.'}];
     const promises = [callAPI(msgs, BILAN_SYS)];
-    if(isAdmin) promises.push(callAPI(msgs, BILAN_SYS_BTB));
-
+    if(avecBTB) promises.push(callAPI(msgs, BILAN_SYS_BTB));
     const results = await Promise.all(promises);
     rmDots();
 
@@ -398,11 +396,11 @@ async function generateBilan(forceAdmin){
       dataBTC=JSON.parse(m?m[0]:results[0].replace(/```json|```/g,'').trim());
     }catch(e){
       addMsg('ai','Erreur de format. Réessai…');
-      setTimeout(generateBilan,2000);return;
+      setTimeout(()=>generateBilan(avecBTB),2000);return;
     }
 
-    let dataBTB = null;
-    if(isAdmin && results[1]){
+    let dataBTB=null;
+    if(avecBTB && results[1]){
       try{
         const m2=results[1].match(/\{[\s\S]*\}/);
         dataBTB=JSON.parse(m2?m2[0]:results[1].replace(/```json|```/g,'').trim());
@@ -422,7 +420,7 @@ async function generateBilan(forceAdmin){
     btn.onclick=()=>showBilan(dataBTC);
     c.appendChild(btn);
 
-    if(isAdmin && dataBTB){
+    if(dataBTB){
       const btnBTB=document.createElement('button');
       btnBTB.className='btn-outline';btnBTB.style.margin='8px 4px 0 8px';
       btnBTB.textContent='Bilan thérapeute (BTB) →';
@@ -831,7 +829,7 @@ document.getElementById('inp').addEventListener('keydown',e=>{
 });
 document.getElementById('inp').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px';});
 document.getElementById('tts').addEventListener('change',function(){ttsOn=this.checked;});
-document.addEventListener('keydown',e=>{if(e.ctrlKey&&e.shiftKey&&e.key==='B')generateBilan();});
+document.addEventListener('keydown',e=>{if(e.ctrlKey&&e.shiftKey&&e.key==='B')generateBilan(false);});
 </script>
 </body>
 </html>
