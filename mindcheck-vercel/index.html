@@ -330,7 +330,7 @@ async function submitText(){
   el.value='';el.style.height='auto';
   // Mot de passe admin
   if(t === 'mindcheckadmin00'){
-    if(hist.length === 0){showErr('Commencez d'abord une conversation avant de générer le bilan.');return;}
+    if(hist.length === 0){showErr('Lancez une conversation avant de generer le bilan.');return;}
     generateBilan(true);
     return;
   }
@@ -788,7 +788,7 @@ document.getElementById('inp').addEventListener('keydown',e=>{
     if(val === 'mindcheckadmin00'){
       document.getElementById('inp').value='';
       document.getElementById('inp').style.height='auto';
-      if(hist.length === 0){showErr('Commencez d'abord une conversation.');return;}
+      if(hist.length === 0){showErr('Lancez une conversation.');return;}
       generateBilan(true);
       return;
     }
