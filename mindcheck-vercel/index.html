@@ -228,46 +228,13 @@ let hist=[],count=0,mode='text',sessionCode='',adminMode=false;
   }
 })();
 
-const BILAN_SYS_BTB = `Tu es l'IA d'analyse clinique MindCheck. À partir du récit collecté, génère un bilan JSON structuré à destination du thérapeute.
+const BILAN_SYS_BTB = `Tu es l'IA d'analyse clinique MindCheck. Génère un bilan JSON pour le thérapeute.
 
-STRUCTURE JSON EXACTE (réponds UNIQUEMENT avec ce JSON, sans texte avant/après, sans markdown) :
-{
-  "synthese": "synthèse clinique en 2-3 phrases, langage professionnel, référentiel psychosomatique",
-  "axes": [
-    {"num":1,"label":"Processus psychiques","score":2,"manifestations":"manifestations cliniques détaillées","systemes":"Psychique (central)","lecture":"lecture psychodynamique et mécanismes impliqués"},
-    {"num":2,"label":"Ressources psychiques","score":3,"manifestations":"...","systemes":"SNC, Psychique","lecture":"..."},
-    {"num":3,"label":"Comportements & conduites","score":2,"manifestations":"...","systemes":"SNC, SNA, Psychique","lecture":"..."},
-    {"num":4,"label":"Régulation émotionnelle","score":1,"manifestations":"...","systemes":"Psychique, SNA","lecture":"..."},
-    {"num":5,"label":"Corps & risque somatique","score":2,"manifestations":"...","systemes":"SNA, Immunitaire","lecture":"..."},
-    {"num":6,"label":"Environnement","score":3,"manifestations":"...","systemes":"Modulateur transversal","lecture":"..."}
-  ],
-  "systemes": [
-    {"nom":"Système Psychique","niveau":"Modérément atteint","couleur":"orange","description":"analyse du système psychique"},
-    {"nom":"SNC","niveau":"Sollicité","couleur":"orange","description":"analyse du SNC"},
-    {"nom":"SNA","niveau":"Hyperactivé","couleur":"rouge","description":"analyse du SNA — principal lieu de décharge si applicable"},
-    {"nom":"Système Immunitaire","niveau":"Fonctionnellement impliqué","couleur":"orange","description":"analyse immunitaire"},
-    {"nom":"Terrain génétique","niveau":"Possible","couleur":"gris","description":"vulnérabilité de terrain"}
-  ],
-  "redflags": [
-    {"priorite":"haute","titre":"titre du signal d'alerte","detail":"description clinique"},
-    {"priorite":"moyenne","titre":"...","detail":"..."}
-  ],
-  "axes_therapeutiques": [
-    {"titre":"axe thérapeutique 1","cible":"cible principale","indications":"indications cliniques"},
-    {"titre":"...","cible":"...","indications":"..."}
-  ],
-  "conclusion": "conclusion clinique et pronostic en 3-4 phrases",
-  "forces": ["ressource clinique 1","ressource 2","ressource 3"],
-  "vigilance": ["point de vigilance clinique 1","point 2","point 3"]
-}
+Réponds UNIQUEMENT avec du JSON valide, sans texte avant/après, sans markdown.
 
-RÈGLES DE SCORING (scores 0-4 entiers) :
-- 0-1 = état très dégradé/critique
-- 2 = état préoccupant
-- 3 = correct mais fragile
-- 4 = optimal
+{"synthese":"synthèse clinique professionnelle en 2 phrases","axes":[{"num":1,"label":"Processus psychiques","score":2,"manifestations":"manifestations cliniques","systemes":"Psychique","lecture":"lecture clinique"},{"num":2,"label":"Ressources psychiques","score":3,"manifestations":"...","systemes":"SNC","lecture":"..."},{"num":3,"label":"Comportements & conduites","score":2,"manifestations":"...","systemes":"SNC, SNA","lecture":"..."},{"num":4,"label":"Régulation émotionnelle","score":1,"manifestations":"...","systemes":"Psychique, SNA","lecture":"..."},{"num":5,"label":"Corps & risque somatique","score":2,"manifestations":"...","systemes":"SNA","lecture":"..."},{"num":6,"label":"Environnement","score":3,"manifestations":"...","systemes":"Modulateur","lecture":"..."}],"systemes":[{"nom":"Système Psychique","niveau":"Modérément atteint","couleur":"orange","description":"analyse"},{"nom":"SNC","niveau":"Sollicité","couleur":"orange","description":"analyse"},{"nom":"SNA","niveau":"Hyperactivé","couleur":"rouge","description":"analyse"},{"nom":"Système Immunitaire","niveau":"Impliqué","couleur":"orange","description":"analyse"},{"nom":"Terrain génétique","niveau":"Possible","couleur":"gris","description":"analyse"}],"redflags":[{"priorite":"haute","titre":"signal 1","detail":"description"},{"priorite":"moyenne","titre":"signal 2","detail":"description"}],"axes_therapeutiques":[{"titre":"axe 1","cible":"cible","indications":"indications"},{"titre":"axe 2","cible":"cible","indications":"indications"}],"conclusion":"conclusion clinique en 2 phrases","forces":["ressource 1","ressource 2","ressource 3"],"vigilance":["vigilance 1","vigilance 2","vigilance 3"]}
 
-IMPORTANT : Langage clinique professionnel. Scores fidèles au récit. Ne pas inverser.`;
+RÈGLES : Scores 0-4 entiers. Textes courts (max 150 caractères par champ). JSON strict sans apostrophes non échappées.`;
 
 let listening=false,ttsOn=true,recog=null,baselineData=null;
 
@@ -365,6 +332,7 @@ async function submitText(){
   el.value='';el.style.height='auto';
   // Mot de passe admin
   if(t === 'mindcheckadmin00'){
+    if(hist.length === 0){showErr('Commencez d'abord une conversation avant de générer le bilan.');return;}
     generateBilan(true);
     return;
   }
@@ -382,6 +350,7 @@ function activateAdmin(){
 }
 
 async function generateBilan(avecBTB){
+  console.log('generateBilan appelé, avecBTB=', avecBTB, 'hist.length=', hist.length);
   showDots();
   try{
     const msgs = [...hist,{role:'user',content:'Génère le bilan JSON maintenant selon la structure demandée.'}];
@@ -821,6 +790,7 @@ document.getElementById('inp').addEventListener('keydown',e=>{
     if(val === 'mindcheckadmin00'){
       document.getElementById('inp').value='';
       document.getElementById('inp').style.height='auto';
+      if(hist.length === 0){showErr('Commencez d'abord une conversation.');return;}
       generateBilan(true);
       return;
     }
