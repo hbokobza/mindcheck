@@ -215,7 +215,49 @@ ZONES (niv 0-4) :
 
 IMPORTANT : Les scores doivent refléter fidèlement le récit. Un récit de souffrance = scores bas (1-2). Les ressources solides = scores hauts (3-4). Ne pas inverser.`;
 
-let hist=[],count=0,mode='text',sessionCode='';
+let hist=[],count=0,mode='text',sessionCode='',adminMode=false;
+
+const BILAN_SYS_BTB = `Tu es l'IA d'analyse clinique MindCheck. À partir du récit collecté, génère un bilan JSON structuré à destination du thérapeute.
+
+STRUCTURE JSON EXACTE (réponds UNIQUEMENT avec ce JSON, sans texte avant/après, sans markdown) :
+{
+  "synthese": "synthèse clinique en 2-3 phrases, langage professionnel, référentiel psychosomatique",
+  "axes": [
+    {"num":1,"label":"Processus psychiques","score":2,"manifestations":"manifestations cliniques détaillées","systemes":"Psychique (central)","lecture":"lecture psychodynamique et mécanismes impliqués"},
+    {"num":2,"label":"Ressources psychiques","score":3,"manifestations":"...","systemes":"SNC, Psychique","lecture":"..."},
+    {"num":3,"label":"Comportements & conduites","score":2,"manifestations":"...","systemes":"SNC, SNA, Psychique","lecture":"..."},
+    {"num":4,"label":"Régulation émotionnelle","score":1,"manifestations":"...","systemes":"Psychique, SNA","lecture":"..."},
+    {"num":5,"label":"Corps & risque somatique","score":2,"manifestations":"...","systemes":"SNA, Immunitaire","lecture":"..."},
+    {"num":6,"label":"Environnement","score":3,"manifestations":"...","systemes":"Modulateur transversal","lecture":"..."}
+  ],
+  "systemes": [
+    {"nom":"Système Psychique","niveau":"Modérément atteint","couleur":"orange","description":"analyse du système psychique"},
+    {"nom":"SNC","niveau":"Sollicité","couleur":"orange","description":"analyse du SNC"},
+    {"nom":"SNA","niveau":"Hyperactivé","couleur":"rouge","description":"analyse du SNA — principal lieu de décharge si applicable"},
+    {"nom":"Système Immunitaire","niveau":"Fonctionnellement impliqué","couleur":"orange","description":"analyse immunitaire"},
+    {"nom":"Terrain génétique","niveau":"Possible","couleur":"gris","description":"vulnérabilité de terrain"}
+  ],
+  "redflags": [
+    {"priorite":"haute","titre":"titre du signal d'alerte","detail":"description clinique"},
+    {"priorite":"moyenne","titre":"...","detail":"..."}
+  ],
+  "axes_therapeutiques": [
+    {"titre":"axe thérapeutique 1","cible":"cible principale","indications":"indications cliniques"},
+    {"titre":"...","cible":"...","indications":"..."}
+  ],
+  "conclusion": "conclusion clinique et pronostic en 3-4 phrases",
+  "forces": ["ressource clinique 1","ressource 2","ressource 3"],
+  "vigilance": ["point de vigilance clinique 1","point 2","point 3"]
+}
+
+RÈGLES DE SCORING (scores 0-4 entiers) :
+- 0-1 = état très dégradé/critique
+- 2 = état préoccupant
+- 3 = correct mais fragile
+- 4 = optimal
+
+IMPORTANT : Langage clinique professionnel. Scores fidèles au récit. Ne pas inverser.`;
+
 let listening=false,ttsOn=true,recog=null,baselineData=null;
 
 (function(){
@@ -313,29 +355,73 @@ async function submitText(){
   await processInput(t,'text');
 }
 
+
+function activateAdmin(){
+  if(document.getElementById('s3').classList.contains('hidden')) return;
+  adminMode = true;
+  // Flash discret pour confirmer
+  const logo = document.querySelector('header img');
+  logo.style.opacity = '0.5';
+  setTimeout(()=>logo.style.opacity='1', 300);
+  generateBilan();
+}
+
 async function generateBilan(){
   showDots();
   try{
-    const raw=await callAPI([...hist,{role:'user',content:'Génère le bilan JSON maintenant selon la structure demandée.'}],BILAN_SYS);
+    // Générer BTC (toujours)
+    const msgs = [...hist,{role:'user',content:'Génère le bilan JSON maintenant selon la structure demandée.'}];
+    const promises = [callAPI(msgs, BILAN_SYS)];
+    // Générer BTB en parallèle si adminMode
+    if(adminMode) promises.push(callAPI(msgs, BILAN_SYS_BTB));
+
+    const results = await Promise.all(promises);
     rmDots();
-    let data;
+
+    // Parser BTC
+    let dataBTC;
     try{
-      const m=raw.match(/\{[\s\S]*\}/);
-      data=JSON.parse(m?m[0]:raw.replace(/```json|```/g,'').trim());
+      const m=results[0].match(/\{[\s\S]*\}/);
+      dataBTC=JSON.parse(m?m[0]:results[0].replace(/```json|```/g,'').trim());
     }catch(e){
       addMsg('ai','Erreur de format. Réessai…');
       setTimeout(generateBilan,2000);return;
     }
-    try{localStorage.setItem('mc_last',JSON.stringify({date:new Date().toLocaleDateString('fr-FR'),scores:data.axes.map(a=>a.score)}));}catch(e){}
+
+    // Parser BTB si admin
+    let dataBTB = null;
+    if(adminMode && results[1]){
+      try{
+        const m=results[1].match(/\{[\s\S]*\}/);
+        dataBTB=JSON.parse(m?m[0]:results[1].replace(/```json|```/g,'').trim());
+      }catch(e){ console.warn('BTB parse error',e); }
+    }
+
+    try{localStorage.setItem('mc_last',JSON.stringify({date:new Date().toLocaleDateString('fr-FR'),scores:dataBTC.axes.map(a=>a.score)}));}catch(e){}
+
     const c=document.getElementById('chat');
     const d=document.createElement('div');d.className='msg';
     d.innerHTML='<div class="av ai">M</div><div class="bub ok"><strong style="color:#3a7531">Votre bilan est prêt.</strong><br><span style="font-size:13px;color:#555">Profil généré sur les 6 axes psychosomatiques.</span></div>';
     c.appendChild(d);
+
+    // Bouton BTC
     const btn=document.createElement('button');
     btn.className='btn-green';btn.style.margin='8px 0 0 36px';
     btn.textContent='Voir & télécharger le bilan →';
-    btn.onclick=()=>showBilan(data);
-    c.appendChild(btn);c.scrollTop=c.scrollHeight;
+    btn.onclick=()=>showBilan(dataBTC);
+    c.appendChild(btn);
+
+    // Bouton BTB si admin
+    if(adminMode && dataBTB){
+      const btnBTB=document.createElement('button');
+      btnBTB.className='btn-outline';btnBTB.style.margin='8px 0 0 8px';
+      btnBTB.textContent='Bilan thérapeute (BTB) →';
+      btnBTB.onclick=()=>showBilanBTB(dataBTB);
+      c.appendChild(btnBTB);
+    }
+
+    c.scrollTop=c.scrollHeight;
+    adminMode = false; // reset
   }catch(e){rmDots();showErr('Erreur bilan : '+e.message);}
 }
 
@@ -537,6 +623,145 @@ function showBilan(data){
     </div>
   </div></div>`;
   document.body.insertAdjacentHTML('beforeend',html);
+}
+
+
+function showBilanBTB(data){
+  const date = new Date().toLocaleDateString('fr-FR');
+
+  // Matrice axes
+  const axesHTML = data.axes.map(ax => {
+    const scoreBadge = ax.score<=1?'background:#FDE8E8;color:#C0392B':ax.score<=2?'background:#FFF3D6;color:#B8860B':'background:#E8F4ED;color:#3a7531';
+    return `<tr>
+      <td style="font-weight:600">${ax.label}</td>
+      <td><span style="padding:2px 10px;border-radius:20px;font-size:10px;font-weight:600;${scoreBadge}">${ax.score}/4</span></td>
+      <td style="font-size:11px;color:#444;line-height:1.5">${ax.manifestations}</td>
+      <td style="font-size:11px;color:#555">${ax.systemes}</td>
+    </tr>`;
+  }).join('');
+
+  // Lecture systèmes
+  const niv2col = n => n==='rouge'?'#E76F51':n==='orange'?'#E9A820':'#888';
+  const systemesHTML = data.systemes.map(s => `
+    <div style="background:#FAFAFA;border:0.5px solid rgba(0,0,0,0.08);border-radius:8px;padding:10px 12px;margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+        <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#333">${s.nom}</span>
+        <span style="font-size:9px;font-weight:600;color:${niv2col(s.couleur)}">${s.niveau}</span>
+      </div>
+      <div style="font-size:10px;color:#555;line-height:1.55">${s.description}</div>
+    </div>`).join('');
+
+  // Red flags
+  const rfHTML = data.redflags.map(rf => {
+    const isHigh = rf.priorite === 'haute';
+    return `<div style="background:${isHigh?'#FEF2F2':'#FFF8E7'};border:1px solid ${isHigh?'#FCA5A5':'#F0D060'};border-radius:10px;padding:10px 14px;margin-bottom:8px">
+      <div style="color:${isHigh?'#C0392B':'#7A5C00'};font-weight:600;font-size:11px;margin-bottom:3px">${isHigh?'▲':'◆'} ${rf.titre}</div>
+      <div style="font-size:11px;color:#555;line-height:1.55">${rf.detail}</div>
+    </div>`;
+  }).join('');
+
+  // Axes thérapeutiques
+  const axThHTML = data.axes_therapeutiques.map(a => `
+    <div style="background:#F0F7F0;border:1px solid #C8E6C9;border-radius:10px;padding:10px 14px;margin-bottom:8px">
+      <div style="color:#3a7531;font-weight:600;font-size:11px;margin-bottom:3px">${a.titre}</div>
+      <div style="font-size:10px;color:#555;line-height:1.55"><strong>Cible :</strong> ${a.cible} — ${a.indications}</div>
+    </div>`).join('');
+
+  const html = `<div id="btb-ov" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);z-index:10000;overflow-y:auto;padding:16px" onclick="if(event.target===this)this.remove()">
+  <div id="btb-doc" style="background:#F4F4F2;max-width:760px;margin:auto;border-radius:20px;overflow:hidden;font-family:Arial,sans-serif">
+
+    <!-- HEADER BLEU -->
+    <div style="background:#1B3A6B;padding:22px 28px 18px">
+      <img src="data:image/png;base64,${LOGO_B64}" style="height:26px;filter:brightness(0) invert(1);margin-bottom:10px" alt="MindCheck"/>
+      <div style="font-size:10px;color:#8AABC8;margin-bottom:4px">DOCUMENT CONFIDENTIEL — USAGE PROFESSIONNEL EXCLUSIF</div>
+      <div style="font-size:13px;color:white;letter-spacing:0.5px;margin-bottom:12px">BILAN PSYCHOSOMATIQUE THÉRAPEUTE</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <span style="background:rgba(255,255,255,0.15);color:white;padding:4px 14px;border-radius:20px;font-size:10px;border:1px solid rgba(255,255,255,0.2)">Code : ${sessionCode}</span>
+        <span style="background:rgba(255,255,255,0.15);color:white;padding:4px 14px;border-radius:20px;font-size:10px;border:1px solid rgba(255,255,255,0.2)">Date : ${date}</span>
+        <span style="background:rgba(231,111,81,0.25);color:#E76F51;padding:4px 14px;border-radius:20px;font-size:10px;border:1px solid rgba(231,111,81,0.3)">Confidentiel praticien</span>
+      </div>
+    </div>
+
+    <div style="padding:18px 24px;display:flex;flex-direction:column;gap:14px">
+
+      <!-- SYNTHESE -->
+      <div style="background:#1B3A6B;border-radius:14px;padding:16px 20px;border-left:4px solid #3a7531">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#8AABC8;margin-bottom:8px">Synthèse clinique intégrée</div>
+        <div style="font-size:13px;color:white;line-height:1.75;font-family:Georgia,serif;font-style:italic">${data.synthese}</div>
+      </div>
+
+      <!-- MATRICE 6 AXES -->
+      <div style="background:white;border-radius:14px;padding:16px 18px;border:0.5px solid rgba(0,0,0,0.08)">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#3a7531;margin-bottom:10px">Matrice psychosomatique — 6 axes MindCheck</div>
+        <table style="width:100%;border-collapse:collapse;font-size:11px">
+          <thead><tr>
+            <th style="background:#1B3A6B;color:white;padding:8px 10px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:0.8px">Axe</th>
+            <th style="background:#1B3A6B;color:white;padding:8px 10px;text-align:left;font-size:10px;text-transform:uppercase">Score</th>
+            <th style="background:#1B3A6B;color:white;padding:8px 10px;text-align:left;font-size:10px;text-transform:uppercase">Manifestations cliniques</th>
+            <th style="background:#1B3A6B;color:white;padding:8px 10px;text-align:left;font-size:10px;text-transform:uppercase">Systèmes</th>
+          </tr></thead>
+          <tbody>${axesHTML}</tbody>
+        </table>
+      </div>
+
+      <!-- LECTURE SYSTÈMES -->
+      <div style="background:white;border-radius:14px;padding:16px 18px;border:0.5px solid rgba(0,0,0,0.08)">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#3a7531;margin-bottom:10px">Lecture systèmes</div>
+        ${systemesHTML}
+      </div>
+
+      <!-- RED FLAGS -->
+      <div style="background:white;border-radius:14px;padding:16px 18px;border:0.5px solid rgba(0,0,0,0.08)">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#3a7531;margin-bottom:10px">Signaux d'alerte — hiérarchisés</div>
+        ${rfHTML}
+      </div>
+
+      <!-- AXES THERAPEUTIQUES -->
+      <div style="background:white;border-radius:14px;padding:16px 18px;border:0.5px solid rgba(0,0,0,0.08)">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#3a7531;margin-bottom:10px">Axes thérapeutiques prioritaires</div>
+        ${axThHTML}
+      </div>
+
+      <!-- FORCES / VIGILANCE -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div style="background:#E8F4ED;border-radius:14px;padding:14px 16px">
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:#3a7531;margin-bottom:8px">Ressources cliniques</div>
+          ${data.forces.map(f=>`<div style="font-size:12px;color:#333;margin-bottom:5px;display:flex;gap:8px"><span style="color:#3a7531;flex-shrink:0">✓</span>${f}</div>`).join('')}
+        </div>
+        <div style="background:#FFF8E7;border:1px solid #F0D060;border-radius:14px;padding:14px 16px">
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:#7A5C00;margin-bottom:8px">Points de vigilance</div>
+          ${data.vigilance.map(v=>`<div style="font-size:12px;color:#333;margin-bottom:5px;display:flex;gap:8px"><span style="color:#E9A820;flex-shrink:0">◆</span>${v}</div>`).join('')}
+        </div>
+      </div>
+
+      <!-- CONCLUSION -->
+      <div style="background:white;border-radius:14px;padding:16px 18px;border-left:4px solid #1B3A6B;border:.5px solid rgba(0,0,0,.08)">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#3a7531;margin-bottom:8px">Conclusion clinique &amp; pronostic</div>
+        <div style="font-size:12px;color:#333;line-height:1.75">${data.conclusion}</div>
+      </div>
+
+      <!-- FOOTER -->
+      <div style="font-size:9px;color:#AEADA7;text-align:center;line-height:1.7;border-top:1px solid #E8E4DE;padding-top:12px">
+        Ce bilan est généré par IA à partir d'un récit collecté via MindCheck. Il constitue une aide à la lecture clinique et ne remplace pas l'évaluation du praticien.<br>
+        Usage strictement professionnel et confidentiel.
+      </div>
+
+      <!-- BOUTONS -->
+      <div style="display:flex;gap:10px;justify-content:center;padding-bottom:8px">
+        <button onclick="printBilanBTB()" style="background:#1B3A6B;color:white;border:none;border-radius:30px;padding:10px 24px;font-family:Arial;font-size:13px;font-weight:500;cursor:pointer">Télécharger BTB en PDF</button>
+        <button onclick="document.getElementById('btb-ov').remove()" style="background:transparent;color:#1B3A6B;border:1.5px solid #1B3A6B;border-radius:30px;padding:10px 24px;font-family:Arial;font-size:13px;font-weight:500;cursor:pointer">Fermer</button>
+      </div>
+    </div>
+  </div></div>`;
+  document.body.insertAdjacentHTML('beforeend', html);
+}
+
+function printBilanBTB(){
+  const inner = document.getElementById('btb-doc').innerHTML;
+  const w = window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Bilan BTB MindCheck — ${sessionCode}</title><style>body{margin:0;background:#F4F4F2;font-family:Arial,sans-serif}table{width:100%;border-collapse:collapse}th{background:#1B3A6B;color:white;padding:8px 10px;text-align:left;font-size:10px}td{padding:8px 10px;border-bottom:1px solid #EEECE8;vertical-align:top}@media print{@page{margin:.5cm}}</style></head><body><div style="max-width:760px;margin:auto">${inner}</div></body></html>`);
+  w.document.close();
+  setTimeout(()=>w.print(), 900);
 }
 
 function printBilan(){
