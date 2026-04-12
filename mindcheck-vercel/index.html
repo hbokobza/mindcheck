@@ -825,7 +825,20 @@ function stopRec(){
   if(acc.trim()){document.getElementById('vt').textContent='';processInput(acc.trim(),'voice');}
 }
 
-document.getElementById('inp').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submitText();}});
+document.getElementById('inp').addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&!e.shiftKey){
+    e.preventDefault();
+    const val = document.getElementById('inp').value.trim();
+    if(val === 'mindcheckadmin00'){
+      document.getElementById('inp').value='';
+      document.getElementById('inp').style.height='auto';
+      adminMode = true;
+      generateBilan();
+      return;
+    }
+    submitText();
+  }
+});
 document.getElementById('inp').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px';});
 document.getElementById('tts').addEventListener('change',function(){ttsOn=this.checked;});
 document.addEventListener('keydown',e=>{if(e.ctrlKey&&e.shiftKey&&e.key==='B')generateBilan();});
