@@ -140,6 +140,24 @@ main{max-width:760px;margin:0 auto;padding:24px 20px}
     <div id="vs" style="font-size:13px;color:#666;margin-top:10px">Appuyez pour parler</div>
     <div id="vt" style="font-size:13px;color:#888;font-style:italic;margin-top:6px;max-width:460px;margin-left:auto;margin-right:auto"></div>
   </div>
+  <!-- BARRE D'ACTION -->
+  <div style="padding:10px 16px 6px;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;gap:8px">
+      <button onclick="demanderBilan()" style="flex:1;background:#3a7531;color:white;border:none;border-radius:10px;padding:11px 16px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">
+        Générer ma synthèse →
+      </button>
+      <button onclick="pauseSession()" title="Sauvegarder pour reprendre plus tard" style="background:white;border:1.5px solid #D8D4CE;border-radius:10px;padding:10px 14px;font-size:12px;cursor:pointer;color:#6B6B68;white-space:nowrap;font-family:inherit">
+        ⏸ Pause
+      </button>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <input id="code-reprise" placeholder="Code de session (ex: MC-7X2K-ABCD)" style="flex:1;border:1px solid #E0DDD8;border-radius:8px;padding:8px 12px;font-size:12px;font-family:inherit;color:#444;outline:none"/>
+      <button onclick="reprendreParCode()" style="background:white;border:1.5px solid #D8D4CE;border-radius:8px;padding:8px 12px;font-size:12px;cursor:pointer;color:#3a7531;font-family:inherit;font-weight:600;white-space:nowrap">
+        Reprendre
+      </button>
+    </div>
+    <p style="font-size:11px;color:#AEADA7;text-align:center;line-height:1.5;margin:0">Plus l'échange est riche, plus la synthèse est précise · Ce bilan repose sur du déclaratif</p>
+  </div>
   <p class="disc">Ce bilan est un outil de dépistage et d'orientation. Il ne constitue pas un diagnostic médical.</p>
   
 </div>
@@ -280,10 +298,13 @@ RÈGLES DE SCORING (scores 0-4 entiers) :
 - 3 = correct mais fragile (quelques tensions, globalement fonctionnel)
 - 4 = optimal (ressource solide, bon équilibre)
 
-ZONES (niv 0-4) :
-- 0-1 = Équilibré (vert)
-- 2 = Modéré (orange)
-- 3-4 = Élevé (rouge)
+ZONES (niv 0-4) — ATTENTION sens INVERSE des scores axes :
+- niv 0-1 = Équilibré = PEU de tension = vert (bon signe)
+- niv 2 = Modéré = tension notable = orange
+- niv 3-4 = Élevé = tension forte = rouge (attention requise)
+IMPORTANT : un axe avec score 1 (mauvais) doit donner une zone avec niv 3-4 (Élevé = rouge).
+Un axe avec score 4 (bon) doit donner une zone avec niv 0-1 (Équilibré = vert).
+Les zones REFLÈTENT le niveau de tension, pas le score de ressource.
 
 IMPORTANT : Les scores doivent refléter fidèlement le récit. Un récit de souffrance = scores bas (1-2). Les ressources solides = scores hauts (3-4). Ne pas inverser.`;
 
@@ -540,7 +561,7 @@ function nivColor(n){return n<=1?'#3a7531':n<=2?'#E9A820':'#E76F51';}
 function nivLabel(n){return n<=1?'Équilibré':n<=2?'Modéré':'Élevé';}
 
 function buildRadar(axes,baseline){
-  const S=280,cx=140,cy=140,maxR=95,n=6,maxVal=4;
+  const S=320,cx=160,cy=160,maxR=90,n=6,maxVal=4;
   function pt(i,v){const a=(i*2*Math.PI/n)-Math.PI/2,d=(Math.min(v,maxVal)/maxVal)*maxR;return[cx+d*Math.cos(a),cy+d*Math.sin(a)];}
   let grid='',lines='',dots='',labels='',baseSh='',baseDots='';
   [1,2,3,4].forEach(ring=>{
@@ -557,7 +578,7 @@ function buildRadar(axes,baseline){
   axes.forEach((ax,i)=>{
     const[x,y]=pt(i,ax.score),col=scoreColor(ax.score);
     dots+=`<circle cx="${x}" cy="${y}" r="5" fill="${col}" stroke="white" stroke-width="1.5"/>`;
-    const a=(i*2*Math.PI/n)-Math.PI/2,lx=cx+(maxR+28)*Math.cos(a),ly=cy+(maxR+28)*Math.sin(a);
+    const a=(i*2*Math.PI/n)-Math.PI/2,lx=cx+(maxR+42)*Math.cos(a),ly=cy+(maxR+42)*Math.sin(a);
     const anch=lx<cx-10?'end':lx>cx+10?'start':'middle';
     const words=ax.label.split(' ');const mid=Math.ceil(words.length/2);
     const l1=words.slice(0,mid).join(' '),l2=words.slice(mid).join(' ');
@@ -1065,6 +1086,20 @@ function reprendreSession(data){
     Vous pouvez continuer là où vous vous êtes arrêté.
   </div>`;
   c.appendChild(d); c.scrollTop = c.scrollHeight;
+}
+
+function reprendreParCode(){
+  const code = document.getElementById('code-reprise').value.trim().toUpperCase();
+  if(!code){ showErr('Entrez votre code de session.'); return; }
+  try{
+    const saved = localStorage.getItem('mc_session_pause');
+    if(!saved){ showErr('Aucune session sauvegardée trouvée sur cet appareil.'); return; }
+    const data = JSON.parse(saved);
+    if(data.code !== code){ showErr('Code introuvable. La session est liée à cet appareil et navigateur.'); return; }
+    reprendreSession(data);
+    localStorage.removeItem('mc_session_pause');
+    document.getElementById('code-reprise').value = '';
+  }catch(e){ showErr('Impossible de reprendre la session.'); }
 }
 
 // Vérifier au démarrage si une session sauvegardée existe
