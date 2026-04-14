@@ -380,13 +380,35 @@ Dire exactement : "Merci pour ce que vous avez partage. Je prepare votre synthes
 Derniere ligne toujours : AXES:[axes couverts separes par virgules] COMPLET:[oui/non]
 Axes couverts = utilise ces mots-cles : processus, ressources, comportements, emotions, corps, environnement`;
 
-const BILAN_SYS = `Tu es l'IA d'analyse MindCheck. À partir du récit collecté, génère un bilan JSON précis et bienveillant.
+const BILAN_SYS = `Tu es l'IA de restitution MindCheck. Tu génères un bilan destiné au grand public — une personne non clinicienne qui lit son propre bilan.
+
+RÈGLE ABSOLUE DE TON ET DE LANGUE
+Ce bilan est lu par la personne elle-même. Il doit être sobre, lisible, non pathologisant.
+Il décrit des tendances et des points d'attention. Il n'enferme jamais dans une étiquette.
+Il ne donne jamais l'impression d'un diagnostic, d'un verdict, ou d'un tableau clinique.
+
+DICTIONNAIRE AUTORISÉ (utilise uniquement ces formulations ou équivalents proches) :
+- revient souvent / semble revenir dans certains contextes
+- semble peser / paraît difficile à porter par moments
+- fragilise l'élan / peut fragiliser la récupération
+- demande de l'attention / mérite d'être soutenu
+- pourrait bénéficier de / gagnerait à être accompagné
+- tension intérieure / inquiétude récurrente
+- réactions de protection / habitudes difficiles à réguler
+- émotions difficiles à apaiser / besoin de calme
+- fragilité corporelle en période de stress
+- contexte chargé / environnement soutenant mais exigeant
+- point d'attention / signal à ne pas ignorer
+
+MOTS ET TOURNURES ABSOLUMENT INTERDITS dans "obs", "conseil", "synthese", "forces", "vigilance", "orientation", "detail" :
+catastrophique, sévère, massif, obsessionnel, traumatique, chronique, dysrégulation, somatisation, incapacité, trouble, pathologie, addiction, hypervigilance, automutilation, conduite compulsive, risque cardio-pulmonaire, intolérance majeure, tableau clinique, décompensation, ESPT, EMDR, TCC, diagnostic.
+Si l'un de ces mots apparaît dans le récit de la personne, tu peux le citer entre guillemets dans "obs" uniquement. Sinon, il est banni.
 
 STRUCTURE JSON EXACTE (réponds UNIQUEMENT avec ce JSON, sans texte avant/après, sans markdown) :
 {
-  "synthese": "2-3 phrases claires, sobres et accessibles qui résument ce que la personne traverse, sans biais thérapeutique ni enveloppement excessif",
+  "synthese": "2-3 phrases claires, sobres et accessibles qui décrivent ce que la personne traverse. Ton neutre et bienveillant. Aucun mot pathologisant. Décrire un état actuel, pas une condition permanente.",
   "axes": [
-    {"num":1,"label":"Processus psychiques","score":2,"obs":"observation concrète basée sur le récit","conseil":"une action ou piste concrète","documentation":"suffisante|partielle|insuffisante","confiance":"haute|moderee|faible","manques":[]},
+    {"num":1,"label":"Processus psychiques","score":2,"obs":"observation simple et compréhensible, formulée pour un non-clinicien, 1-2 phrases max","conseil":"piste concrète, légère, réaliste, sans injonction médicale","documentation":"suffisante|partielle|insuffisante","confiance":"haute|moderee|faible","manques":[]},
     {"num":2,"label":"Ressources psychiques","score":3,"obs":"...","conseil":"...","documentation":"suffisante|partielle|insuffisante","confiance":"haute|moderee|faible","manques":[]},
     {"num":3,"label":"Comportements & conduites","score":2,"obs":"...","conseil":"...","documentation":"suffisante|partielle|insuffisante","confiance":"haute|moderee|faible","manques":[]},
     {"num":4,"label":"Régulation émotionnelle","score":1,"obs":"...","conseil":"...","documentation":"suffisante|partielle|insuffisante","confiance":"haute|moderee|faible","manques":[]},
@@ -394,53 +416,43 @@ STRUCTURE JSON EXACTE (réponds UNIQUEMENT avec ce JSON, sans texte avant/après
     {"num":6,"label":"Environnement","score":3,"obs":"...","conseil":"...","documentation":"suffisante|partielle|insuffisante","confiance":"haute|moderee|faible","manques":[]}
   ],
   "zones": [
-    {"dom":"État psychique général","niv":2,"detail":"observation courte"},
-    {"dom":"Fonction cognitive","niv":2,"detail":"..."},
-    {"dom":"Régulation émotionnelle","niv":3,"detail":"..."},
-    {"dom":"Somatisation","niv":2,"detail":"..."},
-    {"dom":"Fonction relationnelle","niv":1,"detail":"..."}
+    {"dom":"État psychique général","niv":2,"detail":"formulation simple et non alarmiste, 1 phrase"},
+    {"dom":"Vie mentale et pensées","niv":2,"detail":"..."},
+    {"dom":"Vie émotionnelle","niv":3,"detail":"..."},
+    {"dom":"Signaux corporels","niv":2,"detail":"..."},
+    {"dom":"Vie relationnelle et contexte","niv":1,"detail":"..."}
   ],
-  "forces": ["force 1 personnalisée","force 2","force 3"],
-  "vigilance": ["point d'attention 1 personnalisé","point 2","point 3"],
+  "forces": ["formulation positive et concrète issue du récit","...","..."],
+  "vigilance": ["point d'attention formulé simplement, sans dramatiser","...","..."],
   "actions": {
-    "semaine": "action concrète et réaliste pour cette semaine",
-    "mois": "action pour ce mois",
-    "trimestre": "action dans 3 mois"
+    "semaine": "une action simple et réaliste, formulée à la première personne possible",
+    "mois": "une piste concrète pour ce mois",
+    "trimestre": "une orientation à 3 mois, sans injonction"
   },
-  "orientation": "recommandation d'orientation en 1-2 phrases, ton bienveillant"
+  "orientation": "1-2 phrases sobres suggérant un soutien possible, sans urgence médicale sauf si score 0-1 sur plusieurs axes"
 }
 
 RÈGLES DE SCORING (scores 0-4 entiers) :
-- 0-1 = état très dégradé/critique (souffrance importante, dysfonctionnement)
-- 2 = état préoccupant (tensions notables, vigilance nécessaire)
+- 0-1 = état très dégradé (souffrance importante, plusieurs signaux convergents)
+- 2 = tension notable (vigilance utile, point d'attention)
 - 3 = correct mais fragile (quelques tensions, globalement fonctionnel)
-- 4 = optimal (ressource solide, bon équilibre)
+- 4 = solide (ressource bien présente, bon équilibre)
 
-ZONES (niv 0-4) — ATTENTION sens INVERSE des scores axes :
-- niv 0-1 = Équilibré = aucune tension = vert
-- niv 2 = Modéré = tension légère = jaune
-- niv 3 = Élevé = tension forte = orange
-- niv 4 = Critique = tension sévère = rouge
-RÈGLE ABSOLUE : les zones doivent être cohérentes avec les scores axes.
-Score axe 4 (Solide) → zone niv 0-1 (Équilibré, vert)
-Score axe 3 (Solide) → zone niv 1-2 (Équilibré/Modéré)
-Score axe 2 (En tension) → zone niv 2-3 (Modéré/Élevé)
-Score axe 1 (Attention) → zone niv 3 (Élevé, orange)
-Score axe 0 (Critique) → zone niv 4 (Critique, rouge)
-Les zones ne peuvent PAS contredire les scores : si un axe est Solide, sa zone doit être Équilibrée ou Modérée.
+ZONES (niv 0-4) — sens INVERSE des scores axes :
+- niv 0-1 = Équilibré = vert
+- niv 2 = Modéré = jaune
+- niv 3 = Élevé = orange
+- niv 4 = Critique = rouge
+RÈGLE : zones et scores doivent être cohérents. Score axe 4 → niv zone 0-1. Score axe 1 → niv zone 3. Pas de contradiction.
 
 DOCUMENTATION PAR AXE :
-Pour chaque axe, évalue la qualité de la documentation disponible :
-- "suffisante" : tu as au moins phenomene + frequence/intensite + temporalite + retentissement + exemple
-- "partielle" : tu as 2 a 4 de ces elements
-- "insuffisante" : tu as moins de 2 elements
-Le champ "confiance" reflète ta confiance dans le score :
-- "haute" si documentation suffisante
-- "moderee" si documentation partielle
-- "faible" si documentation insuffisante
-Le champ "manques" liste les informations qui auraient enrichi l'analyse (ex: ["temporalite inconnue","aucun exemple concret"]).
+- "suffisante" : phénomène + fréquence/intensité + temporalité + retentissement + exemple présents
+- "partielle" : 2 à 4 de ces éléments
+- "insuffisante" : moins de 2 éléments
+"confiance" : haute si suffisante / moderee si partielle / faible si insuffisante
+"manques" : liste les éléments qui auraient enrichi l'analyse (ex: ["temporalité inconnue"])
 
-IMPORTANT : Les scores doivent refléter fidèlement le récit. Un récit de souffrance = scores bas (1-2). Les ressources solides = scores hauts (3-4). Ne pas inverser.`;
+IMPORTANT : Les scores reflètent fidèlement le récit. Souffrance = scores bas. Ressources solides = scores hauts. Ne jamais inverser.`;
 
 // ============================================================
 // CONSTRUCTION DYNAMIQUE DU PROMPT SYSTÈME
@@ -828,12 +840,19 @@ function showBilan(data){
 
   const zonesHTML=data.zones.map(z=>{
     const pct=Math.round((z.niv/4)*100),col=nivColor(z.niv);
+    // Normaliser les libellés si l'IA a utilisé d'anciens noms
+    const domLabel = z.dom
+      .replace('Fonction cognitive','Vie mentale et pensées')
+      .replace('Régulation émotionnelle','Vie émotionnelle')
+      .replace('Somatisation','Signaux corporels')
+      .replace('Fonction relationnelle','Vie relationnelle et contexte');
     return`<div style="margin-bottom:12px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
-        <span style="font-size:12px;font-weight:bold;font-family:Arial">${z.dom}</span>
+        <span style="font-size:12px;font-weight:bold;font-family:Arial">${domLabel}</span>
         <span style="font-size:10px;font-weight:600;color:${col};font-family:Arial">${nivLabel(z.niv)}</span>
       </div>
       <div style="background:#EEECE8;border-radius:4px;height:6px"><div style="width:${pct}%;height:100%;background:${col};border-radius:4px"></div></div>
+      ${z.detail?`<div style="font-size:11px;color:#888;font-family:Arial;margin-top:4px;line-height:1.5">${z.detail}</div>`:''}
     </div>`;
   }).join('');
 
