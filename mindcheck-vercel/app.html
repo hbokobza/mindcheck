@@ -141,22 +141,37 @@ main{max-width:760px;margin:0 auto;padding:24px 20px}
     <div id="vt" style="font-size:13px;color:#888;font-style:italic;margin-top:6px;max-width:460px;margin-left:auto;margin-right:auto"></div>
   </div>
   <!-- BARRE D'ACTION -->
-  <div style="padding:10px 16px 6px;display:flex;flex-direction:column;gap:8px">
-    <div style="display:flex;gap:8px">
-      <button onclick="demanderBilan()" style="flex:1;background:#3a7531;color:white;border:none;border-radius:10px;padding:11px 16px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">
-        Générer ma synthèse →
-      </button>
-      <button onclick="pauseSession()" title="Sauvegarder pour reprendre plus tard" style="background:white;border:1.5px solid #D8D4CE;border-radius:10px;padding:10px 14px;font-size:12px;cursor:pointer;color:#6B6B68;white-space:nowrap;font-family:inherit">
-        ⏸ Pause
+  <div style="padding:10px 16px 6px">
+
+    <!-- Bouton principal générer -->
+    <button onclick="demanderBilan()" style="width:100%;background:#3a7531;color:white;border:none;border-radius:12px;padding:13px 16px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:8px">
+      Générer ma synthèse →
+    </button>
+
+    <!-- Ligne pause + info -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:0 2px">
+      <span style="font-size:11px;color:#AEADA7;line-height:1.5;max-width:72%">Plus vous partagez, plus la synthèse sera précise. Vous pouvez générer à tout moment.</span>
+      <button onclick="pauseSession()" style="background:none;border:none;cursor:pointer;color:#888;font-size:12px;font-family:inherit;padding:4px 8px;border-radius:6px;border:1px solid #E0DDD8;white-space:nowrap" title="Sauvegarder cette session pour la reprendre plus tard sur cet appareil">
+        💾 Sauvegarder
       </button>
     </div>
-    <div style="display:flex;gap:8px;align-items:center">
-      <input id="code-reprise" placeholder="Code de session (ex: MC-7X2K-ABCD)" style="flex:1;border:1px solid #E0DDD8;border-radius:8px;padding:8px 12px;font-size:12px;font-family:inherit;color:#444;outline:none"/>
-      <button onclick="reprendreParCode()" style="background:white;border:1.5px solid #D8D4CE;border-radius:8px;padding:8px 12px;font-size:12px;cursor:pointer;color:#3a7531;font-family:inherit;font-weight:600;white-space:nowrap">
-        Reprendre
+
+    <!-- Reprendre une session — discret, dépliable -->
+    <div style="text-align:center">
+      <button onclick="toggleReprise()" style="background:none;border:none;cursor:pointer;font-size:11px;color:#AEADA7;font-family:inherit;text-decoration:underline;padding:2px">
+        Reprendre une session sauvegardée
       </button>
     </div>
-    <p style="font-size:11px;color:#AEADA7;text-align:center;line-height:1.5;margin:0">Plus l'échange est riche, plus la synthèse est précise · Ce bilan repose sur du déclaratif</p>
+    <div id="reprise-panel" style="display:none;margin-top:8px;background:#F5F0E8;border-radius:10px;padding:12px 14px">
+      <p style="font-size:12px;color:#555;margin-bottom:8px;line-height:1.5">Entrez votre code de session pour retrouver un entretien sauvegardé sur cet appareil.</p>
+      <div style="display:flex;gap:8px">
+        <input id="code-reprise" placeholder="MC-7X2K-ABCD" style="flex:1;border:1px solid #E0DDD8;border-radius:8px;padding:8px 12px;font-size:13px;font-family:inherit;color:#444;outline:none;background:white"/>
+        <button onclick="reprendreParCode()" style="background:#3a7531;color:white;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap">
+          Reprendre →
+        </button>
+      </div>
+    </div>
+
   </div>
   <p class="disc">Ce bilan est un outil de dépistage et d'orientation. Il ne constitue pas un diagnostic médical.</p>
   
@@ -1086,6 +1101,11 @@ function reprendreSession(data){
     Vous pouvez continuer là où vous vous êtes arrêté.
   </div>`;
   c.appendChild(d); c.scrollTop = c.scrollHeight;
+}
+
+function toggleReprise(){
+  const p = document.getElementById('reprise-panel');
+  p.style.display = p.style.display === 'none' ? 'block' : 'none';
 }
 
 function reprendreParCode(){
