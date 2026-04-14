@@ -723,49 +723,29 @@ function showBilan(data){
         Son objectif : vous aider à mieux vous comprendre et à trouver le bon soutien, au bon moment.
       </div>
 
+      <!-- FREEMIUM -->
+      <div style="margin:0 0 20px;background:linear-gradient(135deg,#1A2E22 0%,#2D5233 100%);border-radius:20px;padding:28px;color:white;text-align:center">
+        <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:10px">Votre espace MindCheck</div>
+        <h3 style="font-family:Georgia,serif;font-size:20px;font-weight:700;margin-bottom:8px">Suivez votre evolution dans le temps</h3>
+        <p style="font-size:12px;color:rgba(255,255,255,0.55);line-height:1.7;max-width:360px;margin:0 auto 20px">Enregistrez ce bilan, comparez vos resultats, recevez une lecture d'evolution et accedez a une orientation therapeutique adaptee a votre profil exact.</p>
+        <div style="display:flex;gap:10px;justify-content:center;margin-bottom:20px;flex-wrap:wrap">
+          <div style="background:rgba(255,255,255,0.1);border-radius:8px;padding:8px 12px;font-size:11px;color:rgba(255,255,255,0.75)">Suivi dans le temps</div>
+          <div style="background:rgba(255,255,255,0.1);border-radius:8px;padding:8px 12px;font-size:11px;color:rgba(255,255,255,0.75)">Comparaison des bilans</div>
+          <div style="background:rgba(255,255,255,0.1);border-radius:8px;padding:8px 12px;font-size:11px;color:rgba(255,255,255,0.75)">Orientation therapeute</div>
+          <div style="background:rgba(255,255,255,0.1);border-radius:8px;padding:8px 12px;font-size:11px;color:rgba(255,255,255,0.75)">Acces illimite</div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:10px">
+          <span style="font-size:26px;font-weight:700;color:white">9<span style="font-size:14px">€/mois</span></span>
+          <div style="background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.5);padding:11px 22px;border-radius:26px;font-size:12px;font-weight:600;cursor:not-allowed;border:1px solid rgba(255,255,255,0.15)">
+            Creer mon espace — bientot disponible
+          </div>
+        </div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.25)">Email uniquement · Lien magique · Sans mot de passe · Resiliation immediate</div>
+      </div>
+
       <!-- BOUTONS -->
       <div style="display:flex;gap:10px;justify-content:center;padding-bottom:10px">
-        <button onclick="printBilan()" style="background:#3a7531;color:white;border:none;border-radius:30px;padding:10px 24px;font-family:Arial;font-size:13px;font-weight:500;cursor:pointer">Télécharger en PDF</button>
-
-      <!-- BLOC FREEMIUM -->
-      <div style="margin:24px 0 0;background:#F5F0E8;border-radius:16px;padding:22px 24px;border:1px solid #E8E4DE;text-align:left">
-        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#3a7531;margin-bottom:12px">Aller plus loin avec MindCheck</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px">
-          <div style="font-size:12px;color:#555;display:flex;gap:8px;align-items:flex-start">
-            <span style="color:#3a7531;font-weight:700;flex-shrink:0">✓</span>
-            <span>Enregistrer ce bilan et y accéder à tout moment</span>
-          </div>
-          <div style="font-size:12px;color:#555;display:flex;gap:8px;align-items:flex-start">
-            <span style="color:#3a7531;font-weight:700;flex-shrink:0">✓</span>
-            <span>Suivre l'évolution de vos 6 axes dans le temps</span>
-          </div>
-          <div style="font-size:12px;color:#555;display:flex;gap:8px;align-items:flex-start">
-            <span style="color:#3a7531;font-weight:700;flex-shrink:0">✓</span>
-            <span>Comparer vos bilans successifs</span>
-          </div>
-          <div style="font-size:12px;color:#555;display:flex;gap:8px;align-items:flex-start">
-            <span style="color:#3a7531;font-weight:700;flex-shrink:0">✓</span>
-            <span>Recevoir une lecture d'évolution personnalisée</span>
-          </div>
-          <div style="font-size:12px;color:#555;display:flex;gap:8px;align-items:flex-start">
-            <span style="color:#3a7531;font-weight:700;flex-shrink:0">✓</span>
-            <span>Accès illimité aux check-ups</span>
-          </div>
-          <div style="font-size:12px;color:#555;display:flex;gap:8px;align-items:flex-start">
-            <span style="color:#3a7531;font-weight:700;flex-shrink:0">✓</span>
-            <span>Orientation vers un thérapeute adapté à votre profil</span>
-          </div>
-        </div>
-        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
-          <div style="background:#3a7531;color:white;padding:10px 22px;border-radius:24px;font-size:13px;font-weight:600;cursor:not-allowed;opacity:0.7">
-            Créer mon espace MindCheck — 9€/mois
-          </div>
-          <span style="font-size:11px;color:#AEADA7;font-style:italic">Bientôt disponible · Email + lien magique · Sans mot de passe</span>
-        </div>
-        <div style="margin-top:10px;font-size:11px;color:#AEADA7;line-height:1.6">
-          Votre espace sera lié à votre email uniquement. Aucune donnée personnelle n'est collectée avant la création de compte. Résiliation à tout moment.
-        </div>
-      </div>
+        <button onclick="printBilan()" style="background:#3a7531;color:white;border:none;border-radius:30px;padding:10px 24px;font-family:Arial;font-size:13px;font-weight:500;cursor:pointer">Telecharger en PDF</button>
         <button onclick="document.getElementById('bov').remove()" style="background:transparent;color:#3a7531;border:1.5px solid #3a7531;border-radius:30px;padding:10px 24px;font-family:Arial;font-size:13px;font-weight:500;cursor:pointer">Fermer</button>
       </div>
     </div>
