@@ -789,40 +789,56 @@ async function generateBilan(avecBTB){
   }catch(e){rmDots();showErr('Erreur bilan : '+e.message);}
 }
 
-function scoreColor(s){return s>=3?'#3a7531':s>=2?'#E9A820':s>=1?'#E76F51':'#C0392B';}
-function scoreLabel(s){return s>=3?'Solide':s>=2?'En tension':s>=1?'Attention':'Critique';}
-function scoreBg(s){return s>=3?'#e8f2e8':s>=2?'#FFF3D6':s>=1?'#FDE8E0':'#FDDE8E8';}
-function nivColor(n){return n<=1?'#3a7531':n<=2?'#E9A820':n<=3?'#E76F51':'#C0392B';}
-function nivLabel(n){return n<=1?'Équilibré':n<=2?'Modéré':n<=3?'Élevé':'Critique';}
+// ── Nouveau système de couleurs unifié ──────────────────────────
+const SCORE_META = {
+  1: { label: "Fragile",    color: "#D97A7A", bg: "#FAE8E8" },
+  2: { label: "En tension", color: "#D8A24A", bg: "#FBF0DC" },
+  3: { label: "Stable",     color: "#A9C76F", bg: "#EEF5DC" },
+  4: { label: "Solide",     color: "#5B9B67", bg: "#E0F0E4" }
+};
+function getScoreMeta(s){ return SCORE_META[Math.max(1,Math.min(4,Math.round(s)))] || {label:"—",color:"#CFC8BC",bg:"#F0EDE8"}; }
+function scoreColor(s){ return getScoreMeta(s).color; }
+function scoreLabel(s){ return getScoreMeta(s).label; }
+function scoreBg(s){    return getScoreMeta(s).bg; }
+// niv zones : le modèle envoie 0-1=vert, 2=jaune, 3=orange, 4=rouge → converti en score 1-4
+function nivMeta(n){ const sc = n<=1?4:n===2?3:n===3?2:1; return getScoreMeta(sc); }
+function nivColor(n){ return nivMeta(n).color; }
+function nivLabel(n){ return nivMeta(n).label; }
 
 function buildRadar(axes,baseline){
   const S=320,cx=160,cy=160,maxR=90,n=6,maxVal=4;
   function pt(i,v){const a=(i*2*Math.PI/n)-Math.PI/2,d=(Math.min(v,maxVal)/maxVal)*maxR;return[cx+d*Math.cos(a),cy+d*Math.sin(a)];}
   let grid='',lines='',dots='',labels='',baseSh='',baseDots='';
+  // Grille gris clair
   [1,2,3,4].forEach(ring=>{
     const pts=axes.map((_,i)=>pt(i,ring).join(',')).join(' ');
-    grid+=`<polygon points="${pts}" fill="none" stroke="#D8D4CE" stroke-width="${ring===4?1.2:.6}"/>`;
+    grid+=`<polygon points="${pts}" fill="none" stroke="#DDD5C8" stroke-width="${ring===4?1.2:.5}"/>`;
   });
-  for(let i=0;i<n;i++){const[x,y]=pt(i,maxVal);lines+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#D8D4CE" stroke-width=".8"/>`;}
+  for(let i=0;i<n;i++){const[x,y]=pt(i,maxVal);lines+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#DDD5C8" stroke-width=".6"/>`;}
+  // Baseline précédente (bleu pointillé)
   if(baseline&&baseline.scores&&baseline.scores.length===n){
     const bPts=baseline.scores.map((s,i)=>pt(i,s).join(',')).join(' ');
-    baseSh=`<polygon points="${bPts}" fill="rgba(59,130,246,0.08)" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="4,3" stroke-linejoin="round"/>`;
-    baseline.scores.forEach((s,i)=>{const[bx,by]=pt(i,s);baseDots+=`<circle cx="${bx}" cy="${by}" r="3" fill="#3B82F6" opacity=".7"/>`;});
+    baseSh=`<polygon points="${bPts}" fill="rgba(59,130,246,0.07)" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="4,3" stroke-linejoin="round"/>`;
+    baseline.scores.forEach((s,i)=>{const[bx,by]=pt(i,s);baseDots+=`<circle cx="${bx}" cy="${by}" r="3" fill="#3B82F6" opacity=".6"/>`;});
   }
+  // Polygone de données — sobre, gris-vert neutre
   const dataPts=axes.map((ax,i)=>pt(i,ax.score).join(',')).join(' ');
+  // Points colorés selon score
   axes.forEach((ax,i)=>{
     const[x,y]=pt(i,ax.score),col=scoreColor(ax.score);
-    dots+=`<circle cx="${x}" cy="${y}" r="5" fill="${col}" stroke="white" stroke-width="1.5"/>`;
-    const a=(i*2*Math.PI/n)-Math.PI/2,lx=cx+(maxR+42)*Math.cos(a),ly=cy+(maxR+42)*Math.sin(a);
+    dots+=`<circle cx="${x}" cy="${y}" r="6" fill="${col}" stroke="white" stroke-width="1.8"/>`;
+    const a=(i*2*Math.PI/n)-Math.PI/2,lx=cx+(maxR+44)*Math.cos(a),ly=cy+(maxR+44)*Math.sin(a);
     const anch=lx<cx-10?'end':lx>cx+10?'start':'middle';
     const words=ax.label.split(' ');const mid=Math.ceil(words.length/2);
     const l1=words.slice(0,mid).join(' '),l2=words.slice(mid).join(' ');
-    labels+=l2?`<text text-anchor="${anch}" font-size="9" font-family="Arial" fill="${col}" font-weight="600"><tspan x="${lx}" y="${ly-4}">${l1}</tspan><tspan x="${lx}" dy="11">${l2}</tspan></text>`
-      :`<text x="${lx}" y="${ly+4}" text-anchor="${anch}" font-size="9" font-family="Arial" fill="${col}" font-weight="600">${l1}</text>`;
+    labels+=l2
+      ?`<text text-anchor="${anch}" font-size="9" font-family="Arial" fill="${col}" font-weight="700"><tspan x="${lx}" y="${ly-4}">${l1}</tspan><tspan x="${lx}" dy="11">${l2}</tspan></text>`
+      :`<text x="${lx}" y="${ly+4}" text-anchor="${anch}" font-size="9" font-family="Arial" fill="${col}" font-weight="700">${l1}</text>`;
   });
-  let legend='';
-  if(baseline)legend=`<g><line x1="8" y1="${S-8}" x2="22" y2="${S-8}" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="4,3"/><text x="26" y="${S-4}" font-size="8" fill="#666" font-family="Arial">Précédent (${baseline.date})</text><line x1="115" y1="${S-8}" x2="129" y2="${S-8}" stroke="#3a7531" stroke-width="2"/><circle cx="122" cy="${S-8}" r="3" fill="#3a7531"/><text x="133" y="${S-4}" font-size="8" fill="#666" font-family="Arial">Actuel</text></g>`;
-  return`<svg width="${S}" height="${S}" viewBox="0 0 ${S} ${S}" overflow="visible">${grid}${lines}${baseSh}<polygon points="${dataPts}" fill="rgba(58,117,49,0.12)" stroke="#3a7531" stroke-width="2.5" stroke-linejoin="round"/>${baseDots}${dots}${labels}${legend}</svg>`;
+  // Légende baseline si présente
+  let bLegend='';
+  if(baseline)bLegend=`<g><line x1="8" y1="${S-8}" x2="22" y2="${S-8}" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="4,3"/><text x="26" y="${S-4}" font-size="8" fill="#888" font-family="Arial">Précédent (${baseline.date})</text><line x1="112" y1="${S-8}" x2="126" y2="${S-8}" stroke="#7A9A7A" stroke-width="2"/><text x="130" y="${S-4}" font-size="8" fill="#888" font-family="Arial">Actuel</text></g>`;
+  return`<svg width="${S}" height="${S}" viewBox="0 0 ${S} ${S}" overflow="visible">${grid}${lines}${baseSh}<polygon points="${dataPts}" fill="rgba(120,160,120,0.10)" stroke="#8AAA8A" stroke-width="2" stroke-linejoin="round"/>${baseDots}${dots}${labels}${bLegend}</svg>`;
 }
 
 const PICTOS = {
@@ -839,40 +855,46 @@ function showBilan(data){
   const radar=buildRadar(data.axes,baselineData);
 
   const zonesHTML=data.zones.map(z=>{
-    const pct=Math.round((z.niv/4)*100),col=nivColor(z.niv);
-    // Normaliser les libellés si l'IA a utilisé d'anciens noms
+    const meta=nivMeta(z.niv);
+    // score 1-4 déduit pour les segments
+    const sc = z.niv<=1?4:z.niv===2?3:z.niv===3?2:1;
     const domLabel = z.dom
       .replace('Fonction cognitive','Vie mentale et pensées')
       .replace('Régulation émotionnelle','Vie émotionnelle')
       .replace('Somatisation','Signaux corporels')
       .replace('Fonction relationnelle','Vie relationnelle et contexte');
-    return`<div style="margin-bottom:12px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
-        <span style="font-size:12px;font-weight:bold;font-family:Arial">${domLabel}</span>
-        <span style="font-size:10px;font-weight:600;color:${col};font-family:Arial">${nivLabel(z.niv)}</span>
+    const segs=[1,2,3,4].map(i=>{
+      const segColor=SCORE_META[i].color;
+      const active=i<=sc;
+      return`<span style="height:8px;border-radius:3px;background:${segColor};opacity:${active?'1':'.2'}"></span>`;
+    }).join('');
+    return`<div style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <span style="font-size:12px;font-weight:700;font-family:Arial;color:#1f1f1c">${domLabel}</span>
+        <span style="font-size:10px;font-weight:700;color:${meta.color};font-family:Arial">${meta.label}</span>
       </div>
-      <div style="background:#EEECE8;border-radius:4px;height:6px"><div style="width:${pct}%;height:100%;background:${col};border-radius:4px"></div></div>
-      ${z.detail?`<div style="font-size:11px;color:#888;font-family:Arial;margin-top:4px;line-height:1.5">${z.detail}</div>`:''}
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin-bottom:6px">${segs}</div>
+      ${z.detail?`<div style="font-size:11px;color:#6d6b63;font-family:Arial;line-height:1.5">${z.detail}</div>`:''}
     </div>`;
   }).join('');
 
   const dimHTML=data.axes.map(ax=>{
-    const col=scoreColor(ax.score),bg=scoreBg(ax.score),pct=Math.round((ax.score/4)*100);
+    const meta=getScoreMeta(ax.score),col=meta.color,bg=meta.bg;
     const prev=baselineData?baselineData.scores[ax.num-1]:null;
-    const diff=prev!==null?(ax.score-prev).toFixed(1):null;
-    const diffHTML=diff!==null?`<span style="font-size:10px;margin-left:6px;color:${parseFloat(diff)>=0?'#3a7531':'#E76F51'}">${parseFloat(diff)>=0?'↑':'↓'}${Math.abs(diff)}</span>`:'';
-    return`<div style="border:.5px solid rgba(0,0,0,.08);border-radius:12px;padding:14px 16px;margin-bottom:9px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+    const diff=prev!=null?(ax.score-prev):null;
+    const diffHTML=diff!=null?`<span style="font-size:10px;margin-left:6px;color:${diff>=0?'#5B9B67':'#D97A7A'}">${diff>=0?'↑':'↓'}${Math.abs(diff)}</span>`:'';
+    const segs=[1,2,3,4].map(i=>`<span style="height:5px;border-radius:2px;background:${SCORE_META[i].color};opacity:${i<=ax.score?'1':'.18'}"></span>`).join('');
+    return`<div style="border:1px solid rgba(0,0,0,.07);border-radius:14px;padding:14px 16px;margin-bottom:9px;background:white">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
         <div style="display:flex;align-items:center;gap:10px">
           <div style="width:30px;height:30px;border-radius:50%;background:${bg};display:flex;align-items:center;justify-content:center;color:${col};flex-shrink:0">${PICTOS[ax.num]}</div>
-          <span style="font-size:13px;font-weight:bold;font-family:Arial">${ax.label}${diffHTML}</span>
+          <span style="font-size:13px;font-weight:700;font-family:Arial;color:#1f1f1c">${ax.label}${diffHTML}</span>
         </div>
-        <span style="font-size:10px;font-weight:600;color:${col};background:${bg};padding:3px 11px;border-radius:12px;flex-shrink:0;margin-left:8px">${scoreLabel(ax.score)}</span>
+        <span style="font-size:11px;font-weight:700;color:${col};background:${bg};padding:5px 12px;border-radius:999px;flex-shrink:0;margin-left:8px">${meta.label}</span>
       </div>
-      <div style="font-size:11px;color:#888;font-family:Arial;margin:4px 0 7px 40px">${ax.obs.substring(0,60).replace(/[^a-zA-ZÀ-ÿ0-9 ]/g,' ').trim()}…</div>
-      <div style="background:#EEECE8;border-radius:3px;height:5px;margin-bottom:9px"><div style="width:${pct}%;height:100%;background:${col};border-radius:3px"></div></div>
-      <div style="font-size:12px;color:#333;line-height:1.65;font-family:Arial;margin-bottom:7px">${ax.obs}</div>
-      <div style="font-size:11px;color:#3a7531;font-style:italic;font-family:Georgia,serif;border-left:2px solid #95D5B2;padding-left:10px">→ ${ax.conseil}</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin:8px 0 10px">${segs}</div>
+      <div style="font-size:12px;color:#40403a;line-height:1.65;font-family:Arial;margin-bottom:8px">${ax.obs}</div>
+      <div style="font-size:11px;color:#5B9B67;font-style:italic;font-family:Georgia,serif;border-left:2px solid #A9C76F;padding-left:10px;line-height:1.5">→ ${ax.conseil}</div>
     </div>`;
   }).join('');
 
@@ -906,16 +928,16 @@ function showBilan(data){
           <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#3a7531;margin-bottom:4px">Votre cartographie psychique</div>
           <div style="font-size:9px;color:#AEADA7;margin-bottom:8px">Modèle Stora (2001) — 0 à 4</div>
           <div style="display:flex;justify-content:center">${radar}</div>
-          <div style="display:flex;gap:12px;margin-top:8px;justify-content:center">
-            <div style="display:flex;align-items:center;gap:4px;font-size:9px;color:#555"><div style="width:8px;height:8px;border-radius:50%;background:#3a7531"></div>Solide</div>
-            <div style="display:flex;align-items:center;gap:4px;font-size:9px;color:#555"><div style="width:8px;height:8px;border-radius:50%;background:#E9A820"></div>Vigilance</div>
-            <div style="display:flex;align-items:center;gap:4px;font-size:9px;color:#555"><div style="width:8px;height:8px;border-radius:50%;background:#E76F51"></div>Attention</div>
+          <div style="display:flex;gap:10px;margin-top:10px;justify-content:center;flex-wrap:wrap">
+            ${Object.entries(SCORE_META).map(([s,m])=>`<div style="display:flex;align-items:center;gap:5px;font-size:9px;color:#6d6b63"><div style="width:10px;height:10px;border-radius:50%;background:${m.color}"></div>${m.label}</div>`).join('')}
           </div>
         </div>
         <div style="background:white;border-radius:14px;padding:14px;border:.5px solid rgba(0,0,0,.08)">
           <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#3a7531;margin-bottom:10px">Zones d'attention</div>
           ${zonesHTML}
-          <div style="font-size:9px;color:#AEADA7;margin-top:6px">● vert = équilibré · jaune = modéré · orange = élevé · rouge = critique</div>
+          <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
+            ${Object.entries(SCORE_META).map(([s,m])=>`<div style="display:flex;align-items:center;gap:4px;font-size:9px;color:#6d6b63"><div style="width:8px;height:8px;border-radius:2px;background:${m.color}"></div>${m.label}</div>`).join('')}
+          </div>
         </div>
       </div>
 
