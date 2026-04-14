@@ -117,7 +117,7 @@ main{max-width:760px;margin:0 auto;padding:24px 20px}
   <div class="chat" id="chat"></div>
   <div id="text-area">
     <div class="input-row">
-      <textarea id="inp" placeholder="Racontez librement… prenez le temps qu'il vous faut." rows="1"></textarea>
+      <textarea id="inp" placeholder="Racontez librement… plus l'échange est riche, plus la synthèse sera juste. Prenez le temps qu'il vous faut." rows="1"></textarea>
       <button id="sbtn" onclick="submitText()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
       </button>
@@ -143,25 +143,15 @@ main{max-width:760px;margin:0 auto;padding:24px 20px}
   <!-- BARRE D'ACTION -->
   <div style="padding:8px 16px 6px;display:flex;flex-direction:column;gap:6px">
 
-    <!-- Bouton principal -->
-    <button onclick="demanderBilan()" style="width:100%;background:#3a7531;color:white;border:none;border-radius:12px;padding:14px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:0.2px">
-      Générer ma synthèse →
-    </button>
-
-    <!-- 2 boutons secondaires côte à côte -->
+    <!-- 2 boutons secondaires EN HAUT -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
       <button onclick="pauseSession()" style="background:white;border:1.5px solid #D8D4CE;border-radius:10px;padding:10px;font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;color:#555;display:flex;align-items:center;justify-content:center;gap:6px">
-        <span>⏸</span> Mettre en pause
+        ⏸ Mettre en pause
       </button>
       <button onclick="toggleReprise()" style="background:white;border:1.5px solid #D8D4CE;border-radius:10px;padding:10px;font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;color:#555;display:flex;align-items:center;justify-content:center;gap:6px">
-        <span>↩</span> Reprendre une session
+        ↩ Reprendre une session interrompue
       </button>
     </div>
-
-    <!-- Explication courte -->
-    <p style="font-size:12px;color:#AEADA7;text-align:center;margin:2px 0 0;line-height:1.5">
-      Plus l'échange est riche, plus la synthèse sera juste.
-    </p>
 
     <!-- Panel reprise dépliable -->
     <div id="reprise-panel" style="display:none;background:#F5F0E8;border-radius:10px;padding:14px">
@@ -175,6 +165,11 @@ main{max-width:760px;margin:0 auto;padding:24px 20px}
         </button>
       </div>
     </div>
+
+    <!-- Bouton principal EN BAS -->
+    <button onclick="demanderBilan()" style="width:100%;background:#3a7531;color:white;border:none;border-radius:12px;padding:14px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:0.2px">
+      Générer ma synthèse →
+    </button>
 
   </div>
   <p class="disc">Ce bilan est un outil de dépistage et d'orientation. Il ne constitue pas un diagnostic médical.</p>
