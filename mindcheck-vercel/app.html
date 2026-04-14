@@ -313,12 +313,17 @@ RÈGLES DE SCORING (scores 0-4 entiers) :
 - 4 = optimal (ressource solide, bon équilibre)
 
 ZONES (niv 0-4) — ATTENTION sens INVERSE des scores axes :
-- niv 0-1 = Équilibré = PEU de tension = vert (bon signe)
-- niv 2 = Modéré = tension notable = orange
-- niv 3-4 = Élevé = tension forte = rouge (attention requise)
-IMPORTANT : un axe avec score 1 (mauvais) doit donner une zone avec niv 3-4 (Élevé = rouge).
-Un axe avec score 4 (bon) doit donner une zone avec niv 0-1 (Équilibré = vert).
-Les zones REFLÈTENT le niveau de tension, pas le score de ressource.
+- niv 0-1 = Équilibré = aucune tension = vert
+- niv 2 = Modéré = tension légère = jaune
+- niv 3 = Élevé = tension forte = orange
+- niv 4 = Critique = tension sévère = rouge
+RÈGLE ABSOLUE : les zones doivent être cohérentes avec les scores axes.
+Score axe 4 (Solide) → zone niv 0-1 (Équilibré, vert)
+Score axe 3 (Solide) → zone niv 1-2 (Équilibré/Modéré)
+Score axe 2 (En tension) → zone niv 2-3 (Modéré/Élevé)
+Score axe 1 (Attention) → zone niv 3 (Élevé, orange)
+Score axe 0 (Critique) → zone niv 4 (Critique, rouge)
+Les zones ne peuvent PAS contredire les scores : si un axe est Solide, sa zone doit être Équilibrée ou Modérée.
 
 IMPORTANT : Les scores doivent refléter fidèlement le récit. Un récit de souffrance = scores bas (1-2). Les ressources solides = scores hauts (3-4). Ne pas inverser.`;
 
@@ -568,11 +573,11 @@ async function generateBilan(avecBTB){
   }catch(e){rmDots();showErr('Erreur bilan : '+e.message);}
 }
 
-function scoreColor(s){return s>=3?'#3a7531':s>=2?'#E9A820':'#E76F51';}
-function scoreLabel(s){return s>=3?'Solide':s>=2?'En tension':'Attention';}
-function scoreBg(s){return s>=3?'#e8f2e8':s>=2?'#FFF3D6':'#FDE8E8';}
-function nivColor(n){return n<=1?'#3a7531':n<=2?'#E9A820':'#E76F51';}
-function nivLabel(n){return n<=1?'Équilibré':n<=2?'Modéré':'Élevé';}
+function scoreColor(s){return s>=3?'#3a7531':s>=2?'#E9A820':s>=1?'#E76F51':'#C0392B';}
+function scoreLabel(s){return s>=3?'Solide':s>=2?'En tension':s>=1?'Attention':'Critique';}
+function scoreBg(s){return s>=3?'#e8f2e8':s>=2?'#FFF3D6':s>=1?'#FDE8E0':'#FDDE8E8';}
+function nivColor(n){return n<=1?'#3a7531':n<=2?'#E9A820':n<=3?'#E76F51':'#C0392B';}
+function nivLabel(n){return n<=1?'Équilibré':n<=2?'Modéré':n<=3?'Élevé':'Critique';}
 
 function buildRadar(axes,baseline){
   const S=320,cx=160,cy=160,maxR=90,n=6,maxVal=4;
@@ -687,7 +692,7 @@ function showBilan(data){
         <div style="background:white;border-radius:14px;padding:14px;border:.5px solid rgba(0,0,0,.08)">
           <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#3a7531;margin-bottom:10px">Zones d'attention</div>
           ${zonesHTML}
-          <div style="font-size:9px;color:#AEADA7;margin-top:6px">● vert = équilibré · jaune = modéré · rouge = élevé</div>
+          <div style="font-size:9px;color:#AEADA7;margin-top:6px">● vert = équilibré · jaune = modéré · orange = élevé · rouge = critique</div>
         </div>
       </div>
 
@@ -731,7 +736,40 @@ function showBilan(data){
       </div>
 
       ${hasAlert?`
-      <!-- ALERTE THERAPIES -->
+      <!-- FREEMIUM — avant les consultations -->
+      <div style="background:#0F1A13;border-radius:20px;padding:28px 24px;color:white;text-align:center;margin-bottom:16px">
+        
+        <!-- Accroche -->
+        <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:10px">Votre espace MindCheck</div>
+        <h3 style="font-family:Georgia,serif;font-size:22px;font-weight:700;margin-bottom:6px;line-height:1.3">Suivez votre évolution<br>dans le temps</h3>
+        <p style="font-size:13px;color:rgba(255,255,255,0.5);line-height:1.6;max-width:340px;margin:0 auto 20px">Enregistrez vos bilans, comparez vos résultats mois après mois et recevez une orientation thérapeutique adaptée à votre profil exact.</p>
+
+        <!-- 2 plans -->
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;text-align:left">
+          <div style="background:rgba(255,255,255,0.08);border:1.5px solid #3a7531;border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;position:relative">
+            <div style="position:absolute;top:-10px;left:16px;background:#3a7531;color:white;font-size:10px;font-weight:700;letter-spacing:1px;padding:2px 10px;border-radius:20px">MEILLEUR PRIX</div>
+            <div>
+              <div style="font-size:14px;font-weight:600;color:white">Plan annuel</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.4)">soit moins de 0,80€/semaine</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:18px;font-weight:700;color:white">39€<span style="font-size:11px;font-weight:400;color:rgba(255,255,255,0.4)">/an</span></div>
+            </div>
+          </div>
+          <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center">
+            <div style="font-size:14px;font-weight:500;color:rgba(255,255,255,0.7)">Plan mensuel</div>
+            <div style="font-size:16px;font-weight:600;color:rgba(255,255,255,0.7)">9€<span style="font-size:11px;font-weight:400;color:rgba(255,255,255,0.35)">/mois</span></div>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div style="background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.4);padding:13px;border-radius:28px;font-size:13px;font-weight:600;cursor:not-allowed;margin-bottom:10px;border:1px solid rgba(255,255,255,0.1)">
+          Créer mon espace — Bientôt disponible
+        </div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.2);line-height:1.6">Sans engagement · Email uniquement · Lien magique · Résiliation immédiate</div>
+      </div>
+
+<!-- ALERTE THERAPIES -->
       <div style="background:#FEF2F2;border:1px solid #FCA5A5;border-radius:16px;padding:16px 20px">
         <div style="color:#C0392B;font-size:12px;font-weight:600;margin-bottom:8px">⚠ Votre bilan révèle un déséquilibre sur plusieurs axes — une consultation préventive est conseillée</div>
         <div style="font-size:12px;color:#555;line-height:1.65;margin-bottom:14px">Quand plusieurs dimensions sont en tension simultanément, elles s'alimentent mutuellement. Agir tôt, c'est éviter que ce déséquilibre s'installe durablement.</div>
@@ -756,26 +794,6 @@ function showBilan(data){
       <div style="font-size:9px;color:#BBB;text-align:center;line-height:1.6;padding-bottom:6px">
         Ce bilan est généré à partir de votre récit auto-déclaré. Il ne constitue pas un diagnostic médical ou psychologique.<br>
         Son objectif : vous aider à mieux vous comprendre et à trouver le bon soutien, au bon moment.
-      </div>
-
-      <!-- FREEMIUM -->
-      <div style="margin:0 0 20px;background:linear-gradient(135deg,#1A2E22 0%,#2D5233 100%);border-radius:20px;padding:28px;color:white;text-align:center">
-        <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:10px">Votre espace MindCheck</div>
-        <h3 style="font-family:Georgia,serif;font-size:20px;font-weight:700;margin-bottom:8px">Suivez votre evolution dans le temps</h3>
-        <p style="font-size:12px;color:rgba(255,255,255,0.55);line-height:1.7;max-width:360px;margin:0 auto 20px">Enregistrez ce bilan, comparez vos resultats, recevez une lecture d'evolution et accedez a une orientation therapeutique adaptee a votre profil exact.</p>
-        <div style="display:flex;gap:10px;justify-content:center;margin-bottom:20px;flex-wrap:wrap">
-          <div style="background:rgba(255,255,255,0.1);border-radius:8px;padding:8px 12px;font-size:11px;color:rgba(255,255,255,0.75)">Suivi dans le temps</div>
-          <div style="background:rgba(255,255,255,0.1);border-radius:8px;padding:8px 12px;font-size:11px;color:rgba(255,255,255,0.75)">Comparaison des bilans</div>
-          <div style="background:rgba(255,255,255,0.1);border-radius:8px;padding:8px 12px;font-size:11px;color:rgba(255,255,255,0.75)">Orientation therapeute</div>
-          <div style="background:rgba(255,255,255,0.1);border-radius:8px;padding:8px 12px;font-size:11px;color:rgba(255,255,255,0.75)">Acces illimite</div>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:10px">
-          <span style="font-size:26px;font-weight:700;color:white">9<span style="font-size:14px">€/mois</span></span>
-          <div style="background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.5);padding:11px 22px;border-radius:26px;font-size:12px;font-weight:600;cursor:not-allowed;border:1px solid rgba(255,255,255,0.15)">
-            Creer mon espace — bientot disponible
-          </div>
-        </div>
-        <div style="font-size:10px;color:rgba(255,255,255,0.25)">Email uniquement · Lien magique · Sans mot de passe · Resiliation immediate</div>
       </div>
 
       <!-- BOUTONS -->
