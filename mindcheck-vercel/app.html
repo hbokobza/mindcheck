@@ -235,6 +235,10 @@ Le check-up MindCheck n'est pas adapte a votre situation en ce moment."
 Ne jamais relancer l'entretien apres ce message. Ne jamais ajouter AXES: ni COMPLET: apres ce message.
 
 CLOTURE
+Tu continues l'entretien aussi longtemps que la personne souhaite partager. L'utilisateur peut choisir de generer sa synthese a tout moment via le bouton prevu. Si la personne dit qu'elle a fini ou veut la synthese, tu confirmes et tu clos.
+Les 6 axes obligatoires sont : processus, ressources, comportements, emotions, corps, environnement.
+Si un axe manque encore, pose naturellement la question d'ouverture de cet axe avant de clore.
+Tu mets COMPLET:oui quand la personne demande explicitement sa synthese ou quand les 6 axes sont tous couverts.
 Quand les 6 axes sont couverts et que tu as obtenu pour chacun : nature + intensite + frequence + anciennete + retentissement :
 Dire exactement : "Merci pour ce que vous avez partage. Je prepare votre synthese."
 Derniere ligne toujours : AXES:[axes couverts separes par virgules] COMPLET:[oui/non]
@@ -328,7 +332,28 @@ function startSession(m){
   document.getElementById('s2').classList.add('hidden');
   document.getElementById('s3').classList.remove('hidden');
   setMode(m);
-  addMsg('ai',"Je vous écoute. Prenez le temps qu'il vous faut — racontez ce qui vous amène aujourd'hui.");
+
+  // Proposer de reprendre une session sauvegardée
+  if(window._savedSession){
+    const data = window._savedSession;
+    const dateStr = new Date(data.date).toLocaleDateString('fr-FR', {day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'});
+    const c = document.getElementById('chat');
+    const d = document.createElement('div');
+    d.className = 'msg';
+    d.innerHTML = `<div class="av ai">M</div><div class="bub" style="background:#FFF8E7;border:1px solid #F0D060;font-size:13px;line-height:1.7;color:#5A4500">
+      <strong>Une session est sauvegardée</strong><br>
+      Code : ${data.code} · ${dateStr}<br>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button onclick="reprendreSession(window._savedSession);window._savedSession=null;localStorage.removeItem('mc_session_pause')" style="background:#3a7531;color:white;border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer">Reprendre cette session</button>
+        <button onclick="this.closest('.bub').parentElement.parentElement.remove();window._savedSession=null" style="background:transparent;color:#888;border:1px solid #ccc;border-radius:8px;padding:7px 14px;font-size:12px;cursor:pointer">Nouvelle session</button>
+      </div>
+    </div>`;
+    c.appendChild(d); c.scrollTop = c.scrollHeight;
+    hist.push({role:'assistant',content:'Session sauvegardee detectee. AXES:[] COMPLET:[non]'});
+    return;
+  }
+
+  addMsg('ai',`Bienvenue dans ce check-up psychique.\n\nIl n'y a pas de bonne ou de mauvaise façon de répondre. Plus vous partagez, plus la synthèse sera précise et utile.\n\nPrécision importante : ce check-up repose uniquement sur ce que vous choisissez de dire. Il n'explore pas l'inconscient et ne remplace pas un entretien clinique avec un professionnel.\n\nPrenez le temps qu'il vous faut. Vous pouvez générer votre synthèse à tout moment via le bouton vert — mais plus l'échange est riche, plus la lecture sera juste.\n\nCommençons : qu'est-ce qui vous amène aujourd'hui ?`);
   hist.push({role:'assistant',content:"Je vous écoute.\nAXES:[] COMPLET:[non]"});
 }
 
@@ -393,15 +418,25 @@ async function processInput(text,src){
     const cpM=raw.match(/COMPLET:\[(oui|non)\]/);
     const clean=raw.replace(/AXES:\[[^\]]*\]/g,'').replace(/COMPLET:\[[^\]]*\]/g,'').trim();
     if(axM)updateAxes(axM[1]);
-    const done=cpM?.[1]==='oui'||count>=14;
+    const done=cpM?.[1]==='oui';
     if(done||clean.toLowerCase().includes('je prépare')){
-      addMsg('ai',"Merci pour ce partage. Je prépare votre bilan personnalisé…");
+      addMsg('ai',"Merci pour ce partage. Je prépare votre synthèse…");
       hist.push({role:'assistant',content:raw});
       setTimeout(()=>generateBilan(false),1200);
     } else {
       addMsg('ai',clean);
       hist.push({role:'assistant',content:raw});
       if(src==='voice')speak(clean);
+
+      // Relance proactive tous les 10 échanges à partir de 20
+      if(count >= 20 && count % 10 === 0){
+        setTimeout(()=>{
+          const msg = count === 20
+            ? `Vous avez partagé beaucoup d'éléments utiles. Vous pouvez générer votre synthèse maintenant via le bouton vert, ou continuer à explorer d'autres aspects de votre situation — les deux sont possibles.`
+            : `Nous avons eu un échange riche. Souhaitez-vous approfondir certains aspects — corps, émotions, environnement, ressources — ou préférez-vous générer votre synthèse maintenant ?`;
+          addMsg('ai', msg, 'nudge');
+        }, 1500);
+      }
     }
   }catch(e){rmDots();showErr('Erreur de connexion — réessayez dans quelques secondes');}
 }
@@ -427,6 +462,23 @@ function activateAdmin(){
   logo.style.opacity = '0.5';
   setTimeout(()=>logo.style.opacity='1', 300);
   generateBilan(true);
+}
+
+function demanderBilan(){
+  const avertissement = count < 8
+    ? "Vous avez eu peu d'échanges jusqu'ici. La synthèse sera moins précise qu'avec un entretien plus complet. Voulez-vous générer quand même ?"
+    : count < 14
+    ? "Certains axes n'ont peut-être pas encore été explorés. La synthèse pourra être moins complète. Continuer ?"
+    : null;
+
+  if(avertissement){
+    if(!confirm(avertissement)) return;
+  }
+
+  // Injecter un message de clôture dans l'historique
+  hist.push({role:'user', content:'Je souhaite générer ma synthèse maintenant.'});
+  addMsg('ai', "Bien sûr. Je prépare votre synthèse à partir de ce que vous avez partagé…");
+  setTimeout(()=>generateBilan(false), 800);
 }
 
 async function generateBilan(avecBTB){
@@ -674,6 +726,46 @@ function showBilan(data){
       <!-- BOUTONS -->
       <div style="display:flex;gap:10px;justify-content:center;padding-bottom:10px">
         <button onclick="printBilan()" style="background:#3a7531;color:white;border:none;border-radius:30px;padding:10px 24px;font-family:Arial;font-size:13px;font-weight:500;cursor:pointer">Télécharger en PDF</button>
+
+      <!-- BLOC FREEMIUM -->
+      <div style="margin:24px 0 0;background:#F5F0E8;border-radius:16px;padding:22px 24px;border:1px solid #E8E4DE;text-align:left">
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#3a7531;margin-bottom:12px">Aller plus loin avec MindCheck</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px">
+          <div style="font-size:12px;color:#555;display:flex;gap:8px;align-items:flex-start">
+            <span style="color:#3a7531;font-weight:700;flex-shrink:0">✓</span>
+            <span>Enregistrer ce bilan et y accéder à tout moment</span>
+          </div>
+          <div style="font-size:12px;color:#555;display:flex;gap:8px;align-items:flex-start">
+            <span style="color:#3a7531;font-weight:700;flex-shrink:0">✓</span>
+            <span>Suivre l'évolution de vos 6 axes dans le temps</span>
+          </div>
+          <div style="font-size:12px;color:#555;display:flex;gap:8px;align-items:flex-start">
+            <span style="color:#3a7531;font-weight:700;flex-shrink:0">✓</span>
+            <span>Comparer vos bilans successifs</span>
+          </div>
+          <div style="font-size:12px;color:#555;display:flex;gap:8px;align-items:flex-start">
+            <span style="color:#3a7531;font-weight:700;flex-shrink:0">✓</span>
+            <span>Recevoir une lecture d'évolution personnalisée</span>
+          </div>
+          <div style="font-size:12px;color:#555;display:flex;gap:8px;align-items:flex-start">
+            <span style="color:#3a7531;font-weight:700;flex-shrink:0">✓</span>
+            <span>Accès illimité aux check-ups</span>
+          </div>
+          <div style="font-size:12px;color:#555;display:flex;gap:8px;align-items:flex-start">
+            <span style="color:#3a7531;font-weight:700;flex-shrink:0">✓</span>
+            <span>Orientation vers un thérapeute adapté à votre profil</span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+          <div style="background:#3a7531;color:white;padding:10px 22px;border-radius:24px;font-size:13px;font-weight:600;cursor:not-allowed;opacity:0.7">
+            Créer mon espace MindCheck — 9€/mois
+          </div>
+          <span style="font-size:11px;color:#AEADA7;font-style:italic">Bientôt disponible · Email + lien magique · Sans mot de passe</span>
+        </div>
+        <div style="margin-top:10px;font-size:11px;color:#AEADA7;line-height:1.6">
+          Votre espace sera lié à votre email uniquement. Aucune donnée personnelle n'est collectée avant la création de compte. Résiliation à tout moment.
+        </div>
+      </div>
         <button onclick="document.getElementById('bov').remove()" style="background:transparent;color:#3a7531;border:1.5px solid #3a7531;border-radius:30px;padding:10px 24px;font-family:Arial;font-size:13px;font-weight:500;cursor:pointer">Fermer</button>
       </div>
     </div>
@@ -843,24 +935,75 @@ function toggleMic(){if(listening){stopRec();}else{startRec();}}
 
 function startRec(){
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SR){showErr('Reconnaissance vocale non disponible');return;}
-  recog=new SR();recog.continuous=true;recog.interimResults=true;recog.lang='fr-FR';
-  let acc='',timer=null;
-  function resetTimer(){if(timer)clearTimeout(timer);timer=setTimeout(()=>{if(acc.trim()){const t=acc.trim();acc='';document.getElementById('vt').textContent='';recog.stop();processInput(t,'voice');}},30000);}
-  recog.onstart=()=>{listening=true;document.getElementById('mic').style.background='#3a7531';document.getElementById('vs').textContent='Je vous écoute…';};
-  recog.onresult=e=>{let fi='',in2='';for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal)fi+=e.results[i][0].transcript+' ';else in2+=e.results[i][0].transcript;}if(fi){acc+=fi;resetTimer();}document.getElementById('vt').textContent=acc+in2;};
-  recog.onerror=()=>{listening=false;document.getElementById('mic').style.background='white';document.getElementById('vs').textContent='Appuyez pour parler';};
-  recog.onend=()=>{if(listening&&!acc.trim()){try{recog.start();}catch(e){}}else{listening=false;document.getElementById('mic').style.background='white';}};
-  recog.start();
+  if(!SR){showErr('Reconnaissance vocale non disponible sur ce navigateur. Utilisez Chrome.');return;}
+  if(listening){stopRec();return;}  // toggle si déjà en écoute
+  try{
+    recog=new SR();
+    recog.continuous=false;  // false = plus stable, envoie quand pause détectée
+    recog.interimResults=true;
+    recog.lang='fr-FR';
+    recog.maxAlternatives=1;
+  }catch(e){showErr('Erreur initialisation micro : '+e.message);return;}
+
+  let finalText='';
+
+  recog.onstart=()=>{
+    listening=true;
+    finalText='';
+    const mic=document.getElementById('mic');
+    if(mic)mic.style.background='#3a7531';
+    const vs=document.getElementById('vs');
+    if(vs)vs.textContent='Je vous écoute… (parlez puis pausez)';
+  };
+
+  recog.onresult=e=>{
+    let interim='';
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      if(e.results[i].isFinal) finalText+=e.results[i][0].transcript+' ';
+      else interim+=e.results[i][0].transcript;
+    }
+    const vt=document.getElementById('vt');
+    if(vt)vt.textContent=finalText+interim;
+  };
+
+  recog.onerror=e=>{
+    listening=false;
+    const mic=document.getElementById('mic');
+    if(mic)mic.style.background='white';
+    const vs=document.getElementById('vs');
+    if(vs)vs.textContent='Appuyez pour parler';
+    if(e.error==='not-allowed') showErr('Accès au microphone refusé. Vérifiez les permissions de votre navigateur.');
+    else if(e.error==='no-speech') showErr('Aucune parole détectée. Réessayez.');
+    else if(e.error!=='aborted') showErr('Erreur micro : '+e.error);
+  };
+
+  recog.onend=()=>{
+    listening=false;
+    const mic=document.getElementById('mic');
+    if(mic)mic.style.background='white';
+    const vs=document.getElementById('vs');
+    if(vs)vs.textContent='Appuyez pour parler';
+    const vt=document.getElementById('vt');
+    const text=(finalText||'').trim()||(vt?vt.textContent.trim():'');
+    if(text){
+      if(vt)vt.textContent='';
+      processInput(text,'voice');
+    }
+  };
+
+  try{recog.start();}
+  catch(e){showErr('Impossible de démarrer le micro : '+e.message);listening=false;}
 }
 
 function stopRec(){
-  if(recog)recog.stop();
+  if(recog){
+    try{recog.stop();}catch(e){}
+  }
   listening=false;
-  document.getElementById('mic').style.background='white';
-  document.getElementById('vs').textContent='Appuyez pour parler';
-  const acc=document.getElementById('vt').textContent;
-  if(acc.trim()){document.getElementById('vt').textContent='';processInput(acc.trim(),'voice');}
+  const mic=document.getElementById('mic');
+  if(mic)mic.style.background='white';
+  const vs=document.getElementById('vs');
+  if(vs)vs.textContent='Appuyez pour parler';
 }
 
 document.getElementById('inp').addEventListener('keydown',e=>{
@@ -880,6 +1023,84 @@ document.getElementById('inp').addEventListener('keydown',e=>{
 document.getElementById('inp').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px';});
 document.getElementById('tts').addEventListener('change',function(){ttsOn=this.checked;});
 document.addEventListener('keydown',e=>{if(e.ctrlKey&&e.shiftKey&&e.key==='B')generateBilan(false);});
+
+// ============================================================
+// PAUSE / REPRISE DE SESSION
+// ============================================================
+function pauseSession(){
+  if(hist.length < 2){
+    showErr('Pas encore assez d\'echanges a sauvegarder.');
+    return;
+  }
+  const data = {
+    code: sessionCode,
+    date: new Date().toISOString(),
+    count: count,
+    hist: hist,
+    axesLit: [...document.querySelectorAll('.ax.lit')].map(el=>el.id)
+  };
+  try{
+    localStorage.setItem('mc_session_pause', JSON.stringify(data));
+    // Afficher confirmation dans le chat
+    const c = document.getElementById('chat');
+    const d = document.createElement('div');
+    d.className = 'msg';
+    d.innerHTML = `<div class="av ai">M</div><div class="bub" style="background:#EEF7F2;border:1px solid #C8E6C9;color:#2E6B3E;font-size:13px;line-height:1.7">
+      <strong>Session sauvegardée ✓</strong><br>
+      Code : <strong>${sessionCode}</strong><br>
+      Vous pouvez fermer cette fenêtre et reprendre votre entretien plus tard depuis ce même appareil et navigateur.<br>
+      <span style="font-size:11px;opacity:0.7">Sauvegarde valable 30 jours · liée à ce navigateur uniquement</span>
+    </div>`;
+    c.appendChild(d);
+    c.scrollTop = c.scrollHeight;
+  }catch(e){
+    showErr('Impossible de sauvegarder — vérifiez les paramètres de votre navigateur.');
+  }
+}
+
+function reprendreSession(data){
+  hist = data.hist;
+  count = data.count;
+  // Ré-afficher les messages
+  const c = document.getElementById('chat');
+  c.innerHTML = '';
+  hist.forEach(m => {
+    if(m.role === 'assistant'){
+      const clean = m.content.replace(/AXES:\[[^\]]*\]/g,'').replace(/COMPLET:\[[^\]]*\]/g,'').trim();
+      if(clean) addMsg('ai', clean);
+    } else if(m.role === 'user' && !m.content.includes('Génération admin')){
+      addMsg('u', m.content);
+    }
+  });
+  // Restaurer axes allumés
+  if(data.axesLit) data.axesLit.forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.classList.add('lit');
+  });
+  // Message de reprise
+  const d = document.createElement('div');
+  d.className = 'msg';
+  d.innerHTML = `<div class="av ai">M</div><div class="bub" style="background:#EEF7F2;border:1px solid #C8E6C9;color:#2E6B3E;font-size:13px;line-height:1.7">
+    <strong>Session reprise ✓</strong> — Code ${data.code}<br>
+    Vous pouvez continuer là où vous vous êtes arrêté.
+  </div>`;
+  c.appendChild(d); c.scrollTop = c.scrollHeight;
+}
+
+// Vérifier au démarrage si une session sauvegardée existe
+(function checkPause(){
+  try{
+    const saved = localStorage.getItem('mc_session_pause');
+    if(!saved) return;
+    const data = JSON.parse(saved);
+    // Vérifier que c'est récent (< 30 jours)
+    const age = (Date.now() - new Date(data.date).getTime()) / (1000*60*60*24);
+    if(age > 30){ localStorage.removeItem('mc_session_pause'); return; }
+    // Proposer de reprendre — seulement si on est en section s3
+    // On stocke pour usage après startSession
+    window._savedSession = data;
+  }catch(e){}
+})();
 </script>
 </body>
 </html>
