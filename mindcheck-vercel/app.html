@@ -855,19 +855,19 @@ function showBilan(data){
   const radar=buildRadar(data.axes,baselineData);
 
   const zonesHTML=data.zones.map(z=>{
-    const meta=nivMeta(z.niv);
-    // score 1-4 déduit pour les segments
-    const sc = z.niv<=1?4:z.niv===2?3:z.niv===3?2:1;
-    const domLabel = z.dom
+    // Le modèle renvoie niv 0-4 avec sens inversé (0=excellent, 4=critique)
+    // On convertit en score 1-4 (1=Fragile=mauvais, 4=Solide=bon)
+    const rawNiv = Math.max(0, Math.min(4, Math.round(z.niv)));
+    const sc = rawNiv === 0 ? 4 : rawNiv === 1 ? 4 : rawNiv === 2 ? 3 : rawNiv === 3 ? 2 : 1;
+    const meta = getScoreMeta(sc);
+    const domLabel = (z.dom||'')
       .replace('Fonction cognitive','Vie mentale et pensées')
       .replace('Régulation émotionnelle','Vie émotionnelle')
       .replace('Somatisation','Signaux corporels')
-      .replace('Fonction relationnelle','Vie relationnelle et contexte');
-    const segs=[1,2,3,4].map(i=>{
-      const segColor=SCORE_META[i].color;
-      const active=i<=sc;
-      return`<span style="height:8px;border-radius:3px;background:${segColor};opacity:${active?'1':'.2'}"></span>`;
-    }).join('');
+      .replace('Fonction relationnelle','Vie relationnelle et contexte')
+      .replace('État psychique général','État psychique général'); // identité
+    // Segments : 1=Fragile(rouge) à 4=Solide(vert), actifs jusqu'à sc
+    const segs=[1,2,3,4].map(i=>`<span style="height:8px;border-radius:3px;background:${SCORE_META[i].color};opacity:${i<=sc?'1':'.18'}"></span>`).join('');
     return`<div style="margin-bottom:14px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
         <span style="font-size:12px;font-weight:700;font-family:Arial;color:#1f1f1c">${domLabel}</span>
@@ -883,7 +883,7 @@ function showBilan(data){
     const prev=baselineData?baselineData.scores[ax.num-1]:null;
     const diff=prev!=null?(ax.score-prev):null;
     const diffHTML=diff!=null?`<span style="font-size:10px;margin-left:6px;color:${diff>=0?'#5B9B67':'#D97A7A'}">${diff>=0?'↑':'↓'}${Math.abs(diff)}</span>`:'';
-    const segs=[1,2,3,4].map(i=>`<span style="height:5px;border-radius:2px;background:${SCORE_META[i].color};opacity:${i<=ax.score?'1':'.18'}"></span>`).join('');
+    const segs=[1,2,3,4].map(i=>`<span style="height:5px;border-radius:2px;background:${SCORE_META[i].color};opacity:${i<=Math.round(ax.score)?'1':'.18'}"></span>`).join('');
     return`<div style="border:1px solid rgba(0,0,0,.07);border-radius:14px;padding:14px 16px;margin-bottom:9px;background:white">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
         <div style="display:flex;align-items:center;gap:10px">
@@ -929,14 +929,20 @@ function showBilan(data){
           <div style="font-size:9px;color:#AEADA7;margin-bottom:8px">Modèle Stora (2001) — 0 à 4</div>
           <div style="display:flex;justify-content:center">${radar}</div>
           <div style="display:flex;gap:10px;margin-top:10px;justify-content:center;flex-wrap:wrap">
-            ${Object.entries(SCORE_META).map(([s,m])=>`<div style="display:flex;align-items:center;gap:5px;font-size:9px;color:#6d6b63"><div style="width:10px;height:10px;border-radius:50%;background:${m.color}"></div>${m.label}</div>`).join('')}
+            <div style="display:flex;align-items:center;gap:5px;font-size:9px;color:#6d6b63"><div style="width:10px;height:10px;border-radius:50%;background:#D97A7A"></div>Fragile</div>
+            <div style="display:flex;align-items:center;gap:5px;font-size:9px;color:#6d6b63"><div style="width:10px;height:10px;border-radius:50%;background:#D8A24A"></div>En tension</div>
+            <div style="display:flex;align-items:center;gap:5px;font-size:9px;color:#6d6b63"><div style="width:10px;height:10px;border-radius:50%;background:#A9C76F"></div>Stable</div>
+            <div style="display:flex;align-items:center;gap:5px;font-size:9px;color:#6d6b63"><div style="width:10px;height:10px;border-radius:50%;background:#5B9B67"></div>Solide</div>
           </div>
         </div>
         <div style="background:white;border-radius:14px;padding:14px;border:.5px solid rgba(0,0,0,.08)">
           <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#3a7531;margin-bottom:10px">Zones d'attention</div>
           ${zonesHTML}
           <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
-            ${Object.entries(SCORE_META).map(([s,m])=>`<div style="display:flex;align-items:center;gap:4px;font-size:9px;color:#6d6b63"><div style="width:8px;height:8px;border-radius:2px;background:${m.color}"></div>${m.label}</div>`).join('')}
+            <div style="display:flex;align-items:center;gap:4px;font-size:9px;color:#6d6b63"><div style="width:8px;height:8px;border-radius:2px;background:#D97A7A"></div>Fragile</div>
+            <div style="display:flex;align-items:center;gap:4px;font-size:9px;color:#6d6b63"><div style="width:8px;height:8px;border-radius:2px;background:#D8A24A"></div>En tension</div>
+            <div style="display:flex;align-items:center;gap:4px;font-size:9px;color:#6d6b63"><div style="width:8px;height:8px;border-radius:2px;background:#A9C76F"></div>Stable</div>
+            <div style="display:flex;align-items:center;gap:4px;font-size:9px;color:#6d6b63"><div style="width:8px;height:8px;border-radius:2px;background:#5B9B67"></div>Solide</div>
           </div>
         </div>
       </div>
