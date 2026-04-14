@@ -108,9 +108,9 @@ main{max-width:760px;margin:0 auto;padding:24px 20px}
   <div class="axes">
     <span class="ax" id="a1">Processus psychiques</span>
     <span class="ax" id="a2">Ressources psychiques</span>
+    <span class="ax" id="a5">Comportements & conduites</span>
     <span class="ax" id="a3">Régulation émotionnelle</span>
     <span class="ax" id="a4">Corps & risque somatique</span>
-    <span class="ax" id="a5">Comportements & conduites</span>
     <span class="ax" id="a6">Environnement</span>
   </div>
   <div class="err" id="err"></div>
@@ -299,7 +299,7 @@ Pour chaque axe : 1 question d'ouverture + 1 question de ciblage.
 Si la reponse est insuffisante (moins de 20 mots, trop vague, non illustree, purement evaluative comme "ca va" ou "ca depend") : utilise 1 relance parmi celles prevues pour l'axe.
 Objectif par axe : obtenir nature / intensite / frequence / anciennete / retentissement.
 Une seule question a la fois. Jamais deux dans le meme message.
-Commence par accueillir chaleureusement et demander ce qui amene la personne aujourd'hui avant de commencer les axes.
+Commence simplement par demander ce qui amene la personne aujourd'hui, dans un ton calme, neutre et non interpretatif. Pas d'effusions, pas de formules d'accueil therapeutiques.
 
 AXE 1 — PROCESSUS PSYCHIQUES
 Q1 : Comment fonctionne votre esprit en ce moment : plutot clair, encombre, ralenti, agite, envahi ?
@@ -384,7 +384,7 @@ const BILAN_SYS = `Tu es l'IA d'analyse MindCheck. À partir du récit collecté
 
 STRUCTURE JSON EXACTE (réponds UNIQUEMENT avec ce JSON, sans texte avant/après, sans markdown) :
 {
-  "synthese": "2-3 phrases chaleureuses qui résument ce que la personne traverse, en langage accessible, avec empathie",
+  "synthese": "2-3 phrases claires, sobres et accessibles qui résument ce que la personne traverse, sans biais thérapeutique ni enveloppement excessif",
   "axes": [
     {"num":1,"label":"Processus psychiques","score":2,"obs":"observation concrète basée sur le récit","conseil":"une action ou piste concrète","documentation":"suffisante|partielle|insuffisante","confiance":"haute|moderee|faible","manques":[]},
     {"num":2,"label":"Ressources psychiques","score":3,"obs":"...","conseil":"...","documentation":"suffisante|partielle|insuffisante","confiance":"haute|moderee|faible","manques":[]},
@@ -441,6 +441,56 @@ Le champ "confiance" reflète ta confiance dans le score :
 Le champ "manques" liste les informations qui auraient enrichi l'analyse (ex: ["temporalite inconnue","aucun exemple concret"]).
 
 IMPORTANT : Les scores doivent refléter fidèlement le récit. Un récit de souffrance = scores bas (1-2). Les ressources solides = scores hauts (3-4). Ne pas inverser.`;
+
+// ============================================================
+// CONSTRUCTION DYNAMIQUE DU PROMPT SYSTÈME
+// Le SYS statique est complété à chaque échange par l'état réel
+// des axes pour piloter les relances et la clôture
+// ============================================================
+function buildSYS() {
+  const axes = Object.entries(couvertureAxes);
+  const manquants = [];
+  const partiels = [];
+
+  axes.forEach(([key, state]) => {
+    const spec = AXES_SPEC[key];
+    if (!spec) return;
+    const needed = spec.needed;
+    const manquesItems = needed.filter(k => !state.items[k]);
+    if (state.statut === "non_couvert") {
+      manquants.push({ key, label: spec.label, relances: spec.relances });
+    } else if (state.statut === "partiel") {
+      partiels.push({ key, label: spec.label, manques: manquesItems, relances: spec.relances });
+    }
+  });
+
+  const prochain = manquants[0] || partiels[0] || null;
+  const tousCouverts = manquants.length === 0 && partiels.length === 0;
+
+  let moteur = `\n\nMOTEUR DÉCISIONNEL — ÉTAT ACTUEL DES AXES\n`;
+  moteur += `Axes non couverts : ${manquants.map(a=>a.label).join(', ') || 'aucun'}\n`;
+  moteur += `Axes partiels : ${partiels.map(a=>a.label).join(', ') || 'aucun'}\n`;
+
+  if (tousCouverts) {
+    moteur += `TOUS LES AXES SONT SUFFISAMMENT DOCUMENTÉS.\n`;
+    moteur += `Clos l'entretien si la personne n'ajoute rien.\n`;
+    moteur += `Dis exactement : "Merci pour ce que vous avez partagé. Je prépare votre synthèse."\n`;
+    moteur += `Dernière ligne : AXES:[processus,ressources,comportements,emotions,corps,environnement] COMPLET:[oui]\n`;
+  } else if (prochain) {
+    const isPartiel = partiels.find(a => a.key === prochain.key);
+    moteur += `\nAXE PRIORITAIRE : ${prochain.label}\n`;
+    if (isPartiel && isPartiel.manques.length > 0) {
+      moteur += `Informations manquantes pour cet axe : ${isPartiel.manques.join(', ')}\n`;
+    }
+    moteur += `Relances disponibles :\n`;
+    prochain.relances.forEach((r,i) => moteur += `  ${i+1}. "${r}"\n`);
+    moteur += `Choisis la relance la plus adaptée au contexte. Adapte-la naturellement si besoin.\n`;
+    moteur += `Ne passe à l'axe suivant que si tu as : phénomène + fréquence/intensité + retentissement.\n`;
+    moteur += `Ne génère PAS COMPLET:oui tant qu'il reste des axes non couverts.\n`;
+  }
+
+  return SYS + moteur;
+}
 
 let hist=[],count=0,mode='text',sessionCode='',adminMode=false;
 
@@ -538,8 +588,27 @@ function showDots(){
 function rmDots(){const e=document.getElementById('typ');if(e)e.remove();}
 function showErr(t){const e=document.getElementById('err');e.textContent=t;e.style.display='block';setTimeout(()=>e.style.display='none',6000);}
 
-const axMap={processus:'a1',ressources:'a2',emotions:'a3',corps:'a4',comportements:'a5',environnement:'a6'};
-function updateAxes(s){if(!s)return;s.split(',').forEach(a=>{const k=a.trim().toLowerCase();Object.keys(axMap).forEach(key=>{if(k.includes(key))document.getElementById(axMap[key]).classList.add('lit');});});}
+const axMap={processus:'a1',ressources:'a2',comportements:'a5',emotions:'a3',corps:'a4',environnement:'a6'};
+
+function updateAxes(s){
+  if(!s) return;
+  s.split(',').forEach(a => {
+    const k = a.trim().toLowerCase();
+    Object.keys(axMap).forEach(key => {
+      if(k.includes(key)){
+        // Mise à jour UI
+        document.getElementById(axMap[key]).classList.add('lit');
+        // Mise à jour état couverture — on marque au moins "partiel" si mentionné par le modèle
+        if(couvertureAxes[key] && couvertureAxes[key].statut === "non_couvert"){
+          couvertureAxes[key].statut = "partiel";
+          // Marquer phénomène + retentissement comme remplis a minima (le modèle a jugé l'axe couvert)
+          couvertureAxes[key].items.phenomene = true;
+          couvertureAxes[key].items.retentissement = true;
+        }
+      }
+    });
+  });
+}
 
 async function callAPI(messages,sys){
   const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:sys,messages})});
@@ -567,13 +636,27 @@ async function processInput(text,src){
   }
 
   try{
-    const raw=await callAPI(hist,SYS);
+    const raw=await callAPI(hist,buildSYS());
     rmDots();
     const axM=raw.match(/AXES:\[([^\]]*)\]/);
     const cpM=raw.match(/COMPLET:\[(oui|non)\]/);
     const clean=raw.replace(/AXES:\[[^\]]*\]/g,'').replace(/COMPLET:\[[^\]]*\]/g,'').trim();
-    if(axM)updateAxes(axM[1]);
+    if(axM) updateAxes(axM[1]);
     const done=cpM?.[1]==='oui';
+    if(done){
+      // Marquer tous les axes mentionnés comme suffisants
+      if(axM && axM[1]){
+        axM[1].split(',').forEach(a => {
+          const k = a.trim().toLowerCase();
+          Object.keys(couvertureAxes).forEach(key => {
+            if(k.includes(key)){
+              couvertureAxes[key].statut = "suffisant";
+              AXES_SPEC[key]?.needed.forEach(n => couvertureAxes[key].items[n] = true);
+            }
+          });
+        });
+      }
+    }
     if(done||clean.toLowerCase().includes('je prépare')){
       addMsg('ai',"Merci pour ce partage. Je prépare votre synthèse…");
       hist.push({role:'assistant',content:raw});
@@ -837,21 +920,21 @@ function showBilan(data){
       </div>
 
       <!-- 3 ACTIONS -->
-      <div style="background:#F5F0E8;border-radius:14px;padding:20px 22px;border:1px solid #E8E4DE">
-        <div style="font-family:Georgia,serif;font-size:16px;color:#1A1A18;margin-bottom:5px">3 choses concrètes à faire maintenant</div>
-        <div style="font-size:11px;color:rgba(255,255,255,.7);margin-bottom:14px">Pas de grands changements. Trois petits pas qui font une vraie différence dans la durée.</div>
+      <div style="background:#2d5c26;border-radius:14px;padding:20px 22px">
+        <div style="font-family:Georgia,serif;font-size:16px;color:white;margin-bottom:4px">3 choses concrètes à faire maintenant</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.55);margin-bottom:14px">Pas de grands changements. Trois petits pas qui font une vraie différence dans la durée.</div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
-          <div style="background:rgba(255,255,255,.12);border-radius:10px;padding:13px">
-            <div style="font-size:10px;color:rgba(255,255,255,.7);margin-bottom:5px;font-weight:600;text-transform:uppercase">Cette semaine</div>
-            <div style="font-size:12px;color:white;line-height:1.55">${data.actions.semaine}</div>
+          <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:13px">
+            <div style="font-size:9px;color:rgba(255,255,255,.5);margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:1px">Cette semaine</div>
+            <div style="font-size:12px;color:white;line-height:1.6">${data.actions.semaine}</div>
           </div>
-          <div style="background:rgba(255,255,255,.12);border-radius:10px;padding:13px">
-            <div style="font-size:10px;color:rgba(255,255,255,.7);margin-bottom:5px;font-weight:600;text-transform:uppercase">Ce mois-ci</div>
-            <div style="font-size:12px;color:white;line-height:1.55">${data.actions.mois}</div>
+          <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:13px">
+            <div style="font-size:9px;color:rgba(255,255,255,.5);margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:1px">Ce mois-ci</div>
+            <div style="font-size:12px;color:white;line-height:1.6">${data.actions.mois}</div>
           </div>
-          <div style="background:rgba(255,255,255,.12);border-radius:10px;padding:13px">
-            <div style="font-size:10px;color:rgba(255,255,255,.7);margin-bottom:5px;font-weight:600;text-transform:uppercase">Dans 3 mois</div>
-            <div style="font-size:12px;color:white;line-height:1.55">${data.actions.trimestre}</div>
+          <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:13px">
+            <div style="font-size:9px;color:rgba(255,255,255,.5);margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:1px">Dans 3 mois</div>
+            <div style="font-size:12px;color:white;line-height:1.6">${data.actions.trimestre}</div>
           </div>
         </div>
       </div>
