@@ -926,94 +926,97 @@ function showBilan(data){
         ${dimHTML}
       </div>
 
-      <!-- FORCES / VIGILANCE -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div style="background:#E8F4ED;border-radius:14px;padding:16px 18px">
-          <div style="font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:#3a7531;margin-bottom:10px">Ce qui vous soutient</div>
-          ${data.forces.map(f=>`<div style="font-size:12px;color:#333;margin-bottom:6px;display:flex;gap:8px"><span style="color:#3a7531;flex-shrink:0">✓</span>${f}</div>`).join('')}
+      <!-- FORCES / VIGILANCE — nouveau design maquette -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div style="border-radius:24px;padding:24px;border:1px solid #c9d8c8;background:#e7efe7">
+          <div style="font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:#5f8f5d;margin-bottom:14px;font-weight:700">Ce qui vous soutient</div>
+          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:14px">
+            ${data.forces.map(f=>`<li style="display:flex;gap:12px;align-items:flex-start;font-size:14px;color:#1f1f1c;line-height:1.55">
+              <span style="width:24px;height:24px;border-radius:50%;background:#dfe9df;color:#2f6b32;display:inline-flex;align-items:center;justify-content:center;flex:0 0 24px;font-size:13px;margin-top:1px">✓</span>
+              <span>${f}</span>
+            </li>`).join('')}
+          </ul>
         </div>
-        <div style="background:#FFF8E7;border-radius:14px;padding:16px 18px;border:1px solid #F0D060">
-          <div style="font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:#7A5C00;margin-bottom:10px">Ce qui demande attention</div>
-          ${data.vigilance.map(v=>`<div style="font-size:12px;color:#333;margin-bottom:6px;display:flex;gap:8px"><span style="color:#E9A820;flex-shrink:0">◆</span>${v}</div>`).join('')}
-        </div>
-      </div>
-
-      <!-- 3 ACTIONS -->
-      <div style="background:#2d5c26;border-radius:14px;padding:20px 22px">
-        <div style="font-family:Georgia,serif;font-size:16px;color:white;margin-bottom:4px">3 choses concrètes à faire maintenant</div>
-        <div style="font-size:11px;color:rgba(255,255,255,.55);margin-bottom:14px">Pas de grands changements. Trois petits pas qui font une vraie différence dans la durée.</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
-          <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:13px">
-            <div style="font-size:9px;color:rgba(255,255,255,.5);margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:1px">Cette semaine</div>
-            <div style="font-size:12px;color:white;line-height:1.6">${data.actions.semaine}</div>
-          </div>
-          <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:13px">
-            <div style="font-size:9px;color:rgba(255,255,255,.5);margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:1px">Ce mois-ci</div>
-            <div style="font-size:12px;color:white;line-height:1.6">${data.actions.mois}</div>
-          </div>
-          <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:13px">
-            <div style="font-size:9px;color:rgba(255,255,255,.5);margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:1px">Dans 3 mois</div>
-            <div style="font-size:12px;color:white;line-height:1.6">${data.actions.trimestre}</div>
-          </div>
+        <div style="border-radius:24px;padding:24px;border:1px solid #e7c77f;background:#f7efdd">
+          <div style="font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:#b47f09;margin-bottom:14px;font-weight:700">Ce qui demande attention</div>
+          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:14px">
+            ${data.vigilance.map(v=>`<li style="display:flex;gap:12px;align-items:flex-start;font-size:14px;color:#1f1f1c;line-height:1.55">
+              <span style="width:24px;height:24px;border-radius:50%;background:#f2e6bf;color:#a06f00;display:inline-flex;align-items:center;justify-content:center;flex:0 0 24px;font-size:12px;margin-top:1px">•</span>
+              <span>${v}</span>
+            </li>`).join('')}
+          </ul>
         </div>
       </div>
 
-      ${hasAlert?`
-      <!-- FREEMIUM — avant les consultations -->
-      <div style="background:#3a7531;border-radius:20px;padding:28px 24px;color:white;text-align:center;margin-bottom:16px">
-        
-        <!-- Accroche -->
-        <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:10px">Votre espace MindCheck</div>
-        <h3 style="font-family:Georgia,serif;font-size:22px;font-weight:700;margin-bottom:6px;line-height:1.3">Suivez votre évolution<br>dans le temps</h3>
-        <p style="font-size:13px;color:rgba(255,255,255,0.5);line-height:1.6;max-width:340px;margin:0 auto 20px">Enregistrez vos bilans, comparez vos résultats mois après mois et recevez une orientation thérapeutique adaptée à votre profil exact.</p>
-
-        <!-- 2 plans -->
-        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;text-align:left">
-          <div style="background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.6);border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;position:relative;cursor:pointer">
-            <div style="position:absolute;top:-10px;left:16px;background:#3a7531;color:white;font-size:10px;font-weight:700;letter-spacing:1px;padding:2px 10px;border-radius:20px">MEILLEUR PRIX</div>
-            <div>
-              <div style="font-size:14px;font-weight:600;color:white">Plan annuel</div>
-              <div style="font-size:11px;color:rgba(255,255,255,0.4)">soit moins de 0,80€/semaine</div>
-            </div>
-            <div style="text-align:right">
-              <div style="font-size:18px;font-weight:400;color:white">39€<span style="font-size:11px;font-weight:400;color:rgba(255,255,255,0.4)">/an</span></div>
-            </div>
-          </div>
-          <div onclick="this.style.border='1.5px solid rgba(255,255,255,0.6)';this.style.background='rgba(255,255,255,0.1)';this.previousElementSibling.style.border='1px solid rgba(255,255,255,0.2)';this.previousElementSibling.style.background='rgba(255,255,255,0.05)'" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:all 0.2s">
-            <div>
-              <div style="font-size:14px;font-weight:500;color:white">Plan mensuel</div>
-              <div style="font-size:11px;color:rgba(255,255,255,0.4)">sans engagement</div>
-            </div>
-            <div style="font-size:16px;font-weight:400;color:white">9€<span style="font-size:11px;font-weight:400;color:rgba(255,255,255,0.45)">/mois</span></div>
-          </div>
+      <!-- ORIENTATION — nouveau design maquette -->
+      <div style="border:2px solid #7aa175;background:linear-gradient(180deg,#fffdfa 0%,#f9fbf8 100%);border-radius:30px;padding:28px;text-align:center">
+        <div style="font-family:Georgia,serif;font-size:22px;color:#2f6b32;margin-bottom:12px;font-weight:700;line-height:1.2">Souhaitez-vous être accompagné(e)&nbsp;?</div>
+        <p style="color:#373731;font-size:15px;line-height:1.7;max-width:600px;margin:0 auto 18px">MindCheck peut vous mettre en relation avec des thérapeutes adaptés à votre profil psychique — pas seulement à vos symptômes. Chaque professionnel choisit de se proposer à vous. Vous comparez, vous choisissez librement.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:22px">
+          ${['En cabinet','En ligne','Par messagerie','Séances courtes','Suivi long terme','Approche corporelle','Hypnose','Groupe de parole'].map(t=>`<span style="padding:10px 16px;border-radius:999px;background:#edf3ec;border:1px solid #d8e5d6;color:#5f8f5d;font-size:13px;white-space:nowrap">${t}</span>`).join('')}
         </div>
-
-        <!-- CTA -->
-        <div style="background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.4);padding:13px;border-radius:28px;font-size:13px;font-weight:600;cursor:not-allowed;margin-bottom:10px;border:1px solid rgba(255,255,255,0.1)">
-          Créer mon espace — Bientôt disponible
+        <div style="display:flex;justify-content:center;margin-bottom:14px">
+          <button onclick="alert('Bientôt disponible')" style="min-width:280px;padding:16px 28px;border-radius:999px;border:none;background:#2f6b32;color:white;font-weight:700;font-size:16px;cursor:pointer;box-shadow:0 8px 24px rgba(47,107,50,.18)">Recevoir des propositions de thérapeutes →</button>
         </div>
-        <div style="font-size:10px;color:rgba(255,255,255,0.2);line-height:1.6">Sans engagement · Email uniquement · Lien magique · Résiliation immédiate</div>
+        <div style="color:#8a897f;font-size:12px">Réponses sous 24–48h · 100 % anonymisé · Sans engagement</div>
       </div>
 
-<!-- ALERTE THERAPIES -->
-      <div style="background:#FEF2F2;border:1px solid #FCA5A5;border-radius:16px;padding:16px 20px">
-        <div style="color:#C0392B;font-size:12px;font-weight:600;margin-bottom:8px">⚠ Votre bilan révèle un déséquilibre sur plusieurs axes — une consultation préventive est conseillée</div>
-        <div style="font-size:12px;color:#555;line-height:1.65;margin-bottom:14px">Quand plusieurs dimensions sont en tension simultanément, elles s'alimentent mutuellement. Agir tôt, c'est éviter que ce déséquilibre s'installe durablement.</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-          ${[['Psychothérapie','Travailler en profondeur sur les origines des tensions'],['TCC / EMDR','Approches ciblées sur des symptômes précis'],['Hypnose','Accéder à des ressources profondes par la suggestion'],['Sophrologie','Réguler par le corps, la respiration et la visualisation'],['Coaching psychologique','Accompagnement préventif et orienté solutions'],['Thérapie de groupe','Partager et se reconnaître dans l\'expérience des autres']].map(([n,d])=>`<div style="border:1px solid #FECACA;border-radius:8px;padding:10px 13px;background:white"><div style="font-size:11px;font-weight:600;color:#C0392B;margin-bottom:3px">${n}</div><div style="font-size:10px;color:#666;line-height:1.5">${d}</div></div>`).join('')}
+      <!-- 3 REPÈRES — nouveau design maquette -->
+      <div style="background:#f1f5f0;border:1px solid #d4ded3;border-radius:24px;padding:24px">
+        <div style="font-family:Georgia,serif;font-size:20px;color:#2f6b32;margin-bottom:6px;font-weight:700">3 repères simples pour maintenant</div>
+        <div style="color:#5f8f5d;font-size:14px;margin-bottom:20px">Pas de grands changements. Trois points d'appui concrets pour les prochaines semaines.</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+          <div style="background:#fffdfa;border:1px solid #d7dfd5;border-radius:22px;padding:22px;min-height:160px">
+            <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#5f8f5d;font-weight:700;margin-bottom:12px">Cette semaine</div>
+            <p style="color:#40403a;font-size:14px;line-height:1.55;margin:0">${data.actions.semaine}</p>
+          </div>
+          <div style="background:#fffdfa;border:1px solid #d7dfd5;border-radius:22px;padding:22px;min-height:160px">
+            <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#5f8f5d;font-weight:700;margin-bottom:12px">Ce mois-ci</div>
+            <p style="color:#40403a;font-size:14px;line-height:1.55;margin:0">${data.actions.mois}</p>
+          </div>
+          <div style="background:#fffdfa;border:1px solid #d7dfd5;border-radius:22px;padding:22px;min-height:160px">
+            <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#5f8f5d;font-weight:700;margin-bottom:12px">Dans 3 mois</div>
+            <p style="color:#40403a;font-size:14px;line-height:1.55;margin:0">${data.actions.trimestre}</p>
+          </div>
         </div>
-      </div>`:''}
+      </div>
 
-      <!-- ACCOMPAGNEMENT -->
-      <div style="background:white;border:1.5px solid #3a7531;border-radius:16px;padding:24px 26px;text-align:center">
-        <div style="font-family:Georgia,serif;font-size:18px;color:#3a7531;margin-bottom:12px">Vous souhaitez être accompagné(e) ?</div>
-        <div style="font-size:13px;color:#444;line-height:1.75;margin-bottom:10px">MindCheck vous met en relation avec des thérapeutes adaptés à votre profil psychique exact — pas seulement à votre symptôme. Chaque professionnel choisit de se proposer à vous. Vous comparez, vous choisissez librement.</div>
-        <div style="font-size:13px;color:#444;line-height:1.75;margin-bottom:16px">En cabinet, en ligne, par messagerie, en séances courtes ou en suivi long terme — chaque format existe.</div>
-        <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:18px">
-          ${['En cabinet','En ligne (visio)','Par messagerie','Séances courtes','Suivi long terme','Approche corporelle','Hypnose','Groupe de parole'].map(t=>`<span style="background:#E8F4ED;color:#3a7531;padding:6px 14px;border-radius:20px;font-size:11px;font-weight:500">${t}</span>`).join('')}
+      <!-- ABONNEMENT — nouveau design maquette -->
+      <div style="background:linear-gradient(135deg,#285d2a 0%,#2f6b32 55%,#346f37 100%);border-radius:28px;padding:32px;color:white;position:relative;overflow:hidden">
+        <div style="position:absolute;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.04);filter:blur(10px);left:-70px;bottom:-120px"></div>
+        <div style="position:absolute;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.04);filter:blur(10px);right:-80px;top:-120px"></div>
+        <div style="position:relative;z-index:1;display:grid;grid-template-columns:1.15fr .85fr;gap:24px;align-items:start">
+          <div>
+            <div style="font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:#d9ead7;font-weight:700;margin-bottom:14px">Votre espace MindCheck</div>
+            <div style="font-family:Georgia,serif;font-size:32px;font-weight:700;color:white;margin-bottom:14px;line-height:1.2">Gardez une trace de votre évolution</div>
+            <p style="color:#e6efe4;font-size:15px;max-width:420px;margin-bottom:20px;line-height:1.6">Retrouvez vos bilans, comparez vos résultats au fil des mois, et recevez une lecture claire de votre évolution psychique.</p>
+            <div style="display:grid;gap:12px">
+              ${['Historique de vos bilans','Comparaison de vos 6 dimensions','Lecture personnalisée des évolutions','Orientation thérapeutique plus précise au fil du temps'].map(b=>`
+              <div style="display:flex;gap:12px;align-items:flex-start;color:#f3f8f2;font-size:14px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.14)">
+                <span style="flex-shrink:0;margin-top:2px">•</span><span>${b}</span>
+              </div>`).join('')}
+            </div>
+          </div>
+          <div style="display:grid;gap:16px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+              <div style="background:#f8f4ea;color:#243423;border-radius:22px;padding:22px 18px;position:relative;min-height:200px">
+                <div style="position:absolute;top:-11px;left:16px;background:#f0c94a;color:#3b3208;font-size:10px;font-weight:800;letter-spacing:.16em;padding:6px 11px;border-radius:999px;text-transform:uppercase">Meilleur prix</div>
+                <div style="font-family:Georgia,serif;font-size:16px;color:#2f6b32;margin-bottom:8px;font-weight:700;margin-top:8px">Plan annuel</div>
+                <div style="color:#66665f;font-size:12px;margin-bottom:18px;line-height:1.5">Le plus avantageux pour suivre votre évolution</div>
+                <div style="font-size:48px;line-height:1;font-weight:800;color:#1d251a;letter-spacing:-.03em">39€<span style="font-size:20px;font-weight:600;color:#3d4b38">/an</span></div>
+              </div>
+              <div style="background:#f8f4ea;color:#243423;border-radius:22px;padding:22px 18px;min-height:200px">
+                <div style="font-family:Georgia,serif;font-size:16px;color:#2f6b32;margin-bottom:8px;font-weight:700">Plan mensuel</div>
+                <div style="color:#66665f;font-size:12px;margin-bottom:18px;line-height:1.5">Souple, sans engagement</div>
+                <div style="font-size:48px;line-height:1;font-weight:800;color:#1d251a;letter-spacing:-.03em">9€<span style="font-size:20px;font-weight:600;color:#3d4b38">/mois</span></div>
+              </div>
+            </div>
+            <button onclick="alert('Bientôt disponible')" style="width:100%;padding:18px 24px;border-radius:999px;border:none;background:#f0c94a;color:#2a3308;font-weight:800;font-size:18px;cursor:pointer">Créer mon espace MindCheck →</button>
+            <div style="display:flex;gap:14px;flex-wrap:wrap;color:#dce9da;font-size:12px">
+              <span>Sans engagement</span><span>Email uniquement</span><span>Lien magique</span><span>Résiliation immédiate</span>
+            </div>
+          </div>
         </div>
-        <button onclick="alert('Bientôt disponible')" style="background:#3a7531;color:white;border:none;border-radius:30px;padding:13px 32px;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:12px">Recevoir des propositions de thérapeutes →</button>
-        <div style="font-size:10px;color:#AEADA7">Réponse sous 24–48h · 100% anonymisé · Sans engagement · Vous choisissez librement</div>
       </div>
 
       <!-- FOOTER -->
