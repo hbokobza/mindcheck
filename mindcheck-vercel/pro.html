@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MindCheck Pro — L'IA au service de la pratique clinique</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green: #3a7531;
+  --green-light: #e8f2e8;
+  --beige: #F5F0E8;
+  --beige-dark: #EDE6D8;
+  --black: #1A1A18;
+  --gray: #6B6B68;
+  --white: #fff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', Arial, sans-serif; background: var(--beige); color: var(--black); overflow-x: hidden; }
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(245,240,232,0.96); backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  padding: 0 64px; height: 66px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo { display:flex; align-items:center; gap:10px; font-weight:600; letter-spacing:-0.02em; }
+.nav-logo .pro-tag {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 1.4px;
+  color: var(--green); border: 1px solid rgba(58,117,49,0.2); padding: 5px 10px; border-radius: 999px;
+}
+.nav-links { display: flex; align-items: center; gap: 36px; }
+.nav-links a { text-decoration: none; color: var(--black); font-size: 14px; opacity: 0.6; transition: opacity 0.2s; }
+.nav-links a:hover { opacity: 1; }
+.nav-cta { background: var(--black) !important; color: white !important; opacity: 1 !important; padding: 10px 24px; border-radius: 24px; font-size: 13px; font-weight: 600; }
+.nav-cta:hover { background: var(--green) !important; }
+.hero { background: var(--beige); padding: 74px 40px 0; overflow: hidden; }
+.hero-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1.05fr .95fr; gap: 52px; align-items: center; }
+.hero-copy { padding-bottom: 48px; }
+.hero-kicker {
+  display:inline-flex; align-items:center; gap:10px; background: var(--green-light); color: var(--green);
+  padding: 9px 16px; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: 1.4px;
+  text-transform: uppercase; margin-bottom: 22px;
+}
+.hero-title {
+  font-family: 'Playfair Display', serif; font-size: 62px; line-height: 1.02; font-weight: 700;
+  color: var(--black); margin-bottom: 18px; letter-spacing: -1.2px;
+}
+.hero-title em { font-style: italic; color: var(--green); font-weight: 400; }
+.hero-sub { font-size: 18px; color: var(--gray); line-height: 1.8; max-width: 620px; margin-bottom: 28px; }
+.hero-actions { display:flex; gap:14px; flex-wrap:wrap; margin-bottom: 26px; }
+.btn-hero {
+  display: inline-block; background: var(--green); color: white; padding: 16px 34px; border-radius: 32px;
+  font-size: 16px; font-weight: 600; text-decoration: none; box-shadow: 0 4px 20px rgba(58,117,49,0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-hero:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(58,117,49,0.4); }
+.btn-hero.secondary { background: transparent; color: var(--green); border: 2px solid var(--green); box-shadow: none; }
+.btn-hero.secondary:hover { background: var(--green-light); }
+.hero-tags { display:flex; gap:10px; flex-wrap:wrap; }
+.hero-tag { background: rgba(255,255,255,0.75); color: var(--gray); padding: 7px 16px; border-radius: 20px; font-size: 13px; border:1px solid rgba(0,0,0,0.04); }
+.hero-panel-wrap { position: relative; padding-bottom: 64px; }
+.hero-panel-blur { position:absolute; inset: 24px -10px -10px 24px; background: linear-gradient(135deg, #dcead9, #ece3d6); border-radius: 28px; filter: blur(24px); opacity: .8; }
+.hero-panel { position:relative; background: white; border-radius: 28px; overflow:hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.14); border: 1px solid rgba(0,0,0,0.06); }
+.panel-top { background: var(--green); color:white; padding: 20px 24px 18px; }
+.panel-top .mini { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.62); margin-bottom: 6px; }
+.panel-top h3 { font-family:'Playfair Display', serif; font-size: 28px; font-weight:700; }
+.panel-body { padding: 22px; background: #fff; }
+.block-soft { background: #F7F4EF; border-radius: 18px; padding: 18px; border:1px solid rgba(0,0,0,0.04); margin-bottom: 16px; }
+.block-soft .eyebrow { font-size: 10px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--green); margin-bottom: 8px; font-weight:600; }
+.block-soft p { font-size: 14px; color: #4d4c47; line-height: 1.8; }
+.axes-mini { display:grid; grid-template-columns: repeat(2,1fr); gap: 12px; margin-bottom: 16px; }
+.axe-mini-card { border:1px solid rgba(0,0,0,0.05); border-radius:16px; padding: 14px; background:#fff; }
+.axe-mini-card .num { font-size: 10px; color: rgba(0,0,0,0.3); letter-spacing:1px; margin-bottom: 5px; }
+.axe-mini-card .title { font-size: 13px; font-weight: 500; line-height: 1.4; margin-bottom: 10px; }
+.bar { height: 8px; border-radius: 999px; background: #EDE6D8; overflow:hidden; }
+.bar > span { display:block; height:100%; border-radius:999px; }
+.r1 { width: 28%; background: #D97A7A; }
+.r2 { width: 52%; background: #D8A24A; }
+.r3 { width: 76%; background: #A9C76F; }
+.r4 { width: 92%; background: #5B9B67; }
+.dual-boxes { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.dual { border-radius:16px; padding: 15px; font-size: 13px; line-height: 1.7; border:1px solid rgba(0,0,0,0.04); }
+.dual h4 { font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 6px; }
+.dual.green { background: #E8F2E8; }
+.dual.green h4 { color: var(--green); }
+.dual.gold { background: #F7EFDD; }
+.dual.gold h4 { color: #B58B21; }
+.eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--green); margin-bottom: 14px; }
+.section-title { font-family: 'Playfair Display', serif; font-size: 40px; line-height: 1.15; font-weight: 700; margin-bottom: 20px; }
+.section-text { font-size: 16px; color: var(--gray); line-height: 1.85; margin-bottom: 16px; }
+.section-pourquoi { display: grid; grid-template-columns: 1fr 1fr; background: var(--white); }
+.pourquoi-art { min-height: 560px; background: linear-gradient(160deg, #dfeadd 0%, #f5f0e8 55%, #e8dfcf 100%); display:flex; align-items:flex-end; padding: 48px; }
+.pourquoi-note { background: rgba(255,255,255,0.75); backdrop-filter: blur(8px); border:1px solid rgba(255,255,255,0.7); border-radius: 24px; padding: 28px; max-width: 430px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+.pourquoi-note h3 { font-family:'Playfair Display', serif; font-size: 34px; line-height: 1.15; margin-bottom: 12px; }
+.pourquoi-note p { font-size: 15px; line-height: 1.8; color: #5d5b55; }
+.pourquoi-content { padding: 80px 72px 80px 64px; display: flex; flex-direction: column; justify-content: center; }
+.value-list { display:flex; flex-direction:column; gap:14px; margin-top: 18px; }
+.value-item { background: #F7F4EF; border-radius: 18px; padding: 18px 20px; border:1px solid rgba(0,0,0,0.04); }
+.value-item h4 { font-size: 18px; font-weight: 500; margin-bottom: 6px; }
+.value-item p { font-size: 14px; color: var(--gray); line-height: 1.75; }
+.section-outputs { padding: 86px 64px; background: var(--beige); }
+.outputs-header { max-width: 690px; margin-bottom: 52px; }
+.outputs-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; max-width: 1100px; }
+.output-card { background: white; border-radius: 20px; padding: 24px; min-height: 220px; border:1px solid rgba(0,0,0,0.05); box-shadow: 0 8px 20px rgba(0,0,0,0.03); }
+.output-num { font-size: 10px; color: rgba(0,0,0,0.35); letter-spacing: 1px; margin-bottom: 12px; text-transform:uppercase; }
+.output-title { font-family: 'Playfair Display', serif; font-size: 28px; line-height: 1.15; margin-bottom: 12px; }
+.output-text { font-size: 14px; color: var(--gray); line-height: 1.75; }
+.section-comment { display: grid; grid-template-columns: .88fr 1.12fr; background: var(--black); }
+.comment-content { padding: 84px 64px; }
+.comment-content .eyebrow { color: rgba(255,255,255,0.35); }
+.comment-content .section-title { color: white; }
+.comment-content .section-text { color: rgba(255,255,255,0.55); }
+.steps { margin-top: 36px; display: flex; flex-direction: column; gap: 28px; }
+.step { display: flex; gap: 18px; }
+.step-num { width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 12px; color: rgba(255,255,255,0.35); flex-shrink: 0; margin-top: 2px; }
+.step-text h4 { font-size: 17px; color: white; font-weight: 500; margin-bottom: 6px; }
+.step-text p { font-size: 14px; color: rgba(255,255,255,0.45); line-height: 1.75; }
+.comment-side { padding: 84px 64px 84px 24px; display:flex; align-items:center; }
+.comment-card { background: rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 30px; color:white; width:100%; }
+.comment-card h3 { font-family:'Playfair Display', serif; font-size: 34px; line-height:1.15; margin-bottom: 12px; }
+.comment-card p { font-size: 15px; line-height: 1.85; color: rgba(255,255,255,0.6); margin-bottom: 20px; }
+.comment-points { display:flex; flex-direction:column; gap:12px; }
+.comment-points div { padding: 14px 16px; border-radius: 16px; background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.78); font-size: 14px; line-height:1.7; }
+.section-practice { padding: 86px 64px; background: var(--beige-dark); }
+.practice-header { max-width: 680px; margin-bottom: 48px; }
+.practice-grid { display:grid; grid-template-columns: repeat(3,1fr); gap:20px; }
+.practice-card { background:white; border-radius:20px; padding:26px; border:1px solid rgba(0,0,0,0.05); }
+.practice-card h4 { font-family:'Playfair Display', serif; font-size: 29px; line-height:1.15; margin-bottom: 10px; }
+.practice-card p { font-size: 14px; color: var(--gray); line-height:1.8; }
+.section-pricing { padding: 96px 64px; background: var(--white); text-align:center; }
+.pricing-header { max-width: 760px; margin: 0 auto 46px; }
+.pricing-card { max-width: 620px; margin: 0 auto; background: var(--green); border-radius: 28px; padding: 42px; color: white; box-shadow: 0 20px 50px rgba(58,117,49,0.22); }
+.pricing-mini { font-size: 11px; letter-spacing: 1.8px; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 12px; }
+.pricing-price { font-family:'Playfair Display', serif; font-size: 72px; line-height: .95; margin-bottom: 6px; }
+.pricing-price span { font-size: 30px; color: rgba(255,255,255,0.72); }
+.pricing-sub { font-size: 16px; color: rgba(255,255,255,0.72); margin-bottom: 26px; }
+.pricing-list { max-width: 430px; margin: 0 auto 28px; text-align:left; display:flex; flex-direction:column; gap:12px; }
+.pricing-list div { font-size: 15px; line-height: 1.75; }
+.pricing-btn { display:inline-block; background:white; color: var(--black); padding: 16px 36px; border-radius: 32px; font-size: 17px; font-weight: 600; text-decoration:none; }
+.pricing-btn:hover { background: #F7F4EF; }
+.pricing-note { margin-top: 16px; font-size: 13px; color: rgba(255,255,255,0.65); }
+.section-cta { padding: 100px 64px; text-align: center; background: var(--beige); }
+.cta-title { font-family: 'Playfair Display', serif; font-size: 50px; line-height: 1.12; margin-bottom: 18px; }
+.cta-title em { font-style: italic; color: var(--green); font-weight:400; }
+.cta-sub { font-size: 17px; color: var(--gray); max-width: 700px; margin: 0 auto 32px; line-height: 1.8; }
+.cta-tags { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 36px; }
+.cta-tag { background: white; color: var(--gray); padding: 8px 18px; border-radius: 20px; font-size: 13px; border:1px solid rgba(0,0,0,0.04); }
+footer { background: var(--black); padding: 36px 64px; display: flex; justify-content: space-between; align-items: center; }
+footer .brand { color: rgba(255,255,255,0.45); font-weight:600; }
+footer p, footer a { font-size: 12px; color: rgba(255,255,255,0.3); text-decoration: none; }
+@media (max-width: 980px) {
+  nav { padding: 0 20px; }
+  .nav-links { display: none; }
+  .hero { padding: 48px 20px 0; }
+  .hero-grid { grid-template-columns: 1fr; gap: 28px; }
+  .hero-title { font-size: 42px; }
+  .section-pourquoi, .section-comment { grid-template-columns: 1fr; }
+  .pourquoi-content, .comment-content, .comment-side { padding: 44px 24px; }
+  .pourquoi-art { min-height: 340px; padding: 24px; }
+  .section-outputs, .section-practice, .section-pricing, .section-cta { padding: 60px 20px; }
+  .outputs-grid, .practice-grid { grid-template-columns: 1fr; }
+  .axes-mini, .dual-boxes { grid-template-columns: 1fr; }
+  .section-title { font-size: 34px; }
+  .pricing-price { font-size: 56px; }
+  footer { flex-direction: column; gap: 14px; text-align: center; padding: 28px 20px; }
+}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-logo">
+    <div>MindCheck</div>
+    <div class="pro-tag">Pro</div>
+  </div>
+  <div class="nav-links">
+    <a href="#pourquoi">Pourquoi MindCheck Pro ?</a>
+    <a href="#sorties">Ce que vous recevez</a>
+    <a href="#comment">Comment ça marche</a>
+    <a href="#tarif" class="nav-cta">Essayer MindCheck Pro</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-grid">
+    <div class="hero-copy">
+      <div class="hero-kicker">L’IA au service de la pratique clinique</div>
+      <h1 class="hero-title">Préparer la rencontre,<br><em>sans retirer l’humain</em></h1>
+      <p class="hero-sub">
+        Prescrivez un check-up psychique à vos patients et recevez un bilan BTB structuré pour gagner du temps, affiner votre lecture clinique et laisser davantage de place au travail thérapeutique.
+      </p>
+      <div class="hero-actions">
+        <a href="#tarif" class="btn-hero">Essayer MindCheck Pro</a>
+        <a href="#sorties" class="btn-hero secondary">Voir ce que reçoit le thérapeute</a>
+      </div>
+      <div class="hero-tags">
+        <span class="hero-tag">49€/mois</span>
+        <span class="hero-tag">Sans engagement</span>
+        <span class="hero-tag">Pour psychologues, psychothérapeutes, psychiatres</span>
+      </div>
+    </div>
+    <div class="hero-panel-wrap">
+      <div class="hero-panel-blur"></div>
+      <div class="hero-panel">
+        <div class="panel-top">
+          <div class="mini">Exemple de sortie professionnelle</div>
+          <h3>Bilan BTB MindCheck</h3>
+        </div>
+        <div class="panel-body">
+          <div class="block-soft">
+            <div class="eyebrow">Synthèse clinique intégrée</div>
+            <p>
+              Le récit fait apparaître une configuration dominée par une anxiété de perte importante, une charge émotionnelle difficile à apaiser et un retentissement corporel digestif ancien, sur fond de ressources relationnelles et professionnelles préservées.
+            </p>
+          </div>
+          <div class="axes-mini">
+            <div class="axe-mini-card"><div class="num">Axe 01</div><div class="title">Processus psychiques</div><div class="bar"><span class="r2"></span></div></div>
+            <div class="axe-mini-card"><div class="num">Axe 02</div><div class="title">Ressources psychiques</div><div class="bar"><span class="r3"></span></div></div>
+            <div class="axe-mini-card"><div class="num">Axe 03</div><div class="title">Comportements & conduites</div><div class="bar"><span class="r2"></span></div></div>
+            <div class="axe-mini-card"><div class="num">Axe 04</div><div class="title">Régulation émotionnelle</div><div class="bar"><span class="r1"></span></div></div>
+            <div class="axe-mini-card"><div class="num">Axe 05</div><div class="title">Corps & risque somatique</div><div class="bar"><span class="r2"></span></div></div>
+            <div class="axe-mini-card"><div class="num">Axe 06</div><div class="title">Environnement</div><div class="bar"><span class="r3"></span></div></div>
+          </div>
+          <div class="dual-boxes">
+            <div class="dual green"><h4>Ressources cliniques</h4>Soutien conjugal stable, continuité professionnelle, liens familiaux investis.</div>
+            <div class="dual gold"><h4>Points de vigilance</h4>Hyperréactivité émotionnelle, pensées de perte, retentissement corporel ancien.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pourquoi" class="section-pourquoi">
+  <div class="pourquoi-art">
+    <div class="pourquoi-note">
+      <h3>La première séance sert souvent à organiser avant de pouvoir travailler.</h3>
+      <p>Le patient arrive avec une matière riche mais dispersée. La clinique commence souvent par un tri, parfois au détriment du temps d’élaboration et de la rencontre elle-même.</p>
+    </div>
+  </div>
+  <div class="pourquoi-content">
+    <div class="eyebrow">Pourquoi MindCheck Pro ?</div>
+    <h2 class="section-title">Introduire l’IA dans la pratique,<br><em style="font-style:italic;color:var(--green);font-weight:400;">sans court-circuiter la clinique</em></h2>
+    <p class="section-text">MindCheck Pro ne remplace ni l’entretien, ni l’écoute, ni le transfert. Il prépare le terrain : la parole du patient est recueillie, structurée, hiérarchisée, puis rendue exploitable par le thérapeute.</p>
+    <div class="value-list">
+      <div class="value-item"><h4>Préparer la première rencontre</h4><p>Le patient réalise le check-up en amont. Vous recevez une lecture BTB structurée avant ou pendant la consultation.</p></div>
+      <div class="value-item"><h4>Gagner du temps clinique</h4><p>Moins de recueil dispersé, plus de temps pour l’écoute, l’élaboration et le travail thérapeutique.</p></div>
+      <div class="value-item"><h4>Affiner plus vite le profil psychique</h4><p>Les 6 axes MindCheck font émerger plus vite ressources, fragilités, retentissements somatiques et pression contextuelle.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="sorties" class="section-outputs">
+  <div class="outputs-header">
+    <div class="eyebrow">Ce que reçoit le thérapeute</div>
+    <h2 class="section-title">Une lecture BTB structurée<br>selon 6 axes cliniques</h2>
+    <p class="section-text">Pas un simple questionnaire. Un document exploitable qui fait émerger plus vite les ressources, les fragilités et les priorités à explorer.</p>
+  </div>
+  <div class="outputs-grid">
+    <div class="output-card"><div class="output-num">Sortie 01</div><div class="output-title">Synthèse clinique intégrée</div><div class="output-text">Une formulation courte, structurée et prudente qui organise la logique d’ensemble du récit sans se substituer à l’évaluation du praticien.</div></div>
+    <div class="output-card"><div class="output-num">Sortie 02</div><div class="output-title">Matrice 6 axes</div><div class="output-text">Processus psychiques, ressources, comportements, régulation émotionnelle, corps, environnement : une cartographie lisible du fonctionnement actuel.</div></div>
+    <div class="output-card"><div class="output-num">Sortie 03</div><div class="output-title">Points de vigilance</div><div class="output-text">Hiérarchisation des zones de fragilité, des signaux d’alerte et des éléments protecteurs utiles pour penser la suite du travail.</div></div>
+    <div class="output-card"><div class="output-num">Sortie 04</div><div class="output-title">Ressources cliniques</div><div class="output-text">Repérage des appuis internes et externes, des capacités de mobilisation et des éléments susceptibles de soutenir une réorganisation.</div></div>
+    <div class="output-card"><div class="output-num">Sortie 05</div><div class="output-title">Axes thérapeutiques</div><div class="output-text">Des foyers de travail à explorer, formulés comme pistes cliniques, pas comme prescriptions automatiques ni comme verdicts diagnostiques.</div></div>
+    <div class="output-card"><div class="output-num">Sortie 06</div><div class="output-title">Document exploitable avant séance</div><div class="output-text">Une base de lecture qui aide à entrer plus vite dans la clinique sans alourdir la rencontre ni réduire la singularité du patient.</div></div>
+  </div>
+</section>
+
+<section id="comment" class="section-comment">
+  <div class="comment-content">
+    <div class="eyebrow">Comment ça marche</div>
+    <h2 class="section-title">Trois étapes, un même objectif :<br><em style="font-style:italic;color:#93B88F;font-weight:400;">mieux entrer dans la clinique</em></h2>
+    <p class="section-text">L’outil reste léger côté praticien. L’essentiel se joue avant la séance, pour que la séance serve davantage au travail clinique lui-même.</p>
+    <div class="steps">
+      <div class="step"><div class="step-num">01</div><div class="step-text"><h4>Vous prescrivez le check-up</h4><p>Avant une première consultation, entre deux séances, ou à un moment charnière du suivi.</p></div></div>
+      <div class="step"><div class="step-num">02</div><div class="step-text"><h4>Le patient réalise l’entretien MindCheck</h4><p>À l’écrit ou à l’oral, à son rythme, dans un cadre structuré, confidentiel et sans pression de performance.</p></div></div>
+      <div class="step"><div class="step-num">03</div><div class="step-text"><h4>Vous recevez un bilan BTB exploitable</h4><p>Synthèse clinique, matrice 6 axes, points de vigilance et axes thérapeutiques à explorer avant ou pendant la séance.</p></div></div>
+    </div>
+  </div>
+  <div class="comment-side">
+    <div class="comment-card">
+      <h3>L’IA prépare le terrain.<br>Le thérapeute fait le reste.</h3>
+      <p>MindCheck Pro n’automatise pas la clinique. Il organise la première matière du patient pour que le praticien puisse consacrer davantage de temps à l’écoute, à l’interprétation et à la relation.</p>
+      <div class="comment-points">
+        <div>Moins de dispersion initiale</div>
+        <div>Plus de temps pour la rencontre et l’élaboration</div>
+        <div>Une lecture plus rapide des zones d’appui et de fragilité</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-practice">
+  <div class="practice-header">
+    <div class="eyebrow">Ce que cela change dans la pratique</div>
+    <h2 class="section-title">Moins de dispersion.<br>Plus de présence clinique.</h2>
+  </div>
+  <div class="practice-grid">
+    <div class="practice-card"><h4>Gain de temps</h4><p>Moins de temps consacré au tri de la matière initiale, plus de temps pour écouter, relancer, contenir et travailler.</p></div>
+    <div class="practice-card"><h4>Lecture plus rapide</h4><p>Les axes structurent ce qui, autrement, arrive souvent dans un ordre éclaté, chargé émotionnellement ou peu hiérarchisé.</p></div>
+    <div class="practice-card"><h4>Clinique mieux valorisée</h4><p>L’IA prépare la matière. Le thérapeute garde l’interprétation, la rencontre, la conduite du cadre et la dynamique du traitement.</p></div>
+  </div>
+</section>
+
+<section id="tarif" class="section-pricing">
+  <div class="pricing-header">
+    <div class="eyebrow">Tarif</div>
+    <h2 class="section-title">Une seule offre.<br>Simple, lisible, sans friction.</h2>
+    <p class="section-text">Pas de grille compliquée. Une offre conçue pour être essayée facilement dans la pratique quotidienne.</p>
+  </div>
+  <div class="pricing-card">
+    <div class="pricing-mini">MindCheck Pro</div>
+    <div class="pricing-price">49€<span>/mois</span></div>
+    <div class="pricing-sub">Sans engagement</div>
+    <div class="pricing-list">
+      <div>• Prescription du check-up à vos patients</div>
+      <div>• Réception des bilans BTB structurés</div>
+      <div>• Usage simple dans la première consultation ou le suivi</div>
+      <div>• Une IA au service de votre pratique, pas à sa place</div>
+    </div>
+    <a href="#" class="pricing-btn">Essayer MindCheck Pro</a>
+    <div class="pricing-note">Activation simple · Usage clinique · Résiliation libre</div>
+  </div>
+</section>
+
+<section class="section-cta">
+  <h2 class="cta-title">Intégrez l’IA dans votre pratique,<br><em>sans perdre la clinique humaine</em></h2>
+  <p class="cta-sub">MindCheck Pro aide le thérapeute à mieux préparer la rencontre, à gagner du temps sur le recueil initial et à renforcer la qualité de son travail clinique.</p>
+  <div class="cta-tags">
+    <span class="cta-tag">BTB structuré</span>
+    <span class="cta-tag">6 axes cliniques</span>
+    <span class="cta-tag">49€/mois</span>
+    <span class="cta-tag">Sans engagement</span>
+  </div>
+  <a href="#tarif" class="btn-hero">Essayer MindCheck Pro</a>
+</section>
+
+<footer>
+  <div class="brand">MindCheck Pro</div>
+  <p>L’IA au service de la pratique clinique</p>
+  <a href="#">Contact</a>
+</footer>
+</body>
+</html>
