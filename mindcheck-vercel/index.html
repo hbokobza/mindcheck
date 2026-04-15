@@ -32,7 +32,13 @@ nav {
 .nav-links a { text-decoration: none; color: var(--black); font-size: 14px; opacity: 0.6; transition: opacity 0.2s; }
 .nav-links a:hover { opacity: 1; }
 .nav-cta { background: var(--black) !important; color: white !important; opacity: 1 !important; padding: 10px 24px; border-radius: 24px; font-size: 13px; font-weight: 600; }
-.nav-cta:hover { background: var(--green) !important; }
+.nav-pro {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 13px; color: var(--green) !important; opacity: 1 !important;
+  border: 1px solid rgba(58,117,49,0.25); border-radius: 999px;
+  padding: 6px 14px; transition: background 0.2s;
+}
+.nav-pro:hover { background: var(--green-light) !important; }
 
 /* ====== HERO STYLE HEARTIFY ====== */
 .hero {
@@ -208,6 +214,7 @@ footer p, footer a { font-size: 12px; color: rgba(255,255,255,0.3); text-decorat
     <a href="#pourquoi">Pourquoi MindCheck ?</a>
     <a href="#axes">Les 6 axes</a>
     <a href="#orientation">Orientation</a>
+    <a href="pro.html" class="nav-pro">Vous êtes thérapeute ? →</a>
     <a href="app.html" class="nav-cta">Commencer mon check-up</a>
   </div>
 </nav>
