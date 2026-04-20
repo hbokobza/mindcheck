@@ -3,8 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Psee</title>
-<link href="https://fonts.googleapis.com/css2?family=Georgia&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<title>Psee — Le check-up psychique qui aide à y voir plus clair</title>
+<meta name="description" content="Commencez votre check-up psychique Psee : 10 à 15 minutes, en dialogue écrit ou oral, confidentiel et personnalisé.">
+<meta name="theme-color" content="#3a7531">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%226%22 fill=%22%23F5F0E8%22/%3E%3Ctext x=%2216%22 y=%2224%22 font-family=%22Georgia,serif%22 font-size=%2224%22 font-weight=%22700%22 text-anchor=%22middle%22 fill=%22%231a4a2e%22%3EP%3C/text%3E%3C/svg%3E">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="Psee">
+<meta property="og:title" content="Psee — Le check-up psychique qui aide à y voir plus clair">
+<meta property="og:description" content="Mon check-up psychique : 10 à 15 minutes, écrit ou oral, confidentiel.">
+<!-- <meta property="og:url" content="https://psee.fr/app"> -->
+<!-- <meta property="og:image" content="https://psee.fr/og-image.png"> -->
+<!-- Twitter -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Psee — Mon check-up">
+<meta name="twitter:description" content="Un check-up psychique structuré en 6 axes, en 10 à 15 minutes.">
+<meta name="robots" content="noindex">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'DM Sans',Arial,sans-serif;background:#F7F4EF;color:#1A1A18;min-height:100vh}
@@ -626,11 +645,22 @@ function updateAxes(s){
   });
 }
 
-async function callAPI(messages,sys){
-  const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:sys,messages})});
-  const d=await r.json();
-  if(d.error)throw new Error(d.error.message||'Erreur API');
-  return d.content?.[0]?.text||'';
+async function callAPI(messages, mode){
+  // Le system prompt vit desormais cote serveur (lib/systemPrompts.js).
+  // Le front envoie uniquement le mode ('collecte' | 'bilan_btc' | 'bilan_btb')
+  // et l'historique des messages.
+  const r = await fetch('/api/chat', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ messages, mode })
+  });
+  const d = await r.json();
+  if(d.error) throw new Error(d.error.message || 'Erreur API');
+  // La categorie renvoyee par le serveur peut etre utilisee pour la telemetrie
+  if(d.category && d.category !== 'normal'){
+    console.log('[psee-safety] category=' + d.category);
+  }
+  return d.content?.[0]?.text || '';
 }
 
 async function processInput(text,src){
@@ -652,7 +682,7 @@ async function processInput(text,src){
   }
 
   try{
-    const raw=await callAPI(hist,buildSYS());
+    const raw=await callAPI(hist, 'collecte');
     rmDots();
     const axM=raw.match(/AXES:\[([^\]]*)\]/);
     const cpM=raw.match(/COMPLET:\[(oui|non)\]/);
@@ -676,7 +706,7 @@ async function processInput(text,src){
     if(done||clean.toLowerCase().includes('je prépare')){
       addMsg('ai',"Merci pour ce partage. Je prépare votre synthèse…");
       hist.push({role:'assistant',content:raw});
-      setTimeout(()=>generateBilan(false),1200);
+      setTimeout(()=>promptEnrichissement(()=>generateBilan(false)),1200);
     } else {
       addMsg('ai',clean);
       hist.push({role:'assistant',content:raw});
@@ -738,7 +768,68 @@ function demanderBilan(){
 
   hist.push({role:'user', content:'Je souhaite générer ma synthèse maintenant.'});
   addMsg('ai', "Bien sûr. Je prépare votre synthèse à partir de ce que vous avez partagé…");
-  setTimeout(()=>generateBilan(false), 800);
+  setTimeout(()=>promptEnrichissement(()=>generateBilan(false)), 800);
+}
+
+function promptEnrichissement(nextAction){
+  // N'affiche le prompt qu'une fois par session
+  if(window._enrichAsked){ return nextAction(); }
+  window._enrichAsked = true;
+
+  const c = document.getElementById('chat');
+
+  // Message AI introductif
+  addMsg('ai',
+    "Avant la synthèse, souhaitez-vous enrichir le matériau avec un texte personnel ? " +
+    "Extrait de journal, lettre que vous vous êtes écrite, notes libres — tout est bienvenu. " +
+    "C'est facultatif, et votre texte rejoint l'analyse."
+  );
+
+  // Panneau d'enrichissement
+  const wrap = document.createElement('div');
+  wrap.className = 'msg';
+  wrap.id = 'enrich-panel';
+  wrap.innerHTML = `
+    <div class="av ai">M</div>
+    <div class="bub ai" style="max-width:94%;width:100%;background:#F0F7F4;border:1px solid #D8E6D8;padding:16px">
+      <textarea id="enrich-txt" placeholder="Votre texte ici… (facultatif)" style="width:100%;min-height:120px;max-height:320px;border:1px solid #D8D4CE;border-radius:8px;padding:12px;font-family:inherit;font-size:14px;line-height:1.6;color:#1A1A18;background:white;resize:vertical;outline:none;box-sizing:border-box"></textarea>
+      <div style="display:flex;gap:10px;margin-top:12px;justify-content:flex-end;flex-wrap:wrap">
+        <button id="enrich-skip" style="background:white;color:#3a7531;border:1.5px solid #3a7531;border-radius:20px;padding:8px 18px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit">Ignorer et générer</button>
+        <button id="enrich-add" style="background:#3a7531;color:white;border:1.5px solid #3a7531;border-radius:20px;padding:8px 18px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit">Ajouter au bilan</button>
+      </div>
+      <div style="font-size:11px;color:#888;margin-top:8px;line-height:1.5">Ce texte reste confidentiel et sert uniquement à affiner votre bilan.</div>
+    </div>`;
+  c.appendChild(wrap);
+  c.scrollTop = c.scrollHeight;
+
+  const done = (enrichText) => {
+    const panel = document.getElementById('enrich-panel');
+    if(panel) panel.remove();
+    if(enrichText && enrichText.trim()){
+      // Affichage côté utilisateur (tronqué si long)
+      const excerpt = enrichText.trim().length > 280
+        ? enrichText.trim().slice(0, 280) + '…'
+        : enrichText.trim();
+      addMsg('u', '[Texte personnel ajouté] ' + excerpt);
+      // Ajout dans l'historique conversationnel pour l'analyse
+      hist.push({
+        role: 'user',
+        content: "Voici un texte personnel que j'aimerais ajouter au matériau pour enrichir l'analyse (journal, lettre ou note libre) :\n\n" + enrichText.trim()
+      });
+      addMsg('ai', "Merci. J'intègre ce texte à l'analyse et je prépare la synthèse…");
+      setTimeout(() => nextAction(), 900);
+    } else {
+      nextAction();
+    }
+  };
+
+  document.getElementById('enrich-skip').addEventListener('click', () => done(''));
+  document.getElementById('enrich-add').addEventListener('click', () => {
+    const val = document.getElementById('enrich-txt').value;
+    done(val);
+  });
+  // Focus sur le textarea pour inviter à la saisie
+  setTimeout(() => document.getElementById('enrich-txt')?.focus(), 200);
 }
 
 async function generateBilan(avecBTB){
@@ -746,8 +837,8 @@ async function generateBilan(avecBTB){
   showDots();
   try{
     const msgs = [...hist,{role:'user',content:'Génère le bilan JSON maintenant selon la structure demandée.'}];
-    const promises = [callAPI(msgs, BILAN_SYS)];
-    if(avecBTB) promises.push(callAPI(msgs, BILAN_SYS_BTB));
+    const promises = [callAPI(msgs, 'bilan_btc')];
+    if(avecBTB) promises.push(callAPI(msgs, 'bilan_btb'));
     const results = await Promise.all(promises);
     rmDots();
 
