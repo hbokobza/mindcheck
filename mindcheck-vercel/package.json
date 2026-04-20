@@ -1,1 +1,10 @@
-
+  {
+     "name": "psee",
+     "version": "1.0.0",
+     "description": "Psee — check-up psychique en ligne",
+     "type": "module",
+     "engines": {
+       "node": "20.x"
+     },
+     "private": true
+   }
