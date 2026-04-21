@@ -3,336 +3,585 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MindCheck - Test App</title>
+  <title>MindCheck — Interrogatoire clinique</title>
   <style>
-    * {
-      box-sizing: border-box;
+    :root{
+      --bg:#f6f8f7;
+      --card:#ffffff;
+      --line:#d8e0dc;
+      --text:#1f2a24;
+      --muted:#66746d;
+      --primary:#244f45;
+      --primary-2:#2f6d5f;
+      --danger:#9d2f2f;
+      --ok:#1f6b43;
+      --shadow:0 8px 30px rgba(18,33,28,.08);
+      --radius:18px;
     }
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f7fb;
-      color: #1f2937;
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+      background:linear-gradient(180deg,#f4f7f5 0%,#eef3f0 100%);
+      color:var(--text);
     }
 
-    .container {
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 24px;
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding:24px;
     }
 
-    .card {
-      background: #ffffff;
-      border-radius: 16px;
-      padding: 24px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    .hero{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:28px;
+      margin-bottom:20px;
     }
 
-    h1 {
-      margin: 0 0 8px 0;
-      font-size: 28px;
+    .hero h1{
+      margin:0 0 10px 0;
+      font-size:32px;
+      line-height:1.1;
+      letter-spacing:-0.02em;
     }
 
-    .subtitle {
-      margin: 0 0 24px 0;
-      color: #6b7280;
-      font-size: 14px;
+    .hero p{
+      margin:0;
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.6;
+      max-width:850px;
     }
 
-    .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 16px;
+    .grid{
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap:20px;
     }
 
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
-    label {
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    input[type="text"],
-    select,
-    textarea {
-      width: 100%;
-      border: 1px solid #d1d5db;
-      border-radius: 10px;
-      padding: 12px 14px;
-      font-size: 14px;
-      background: #fff;
-    }
-
-    textarea {
-      min-height: 150px;
-      resize: vertical;
-    }
-
-    input[type="file"] {
-      font-size: 14px;
-    }
-
-    .actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 8px;
-    }
-
-    button {
-      border: none;
-      border-radius: 10px;
-      padding: 12px 18px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .btn-primary {
-      background: #111827;
-      color: white;
-    }
-
-    .btn-secondary {
-      background: #e5e7eb;
-      color: #111827;
-    }
-
-    .status {
-      margin-top: 18px;
-      padding: 12px 14px;
-      border-radius: 10px;
-      font-size: 14px;
-      display: none;
-    }
-
-    .status.info {
-      display: block;
-      background: #eff6ff;
-      color: #1d4ed8;
-      border: 1px solid #bfdbfe;
-    }
-
-    .status.error {
-      display: block;
-      background: #fef2f2;
-      color: #b91c1c;
-      border: 1px solid #fecaca;
-    }
-
-    .response-box {
-      margin-top: 24px;
-      border-top: 1px solid #e5e7eb;
-      padding-top: 24px;
-    }
-
-    .response-title {
-      font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 12px;
-    }
-
-    .response-content {
-      white-space: pre-wrap;
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      padding: 16px;
-      min-height: 120px;
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    .meta {
-      margin-top: 12px;
-      font-size: 12px;
-      color: #6b7280;
-    }
-
-    .file-list {
-      margin-top: 8px;
-      font-size: 13px;
-      color: #374151;
-    }
-
-    @media (max-width: 700px) {
-      .row {
-        grid-template-columns: 1fr;
+    @media (max-width: 980px){
+      .grid{
+        grid-template-columns:1fr;
       }
+    }
 
-      .container {
-        margin: 20px auto;
-        padding: 14px;
-      }
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:20px;
+    }
 
-      .card {
-        padding: 18px;
+    .card h2{
+      margin:0 0 14px 0;
+      font-size:20px;
+    }
+
+    .section{
+      margin-bottom:18px;
+    }
+
+    label{
+      display:block;
+      margin-bottom:8px;
+      font-weight:600;
+      font-size:14px;
+    }
+
+    .help{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
+      margin-top:6px;
+    }
+
+    textarea, input[type="text"], select{
+      width:100%;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:14px 16px;
+      font-size:15px;
+      color:var(--text);
+      background:#fff;
+      outline:none;
+      transition:border-color .2s, box-shadow .2s;
+    }
+
+    textarea:focus, input[type="text"]:focus, select:focus{
+      border-color:#8fb7aa;
+      box-shadow:0 0 0 4px rgba(90,140,122,.12);
+    }
+
+    textarea{
+      min-height:220px;
+      resize:vertical;
+      line-height:1.55;
+    }
+
+    .row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+    }
+
+    @media (max-width:680px){
+      .row{
+        grid-template-columns:1fr;
       }
+    }
+
+    .upload{
+      border:1.5px dashed #b8c8c0;
+      background:#fafcfb;
+      border-radius:16px;
+      padding:16px;
+    }
+
+    .upload input[type="file"]{
+      width:100%;
+      font-size:14px;
+    }
+
+    .file-list{
+      margin-top:12px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .file-item{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      padding:10px 12px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:#fff;
+      font-size:14px;
+    }
+
+    .file-meta{
+      overflow:hidden;
+    }
+
+    .file-name{
+      font-weight:600;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .file-size{
+      color:var(--muted);
+      font-size:12px;
+      margin-top:2px;
+    }
+
+    .remove-btn{
+      border:none;
+      background:#f5e9e9;
+      color:#7a1f1f;
+      border-radius:10px;
+      padding:8px 10px;
+      cursor:pointer;
+      font-size:12px;
+      white-space:nowrap;
+    }
+
+    .switches{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:10px 14px;
+      background:#fff;
+      cursor:pointer;
+      user-select:none;
+      font-size:14px;
+    }
+
+    .chip input{
+      margin:0;
+    }
+
+    .actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:16px;
+    }
+
+    button{
+      border:none;
+      border-radius:14px;
+      padding:14px 18px;
+      font-size:15px;
+      font-weight:600;
+      cursor:pointer;
+      transition:transform .03s ease, opacity .2s ease, background .2s ease;
+    }
+
+    button:active{
+      transform:translateY(1px);
+    }
+
+    .btn-primary{
+      background:var(--primary);
+      color:#fff;
+    }
+
+    .btn-primary:hover{
+      background:var(--primary-2);
+    }
+
+    .btn-secondary{
+      background:#eef4f1;
+      color:var(--text);
+      border:1px solid var(--line);
+    }
+
+    .status{
+      margin-top:14px;
+      padding:12px 14px;
+      border-radius:12px;
+      font-size:14px;
+      display:none;
+      white-space:pre-wrap;
+    }
+
+    .status.info{
+      display:block;
+      background:#eef5f2;
+      color:#27463d;
+      border:1px solid #cadcd4;
+    }
+
+    .status.error{
+      display:block;
+      background:#f9ecec;
+      color:#7d2525;
+      border:1px solid #e6c3c3;
+    }
+
+    .status.ok{
+      display:block;
+      background:#eef8f1;
+      color:#1f6b43;
+      border:1px solid #cbe6d5;
+    }
+
+    .response-box{
+      min-height:420px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:18px;
+      background:#fbfcfc;
+      white-space:pre-wrap;
+      line-height:1.65;
+      font-size:15px;
+    }
+
+    .placeholder{
+      color:var(--muted);
+    }
+
+    .mini{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.55;
+    }
+
+    .badge{
+      display:inline-block;
+      background:#edf3f0;
+      color:#345347;
+      border:1px solid #d7e3dd;
+      border-radius:999px;
+      padding:7px 11px;
+      font-size:12px;
+      margin-right:8px;
+      margin-bottom:8px;
+    }
+
+    .footer-note{
+      margin-top:18px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.55;
+    }
+
+    .hidden{
+      display:none;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="card">
-      <h1>MindCheck - Interface de test</h1>
-      <p class="subtitle">
-        Version simple pour vérifier que le front envoie bien les données à <code>/api/chat</code>.
+  <div class="wrap">
+    <section class="hero">
+      <h1>MindCheck — Interrogatoire clinique guidé</h1>
+      <p>
+        Décrivez votre situation librement. Vous pouvez compléter votre texte par des documents joints.
+        L’objectif est de transmettre au moteur suffisamment d’éléments pour produire une première
+        synthèse structurée et exploitable.
       </p>
+    </section>
 
-      <div class="row">
-        <div class="field">
-          <label for="sessionCode">Code session</label>
-          <input type="text" id="sessionCode" placeholder="Ex: TEST-001" />
-        </div>
+    <div class="grid">
+      <section class="card">
+        <h2>Entrée utilisateur</h2>
 
-        <div class="field">
-          <label for="mode">Mode</label>
+        <div class="section">
+          <label for="mode">Mode d’entrée</label>
           <select id="mode">
-            <option value="text">Texte</option>
-            <option value="voice">Oral</option>
+            <option value="text" selected>Écrit</option>
+            <option value="oral">Oral / transcription</option>
           </select>
+          <div class="help">
+            Le mode “oral” n’enregistre pas automatiquement le micro dans cette version.
+            Il sert à indiquer au backend la nature de l’entrée. Pour un vrai mode micro,
+            il faudra ajouter la capture/transcription ensuite.
+          </div>
         </div>
-      </div>
 
-      <div class="field">
-        <label for="message">Message / interrogatoire</label>
-        <textarea id="message" placeholder="Saisissez ici le contenu du message patient ou de l'interrogatoire..."></textarea>
-      </div>
+        <div class="section">
+          <label for="patientName">Prénom ou identifiant du patient</label>
+          <input type="text" id="patientName" placeholder="Ex. Laura, Patient 07, Anonyme..." />
+        </div>
 
-      <div class="field">
-        <label for="attachments">Documents joints</label>
-        <input type="file" id="attachments" multiple />
-        <div id="fileList" class="file-list"></div>
-      </div>
+        <div class="section">
+          <label for="message">Message clinique / interrogatoire</label>
+          <textarea id="message" placeholder="Exemple :
+Patiente de 34 ans, fatigue psychique importante, hypersensibilité au regard des autres, difficultés de sommeil, tendance à l’évitement...
+Vous pouvez aussi décrire le contexte, les symptômes, l’histoire, les antécédents, la relation au corps, au travail, aux affects, etc."></textarea>
+          <div class="help">
+            Plus le matériau clinique est précis, plus la synthèse sera utile.
+          </div>
+        </div>
 
-      <div class="actions">
-        <button class="btn-primary" id="sendBtn">Envoyer</button>
-        <button class="btn-secondary" id="clearBtn" type="button">Effacer</button>
-      </div>
+        <div class="section">
+          <label>Pièces jointes</label>
+          <div class="upload">
+            <input id="attachments" type="file" multiple />
+            <div class="help">
+              Vous pouvez joindre des documents complémentaires : notes, textes, captures, PDF, images.
+              Dans cette version, les fichiers sont transmis au backend en base64.
+            </div>
+            <div id="fileList" class="file-list"></div>
+          </div>
+        </div>
 
-      <div id="statusBox" class="status"></div>
+        <div class="section">
+          <label>Options</label>
+          <div class="switches">
+            <label class="chip">
+              <input type="checkbox" id="needStructuredOutput" checked />
+              Sortie structurée
+            </label>
+            <label class="chip">
+              <input type="checkbox" id="needClinicalTone" checked />
+              Ton clinique
+            </label>
+            <label class="chip">
+              <input type="checkbox" id="needVigilance" checked />
+              Vigilance sécurité
+            </label>
+          </div>
+        </div>
 
-      <div class="response-box">
-        <div class="response-title">Réponse</div>
-        <div id="responseContent" class="response-content">Aucune réponse pour l’instant.</div>
-        <div id="responseMeta" class="meta"></div>
-      </div>
+        <div class="actions">
+          <button class="btn-primary" id="sendBtn">Envoyer à l’analyse</button>
+          <button class="btn-secondary" id="clearBtn" type="button">Réinitialiser</button>
+        </div>
+
+        <div id="status" class="status"></div>
+
+        <div class="footer-note">
+          Cette page front ne remplace pas vos fichiers de logique serveur. Elle envoie simplement
+          les données à <code>/api/chat</code>. Vos modules <code>lib/...</code> existants restent utilisés côté backend.
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Réponse du moteur</h2>
+        <div style="margin-bottom:12px;">
+          <span class="badge">API : /api/chat</span>
+          <span class="badge">Front simplifié</span>
+          <span class="badge">Compatible Vercel</span>
+        </div>
+        <div id="responseBox" class="response-box">
+          <span class="placeholder">La réponse apparaîtra ici.</span>
+        </div>
+        <div class="mini" style="margin-top:12px;">
+          Si rien ne s’affiche, le problème vient en général de l’un de ces points :
+          format JSON envoyé, erreur dans <code>api/chat.js</code>, timeout, ou réponse backend non conforme.
+        </div>
+      </section>
     </div>
   </div>
 
   <script>
-    const sessionCodeInput = document.getElementById("sessionCode");
-    const modeInput = document.getElementById("mode");
-    const messageInput = document.getElementById("message");
     const attachmentsInput = document.getElementById("attachments");
     const fileList = document.getElementById("fileList");
     const sendBtn = document.getElementById("sendBtn");
     const clearBtn = document.getElementById("clearBtn");
-    const statusBox = document.getElementById("statusBox");
-    const responseContent = document.getElementById("responseContent");
-    const responseMeta = document.getElementById("responseMeta");
+    const statusBox = document.getElementById("status");
+    const responseBox = document.getElementById("responseBox");
 
-    let encodedAttachments = [];
+    let storedFiles = [];
 
-    function setStatus(message, type = "info") {
+    function formatBytes(bytes){
+      if (!bytes && bytes !== 0) return "";
+      const units = ["B","KB","MB","GB"];
+      let i = 0;
+      let value = bytes;
+      while (value >= 1024 && i < units.length - 1){
+        value /= 1024;
+        i++;
+      }
+      return `${value.toFixed(value >= 10 || i === 0 ? 0 : 1)} ${units[i]}`;
+    }
+
+    function setStatus(type, message){
       statusBox.className = "status " + type;
       statusBox.textContent = message;
     }
 
-    function clearStatus() {
+    function clearStatus(){
       statusBox.className = "status";
       statusBox.textContent = "";
     }
 
-    function toBase64(file) {
+    function renderFiles(){
+      fileList.innerHTML = "";
+      if (!storedFiles.length){
+        fileList.innerHTML = '<div class="help">Aucun fichier sélectionné.</div>';
+        return;
+      }
+
+      storedFiles.forEach((fileObj, index) => {
+        const row = document.createElement("div");
+        row.className = "file-item";
+
+        const meta = document.createElement("div");
+        meta.className = "file-meta";
+
+        const name = document.createElement("div");
+        name.className = "file-name";
+        name.textContent = fileObj.name;
+
+        const size = document.createElement("div");
+        size.className = "file-size";
+        size.textContent = `${fileObj.type || "type inconnu"} • ${formatBytes(fileObj.size)}`;
+
+        meta.appendChild(name);
+        meta.appendChild(size);
+
+        const btn = document.createElement("button");
+        btn.className = "remove-btn";
+        btn.type = "button";
+        btn.textContent = "Retirer";
+        btn.addEventListener("click", () => {
+          storedFiles.splice(index, 1);
+          renderFiles();
+        });
+
+        row.appendChild(meta);
+        row.appendChild(btn);
+        fileList.appendChild(row);
+      });
+    }
+
+    function fileToDataUrl(file){
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = () => {
-          const result = reader.result || "";
-          const base64 = String(result).split(",")[1] || "";
-          resolve(base64);
-        };
-        reader.onerror = reject;
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(new Error(`Lecture impossible pour ${file.name}`));
         reader.readAsDataURL(file);
       });
     }
 
     attachmentsInput.addEventListener("change", async (e) => {
       const files = Array.from(e.target.files || []);
-      fileList.innerHTML = "";
+      if (!files.length) return;
 
-      if (!files.length) {
-        encodedAttachments = [];
-        return;
-      }
-
-      setStatus("Encodage des documents en cours...", "info");
-
+      setStatus("info", "Lecture des pièces jointes...");
       try {
-        encodedAttachments = await Promise.all(
-          files.map(async (file) => ({
+        for (const file of files){
+          const dataUrl = await fileToDataUrl(file);
+          storedFiles.push({
             name: file.name,
-            type: file.type || "application/octet-stream",
+            type: file.type,
             size: file.size,
-            content: await toBase64(file)
-          }))
-        );
-
-        fileList.innerHTML = files
-          .map(file => `<div>- ${file.name} (${Math.round(file.size / 1024)} Ko)</div>`)
-          .join("");
-
-        setStatus("Documents prêts à être envoyés.", "info");
-      } catch (error) {
-        encodedAttachments = [];
-        setStatus("Erreur lors de la lecture des documents.", "error");
+            dataUrl
+          });
+        }
+        renderFiles();
+        setStatus("ok", "Pièces jointes ajoutées.");
+      } catch (err){
+        setStatus("error", err.message || "Erreur lors de la lecture des fichiers.");
+      } finally {
+        attachmentsInput.value = "";
       }
     });
 
     clearBtn.addEventListener("click", () => {
-      sessionCodeInput.value = "";
-      modeInput.value = "text";
-      messageInput.value = "";
-      attachmentsInput.value = "";
-      encodedAttachments = [];
-      fileList.innerHTML = "";
-      responseContent.textContent = "Aucune réponse pour l’instant.";
-      responseMeta.textContent = "";
+      document.getElementById("mode").value = "text";
+      document.getElementById("patientName").value = "";
+      document.getElementById("message").value = "";
+      document.getElementById("needStructuredOutput").checked = true;
+      document.getElementById("needClinicalTone").checked = true;
+      document.getElementById("needVigilance").checked = true;
+      storedFiles = [];
+      renderFiles();
       clearStatus();
+      responseBox.innerHTML = '<span class="placeholder">La réponse apparaîtra ici.</span>';
     });
 
     sendBtn.addEventListener("click", async () => {
-      const sessionCode = sessionCodeInput.value.trim() || "TEST-001";
-      const mode = modeInput.value;
-      const message = messageInput.value.trim();
+      const mode = document.getElementById("mode").value;
+      const patientName = document.getElementById("patientName").value.trim();
+      const message = document.getElementById("message").value.trim();
+      const needStructuredOutput = document.getElementById("needStructuredOutput").checked;
+      const needClinicalTone = document.getElementById("needClinicalTone").checked;
+      const needVigilance = document.getElementById("needVigilance").checked;
 
-      if (!message) {
-        setStatus("Veuillez saisir un message avant l’envoi.", "error");
+      if (!message){
+        setStatus("error", "Veuillez saisir un texte avant l’envoi.");
         return;
       }
 
-      sendBtn.disabled = true;
-      sendBtn.textContent = "Envoi...";
-      setStatus("Requête en cours vers /api/chat ...", "info");
+      const payload = {
+        app: "mindcheck",
+        version: "front-simple-1",
+        mode,
+        patientName,
+        message,
+        options: {
+          structuredOutput: needStructuredOutput,
+          clinicalTone: needClinicalTone,
+          vigilance: needVigilance
+        },
+        attachments: storedFiles
+      };
 
-      responseContent.textContent = "Chargement...";
-      responseMeta.textContent = "";
+      clearStatus();
+      setStatus("info", "Analyse en cours...");
+      responseBox.textContent = "Analyse en cours...";
 
       try {
-        const payload = {
-          sessionCode,
-          mode,
-          message,
-          attachments: encodedAttachments
-        };
-
         const res = await fetch("/api/chat", {
           method: "POST",
           headers: {
@@ -341,48 +590,43 @@
           body: JSON.stringify(payload)
         });
 
-        const data = await res.json();
+        const rawText = await res.text();
 
-        if (!res.ok) {
-          throw new Error(data?.error || "Erreur API");
+        let data;
+        try {
+          data = JSON.parse(rawText);
+        } catch {
+          data = { raw: rawText };
         }
 
-        responseContent.textContent =
-          data.reply ||
-          data.response ||
-          data.output ||
-          "Réponse reçue mais champ texte non reconnu.";
-
-        const metaParts = [];
-
-        if (data.meta?.blocked !== undefined) {
-          metaParts.push("blocked: " + String(data.meta.blocked));
+        if (!res.ok){
+          const errorMessage =
+            data?.error ||
+            data?.message ||
+            data?.raw ||
+            `Erreur HTTP ${res.status}`;
+          throw new Error(errorMessage);
         }
 
-        if (data.meta?.reason) {
-          metaParts.push("reason: " + data.meta.reason);
-        }
+        const finalText =
+          data?.reply ||
+          data?.output ||
+          data?.content ||
+          data?.message ||
+          data?.result ||
+          data?.raw ||
+          "Réponse vide.";
 
-        if (data.meta?.flags) {
-          metaParts.push("flags: " + JSON.stringify(data.meta.flags));
-        }
-
-        if (data.meta?.policy) {
-          metaParts.push("policy: " + data.meta.policy);
-        }
-
-        responseMeta.textContent = metaParts.join(" | ");
-
-        setStatus("Réponse reçue avec succès.", "info");
-      } catch (error) {
-        responseContent.textContent = "Erreur lors de l’appel API.";
-        responseMeta.textContent = "";
-        setStatus(error.message || "Erreur inconnue.", "error");
-      } finally {
-        sendBtn.disabled = false;
-        sendBtn.textContent = "Envoyer";
+        responseBox.textContent = finalText;
+        setStatus("ok", "Analyse terminée.");
+      } catch (err){
+        responseBox.textContent = "";
+        responseBox.innerHTML = '<span class="placeholder">Aucune réponse exploitable.</span>';
+        setStatus("error", err.message || "Erreur inconnue.");
       }
     });
+
+    renderFiles();
   </script>
 </body>
 </html>
