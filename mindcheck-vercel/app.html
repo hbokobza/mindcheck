@@ -1690,23 +1690,21 @@ function reprendreParCode(){
   function crisisMessage(level) {
     if (level === "critical") {
       return (
-        "<strong>Situation à risque détectée.</strong><br>" +
-        "Cette application ne peut pas gérer une situation de crise ou de danger immédiat.<br><br>" +
-        "Faites immédiatement l’une de ces actions :<br>" +
-        "• appelez les secours (<strong>15</strong> en France, <strong>112</strong> en Europe)<br>" +
-        "• appelez le <strong>3114</strong> (numéro national de prévention du suicide, 24h/24)<br>" +
-        "• contactez sans attendre un proche ou un médecin<br>" +
-        "• rendez-vous aux urgences les plus proches"
+        "Ce que vous partagez évoque une souffrance importante. Cette application ne peut pas accompagner une situation de crise.\n\n" +
+        "Si c'est le cas en ce moment, ces ressources sont disponibles :\n" +
+        "• le 3114 (prévention du suicide, 24h/24, gratuit)\n" +
+        "• le 15 ou le 112 pour une urgence médicale\n" +
+        "• un proche, un médecin, ou les urgences les plus proches\n\n" +
+        "Vous pouvez continuer ce check-up si vous le souhaitez — il reste un outil de repérage, pas un soin d'urgence."
       );
     }
 
     return (
-      "<strong>Niveau de détresse élevé détecté.</strong><br>" +
-      "Cette application n’est pas adaptée pour une prise en charge d’urgence.<br><br>" +
-      "Si vous vous sentez en danger, ou proche de perdre le contrôle :<br>" +
-      "• appelez le <strong>15</strong> ou le <strong>112</strong><br>" +
-      "• appelez le <strong>3114</strong><br>" +
-      "• contactez immédiatement un proche ou un professionnel"
+      "Ce que vous partagez semble difficile. Cette application reste un outil de repérage, pas un accompagnement d'urgence.\n\n" +
+      "Si vous traversez une période intense, ces ressources peuvent aider :\n" +
+      "• le 3114 (24h/24, gratuit, confidentiel)\n" +
+      "• un proche, un médecin, ou un professionnel de santé\n\n" +
+      "Vous pouvez continuer ce check-up si vous le souhaitez."
     );
   }
 
@@ -1823,13 +1821,9 @@ function reprendreParCode(){
       securityState.lastRiskLevel = level;
 
       if (level === "critical") {
-        securityState.sessionBlocked = true;
-        addAlertBubble(crisisMessage("critical"));
-        return;
-      }
-
-      if (level === "high") {
-        addAlertBubble(crisisMessage("high"));
+        addMsg('ai', crisisMessage("critical"));
+      } else if (level === "high") {
+        addMsg('ai', crisisMessage("high"));
       }
 
       securityState.replyCount += 1;
