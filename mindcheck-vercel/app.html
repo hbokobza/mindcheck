@@ -1520,7 +1520,7 @@ function reprendreParCode(){
      CONFIG
   ========================= */
   const SECURITY_CONFIG = {
-    MAX_REPLIES_PER_SESSION: 12,
+    MAX_REPLIES_PER_SESSION: 40,
     MAX_USER_MESSAGE_CHARS: 3500,
     MAX_ASSISTANT_REPLY_CHARS: 2200,
     MAX_CONSECUTIVE_SHORT_USER_MSGS: 3,
@@ -1712,11 +1712,8 @@ function reprendreParCode(){
 
   function reframingPrompt() {
     return (
-      "Pour continuer utilement, répondez de façon concrète sur un seul point :<br>" +
-      "1. ce que vous ressentez en ce moment<br>" +
-      "2. depuis quand<br>" +
-      "3. ce que cela gêne dans votre vie<br>" +
-      "4. si cela s’aggrave ou non"
+      "Pour que je puisse saisir ce que vous vivez, pouvez-vous m'en dire un peu plus : " +
+      "ce que vous ressentez concrètement, depuis quand, et si cela gêne votre quotidien ?"
     );
   }
 
@@ -1816,7 +1813,8 @@ function reprendreParCode(){
       }
 
       if (securityState.consecutiveShortMsgs >= SECURITY_CONFIG.MAX_CONSECUTIVE_SHORT_USER_MSGS) {
-        addSystemBubble(reframingPrompt());
+        addMsg('ai', reframingPrompt());
+        securityState.consecutiveShortMsgs = 0;
         return;
       }
 
