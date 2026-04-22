@@ -48,20 +48,20 @@ REGLES
 - Signaler les points de vigilance.
 - Rester rigoureux, concis, professionnel.
 `;
-import { classifyInput, isUnsafeOutput } from '../lib/safetyRules.js';
-import { POLICIES } from '../lib/responsePolicies.js';
-import { allowRequest } from '../lib/rateLimit.js';
+import { classifyInput, isUnsafeOutput } from './safetyRules.js';
+import { POLICIES } from './responsePolicies.js';
+import { allowRequest } from './rateLimit.js';
 
-import { chooseNextModule } from '../lib/suspicionEngine.js';
+import { chooseNextModule } from './suspicionEngine.js';
 import {
   getPsychometricModule,
   buildPsychometricResult
-} from '../lib/psychometrics.js';
+} from './psychometrics.js';
 import {
   buildPassationMetrics,
   computePassationQuality
-} from '../lib/passationQuality.js';
-import { buildClinicalSynthesis } from '../lib/clinicalSynthesis.js';
+} from './passationQuality.js';
+import { buildClinicalSynthesis } from './clinicalSynthesis.js';
 
 const MAX_MODULES_PER_SESSION = 2;
 
