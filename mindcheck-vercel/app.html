@@ -1506,5 +1506,444 @@ function reprendreParCode(){
   }catch(e){}
 })();
 </script>
+  <script>
+/* =========================================================
+   PATCH VERSION 2 — GARDE-FOUS / SÉCURITÉ / RECADRAGE
+   À coller juste avant </body>
+========================================================= */
+
+(function () {
+  if (window.__MINDCHECK_SECURITY_PATCH_V2__) return;
+  window.__MINDCHECK_SECURITY_PATCH_V2__ = true;
+
+  /* =========================
+     CONFIG
+  ========================= */
+  const SECURITY_CONFIG = {
+    MAX_REPLIES_PER_SESSION: 12,
+    MAX_USER_MESSAGE_CHARS: 3500,
+    MAX_ASSISTANT_REPLY_CHARS: 2200,
+    MAX_CONSECUTIVE_SHORT_USER_MSGS: 3,
+    MIN_USER_MSG_LEN_FOR_SUBSTANCE: 25,
+    CRISIS_SCORE_ALERT: 7,
+    CRISIS_SCORE_BLOCK: 10
+  };
+
+  /* =========================
+     ÉTAT
+  ========================= */
+  const securityState = {
+    replyCount: 0,
+    consecutiveShortMsgs: 0,
+    lastRiskLevel: "low",
+    sessionBlocked: false,
+    startedAt: Date.now(),
+    turns: []
+  };
+
+  /* =========================
+     UTILITAIRES
+  ========================= */
+  function normalizeText(s) {
+    return String(s || "")
+      .replace(/\s+/g, " ")
+      .replace(/[“”]/g, '"')
+      .replace(/[‘’]/g, "'")
+      .trim();
+  }
+
+  function truncateText(s, max) {
+    s = String(s || "");
+    if (s.length <= max) return s;
+    return s.slice(0, max).trim() + "…";
+  }
+
+  function lower(s) {
+    return normalizeText(s).toLowerCase();
+  }
+
+  function escapeHtml(str) {
+    return String(str || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
+
+  function getChatNode() {
+    return document.getElementById("chat");
+  }
+
+  function addSystemBubble(html) {
+    const chat = getChatNode();
+    if (!chat) return;
+    const d = document.createElement("div");
+    d.className = "a";
+    d.innerHTML =
+      '<div class="msg" style="background:#FFF8E8;border:1px solid #E7C97A;color:#5E4A16">' +
+      html +
+      "</div>";
+    chat.appendChild(d);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  function addAlertBubble(html) {
+    const chat = getChatNode();
+    if (!chat) return;
+    const d = document.createElement("div");
+    d.className = "a";
+    d.innerHTML =
+      '<div class="msg" style="background:#FFF1F1;border:1px solid #D88A8A;color:#7A1F1F">' +
+      html +
+      "</div>";
+    chat.appendChild(d);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  function safeShowError(msg) {
+    if (typeof window.showErr === "function") {
+      window.showErr(msg);
+    } else {
+      alert(msg);
+    }
+  }
+
+  /* =========================
+     DÉTECTION RISQUES
+  ========================= */
+  const RISK_PATTERNS = {
+    suicidal: [
+      "suicide", "me suicider", "envie de mourir", "je veux mourir",
+      "mettre fin à mes jours", "en finir", "plus envie de vivre",
+      "je vais me tuer", "je veux me tuer", "tuer moi", "me tuer"
+    ],
+    selfharm: [
+      "automutilation", "me faire du mal", "scarification", "me couper",
+      "mutiler", "je me blesse", "je me frappe"
+    ],
+    psychosis: [
+      "j'entends des voix", "on me parle", "on me surveille",
+      "on me suit", "ils veulent ma peau", "je vois des choses",
+      "hallucination", "hallucinations", "voix dans ma tête"
+    ],
+    extremeDistress: [
+      "je vais exploser", "je perds le contrôle", "je suis en danger",
+      "attaque de panique énorme", "angoisse insupportable",
+      "je ne tiens plus", "c'est insupportable"
+    ],
+    violence: [
+      "tuer quelqu'un", "envie de tuer", "faire du mal à quelqu'un",
+      "je vais l'agresser", "je vais le tuer", "je vais la tuer"
+    ]
+  };
+
+  function scoreRisk(text) {
+    const t = lower(text);
+    let score = 0;
+    const hits = [];
+
+    Object.entries(RISK_PATTERNS).forEach(([category, arr]) => {
+      arr.forEach((p) => {
+        if (t.includes(p)) {
+          score += (category === "suicidal" || category === "violence") ? 4 : 3;
+          hits.push({ category, pattern: p });
+        }
+      });
+    });
+
+    if (/\bmaintenant\b|\btout de suite\b|\bce soir\b|\baujourd'hui\b/.test(t)) {
+      score += 2;
+      hits.push({ category: "urgency", pattern: "urgence temporelle" });
+    }
+
+    return { score, hits };
+  }
+
+  function classifyRisk(score) {
+    if (score >= SECURITY_CONFIG.CRISIS_SCORE_BLOCK) return "critical";
+    if (score >= SECURITY_CONFIG.CRISIS_SCORE_ALERT) return "high";
+    if (score >= 3) return "medium";
+    return "low";
+  }
+
+  /* =========================
+     QUALITÉ DES ENTRÉES
+  ========================= */
+  function assessUserInputQuality(text) {
+    const clean = normalizeText(text);
+    const len = clean.length;
+
+    const isShort = len < SECURITY_CONFIG.MIN_USER_MSG_LEN_FOR_SUBSTANCE;
+    const looksLikeOnlyYesNo = /^(oui|non|ok|d'accord|dac|yes|no)\.?$/i.test(clean);
+    const looksEmpty = len === 0;
+
+    return {
+      len,
+      isShort,
+      looksLikeOnlyYesNo,
+      looksEmpty
+    };
+  }
+
+  /* =========================
+     RÉPONSES DE SÉCURITÉ
+  ========================= */
+  function crisisMessage(level) {
+    if (level === "critical") {
+      return (
+        "<strong>Situation à risque détectée.</strong><br>" +
+        "Cette application ne peut pas gérer une situation de crise ou de danger immédiat.<br><br>" +
+        "Faites immédiatement l’une de ces actions :<br>" +
+        "• appelez les secours (<strong>15</strong> en France, <strong>112</strong> en Europe)<br>" +
+        "• appelez le <strong>3114</strong> (numéro national de prévention du suicide, 24h/24)<br>" +
+        "• contactez sans attendre un proche ou un médecin<br>" +
+        "• rendez-vous aux urgences les plus proches"
+      );
+    }
+
+    return (
+      "<strong>Niveau de détresse élevé détecté.</strong><br>" +
+      "Cette application n’est pas adaptée pour une prise en charge d’urgence.<br><br>" +
+      "Si vous vous sentez en danger, ou proche de perdre le contrôle :<br>" +
+      "• appelez le <strong>15</strong> ou le <strong>112</strong><br>" +
+      "• appelez le <strong>3114</strong><br>" +
+      "• contactez immédiatement un proche ou un professionnel"
+    );
+  }
+
+  function reframingPrompt() {
+    return (
+      "Pour continuer utilement, répondez de façon concrète sur un seul point :<br>" +
+      "1. ce que vous ressentez en ce moment<br>" +
+      "2. depuis quand<br>" +
+      "3. ce que cela gêne dans votre vie<br>" +
+      "4. si cela s’aggrave ou non"
+    );
+  }
+
+  function sessionCapMessage() {
+    return (
+      "<strong>Limite d’échanges atteinte pour cette session.</strong><br>" +
+      "Le but de l’outil est un repérage et une orientation, pas une conversation indéfinie.<br><br>" +
+      "Étapes suivantes possibles :<br>" +
+      "• relire la synthèse<br>" +
+      "• compléter plus tard avec des éléments plus précis<br>" +
+      "• passer à une orientation vers un professionnel"
+    );
+  }
+
+  /* =========================
+     GARDE-FOUS SORTIE IA
+  ========================= */
+  function sanitizeAssistantReply(text) {
+    let out = normalizeText(text);
+
+    const forbiddenPatterns = [
+      /je pose un diagnostic/gi,
+      /vous avez (certainement|clairement|à l'évidence)/gi,
+      /c'est forcément/gi,
+      /vous devez arrêter votre traitement/gi,
+      /arrêtez immédiatement votre traitement/gi,
+      /prenez tel médicament/gi,
+      /augmentez votre dose/gi,
+      /diminuez votre dose/gi
+    ];
+
+    forbiddenPatterns.forEach((re) => {
+      out = out.replace(re, "");
+    });
+
+    out = truncateText(out, SECURITY_CONFIG.MAX_ASSISTANT_REPLY_CHARS);
+
+    if (!/[.!?]$/.test(out)) out += ".";
+
+    return out;
+  }
+
+  function addClinicalDisclaimerIfNeeded(text) {
+    const t = lower(text);
+    const needs =
+      t.includes("traum") ||
+      t.includes("dépress") ||
+      t.includes("anx") ||
+      t.includes("border") ||
+      t.includes("psychot") ||
+      t.includes("bipola") ||
+      t.includes("tdah");
+
+    if (!needs) return text;
+
+    return (
+      text +
+      "\n\nRepérage indicatif uniquement. Ce contenu ne remplace ni un diagnostic, ni un avis médical, ni une évaluation clinique complète."
+    );
+  }
+
+  /* =========================
+     INTERCEPTION ENVOI MESSAGE
+  ========================= */
+  const originalSubmitText = window.submitText;
+
+  if (typeof originalSubmitText === "function") {
+    window.submitText = async function patchedSubmitText() {
+      if (securityState.sessionBlocked) {
+        addAlertBubble(sessionCapMessage());
+        return;
+      }
+
+      const input = document.getElementById("inp");
+      if (!input) return originalSubmitText.apply(this, arguments);
+
+      const raw = input.value || "";
+      const text = normalizeText(raw);
+
+      const quality = assessUserInputQuality(text);
+
+      if (quality.looksEmpty) {
+        safeShowError("Veuillez saisir un message.");
+        return;
+      }
+
+      if (text.length > SECURITY_CONFIG.MAX_USER_MESSAGE_CHARS) {
+        input.value = text.slice(0, SECURITY_CONFIG.MAX_USER_MESSAGE_CHARS);
+        safeShowError("Message trop long. Merci de raccourcir.");
+        return;
+      }
+
+      if (quality.isShort || quality.looksLikeOnlyYesNo) {
+        securityState.consecutiveShortMsgs += 1;
+      } else {
+        securityState.consecutiveShortMsgs = 0;
+      }
+
+      if (securityState.consecutiveShortMsgs >= SECURITY_CONFIG.MAX_CONSECUTIVE_SHORT_USER_MSGS) {
+        addSystemBubble(reframingPrompt());
+        return;
+      }
+
+      const risk = scoreRisk(text);
+      const level = classifyRisk(risk.score);
+      securityState.lastRiskLevel = level;
+
+      if (level === "critical") {
+        securityState.sessionBlocked = true;
+        addAlertBubble(crisisMessage("critical"));
+        return;
+      }
+
+      if (level === "high") {
+        addAlertBubble(crisisMessage("high"));
+      }
+
+      securityState.replyCount += 1;
+      securityState.turns.push({
+        role: "user",
+        text: text,
+        at: new Date().toISOString(),
+        riskScore: risk.score,
+        riskLevel: level
+      });
+
+      if (securityState.replyCount > SECURITY_CONFIG.MAX_REPLIES_PER_SESSION) {
+        securityState.sessionBlocked = true;
+        addAlertBubble(sessionCapMessage());
+        return;
+      }
+
+      return originalSubmitText.apply(this, arguments);
+    };
+  }
+
+  /* =========================
+     INTERCEPTION AFFICHAGE MSG IA
+     (on patch addMsg si présent)
+  ========================= */
+  const originalAddMsg = window.addMsg;
+
+  if (typeof originalAddMsg === "function") {
+    window.addMsg = function patchedAddMsg(role, content) {
+      let finalContent = content;
+
+      if (role === "a") {
+        finalContent = sanitizeAssistantReply(finalContent);
+        finalContent = addClinicalDisclaimerIfNeeded(finalContent);
+
+        const risk = scoreRisk(finalContent);
+        const level = classifyRisk(risk.score);
+
+        if (level === "critical" || level === "high") {
+          finalContent =
+            "Je ne peux pas poursuivre sur ce registre dans cette application.\n\n" +
+            "Si vous êtes en danger ou proche de perdre le contrôle : appelez le 15, le 112 ou le 3114, ou contactez immédiatement un proche / un professionnel.";
+        }
+
+        securityState.turns.push({
+          role: "assistant",
+          text: finalContent,
+          at: new Date().toISOString()
+        });
+      }
+
+      return originalAddMsg.call(this, role, finalContent);
+    };
+  }
+
+  /* =========================
+     INTERCEPTION FETCH /api/chat
+     si l’app écrit directement dans le DOM
+  ========================= */
+  const originalFetch = window.fetch;
+
+  window.fetch = async function patchedFetch(resource, options) {
+    const res = await originalFetch.apply(this, arguments);
+
+    try {
+      const url = typeof resource === "string" ? resource : (resource && resource.url) || "";
+      if (!url.includes("/api/chat")) return res;
+
+      const cloned = res.clone();
+      const contentType = cloned.headers.get("content-type") || "";
+
+      if (!contentType.includes("application/json")) return res;
+
+      const data = await cloned.json();
+
+      if (data && typeof data.reply === "string") {
+        data.reply = sanitizeAssistantReply(data.reply);
+        data.reply = addClinicalDisclaimerIfNeeded(data.reply);
+
+        const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+        return new Response(blob, {
+          status: res.status,
+          statusText: res.statusText,
+          headers: res.headers
+        });
+      }
+
+      return res;
+    } catch (e) {
+      return res;
+    }
+  };
+
+  /* =========================
+     BANDEAU DISCRET AU CHARGEMENT
+  ========================= */
+  window.addEventListener("load", function () {
+    const holder = document.getElementById("chat");
+    if (!holder) return;
+
+    const info = document.createElement("div");
+    info.className = "a";
+    info.innerHTML =
+      '<div class="msg" style="background:#F6F7F9;border:1px solid #D8DCE3;color:#334155;font-size:12px;line-height:1.5">' +
+      "<strong>Cadre d’usage :</strong> cet outil propose un repérage indicatif et une orientation. " +
+      "Il ne remplace ni une consultation médicale, ni un diagnostic, ni une prise en charge d’urgence." +
+      "</div>";
+    holder.appendChild(info);
+  });
+
+  console.log("MindCheck security patch v2 chargé.");
+})();
+</script>
 </body>
 </html>
