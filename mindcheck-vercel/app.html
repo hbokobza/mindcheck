@@ -649,22 +649,28 @@ async function callAPI(messages, mode){
   // Le system prompt vit desormais cote serveur (lib/systemPrompts.js).
   // Le front envoie uniquement le mode ('collecte' | 'bilan_btc' | 'bilan_btb')
   // et l'historique des messages.
+  console.log('[PSEE-DEBUG] callAPI START | mode=', mode, '| messages.count=', messages.length);
   const r = await fetch('/api/chat', {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({ messages, mode })
   });
+  console.log('[PSEE-DEBUG] callAPI HTTP status=', r.status, '| ok=', r.ok);
   const d = await r.json();
+  console.log('[PSEE-DEBUG] callAPI JSON received | keys=', Object.keys(d), '| category=', d.category, '| content?=', Array.isArray(d.content) ? 'array len='+d.content.length : typeof d.content, '| error?=', d.error?.message||'no');
   if(d.error) throw new Error(d.error.message || 'Erreur API');
   // La categorie renvoyee par le serveur peut etre utilisee pour la telemetrie
   if(d.category && d.category !== 'normal'){
     console.log('[psee-safety] category=' + d.category);
   }
-  return d.content?.[0]?.text || '';
+  const out = d.content?.[0]?.text || '';
+  if(!out) console.warn('[PSEE-DEBUG] callAPI returning EMPTY string | full d=', JSON.stringify(d).slice(0,300));
+  return out;
 }
 
 async function processInput(text,src){
   if(!text.trim())return;
+  console.log('[PSEE-DEBUG] processInput ENTRY | count=', count+1, '| hist.length=', hist.length, '| text.len=', text.length, '| text.preview=', text.slice(0,80));
   addMsg('u',text);
   hist.push({role:'user',content:text});
   count++;
@@ -675,6 +681,7 @@ async function processInput(text,src){
   const lower = text.toLowerCase();
   const isCrisis = crisis_keywords.some(kw => lower.includes(kw));
   if(isCrisis){
+    console.log('[PSEE-DEBUG] CRISIS keyword matched, message swallowed (no API call)');
     rmDots();
     const msg = `Ce que vous partagez depasse le cadre de ce check-up.\n\nSi vous traversez une detresse importante, le 3114 est disponible 24h/24, gratuit et confidentiel.\n\nLe check-up Psee n'est pas adapte a votre situation en ce moment.`;
     addMsg('ai', msg, 'crisis');
@@ -683,10 +690,12 @@ async function processInput(text,src){
 
   try{
     const raw=await callAPI(hist, 'collecte');
+    console.log('[PSEE-DEBUG] RAW response | length=', raw.length, '| preview=', raw.slice(0,150));
     rmDots();
     const axM=raw.match(/AXES:\[([^\]]*)\]/);
     const cpM=raw.match(/COMPLET:\[(oui|non)\]/);
     const clean=raw.replace(/AXES:\[[^\]]*\]/g,'').replace(/COMPLET:\[[^\]]*\]/g,'').trim();
+    console.log('[PSEE-DEBUG] PARSED | axes=', axM?.[1]||'none', '| complet=', cpM?.[1]||'none', '| clean.length=', clean.length);
     if(axM) updateAxes(axM[1]);
     const done=cpM?.[1]==='oui';
     if(done){
@@ -704,10 +713,12 @@ async function processInput(text,src){
       }
     }
     if(done||clean.toLowerCase().includes('je prépare')){
+      console.log('[PSEE-DEBUG] PATH = DONE -> bilan auto-déclenché');
       addMsg('ai',"Merci pour ce partage. Je prépare votre synthèse…");
       hist.push({role:'assistant',content:raw});
       setTimeout(()=>promptEnrichissement(()=>generateBilan(false)),1200);
     } else {
+      console.log('[PSEE-DEBUG] PATH = CONTINUE | display.length=', clean.length);
       addMsg('ai',clean);
       hist.push({role:'assistant',content:raw});
       if(src==='voice')speak(clean);
@@ -722,7 +733,7 @@ async function processInput(text,src){
         }, 1500);
       }
     }
-  }catch(e){rmDots();showErr('Erreur de connexion — réessayez dans quelques secondes');}
+  }catch(e){console.error('[PSEE-DEBUG] CAUGHT ERROR in processInput:', e.message, e); rmDots();showErr('Erreur de connexion — réessayez dans quelques secondes');}
 }
 
 async function submitText(){
@@ -1780,7 +1791,9 @@ function reprendreParCode(){
 
   if (typeof originalSubmitText === "function") {
     window.submitText = async function patchedSubmitText() {
+      console.log('[PSEE-DEBUG] patchedSubmitText ENTRY | replyCount=', securityState.replyCount, '| sessionBlocked=', securityState.sessionBlocked, '| consecutiveShortMsgs=', securityState.consecutiveShortMsgs);
       if (securityState.sessionBlocked) {
+        console.warn('[PSEE-DEBUG] SESSION BLOCKED — message ignoré');
         addAlertBubble(sessionCapMessage());
         return;
       }
@@ -1811,6 +1824,7 @@ function reprendreParCode(){
       }
 
       if (securityState.consecutiveShortMsgs >= SECURITY_CONFIG.MAX_CONSECUTIVE_SHORT_USER_MSGS) {
+        console.warn('[PSEE-DEBUG] REFRAMING triggered — message swallowed | consecutiveShortMsgs=', securityState.consecutiveShortMsgs);
         addMsg('ai', reframingPrompt());
         securityState.consecutiveShortMsgs = 0;
         return;
@@ -1836,6 +1850,7 @@ function reprendreParCode(){
       });
 
       if (securityState.replyCount > SECURITY_CONFIG.MAX_REPLIES_PER_SESSION) {
+        console.warn('[PSEE-DEBUG] MAX_REPLIES CAP reached | replyCount=', securityState.replyCount, '| max=', SECURITY_CONFIG.MAX_REPLIES_PER_SESSION);
         securityState.sessionBlocked = true;
         addAlertBubble(sessionCapMessage());
         return;
