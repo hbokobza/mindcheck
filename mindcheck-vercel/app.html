@@ -843,8 +843,9 @@ function promptEnrichissement(nextAction){
   setTimeout(() => document.getElementById('enrich-txt')?.focus(), 200);
 }
 
-async function generateBilan(avecBTB){
-  console.log('generateBilan appelé, avecBTB=', avecBTB, 'hist.length=', hist.length);
+async function generateBilan(avecBTB, retryCount){
+  retryCount = retryCount || 0;
+  console.log('[PSEE-DEBUG] generateBilan ENTRY | avecBTB=', avecBTB, '| retryCount=', retryCount, '| hist.length=', hist.length);
   showDots();
   try{
     const msgs = [...hist,{role:'user',content:'Génère le bilan JSON maintenant selon la structure demandée.'}];
@@ -857,9 +858,36 @@ async function generateBilan(avecBTB){
     try{
       const m=results[0].match(/\{[\s\S]*\}/);
       dataBTC=JSON.parse(m?m[0]:results[0].replace(/```json|```/g,'').trim());
+      console.log('[PSEE-DEBUG] BILAN parse OK on attempt', retryCount+1);
     }catch(e){
-      addMsg('ai','Erreur de format. Réessai…');
-      setTimeout(()=>generateBilan(avecBTB),2000);return;
+      console.error('[PSEE-DEBUG] BILAN parse FAILED on attempt', retryCount+1, '| error=', e.message);
+      console.error('[PSEE-DEBUG] BILAN raw response (first 500 chars):', results[0]?.slice(0,500));
+      console.error('[PSEE-DEBUG] BILAN raw response (last 300 chars):', results[0]?.slice(-300));
+
+      if(retryCount < 2){
+        // Retry automatique limité à 2 fois max (3 tentatives au total)
+        addMsg('ai','Le bilan n\'a pas été généré correctement. Nouvelle tentative…');
+        setTimeout(()=>generateBilan(avecBTB, retryCount+1), 2000);
+        return;
+      }
+
+      // Après 3 échecs, on s'arrête et on propose une action manuelle
+      const c=document.getElementById('chat');
+      const d=document.createElement('div');d.className='msg';
+      d.innerHTML='<div class="av ai">M</div><div class="bub ai" style="background:#FFF8E1;border:1px solid #F0D060">'
+        +'<strong>Le bilan n\'a pas pu être généré.</strong><br><br>'
+        +'Les éléments recueillis sont bien sauvegardés. Vous pouvez réessayer dans un instant. '
+        +'Si le problème persiste, vous pouvez aussi continuer la conversation pour préciser certains aspects, puis relancer.'
+        +'</div>';
+      c.appendChild(d);
+
+      const btn=document.createElement('button');
+      btn.className='btn-green';btn.style.margin='8px 0 0 36px';
+      btn.textContent='Réessayer la génération';
+      btn.onclick=()=>{ btn.remove(); generateBilan(avecBTB, 0); };
+      c.appendChild(btn);
+      c.scrollTop=c.scrollHeight;
+      return;
     }
 
     let dataBTB=null;
