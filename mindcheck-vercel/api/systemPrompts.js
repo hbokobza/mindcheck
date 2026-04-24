@@ -134,6 +134,101 @@ Evite le jargon. Evite les adjectifs dramatisants.
 Si une zone paraît sensible, le dire clairement mais sans affoler.
 `;
 
+// -----------------------------------------------------------------------------
+// MODULES PSYCHOMETRIQUES INVISIBLES
+// -----------------------------------------------------------------------------
+// Quand suspicionEngine detecte des signaux de depression / anxiete / stress,
+// on enrichit le prompt collecte avec ces blocs. Haiku integre alors les items
+// du PHQ9 / GAD7 / PSS10 naturellement dans la conversation, dans son propre
+// langage, sans jamais mentionner le nom des outils ni transformer l'entretien
+// en questionnaire formel. Le scoring se fait au moment du bilan final.
+
+const PHQ9_INSTRUCTIONS = `
+SIGNAL DETECTE : possible humeur depressive
+Au cours de l'entretien, sur les axes pertinents (processus, ressources, regulation emotionnelle, corps), couvre naturellement les 9 dimensions suivantes pour qualifier l'humeur sur les 14 derniers jours.
+Ne mentionne JAMAIS PHQ9, questionnaire, echelle, ou test. Pose chaque dimension avec tes propres mots, integree au flux naturel.
+Pour chaque dimension cherche a savoir : presence (oui/non) + frequence (jamais, quelques jours, plus de la moitie des jours, presque tous les jours).
+Pas plus de 2 dimensions psychometriques par tour. Une fois qu'une dimension a ete clairement abordee par la personne, considere-la couverte et n'y reviens pas.
+
+Dimensions a couvrir (ordre indicatif, suis le rythme de la personne) :
+1. Peu d'interet ou de plaisir a faire les choses
+2. Tristesse, abattement ou sentiment de desespoir
+3. Difficultes d'endormissement, reveils nocturnes ou sommeil excessif
+4. Fatigue ou manque d'energie
+5. Perte d'appetit ou appetit excessif
+6. Mauvaise estime de soi, culpabilite ou sentiment d'echec
+7. Difficultes de concentration
+8. Ralentissement inhabituel ou agitation
+9. Pensees qu'il vaudrait mieux disparaitre ou se faire du mal (n'aborde ce point qu'avec tact, et uniquement si le contexte le permet)
+`;
+
+const GAD7_INSTRUCTIONS = `
+SIGNAL DETECTE : possible composante anxieuse
+Au cours de l'entretien, sur les axes pertinents (processus, regulation emotionnelle, comportements, corps), couvre naturellement les 7 dimensions suivantes pour qualifier l'anxiete sur les 14 derniers jours.
+Ne mentionne JAMAIS GAD7, questionnaire, echelle, ou test. Pose chaque dimension avec tes propres mots, integree au flux naturel.
+Pour chaque dimension cherche a savoir : presence (oui/non) + frequence (jamais, quelques jours, plus de la moitie des jours, presque tous les jours).
+Pas plus de 2 dimensions psychometriques par tour. Une fois qu'une dimension a ete clairement abordee par la personne, considere-la couverte et n'y reviens pas.
+
+Dimensions a couvrir (ordre indicatif) :
+1. Sentiment de nervosite, d'anxiete ou de tension
+2. Difficulte a arreter ou a controler les inquietudes
+3. Inquietudes excessives a propos de differents sujets
+4. Difficulte a se detendre
+5. Agitation ou difficulte a rester tranquille
+6. Irritabilite ou facilite a s'agacer
+7. Peur qu'un evenement grave puisse se produire
+`;
+
+const PSS10_INSTRUCTIONS = `
+SIGNAL DETECTE : possible niveau de stress percu eleve
+Au cours de l'entretien, sur les axes pertinents (environnement, comportements, ressources), couvre naturellement les 10 dimensions suivantes pour qualifier le stress percu sur le dernier mois.
+Ne mentionne JAMAIS PSS10, questionnaire, echelle, ou test. Pose chaque dimension avec tes propres mots, integree au flux naturel.
+Pour chaque dimension cherche a savoir : presence (oui/non) + frequence (jamais, parfois, souvent, tres souvent).
+Pas plus de 2 dimensions psychometriques par tour. Une fois qu'une dimension a ete clairement abordee par la personne, considere-la couverte et n'y reviens pas.
+
+Dimensions a couvrir (ordre indicatif) :
+1. Sentiment d'etre bouleverse par un evenement inattendu
+2. Sentiment d'etre incapable de controler les choses importantes de sa vie
+3. Sentiment de nervosite ou de stress
+4. Sentiment de bien gerer ses difficultes personnelles (capacite preservee)
+5. Sentiment que les choses vont dans son sens (capacite preservee)
+6. Sentiment de ne plus pouvoir faire face a tout
+7. Capacite a maitriser les irritations du quotidien
+8. Sentiment de dominer la situation (capacite preservee)
+9. Irritation par des evenements echappant au controle
+10. Sentiment que les difficultes s'accumulent au point de ne pouvoir les surmonter
+`;
+
+const PSYCHOMETRIC_BLOCKS = {
+  PHQ9: PHQ9_INSTRUCTIONS,
+  GAD7: GAD7_INSTRUCTIONS,
+  PSS10: PSS10_INSTRUCTIONS
+};
+
+/**
+ * Construit le prompt systeme collecte, enrichi par les blocs psychometriques
+ * correspondant aux modules triggeres par suspicionEngine.
+ *
+ * @param {string[]} triggeredModules - Liste des modules detectes (ex: ['PHQ9', 'GAD7'])
+ * @returns {string} Le prompt systeme complet a envoyer a Haiku
+ */
+export function buildCollectePrompt(triggeredModules = []) {
+  if (!Array.isArray(triggeredModules) || triggeredModules.length === 0) {
+    return COLLECTE_SYS;
+  }
+
+  const additions = triggeredModules
+    .map(id => PSYCHOMETRIC_BLOCKS[id])
+    .filter(Boolean)
+    .join('\n');
+
+  if (!additions) return COLLECTE_SYS;
+
+  return COLLECTE_SYS
+    + '\n\n----------\nMODULES PSYCHOMETRIQUES A INTEGRER NATURELLEMENT\n----------\n'
+    + additions;
+}
+
 export const BILAN_BTB_SYS = `
 Tu es l'IA d'analyse clinique Psee. Génére un bilan JSON destiné à un thérapeute professionnel.
 
