@@ -1,58 +1,21 @@
 // api/chat.js
 // Proxy securise vers l'API Anthropic pour PSEE
 // + detection de suspicion clinique
-// + declenchement de modules psychometriques
+// + integration invisible des modules psychometriques (PHQ9, GAD7, PSS10)
 // + controle qualite de passation
 // + synthese finale prudente
 
-const COLLECTE_SYS = `
-IDENTITE ET CADRE STRICT
-Tu es l'assistant de collecte Psee.
-Tu n'es pas un thérapeute, pas un médecin, pas un conseiller.
-Tu conduis un entretien structuré de collecte pour un check-up psychique.
-
-REGLES ABSOLUES
-- Tu ne poses qu'une seule question à la fois.
-- Tu ne donnes jamais de diagnostic.
-- Tu ne donnes jamais de conseil médical ou thérapeutique.
-- Tu ne rassures pas de façon thérapeutique.
-- Tu ne reformules qu'en une phrase courte pour montrer que tu as compris.
-- Tu restes neutre, sobre, factuel.
-- Tu explores progressivement 6 axes : processus psychiques, ressources psychiques, comportements et conduites, régulation émotionnelle, corps et risque somatique, environnement.
-
-OBJECTIF
-Recueillir une matière descriptive utile pour une synthèse prudente.
-Quand la réponse est trop courte, trop vague ou trop générale, tu relances avec une question simple et concrète.
-Tu commences par demander ce qui amène la personne aujourd'hui.
-`;
-
-const BILAN_BTC_SYS = `
-Tu es l'IA de restitution Psee pour le grand public.
-Tu produis une synthèse prudente, claire, non alarmiste, sans diagnostic médical.
-
-REGLES
-- Ne jamais affirmer un trouble comme certain.
-- Employer des formulations comme : "cela peut évoquer", "cela peut faire penser à", "à explorer avec un professionnel".
-- Distinguer les points saillants, les fragilités, les ressources et les points de vigilance.
-- Rester accessible et sobre.
-- Ne jamais prescrire de traitement.
-`;
-
-const BILAN_BTB_SYS = `
-Tu es l'IA d'analyse clinique Psee pour professionnel.
-Tu rédiges une synthèse structurée, prudente, orientée clinique, sans certitude abusive.
-
-REGLES
-- Formuler des hypothèses et non des diagnostics certains.
-- Mettre en évidence les axes dominants, le niveau de retentissement, les facteurs de vulnérabilité et les ressources.
-- Signaler les points de vigilance.
-- Rester rigoureux, concis, professionnel.
-`;
+import {
+  COLLECTE_SYS,
+  BILAN_BTC_SYS,
+  BILAN_BTB_SYS,
+  buildCollectePrompt
+} from './systemPrompts.js';
 import { classifyInput, isUnsafeOutput } from './safetyRules.js';
 import { POLICIES } from './responsePolicies.js';
 import { allowRequest } from './rateLimit.js';
 
-import { chooseNextModule } from './suspicionEngine.js';
+import { detectSuspicion, chooseNextModule } from './suspicionEngine.js';
 import {
   getPsychometricModule,
   buildPsychometricResult
@@ -68,12 +31,12 @@ const MAX_MODULES_PER_SESSION = 2;
 // -----------------------------
 // SYSTEM PROMPT
 // -----------------------------
-function resolveSystemPrompt(mode) {
+function resolveSystemPrompt(mode, triggeredModules = []) {
   switch (mode) {
     case 'bilan_btc': return BILAN_BTC_SYS;
     case 'bilan_btb': return BILAN_BTB_SYS;
     case 'collecte':
-    default: return COLLECTE_SYS;
+    default: return buildCollectePrompt(triggeredModules);
   }
 }
 
@@ -135,7 +98,6 @@ export default async function handler(req, res) {
   }
 
   const state = normalizeSessionState(sessionState);
-  const systemPrompt = resolveSystemPrompt(mode);
 
   // 1. Classification securite du dernier message utilisateur
   let category = 'normal';
@@ -256,39 +218,10 @@ export default async function handler(req, res) {
     });
   }
 
-  // 5. Detection d'un module a declencher
-  const nextModule =
-    state.completedModules.length < MAX_MODULES_PER_SESSION
-      ? chooseNextModule(clinicalFlags, state.completedModules)
-      : null;
-
-  if (
-    nextModule &&
-    !state.completedModules.includes(nextModule) &&
-    state.pendingModule !== nextModule
-  ) {
-    const module = getPsychometricModule(nextModule);
-
-    return res.status(200).json({
-      type: 'psychometric_module',
-      module: {
-        id: module.id,
-        title: module.title,
-        timeframe: module.timeframe,
-        description: module.description,
-        items: module.items
-      },
-      message:
-        'Quelques questions complementaires vont permettre d’objectiver ce point clinique. Ce module affine le reperage, sans poser de diagnostic a lui seul.',
-      category,
-      sessionState: {
-        ...state,
-        axes,
-        clinicalFlags,
-        pendingModule: nextModule
-      }
-    });
-  }
+  // 5. Detection des modules psychometriques a integrer (philo A : invisible)
+  // Plus de bypass Haiku : on enrichit le system prompt avec les items des
+  // modules detectes. Haiku integre les questions naturellement dans le flux.
+  const triggeredModules = detectSuspicion(clinicalFlags);
 
   // 6. Sinon appel Anthropic habituel
   try {
@@ -302,7 +235,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
         max_tokens: 4096,
-        system: systemPrompt,
+        system: resolveSystemPrompt(mode, triggeredModules),
         messages: messages
       })
     });
