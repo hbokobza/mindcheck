@@ -1098,13 +1098,28 @@ function showBilan(data){
         ${indicateurs.map(ind => {
           const meta = PSYCHOMETRIC_META[ind.id] || { nameFr: ind.label || ind.id, scientific: ind.id, author: '' };
           const hasScore = ind.score !== null && ind.score !== undefined;
-          const coverage = ind.items_couverts && ind.items_total
-            ? `${ind.items_couverts}/${ind.items_total} items couverts par votre récit`
-            : '';
+          const itemsCovered = ind.items_couverts || 0;
+          const itemsTotal = ind.items_total || 0;
+          const isPartial = hasScore && itemsTotal > 0 && itemsCovered < itemsTotal;
           const band = hasScore ? getPsychoBand(ind.id, ind.score) : null;
           const ratio = hasScore ? Math.min(1, ind.score / ind.max) : 0;
 
+          // Construction de la pastille (3 cas)
+          let pastilleHTML = '';
+          if (hasScore) {
+            // Cas 1 ou 2 : score complet ou extrapole, pastille coloree selon seuil clinique
+            const labelText = isPartial ? `${band.label} (extrapolé)` : band.label;
+            pastilleHTML = `<span style="display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;background:${band.bg};color:${band.color};font-size:11px;font-weight:700;letter-spacing:.02em">
+              ${labelText}
+              ${isPartial ? `<span title="Score extrapole : tous les items n ont pas ete couverts par l entretien" style="display:inline-flex;width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,.6);color:${band.color};text-align:center;line-height:14px;font-weight:700;font-size:9px;justify-content:center;align-items:center">i</span>` : ''}
+            </span>`;
+          } else {
+            // Cas 3 : passation incomplete, pastille grise neutre
+            pastilleHTML = `<span style="display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;background:#ECEAE3;color:#6d6b63;font-size:11px;font-weight:700;letter-spacing:.02em">à compléter</span>`;
+          }
+
           return `<div style="background:#fbfaf6;border:1px solid rgba(0,0,0,.07);border-radius:12px;padding:16px 18px">
+            <!-- Bandeau titre + score -->
             <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:4px">
               <div style="flex:1;min-width:200px">
                 <div style="font-size:14px;font-weight:700;color:#1f1f1c;margin-bottom:2px">${meta.nameFr}</div>
@@ -1114,20 +1129,26 @@ function showBilan(data){
                 ? `<div style="text-align:right;flex-shrink:0">
                      <div style="font-size:24px;font-weight:800;color:#1f1f1c;line-height:1;letter-spacing:-.02em">${ind.score}<span style="font-size:14px;font-weight:500;color:#8a897f;letter-spacing:0">/${ind.max}</span></div>
                    </div>`
-                : `<div style="font-size:11px;color:#8a897f;font-style:italic;flex-shrink:0">passation incomplète</div>`}
+                : ''}
             </div>
 
-            ${hasScore ? `
-              <div style="margin-top:14px">
+            <!-- Barre de progression : visible uniquement si score, vide grise si passation incomplete -->
+            <div style="margin-top:14px">
+              ${hasScore ? `
                 <div style="height:8px;background:#eee;border-radius:4px;overflow:hidden">
                   <div style="width:${(ratio*100).toFixed(1)}%;height:100%;background:${band.color};border-radius:4px;transition:width .4s ease"></div>
                 </div>
-                <div style="margin-top:8px;display:inline-block;padding:4px 10px;border-radius:999px;background:${band.bg};color:${band.color};font-size:11px;font-weight:700;letter-spacing:.02em">${band.label}</div>
-              </div>
-            ` : ''}
+              ` : `
+                <div style="height:8px;background:#ECEAE3;border-radius:4px;opacity:.5"></div>
+              `}
+              <div style="margin-top:8px">${pastilleHTML}</div>
+            </div>
 
-            ${ind.interpretation ? `<div style="font-size:12px;color:#5d5b54;line-height:1.6;margin-top:10px">${ind.interpretation}</div>` : ''}
-            ${coverage ? `<div style="font-size:10px;color:#8a897f;margin-top:6px;font-style:italic">${coverage}</div>` : ''}
+            ${ind.interpretation && hasScore ? `<div style="font-size:12px;color:#5d5b54;line-height:1.6;margin-top:10px">${ind.interpretation}</div>` : ''}
+
+            ${!hasScore ? `<div style="font-size:12px;color:#5d5b54;line-height:1.6;margin-top:10px">Le récit a abordé certains aspects (${itemsCovered}/${itemsTotal} items repérés), mais pas suffisamment pour produire un score fiable. Pour un repère précis, une passation formelle est recommandée.</div>` : ''}
+
+            ${hasScore ? `<div style="font-size:10px;color:#8a897f;margin-top:6px;font-style:italic">${itemsCovered}/${itemsTotal} items couverts par votre récit${isPartial ? ' (score extrapolé par moyenne)' : ''}</div>` : ''}
 
             <div style="font-size:10px;color:#8a897f;margin-top:10px;padding-top:10px;border-top:1px dashed rgba(0,0,0,.08);line-height:1.5">
               <span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#e7efe7;color:#3a7531;text-align:center;line-height:14px;font-weight:700;font-size:10px;margin-right:6px;vertical-align:middle">i</span>
