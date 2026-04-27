@@ -693,14 +693,39 @@ async function processInput(text,src){
   count++;
   showDots();
 
-  // Detection de crise avant envoi API (s'applique tout le temps, meme en passation)
-  const crisis_keywords = ["suicid","me tuer","mourir","en finir","me faire du mal","automutil","me blesser","plus envie de vivre","je veux mourir","jen peux plus","je vais me"];
+  // Detection de crise NIVEAU 3 SEULEMENT (filet de securite ultime)
+  //
+  // Ce filtre ne doit declencher QUE pour les signaux d'urgence vitale immediate,
+  // c'est-a-dire une tentative en cours ou un passage a l'acte imminent dans les
+  // minutes qui suivent. L'ideation passive (pensees noires, pulsions sans plan,
+  // "j'aimerais ne plus etre la") doit pouvoir etre exprimee normalement —
+  // c'est Haiku qui gere ces niveaux 1 et 2 via le prompt COLLECTE_SYS.
+  //
+  // Le bloquer cote front sur l'ideation passive est un dommage clinique :
+  // ca rejette les personnes en souffrance au moment ou elles trouvent enfin
+  // un espace pour nommer leurs pensees noires. Le silence tue, pas la parole.
   const lower = text.toLowerCase();
-  const isCrisis = crisis_keywords.some(kw => lower.includes(kw));
-  if(isCrisis){
-    console.log('[PSEE-DEBUG] CRISIS keyword matched, message swallowed (no API call)');
+  const level3_patterns = [
+    "je viens de prendre",
+    "je viens d'avaler",
+    "j'ai pris les comprim",
+    "j'ai pris les medic",
+    "j'ai pris les médic",
+    "je suis sur le toit",
+    "je suis sur le pont",
+    "je suis sur le rebord",
+    "je suis en train de",
+    "le couteau est",
+    "la corde est",
+    "je vais le faire dans",
+    "je vais le faire ce soir",
+    "je le fais maintenant"
+  ];
+  const isLevel3 = level3_patterns.some(p => lower.includes(p));
+  if(isLevel3){
+    console.log('[PSEE-DEBUG] CRISIS LEVEL 3 detected, urgence vitale');
     rmDots();
-    const msg = `Ce que vous partagez depasse le cadre de ce check-up.\n\nSi vous traversez une detresse importante, le 3114 est disponible 24h/24, gratuit et confidentiel.\n\nLe check-up Psee n'est pas adapte a votre situation en ce moment.`;
+    const msg = `Ce que vous me dites là demande une attention immédiate.\n\nAppelez le 15 maintenant — ou demandez à quelqu'un autour de vous de le faire. Le 3114 est aussi disponible (gratuit, anonyme, 24h/24).\n\nJe suis avec vous par cet écran, mais ce n'est pas moi qui peux vous aider en cet instant — c'est un humain en chair et en os. S'il vous plaît, appelez.`;
     addMsg('ai', msg, 'crisis');
     return;
   }
