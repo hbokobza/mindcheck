@@ -171,13 +171,26 @@ Le JSON DOIT contenir EXACTEMENT ces champs, dans cet ordre :
   }
 }
 
-REGLES SUR LES SCORES (1-4)
-1 = ressource solide / domaine qui va bien
-2 = fonctionnement OK avec quelques signaux
-3 = signaux nets, attention
-4 = zone qui pese fortement, prioritaire
+REGLES SUR LES SCORES (1-4) — ECHELLE DE FRAGILITE A SOLIDITE
+ATTENTION : un score BAS indique une zone fragile, un score HAUT indique une zone solide.
+1 = Fragile : zone qui pese fortement, manifestations marquees, prioritaire
+2 = En tension : signaux nets, vigilance necessaire, fonctionnement penible
+3 = Stable : fonctionnement OK, quelques signaux mais zone qui tient
+4 = Solide : ressource preservee, zone qui fonctionne bien, appui
 
-Les scores doivent etre coherents avec le recit. Ne mets pas tout a 2 par precaution. Ose differencier les axes.
+REGLES DE CALIBRATION (TRES IMPORTANT)
+- Sois HONNETE cliniquement. Si la personne decrit des symptomes importants (rumination intense, tristesse durable, anxiete envahissante, sommeil tres perturbe, epuisement marque, idees de lassitude, retrait social, perte d interet) sur un axe : ce score est 1 ou 2, pas 3.
+- Mettre tous les axes a 3 par bienveillance fausse la lecture et empeche la personne de prendre la mesure de ce qu elle vit. Ce n est pas un service.
+- A l inverse, ne dramatise pas une plainte legere : un sommeil parfois agite avec quelques pensees du soir, c est 3, pas 2.
+- COHERENCE AVEC LES INDICATEURS PSYCHOMETRIQUES (regle de garde-fou) :
+  * Si le recit suggere PHQ-9 >= 10 (depression moderee a severe) : axe Processus psychiques <= 2 ET axe Regulation emotionnelle <= 2.
+  * Si le recit suggere PHQ-9 >= 15 (depression moderee-severe a severe) : ces deux axes doivent etre a 1.
+  * Si le recit suggere GAD-7 >= 10 (anxiete moderee a severe) : axe Processus psychiques <= 2.
+  * Si le recit suggere GAD-7 >= 15 (anxiete severe) : axe Processus psychiques = 1.
+  * Si le sommeil est decrit comme tres perturbe (cauchemars, reveils precoces, insomnie persistante, fatigue diurne marquee) : axe Corps et risque somatique <= 2.
+  * Si la personne mentionne idees de lassitude, "mettre en pause", "ne plus etre la", "abandon" : axe Regulation emotionnelle = 1 ET indique-le clairement dans la synthese.
+
+Les scores doivent differencier les axes. Tous a 2, tous a 3 = mauvais bilan. Ose voir et nommer les zones fragiles ET les zones solides.
 
 REGLES SUR forces ET vigilance (NOUVEAU FORMAT OBJET)
 - Chaque champ est un objet avec deux cles : "intro" (paragraphe narratif) et "points" (liste concrete).
@@ -357,13 +370,22 @@ Le JSON DOIT contenir EXACTEMENT ces champs, dans cet ordre :
   "conclusion": "string. 3 a 5 phrases. Conclusion clinique et pronostic prudent. Synthese et orientation pour la suite."
 }
 
-REGLES SUR LES SCORES (1-4) PAR AXE
-1 = ressource preservee, fonctionnement adapte
-2 = quelques signaux, fonctionnement globalement adapte
-3 = dysfonctionnement clinique avere
-4 = zone fortement impactee, prioritaire dans la prise en charge
+REGLES SUR LES SCORES (1-4) PAR AXE — ECHELLE DE FRAGILITE A SOLIDITE
+ATTENTION : un score BAS indique une zone fragile, un score HAUT indique une zone solide.
+1 = Fragile : zone fortement impactee, prioritaire dans la prise en charge
+2 = En tension : dysfonctionnement clinique avere, vigilance necessaire
+3 = Stable : quelques signaux, fonctionnement globalement adapte
+4 = Solide : ressource preservee, fonctionnement adapte
 
-Les scores doivent differencier les axes. Ne mets pas tout a 2 ou tout a 3.
+REGLES DE CALIBRATION
+- Differencie les axes. Tous a 2 ou tous a 3 = mauvais bilan, manque de discrimination clinique.
+- COHERENCE AVEC LES INDICATEURS PSYCHOMETRIQUES (regle de garde-fou) :
+  * PHQ-9 >= 10 : axes Processus psychiques et Regulation emotionnelle <= 2.
+  * PHQ-9 >= 15 : ces deux axes doivent etre a 1.
+  * GAD-7 >= 10 : axe Processus psychiques <= 2.
+  * GAD-7 >= 15 : axe Processus psychiques = 1.
+  * Sommeil severement perturbe / somatisations marquees : axe Corps et risque somatique <= 2.
+  * Ideation suicidaire / lassitude vitale exprimee : axe Regulation emotionnelle = 1 et signaler en redflag haute.
 
 REGLES SUR systemes
 - 3 a 6 systemes maximum.
