@@ -181,12 +181,13 @@ const LOGO_B64 = 'iVBORw0KGgoAAAANSUhEUgAAA4YAAABvCAYAAACw0N7aAAAMTWlDQ1BJQ0MgUH
 // SVG inline, deux variantes : couleur charte (vert fonce) et blanc (pour fond colore)
 // Charte : #1a4a2e (vert fonce specifie pour le logo Psee)
 // Typo : Playfair Display 700 (substitut serif si la fonte n'est pas chargee)
-const PSEE_LOGO_DARK = `<svg viewBox="0 0 400 150" xmlns="http://www.w3.org/2000/svg" style="height:36px;width:auto;display:block">
-  <text x="50%" y="110" text-anchor="middle" style="fill:#1a4a2e;font-family:'Playfair Display','Linotype Didot',Didot,serif;font-size:110px;font-weight:700;letter-spacing:-2px">Psee</text>
+// Aligne a gauche : x=0 + text-anchor=start, viewBox calee sur le texte
+const PSEE_LOGO_DARK = `<svg viewBox="0 0 220 130" xmlns="http://www.w3.org/2000/svg" style="height:44px;width:auto;display:block">
+  <text x="0" y="100" text-anchor="start" style="fill:#1a4a2e;font-family:'Playfair Display','Linotype Didot',Didot,serif;font-size:110px;font-weight:700;letter-spacing:-3px">Psee</text>
 </svg>`;
 
-const PSEE_LOGO_WHITE = `<svg viewBox="0 0 400 150" xmlns="http://www.w3.org/2000/svg" style="height:36px;width:auto;display:block">
-  <text x="50%" y="110" text-anchor="middle" style="fill:white;font-family:'Playfair Display','Linotype Didot',Didot,serif;font-size:110px;font-weight:700;letter-spacing:-2px">Psee</text>
+const PSEE_LOGO_WHITE = `<svg viewBox="0 0 220 130" xmlns="http://www.w3.org/2000/svg" style="height:44px;width:auto;display:block">
+  <text x="0" y="100" text-anchor="start" style="fill:white;font-family:'Playfair Display','Linotype Didot',Didot,serif;font-size:110px;font-weight:700;letter-spacing:-3px">Psee</text>
 </svg>`;
 
 // ============================================================
@@ -701,16 +702,6 @@ async function processInput(text,src){
 
       // Auto-save de la session apres chaque tour
       autoSaveSession();
-
-      // Relance proactive tous les 10 échanges à partir de 20
-      if(count >= 20 && count % 10 === 0){
-        setTimeout(()=>{
-          const msg = count === 20
-            ? `Vous avez partagé beaucoup d'éléments utiles. Vous pouvez générer votre synthèse maintenant via le bouton vert, ou continuer à explorer d'autres aspects de votre situation — les deux sont possibles.`
-            : `Nous avons eu un échange riche. Souhaitez-vous approfondir certains aspects — corps, émotions, environnement, ressources — ou préférez-vous générer votre synthèse maintenant ?`;
-          addMsg('ai', msg, 'nudge');
-        }, 1500);
-      }
     }
   }catch(e){console.error('[PSEE-DEBUG] CAUGHT ERROR in processInput:', e.message, e); rmDots();showErr('Erreur de connexion — réessayez dans quelques secondes');}
 }
@@ -825,6 +816,12 @@ function promptEnrichissement(nextAction){
 async function generateBilan(avecBTB, retryCount){
   retryCount = retryCount || 0;
   console.log('[PSEE-DEBUG] generateBilan ENTRY | avecBTB=', avecBTB, '| retryCount=', retryCount, '| hist.length=', hist.length);
+
+  // Forcer l'allumage des 6 axes : si le bilan se genere, c'est que les 6 axes
+  // ont ete suffisamment couverts (la decision est cote serveur). On evite
+  // l'incoherence visuelle ou un axe reste pale alors que le bilan le score.
+  document.querySelectorAll('.ax').forEach(el => el.classList.add('lit'));
+
   showDots();
   try{
     const msgs = [...hist,{role:'user',content:'Génère le bilan JSON maintenant selon la structure demandée.'}];
@@ -1039,29 +1036,112 @@ function showBilan(data){
   }).join('');
 
   // ---- INDICATEURS PSYCHOMETRIQUES (PHQ9 / GAD7 / PSS10) ----
-  // Section discrete affichee uniquement si au moins un module a ete score.
+  // Section visible avec :
+  // - nom francais accessible + nom scientifique en sous-titre
+  // - score en grand + barre de progression coloree selon les seuils cliniques
+  // - interpretation textuelle dans badge color
+  // - couverture en bas, mini-disclaimer
+  // - footer du bloc avec citations des auteurs (creances scientifiques)
   const indicateurs = Array.isArray(data.indicateurs) ? data.indicateurs : [];
+
+  // Metadata par module : nom francais, sous-titre scientifique, seuils colores
+  const PSYCHOMETRIC_META = {
+    PHQ9: {
+      nameFr: "Évaluation de l'humeur",
+      scientific: "PHQ-9 · Patient Health Questionnaire",
+      author: "Kroenke, Spitzer & Williams (2001)",
+      // Seuils PHQ9 : 0-4 minimal, 5-9 leger, 10-14 modere, 15-19 modere-severe, 20-27 severe
+      thresholds: [
+        { max: 4,  color: '#5B9B67', bg: '#e7efe7', label: 'minimal' },
+        { max: 9,  color: '#A9C76F', bg: '#eef4e1', label: 'léger' },
+        { max: 14, color: '#D8A24A', bg: '#f7efdd', label: 'modéré' },
+        { max: 19, color: '#D88A4A', bg: '#fae5d8', label: 'modéré à sévère' },
+        { max: 27, color: '#D97A7A', bg: '#fde0e0', label: 'sévère' }
+      ]
+    },
+    GAD7: {
+      nameFr: "Évaluation de l'anxiété",
+      scientific: "GAD-7 · Generalized Anxiety Disorder Scale",
+      author: "Spitzer, Kroenke, Williams & Löwe (2006)",
+      // Seuils GAD7 : 0-4 minimal, 5-9 leger, 10-14 modere, 15-21 severe
+      thresholds: [
+        { max: 4,  color: '#5B9B67', bg: '#e7efe7', label: 'minimale' },
+        { max: 9,  color: '#A9C76F', bg: '#eef4e1', label: 'légère' },
+        { max: 14, color: '#D8A24A', bg: '#f7efdd', label: 'modérée' },
+        { max: 21, color: '#D97A7A', bg: '#fde0e0', label: 'sévère' }
+      ]
+    },
+    PSS10: {
+      nameFr: "Évaluation du stress perçu",
+      scientific: "PSS-10 · Perceived Stress Scale",
+      author: "Cohen, Kamarck & Mermelstein (1983)",
+      // Seuils PSS10 : 0-13 faible, 14-26 modere, 27-40 eleve
+      thresholds: [
+        { max: 13, color: '#5B9B67', bg: '#e7efe7', label: 'faible' },
+        { max: 26, color: '#D8A24A', bg: '#f7efdd', label: 'modéré' },
+        { max: 40, color: '#D97A7A', bg: '#fde0e0', label: 'élevé' }
+      ]
+    }
+  };
+
+  function getPsychoBand(moduleId, score) {
+    const meta = PSYCHOMETRIC_META[moduleId];
+    if (!meta) return { color: '#8a897f', bg: '#f0eee9', label: '—' };
+    return meta.thresholds.find(t => score <= t.max) || meta.thresholds[meta.thresholds.length - 1];
+  }
+
   const indicateursHTML = indicateurs.length > 0 ? `
-    <div style="background:#fafaf6;border-radius:14px;padding:16px 18px;border:.5px solid rgba(0,0,0,.08)">
-      <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#6d6b63;margin-bottom:4px">Indicateurs standardisés complémentaires</div>
-      <div style="font-size:11px;color:#8a897f;margin-bottom:14px;line-height:1.5;font-style:italic">Ces repères sont issus d'échelles cliniques reconnues. Ils complètent votre lecture sans remplacer un avis professionnel.</div>
-      <div style="display:grid;gap:10px">
+    <div style="background:white;border-radius:14px;padding:22px 24px;border:1px solid #d8e0d4">
+      <div style="font-size:10px;text-transform:uppercase;letter-spacing:2px;color:#3a7531;font-weight:700;margin-bottom:6px">Échelles cliniques validées</div>
+      <div style="font-size:13px;color:#40403a;margin-bottom:18px;line-height:1.65">Ces échelles sont des questionnaires standardisés utilisés par les professionnels de santé partout dans le monde. Elles apportent un repère objectif, sans remplacer un avis clinique. Vous pouvez les transmettre à un thérapeute.</div>
+      <div style="display:grid;gap:14px">
         ${indicateurs.map(ind => {
+          const meta = PSYCHOMETRIC_META[ind.id] || { nameFr: ind.label || ind.id, scientific: ind.id, author: '' };
           const hasScore = ind.score !== null && ind.score !== undefined;
           const coverage = ind.items_couverts && ind.items_total
             ? `${ind.items_couverts}/${ind.items_total} items couverts par votre récit`
             : '';
-          return `<div style="background:white;border:.5px solid rgba(0,0,0,.06);border-radius:10px;padding:12px 14px">
-            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px">
-              <span style="font-size:12px;font-weight:700;color:#1f1f1c">${ind.label || ind.id}</span>
+          const band = hasScore ? getPsychoBand(ind.id, ind.score) : null;
+          const ratio = hasScore ? Math.min(1, ind.score / ind.max) : 0;
+
+          return `<div style="background:#fbfaf6;border:1px solid rgba(0,0,0,.07);border-radius:12px;padding:16px 18px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:4px">
+              <div style="flex:1;min-width:200px">
+                <div style="font-size:14px;font-weight:700;color:#1f1f1c;margin-bottom:2px">${meta.nameFr}</div>
+                <div style="font-size:11px;color:#6d6b63;letter-spacing:.02em">${meta.scientific}</div>
+              </div>
               ${hasScore
-                ? `<span style="font-size:13px;font-weight:700;color:#3a7531">${ind.score}<span style="font-size:11px;color:#8a897f;font-weight:400">/${ind.max}</span></span>`
-                : `<span style="font-size:10px;color:#8a897f;font-style:italic">passation incomplète</span>`}
+                ? `<div style="text-align:right;flex-shrink:0">
+                     <div style="font-size:24px;font-weight:800;color:#1f1f1c;line-height:1;letter-spacing:-.02em">${ind.score}<span style="font-size:14px;font-weight:500;color:#8a897f;letter-spacing:0">/${ind.max}</span></div>
+                   </div>`
+                : `<div style="font-size:11px;color:#8a897f;font-style:italic;flex-shrink:0">passation incomplète</div>`}
             </div>
-            <div style="font-size:11px;color:#5d5b54;line-height:1.5">${ind.interpretation || ''}</div>
-            ${coverage ? `<div style="font-size:10px;color:#8a897f;margin-top:4px;font-style:italic">${coverage}</div>` : ''}
+
+            ${hasScore ? `
+              <div style="margin-top:14px">
+                <div style="height:8px;background:#eee;border-radius:4px;overflow:hidden">
+                  <div style="width:${(ratio*100).toFixed(1)}%;height:100%;background:${band.color};border-radius:4px;transition:width .4s ease"></div>
+                </div>
+                <div style="margin-top:8px;display:inline-block;padding:4px 10px;border-radius:999px;background:${band.bg};color:${band.color};font-size:11px;font-weight:700;letter-spacing:.02em">${band.label}</div>
+              </div>
+            ` : ''}
+
+            ${ind.interpretation ? `<div style="font-size:12px;color:#5d5b54;line-height:1.6;margin-top:10px">${ind.interpretation}</div>` : ''}
+            ${coverage ? `<div style="font-size:10px;color:#8a897f;margin-top:6px;font-style:italic">${coverage}</div>` : ''}
+
+            <div style="font-size:10px;color:#8a897f;margin-top:10px;padding-top:10px;border-top:1px dashed rgba(0,0,0,.08);line-height:1.5">
+              <span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#e7efe7;color:#3a7531;text-align:center;line-height:14px;font-weight:700;font-size:10px;margin-right:6px;vertical-align:middle">i</span>
+              Repère pour orienter la conversation avec un professionnel — ne constitue pas un diagnostic.
+            </div>
           </div>`;
         }).join('')}
+      </div>
+
+      <div style="font-size:9px;color:#a09e95;margin-top:14px;line-height:1.55;font-style:italic">
+        ${indicateurs.map(ind => {
+          const meta = PSYCHOMETRIC_META[ind.id];
+          return meta?.author ? `${meta.scientific.split(' · ')[0]} : ${meta.author}` : '';
+        }).filter(Boolean).join(' · ')}
       </div>
     </div>` : '';
 
