@@ -571,7 +571,7 @@ function startSession(m){
       Code : ${data.code} · ${dateStr}<br>
       <div style="display:flex;gap:8px;margin-top:10px">
         <button onclick="reprendreSession(window._savedSession);window._savedSession=null;localStorage.removeItem('mc_session_pause')" style="background:#3a7531;color:white;border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer">Reprendre cette session</button>
-        <button onclick="this.closest('.bub').parentElement.parentElement.remove();window._savedSession=null" style="background:transparent;color:#888;border:1px solid #ccc;border-radius:8px;padding:7px 14px;font-size:12px;cursor:pointer">Nouvelle session</button>
+        <button onclick="this.closest('.msg').remove();window._savedSession=null" style="background:transparent;color:#888;border:1px solid #ccc;border-radius:8px;padding:7px 14px;font-size:12px;cursor:pointer">Nouvelle session</button>
       </div>
     </div>`;
     c.appendChild(d); c.scrollTop = c.scrollHeight;
@@ -585,6 +585,7 @@ function startSession(m){
 
 function addMsg(role,text,cls){
   const c=document.getElementById('chat');
+  if(!c){console.warn('[PSEE-DEBUG] addMsg: #chat introuvable, message ignore'); return;}
   const d=document.createElement('div');
   d.className='msg'+(role==='u'?' u':'');
   const bCls=role==='u'?'u':(cls||'ai');
@@ -594,6 +595,7 @@ function addMsg(role,text,cls){
 
 function showDots(){
   const c=document.getElementById('chat');
+  if(!c) return;
   const d=document.createElement('div');d.className='msg';d.id='typ';
   d.innerHTML='<div class="av ai">M</div><div class="dots"><div class="d"></div><div class="d"></div><div class="d"></div></div>';
   c.appendChild(d);c.scrollTop=c.scrollHeight;
