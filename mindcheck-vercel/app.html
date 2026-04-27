@@ -988,30 +988,57 @@ function showBilan(data){
   const date=new Date().toLocaleDateString('fr-FR');
   const radar=buildRadar(data.axes,baselineData);
 
-  const zonesHTML=data.zones.map(z=>{
-    // Le modèle renvoie niv 0-4 avec sens inversé (0=excellent, 4=critique)
-    // On convertit en score 1-4 (1=Fragile=mauvais, 4=Solide=bon)
-    const rawNiv = Math.max(0, Math.min(4, Math.round(z.niv)));
-    const sc = rawNiv === 0 ? 4 : rawNiv === 1 ? 4 : rawNiv === 2 ? 3 : rawNiv === 3 ? 2 : 1;
+  // ---- RESUME VISUEL DES 6 AXES (remplace l'ancien data.zones) ----
+  // Plus de redondance avec les axes detailles : juste un visuel synthetique
+  // qui reprend les memes 6 axes avec leur score sous forme de barres.
+  const axesResumeHTML = (data.axes || []).map(ax => {
+    const sc = Math.max(1, Math.min(4, Math.round(ax.score)));
     const meta = getScoreMeta(sc);
-    const domLabel = (z.dom||'')
-      .replace('Fonction cognitive','Vie mentale et pensées')
-      .replace('Régulation émotionnelle','Vie émotionnelle')
-      .replace('Somatisation','Signaux corporels')
-      .replace('Fonction relationnelle','Vie relationnelle et contexte')
-      .replace('État psychique général','État psychique général'); // identité
-    // Segments : 1=Fragile(rouge) à 4=Solide(vert), actifs jusqu'à sc
-    const segs=[1,2,3,4].map(i=>`<span style="height:8px;border-radius:3px;background:${SCORE_META[i].color};opacity:${i<=sc?'1':'.18'}"></span>`).join('');
-    return`<div style="margin-bottom:14px">
+    // Segments : 1=Fragile(rouge) a 4=Solide(vert), actifs jusqu'a sc
+    const segs = [1,2,3,4].map(i =>
+      `<span style="height:8px;border-radius:3px;background:${SCORE_META[i].color};opacity:${i<=sc?'1':'.18'}"></span>`
+    ).join('');
+    return `<div style="margin-bottom:14px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-        <span style="font-size:12px;font-weight:700;font-family:Arial;color:#1f1f1c">${domLabel}</span>
+        <span style="font-size:12px;font-weight:700;font-family:Arial;color:#1f1f1c">${ax.label}</span>
         <span style="font-size:10px;font-weight:700;color:${meta.color};font-family:Arial">${meta.label}</span>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin-bottom:6px">${segs}</div>
-      ${z.detail?`<div style="font-size:11px;color:#6d6b63;font-family:Arial;line-height:1.5">${z.detail}</div>`:''}
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:3px">${segs}</div>
     </div>`;
   }).join('');
 
+  // ---- LECTURE TRANSVERSALE : 3 paragraphes (porte / pese / attention) ----
+  const lt = data.lectureTransversale || {};
+  const ltHTML = (lt.porte || lt.pese || lt.attention) ? `
+    <div style="background:white;border-radius:14px;padding:18px 20px;border:.5px solid rgba(0,0,0,.08);display:grid;gap:14px">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#3a7531">Lecture transversale</div>
+      ${lt.porte ? `
+        <div style="display:flex;gap:14px;align-items:flex-start">
+          <div style="width:32px;height:32px;border-radius:50%;background:#e7efe7;color:#2f6b32;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;font-weight:700">↑</div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#2f6b32;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">Ce que vous portez</div>
+            <div style="font-size:13px;color:#40403a;line-height:1.7;font-family:Georgia,serif">${lt.porte}</div>
+          </div>
+        </div>` : ''}
+      ${lt.pese ? `
+        <div style="display:flex;gap:14px;align-items:flex-start">
+          <div style="width:32px;height:32px;border-radius:50%;background:#f7efdd;color:#a06f00;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;font-weight:700">⊙</div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#a06f00;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">Ce qui pèse</div>
+            <div style="font-size:13px;color:#40403a;line-height:1.7;font-family:Georgia,serif">${lt.pese}</div>
+          </div>
+        </div>` : ''}
+      ${lt.attention ? `
+        <div style="display:flex;gap:14px;align-items:flex-start">
+          <div style="width:32px;height:32px;border-radius:50%;background:#eef2fa;color:#3a5fa6;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;font-weight:700">→</div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#3a5fa6;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">Ce à quoi être attentif</div>
+            <div style="font-size:13px;color:#40403a;line-height:1.7;font-family:Georgia,serif">${lt.attention}</div>
+          </div>
+        </div>` : ''}
+    </div>` : '';
+
+  // ---- DIMENSIONS DETAILLEES (axes avec obs et conseil) ----
   const dimHTML=data.axes.map(ax=>{
     const meta=getScoreMeta(ax.score),col=meta.color,bg=meta.bg;
     const prev=baselineData?baselineData.scores[ax.num-1]:null;
@@ -1032,7 +1059,32 @@ function showBilan(data){
     </div>`;
   }).join('');
 
-  const hasAlert=data.axes.some(a=>a.score<=2);
+  // ---- INDICATEURS PSYCHOMETRIQUES (PHQ9 / GAD7 / PSS10) ----
+  // Section discrete affichee uniquement si au moins un module a ete score.
+  const indicateurs = Array.isArray(data.indicateurs) ? data.indicateurs : [];
+  const indicateursHTML = indicateurs.length > 0 ? `
+    <div style="background:#fafaf6;border-radius:14px;padding:16px 18px;border:.5px solid rgba(0,0,0,.08)">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#6d6b63;margin-bottom:4px">Indicateurs standardisés complémentaires</div>
+      <div style="font-size:11px;color:#8a897f;margin-bottom:14px;line-height:1.5;font-style:italic">Ces repères sont issus d'échelles cliniques reconnues. Ils complètent votre lecture sans remplacer un avis professionnel.</div>
+      <div style="display:grid;gap:10px">
+        ${indicateurs.map(ind => {
+          const hasScore = ind.score !== null && ind.score !== undefined;
+          const coverage = ind.items_couverts && ind.items_total
+            ? `${ind.items_couverts}/${ind.items_total} items couverts par votre récit`
+            : '';
+          return `<div style="background:white;border:.5px solid rgba(0,0,0,.06);border-radius:10px;padding:12px 14px">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px">
+              <span style="font-size:12px;font-weight:700;color:#1f1f1c">${ind.label || ind.id}</span>
+              ${hasScore
+                ? `<span style="font-size:13px;font-weight:700;color:#3a7531">${ind.score}<span style="font-size:11px;color:#8a897f;font-weight:400">/${ind.max}</span></span>`
+                : `<span style="font-size:10px;color:#8a897f;font-style:italic">passation incomplète</span>`}
+            </div>
+            <div style="font-size:11px;color:#5d5b54;line-height:1.5">${ind.interpretation || ''}</div>
+            ${coverage ? `<div style="font-size:10px;color:#8a897f;margin-top:4px;font-style:italic">${coverage}</div>` : ''}
+          </div>`;
+        }).join('')}
+      </div>
+    </div>` : '';
 
   const html=`<div id="bov" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(26,26,24,.6);z-index:9999;overflow-y:auto;padding:16px" onclick="if(event.target===this)this.remove()">
   <div id="bdoc" style="background:#F7F4EF;max-width:740px;margin:auto;border-radius:20px;overflow:hidden;font-family:Arial,sans-serif">
@@ -1056,7 +1108,7 @@ function showBilan(data){
         <div style="font-size:14px;color:#1A2E22;line-height:1.75;font-family:Georgia,serif;font-style:italic">${data.synthese}</div>
       </div>
 
-      <!-- RADAR + ZONES -->
+      <!-- RADAR + RESUME VISUEL DES 6 AXES -->
       <div style="display:grid;grid-template-columns:1fr 1.1fr;gap:12px">
         <div style="background:white;border-radius:14px;padding:14px;border:.5px solid rgba(0,0,0,.08)">
           <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#3a7531;margin-bottom:4px">Votre cartographie psychique</div>
@@ -1070,30 +1122,27 @@ function showBilan(data){
           </div>
         </div>
         <div style="background:white;border-radius:14px;padding:14px;border:.5px solid rgba(0,0,0,.08)">
-          <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#3a7531;margin-bottom:10px">Zones d'attention</div>
-          ${zonesHTML}
-          <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
-            <div style="display:flex;align-items:center;gap:4px;font-size:9px;color:#6d6b63"><div style="width:8px;height:8px;border-radius:2px;background:#D97A7A"></div>Fragile</div>
-            <div style="display:flex;align-items:center;gap:4px;font-size:9px;color:#6d6b63"><div style="width:8px;height:8px;border-radius:2px;background:#D8A24A"></div>En tension</div>
-            <div style="display:flex;align-items:center;gap:4px;font-size:9px;color:#6d6b63"><div style="width:8px;height:8px;border-radius:2px;background:#A9C76F"></div>Stable</div>
-            <div style="display:flex;align-items:center;gap:4px;font-size:9px;color:#6d6b63"><div style="width:8px;height:8px;border-radius:2px;background:#5B9B67"></div>Solide</div>
-          </div>
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#3a7531;margin-bottom:10px">Vos 6 axes en un coup d'œil</div>
+          ${axesResumeHTML}
         </div>
       </div>
 
-      <!-- 6 DIMENSIONS -->
+      <!-- LECTURE TRANSVERSALE (porte / pese / attention) -->
+      ${ltHTML}
+
+      <!-- 6 DIMENSIONS DETAILLEES -->
       <div style="background:white;border-radius:14px;padding:16px 18px;border:.5px solid rgba(0,0,0,.08)">
         <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#3a7531;margin-bottom:6px">Vos 6 dimensions expliquées</div>
         <div style="font-size:12px;color:#555;line-height:1.7;margin-bottom:14px">Votre équilibre psychique fonctionne comme un écosystème — 6 systèmes interconnectés. Quand l'un se déséquilibre, les autres compensent. Jusqu'à un certain point.</div>
         ${dimHTML}
       </div>
 
-      <!-- FORCES / VIGILANCE — nouveau design maquette -->
+      <!-- FORCES / VIGILANCE -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
         <div style="border-radius:24px;padding:24px;border:1px solid #c9d8c8;background:#e7efe7">
           <div style="font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:#5f8f5d;margin-bottom:14px;font-weight:700">Ce qui vous soutient</div>
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:14px">
-            ${data.forces.map(f=>`<li style="display:flex;gap:12px;align-items:flex-start;font-size:14px;color:#1f1f1c;line-height:1.55">
+            ${(data.forces||[]).map(f=>`<li style="display:flex;gap:12px;align-items:flex-start;font-size:14px;color:#1f1f1c;line-height:1.55">
               <span style="width:24px;height:24px;border-radius:50%;background:#dfe9df;color:#2f6b32;display:inline-flex;align-items:center;justify-content:center;flex:0 0 24px;font-size:13px;margin-top:1px">✓</span>
               <span>${f}</span>
             </li>`).join('')}
@@ -1102,7 +1151,7 @@ function showBilan(data){
         <div style="border-radius:24px;padding:24px;border:1px solid #e7c77f;background:#f7efdd">
           <div style="font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:#b47f09;margin-bottom:14px;font-weight:700">Ce qui demande attention</div>
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:14px">
-            ${data.vigilance.map(v=>`<li style="display:flex;gap:12px;align-items:flex-start;font-size:14px;color:#1f1f1c;line-height:1.55">
+            ${(data.vigilance||[]).map(v=>`<li style="display:flex;gap:12px;align-items:flex-start;font-size:14px;color:#1f1f1c;line-height:1.55">
               <span style="width:24px;height:24px;border-radius:50%;background:#f2e6bf;color:#a06f00;display:inline-flex;align-items:center;justify-content:center;flex:0 0 24px;font-size:12px;margin-top:1px">•</span>
               <span>${v}</span>
             </li>`).join('')}
@@ -1110,7 +1159,10 @@ function showBilan(data){
         </div>
       </div>
 
-      <!-- ORIENTATION — nouveau design maquette -->
+      <!-- INDICATEURS PSYCHOMETRIQUES -->
+      ${indicateursHTML}
+
+      <!-- ORIENTATION -->
       <div style="border:2px solid #7aa175;background:linear-gradient(180deg,#fffdfa 0%,#f9fbf8 100%);border-radius:30px;padding:28px;text-align:center">
         <div style="font-family:Georgia,serif;font-size:22px;color:#2f6b32;margin-bottom:12px;font-weight:700;line-height:1.2">Souhaitez-vous être accompagné(e)&nbsp;?</div>
         <p style="color:#373731;font-size:15px;line-height:1.7;max-width:600px;margin:0 auto 18px">Psee peut vous mettre en relation avec des thérapeutes adaptés à votre profil psychique — pas seulement à vos symptômes. Chaque professionnel choisit de se proposer à vous. Vous comparez, vous choisissez librement.</p>
@@ -1123,27 +1175,27 @@ function showBilan(data){
         <div style="color:#8a897f;font-size:12px">Réponses sous 24–48h · 100 % anonymisé · Sans engagement</div>
       </div>
 
-      <!-- 3 REPÈRES — nouveau design maquette -->
+      <!-- 3 REPÈRES -->
       <div style="background:#f1f5f0;border:1px solid #d4ded3;border-radius:24px;padding:24px">
         <div style="font-family:Georgia,serif;font-size:20px;color:#2f6b32;margin-bottom:6px;font-weight:700">3 repères simples pour maintenant</div>
         <div style="color:#5f8f5d;font-size:14px;margin-bottom:20px">Pas de grands changements. Trois points d'appui concrets pour les prochaines semaines.</div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
           <div style="background:#fffdfa;border:1px solid #d7dfd5;border-radius:22px;padding:22px;min-height:160px">
             <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#5f8f5d;font-weight:700;margin-bottom:12px">Cette semaine</div>
-            <p style="color:#40403a;font-size:14px;line-height:1.55;margin:0">${data.actions.semaine}</p>
+            <p style="color:#40403a;font-size:14px;line-height:1.55;margin:0">${(data.actions&&data.actions.semaine)||''}</p>
           </div>
           <div style="background:#fffdfa;border:1px solid #d7dfd5;border-radius:22px;padding:22px;min-height:160px">
             <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#5f8f5d;font-weight:700;margin-bottom:12px">Ce mois-ci</div>
-            <p style="color:#40403a;font-size:14px;line-height:1.55;margin:0">${data.actions.mois}</p>
+            <p style="color:#40403a;font-size:14px;line-height:1.55;margin:0">${(data.actions&&data.actions.mois)||''}</p>
           </div>
           <div style="background:#fffdfa;border:1px solid #d7dfd5;border-radius:22px;padding:22px;min-height:160px">
             <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#5f8f5d;font-weight:700;margin-bottom:12px">Dans 3 mois</div>
-            <p style="color:#40403a;font-size:14px;line-height:1.55;margin:0">${data.actions.trimestre}</p>
+            <p style="color:#40403a;font-size:14px;line-height:1.55;margin:0">${(data.actions&&data.actions.trimestre)||''}</p>
           </div>
         </div>
       </div>
 
-      <!-- ABONNEMENT — nouveau design maquette -->
+      <!-- ABONNEMENT -->
       <div style="background:linear-gradient(135deg,#285d2a 0%,#2f6b32 55%,#346f37 100%);border-radius:28px;padding:32px;color:white;position:relative;overflow:hidden">
         <div style="position:absolute;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.04);filter:blur(10px);left:-70px;bottom:-120px"></div>
         <div style="position:absolute;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.04);filter:blur(10px);right:-80px;top:-120px"></div>
