@@ -985,36 +985,21 @@ function showBilan(data){
     </div>`;
   }).join('');
 
-  // ---- LECTURE TRANSVERSALE : 3 paragraphes (porte / pese / attention) ----
-  const lt = data.lectureTransversale || {};
-  const ltHTML = (lt.porte || lt.pese || lt.attention) ? `
-    <div style="background:white;border-radius:14px;padding:18px 20px;border:.5px solid rgba(0,0,0,.08);display:grid;gap:14px">
-      <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#3a7531">Lecture transversale</div>
-      ${lt.porte ? `
-        <div style="display:flex;gap:14px;align-items:flex-start">
-          <div style="width:32px;height:32px;border-radius:50%;background:#e7efe7;color:#2f6b32;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;font-weight:700">↑</div>
-          <div>
-            <div style="font-size:11px;font-weight:700;color:#2f6b32;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">Ce que vous portez</div>
-            <div style="font-size:13px;color:#40403a;line-height:1.7;font-family:Georgia,serif">${lt.porte}</div>
-          </div>
-        </div>` : ''}
-      ${lt.pese ? `
-        <div style="display:flex;gap:14px;align-items:flex-start">
-          <div style="width:32px;height:32px;border-radius:50%;background:#f7efdd;color:#a06f00;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;font-weight:700">⊙</div>
-          <div>
-            <div style="font-size:11px;font-weight:700;color:#a06f00;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">Ce qui pèse</div>
-            <div style="font-size:13px;color:#40403a;line-height:1.7;font-family:Georgia,serif">${lt.pese}</div>
-          </div>
-        </div>` : ''}
-      ${lt.attention ? `
-        <div style="display:flex;gap:14px;align-items:flex-start">
-          <div style="width:32px;height:32px;border-radius:50%;background:#eef2fa;color:#3a5fa6;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;font-weight:700">→</div>
-          <div>
-            <div style="font-size:11px;font-weight:700;color:#3a5fa6;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">Ce à quoi être attentif</div>
-            <div style="font-size:13px;color:#40403a;line-height:1.7;font-family:Georgia,serif">${lt.attention}</div>
-          </div>
-        </div>` : ''}
-    </div>` : '';
+  // Helper : normalise forces/vigilance pour gerer ancien format (tableau)
+  // ET nouveau format (objet {intro, points}). Retourne toujours un objet.
+  function normalizeFV(field){
+    if (!field) return { intro: '', points: [] };
+    if (Array.isArray(field)) return { intro: '', points: field };
+    if (typeof field === 'object') {
+      return {
+        intro: field.intro || '',
+        points: Array.isArray(field.points) ? field.points : []
+      };
+    }
+    return { intro: '', points: [] };
+  }
+  const forcesData = normalizeFV(data.forces);
+  const vigilanceData = normalizeFV(data.vigilance);
 
   // ---- DIMENSIONS DETAILLEES (axes avec obs et conseil) ----
   const dimHTML=data.axes.map(ax=>{
@@ -1209,9 +1194,6 @@ function showBilan(data){
         </div>
       </div>
 
-      <!-- LECTURE TRANSVERSALE (porte / pese / attention) -->
-      ${ltHTML}
-
       <!-- 6 DIMENSIONS DETAILLEES -->
       <div style="background:white;border-radius:14px;padding:16px 18px;border:.5px solid rgba(0,0,0,.08)">
         <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#3a7531;margin-bottom:6px">Vos 6 dimensions expliquées</div>
@@ -1219,22 +1201,24 @@ function showBilan(data){
         ${dimHTML}
       </div>
 
-      <!-- FORCES / VIGILANCE -->
+      <!-- FORCES / VIGILANCE (intro narrative + points concrets) -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
         <div style="border-radius:24px;padding:24px;border:1px solid #c9d8c8;background:#e7efe7">
           <div style="font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:#5f8f5d;margin-bottom:14px;font-weight:700">Ce qui vous soutient</div>
-          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:14px">
-            ${(data.forces||[]).map(f=>`<li style="display:flex;gap:12px;align-items:flex-start;font-size:14px;color:#1f1f1c;line-height:1.55">
-              <span style="width:24px;height:24px;border-radius:50%;background:#dfe9df;color:#2f6b32;display:inline-flex;align-items:center;justify-content:center;flex:0 0 24px;font-size:13px;margin-top:1px">✓</span>
+          ${forcesData.intro ? `<div style="font-size:13px;color:#2f4a32;line-height:1.7;font-family:Georgia,serif;font-style:italic;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid rgba(95,143,93,.25)">${forcesData.intro}</div>` : ''}
+          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:12px">
+            ${forcesData.points.map(f=>`<li style="display:flex;gap:12px;align-items:flex-start;font-size:13px;color:#1f1f1c;line-height:1.55">
+              <span style="width:22px;height:22px;border-radius:50%;background:#dfe9df;color:#2f6b32;display:inline-flex;align-items:center;justify-content:center;flex:0 0 22px;font-size:12px;margin-top:1px">✓</span>
               <span>${f}</span>
             </li>`).join('')}
           </ul>
         </div>
         <div style="border-radius:24px;padding:24px;border:1px solid #e7c77f;background:#f7efdd">
           <div style="font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:#b47f09;margin-bottom:14px;font-weight:700">Ce qui demande attention</div>
-          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:14px">
-            ${(data.vigilance||[]).map(v=>`<li style="display:flex;gap:12px;align-items:flex-start;font-size:14px;color:#1f1f1c;line-height:1.55">
-              <span style="width:24px;height:24px;border-radius:50%;background:#f2e6bf;color:#a06f00;display:inline-flex;align-items:center;justify-content:center;flex:0 0 24px;font-size:12px;margin-top:1px">•</span>
+          ${vigilanceData.intro ? `<div style="font-size:13px;color:#5a4408;line-height:1.7;font-family:Georgia,serif;font-style:italic;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid rgba(180,127,9,.25)">${vigilanceData.intro}</div>` : ''}
+          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:12px">
+            ${vigilanceData.points.map(v=>`<li style="display:flex;gap:12px;align-items:flex-start;font-size:13px;color:#1f1f1c;line-height:1.55">
+              <span style="width:22px;height:22px;border-radius:50%;background:#f2e6bf;color:#a06f00;display:inline-flex;align-items:center;justify-content:center;flex:0 0 22px;font-size:11px;margin-top:1px">•</span>
               <span>${v}</span>
             </li>`).join('')}
           </ul>
@@ -1246,6 +1230,7 @@ function showBilan(data){
 
       <!-- ORIENTATION -->
       <div style="border:2px solid #7aa175;background:linear-gradient(180deg,#fffdfa 0%,#f9fbf8 100%);border-radius:30px;padding:28px;text-align:center">
+        ${data.attention ? `<div style="font-size:14px;color:#2f4a32;line-height:1.7;font-family:Georgia,serif;font-style:italic;max-width:620px;margin:0 auto 22px;padding:0 12px">${data.attention}</div>` : ''}
         <div style="font-family:Georgia,serif;font-size:22px;color:#2f6b32;margin-bottom:12px;font-weight:700;line-height:1.2">Souhaitez-vous être accompagné(e)&nbsp;?</div>
         <p style="color:#373731;font-size:15px;line-height:1.7;max-width:600px;margin:0 auto 18px">Psee peut vous mettre en relation avec des thérapeutes adaptés à votre profil psychique — pas seulement à vos symptômes. Chaque professionnel choisit de se proposer à vous. Vous comparez, vous choisissez librement.</p>
         <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:22px">
@@ -1296,6 +1281,22 @@ function showBilan(data){
 
 function showBilanBTB(data){
   const date = new Date().toLocaleDateString('fr-FR');
+
+  // Helper local : normalise forces/vigilance pour gerer ancien format (tableau)
+  // ET nouveau format (objet {intro, points}).
+  function normalizeFV(field){
+    if (!field) return { intro: '', points: [] };
+    if (Array.isArray(field)) return { intro: '', points: field };
+    if (typeof field === 'object') {
+      return {
+        intro: field.intro || '',
+        points: Array.isArray(field.points) ? field.points : []
+      };
+    }
+    return { intro: '', points: [] };
+  }
+  const forcesData = normalizeFV(data.forces);
+  const vigilanceData = normalizeFV(data.vigilance);
 
   // Matrice axes
   const axesHTML = data.axes.map(ax => {
@@ -1390,15 +1391,17 @@ function showBilanBTB(data){
         ${axThHTML}
       </div>
 
-      <!-- FORCES / VIGILANCE -->
+      <!-- FORCES / VIGILANCE (intro narrative + points) -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
         <div style="background:#E8F4ED;border-radius:14px;padding:14px 16px">
           <div style="font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:#3a7531;margin-bottom:8px">Ressources cliniques</div>
-          ${data.forces.map(f=>`<div style="font-size:12px;color:#333;margin-bottom:5px;display:flex;gap:8px"><span style="color:#3a7531;flex-shrink:0">✓</span>${f}</div>`).join('')}
+          ${forcesData.intro ? `<div style="font-size:12px;color:#1f3a25;line-height:1.65;font-style:italic;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid rgba(58,117,49,.2)">${forcesData.intro}</div>` : ''}
+          ${forcesData.points.map(f=>`<div style="font-size:12px;color:#333;margin-bottom:5px;display:flex;gap:8px"><span style="color:#3a7531;flex-shrink:0">✓</span>${f}</div>`).join('')}
         </div>
         <div style="background:#FFF8E7;border:1px solid #F0D060;border-radius:14px;padding:14px 16px">
           <div style="font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:#7A5C00;margin-bottom:8px">Points de vigilance</div>
-          ${data.vigilance.map(v=>`<div style="font-size:12px;color:#333;margin-bottom:5px;display:flex;gap:8px"><span style="color:#E9A820;flex-shrink:0">◆</span>${v}</div>`).join('')}
+          ${vigilanceData.intro ? `<div style="font-size:12px;color:#5a4408;line-height:1.65;font-style:italic;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid rgba(122,92,0,.2)">${vigilanceData.intro}</div>` : ''}
+          ${vigilanceData.points.map(v=>`<div style="font-size:12px;color:#333;margin-bottom:5px;display:flex;gap:8px"><span style="color:#E9A820;flex-shrink:0">◆</span>${v}</div>`).join('')}
         </div>
       </div>
 
