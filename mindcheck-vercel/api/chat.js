@@ -171,7 +171,18 @@ export default async function handler(req, res) {
 
   if (category === 'critical') {
     logIncident('critical', ip);
-    return res.status(200).json(buildReply(POLICIES.critical, 'critical'));
+    // Refonte : on ne court-circuite plus systematiquement avec un message
+    // de rejet. Le prompt COLLECTE_SYS gere desormais 3 niveaux d'ideation
+    // (passive / active avec plan / urgence vitale) avec des reponses
+    // adaptees. Haiku decide en contexte si l'entretien continue (niveau 1),
+    // s'interromp avec respect (niveau 2), ou redirige en urgence (niveau 3).
+    // Le shortcut hardcoded reste pour les modes non-collecte (bilan, passation)
+    // ou un rejet brut est plus prudent.
+    if (mode && mode !== 'collecte') {
+      return res.status(200).json(buildReply(POLICIES.critical, 'critical'));
+    }
+    // Sinon : on laisse passer a Haiku qui gerera selon les nouvelles regles.
+    // Le logging d'incident est conserve pour l'audit safety.
   }
   if (category === 'out_of_scope') {
     logIncident('out_of_scope', ip);
