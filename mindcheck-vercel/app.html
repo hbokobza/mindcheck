@@ -536,6 +536,37 @@ Scores 0-4 entiers uniquement.`;
 
 let baselineData=null;
 
+// =============================================================================
+// PASSATION FINALE - etat de la mini-passation explicite apres collecte
+// =============================================================================
+// Quand la collecte se termine (COMPLET:[oui]) ET que le serveur a detecte
+// des modules psychometriques pertinents, on bascule dans une mini-passation
+// explicite avant de generer le bilan.
+//
+// Structure de passationQueue : [
+//   { moduleId: 'PHQ9', itemIdx: 0, totalItems: 9 },
+//   { moduleId: 'PHQ9', itemIdx: 1, totalItems: 9 },
+//   ...
+//   { moduleId: 'GAD7', itemIdx: 0, totalItems: 7 },
+//   ...
+// ]
+// passationCursor pointe sur l'index de l'item EN COURS (celui que Haiku
+// vient de poser et auquel l'utilisateur va repondre).
+let passationActive = false;
+let passationQueue = [];
+let passationCursor = 0;
+// Modules detectes en fin de collecte, mis a jour a chaque tour serveur.
+let lastTriggeredModules = [];
+
+// Definition statique : nombre d'items par module (doit correspondre au
+// serveur dans psychometrics.js). Utilise pour construire la queue.
+const PASSATION_MODULE_LENGTHS = { PHQ9: 9, GAD7: 7, PSS10: 10 };
+const PASSATION_MODULE_LABELS = {
+  PHQ9: 'humeur',
+  GAD7: 'anxiete',
+  PSS10: 'stress percu'
+};
+
 (function(){
   const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let c='PS-';
@@ -625,23 +656,29 @@ function updateAxes(s){
   });
 }
 
-async function callAPI(messages, mode){
+async function callAPI(messages, mode, extras){
   // Le system prompt vit desormais cote serveur (lib/systemPrompts.js).
-  // Le front envoie uniquement le mode ('collecte' | 'bilan_btc' | 'bilan_btb')
-  // et l'historique des messages.
-  console.log('[PSEE-DEBUG] callAPI START | mode=', mode, '| messages.count=', messages.length);
+  // Le front envoie uniquement le mode ('collecte' | 'bilan_btc' | 'bilan_btb' | 'passation_finale')
+  // et l'historique des messages, plus eventuellement passationContext en mode passation.
+  console.log('[PSEE-DEBUG] callAPI START | mode=', mode, '| messages.count=', messages.length, '| extras=', extras||{});
+  const payload = { messages, mode };
+  if (extras && extras.passationContext) payload.passationContext = extras.passationContext;
   const r = await fetch('/api/chat', {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({ messages, mode })
+    body: JSON.stringify(payload)
   });
   console.log('[PSEE-DEBUG] callAPI HTTP status=', r.status, '| ok=', r.ok);
   const d = await r.json();
-  console.log('[PSEE-DEBUG] callAPI JSON received | keys=', Object.keys(d), '| category=', d.category, '| content?=', Array.isArray(d.content) ? 'array len='+d.content.length : typeof d.content, '| error?=', d.error?.message||'no');
+  console.log('[PSEE-DEBUG] callAPI JSON received | keys=', Object.keys(d), '| category=', d.category, '| triggeredModules=', d.triggeredModules, '| error?=', d.error?.message||'no');
   if(d.error) throw new Error(d.error.message || 'Erreur API');
-  // La categorie renvoyee par le serveur peut etre utilisee pour la telemetrie
   if(d.category && d.category !== 'normal'){
     console.log('[psee-safety] category=' + d.category);
+  }
+  // Memoriser les modules triggered pour que processInput puisse decider
+  // de basculer en passation finale quand done arrive.
+  if (Array.isArray(d.triggeredModules)) {
+    lastTriggeredModules = d.triggeredModules;
   }
   const out = d.content?.[0]?.text || '';
   if(!out) console.warn('[PSEE-DEBUG] callAPI returning EMPTY string | full d=', JSON.stringify(d).slice(0,300));
@@ -650,13 +687,13 @@ async function callAPI(messages, mode){
 
 async function processInput(text,src){
   if(!text.trim())return;
-  console.log('[PSEE-DEBUG] processInput ENTRY | count=', count+1, '| hist.length=', hist.length, '| text.len=', text.length, '| text.preview=', text.slice(0,80));
+  console.log('[PSEE-DEBUG] processInput ENTRY | count=', count+1, '| hist.length=', hist.length, '| passationActive=', passationActive, '| text.preview=', text.slice(0,80));
   addMsg('u',text);
   hist.push({role:'user',content:text});
   count++;
   showDots();
 
-  // Detection de crise avant envoi API
+  // Detection de crise avant envoi API (s'applique tout le temps, meme en passation)
   const crisis_keywords = ["suicid","me tuer","mourir","en finir","me faire du mal","automutil","me blesser","plus envie de vivre","je veux mourir","jen peux plus","je vais me"];
   const lower = text.toLowerCase();
   const isCrisis = crisis_keywords.some(kw => lower.includes(kw));
@@ -668,6 +705,44 @@ async function processInput(text,src){
     return;
   }
 
+  // ----- BRANCHE PASSATION FINALE -----
+  // Si on est en passation, la reponse de l'utilisateur correspond a l'item courant.
+  // On avance le curseur, puis si la queue n'est pas finie on demande a Haiku
+  // de poser l'item suivant. Sinon on declenche le bilan.
+  if(passationActive){
+    try{
+      passationCursor++;
+      console.log('[PSEE-DEBUG] PASSATION cursor advanced to', passationCursor, '/', passationQueue.length);
+
+      if(passationCursor >= passationQueue.length){
+        // Fin de la passation : tous les items couverts. On lance le bilan.
+        rmDots();
+        addMsg('ai', "Merci pour vos réponses. Je prépare maintenant votre check-up complet.");
+        passationActive = false;
+        updatePassationBanner();
+        setTimeout(()=>generateBilan(false), 1000);
+        return;
+      }
+
+      // Sinon : demander a Haiku de poser l'item suivant
+      const nextItem = passationQueue[passationCursor];
+      const ctx = { moduleId: nextItem.moduleId, currentItemIndex: nextItem.itemIdx };
+      updatePassationBanner();
+      const raw = await callAPI(hist, 'passation_finale', { passationContext: ctx });
+      rmDots();
+      const clean = raw.trim();
+      addMsg('ai', clean);
+      hist.push({role:'assistant', content: raw});
+      autoSaveSession();
+    }catch(e){
+      console.error('[PSEE-DEBUG] PASSATION ERROR:', e.message, e);
+      rmDots();
+      showErr('Erreur de connexion — réessayez dans quelques secondes');
+    }
+    return;
+  }
+
+  // ----- BRANCHE COLLECTE NORMALE -----
   try{
     const raw=await callAPI(hist, 'collecte');
     console.log('[PSEE-DEBUG] RAW response | length=', raw.length, '| preview=', raw.slice(0,150));
@@ -693,10 +768,19 @@ async function processInput(text,src){
       }
     }
     if(done||clean.toLowerCase().includes('je prépare')){
-      console.log('[PSEE-DEBUG] PATH = DONE -> bilan auto-déclenché');
-      addMsg('ai',"Merci pour ce partage. Je prépare votre synthèse…");
+      console.log('[PSEE-DEBUG] PATH = DONE | triggeredModules=', lastTriggeredModules);
       hist.push({role:'assistant',content:raw});
-      setTimeout(()=>promptEnrichissement(()=>generateBilan(false)),1200);
+
+      // Si modules psychometriques triggered : basculer en passation finale
+      // au lieu de generer directement le bilan.
+      if(Array.isArray(lastTriggeredModules) && lastTriggeredModules.length > 0){
+        console.log('[PSEE-DEBUG] -> entering passation_finale mode');
+        startPassationFinale();
+      } else {
+        // Pas de modules a passer : bilan direct
+        addMsg('ai',"Merci pour ce partage. Je prépare votre synthèse…");
+        setTimeout(()=>promptEnrichissement(()=>generateBilan(false)),1200);
+      }
     } else {
       console.log('[PSEE-DEBUG] PATH = CONTINUE | display.length=', clean.length);
       addMsg('ai',clean);
@@ -706,6 +790,113 @@ async function processInput(text,src){
       autoSaveSession();
     }
   }catch(e){console.error('[PSEE-DEBUG] CAUGHT ERROR in processInput:', e.message, e); rmDots();showErr('Erreur de connexion — réessayez dans quelques secondes');}
+}
+
+// =============================================================================
+// PASSATION FINALE - declenchement et UI
+// =============================================================================
+
+// Lance la mini-passation explicite : construit la queue d'items a partir
+// des modules detectes, affiche la banniere de progression + le message
+// d'annonce dans le chat, puis demande a Haiku de poser le premier item.
+async function startPassationFinale(){
+  // 1. Construire la queue plate : un item par entree
+  passationQueue = [];
+  lastTriggeredModules.forEach(moduleId => {
+    const total = PASSATION_MODULE_LENGTHS[moduleId];
+    if(!total) return;
+    for(let i = 0; i < total; i++){
+      passationQueue.push({ moduleId, itemIdx: i, totalItems: total });
+    }
+  });
+
+  if(passationQueue.length === 0){
+    // Aucun item a passer : bilan direct
+    addMsg('ai', "Merci pour ce partage. Je prépare votre synthèse…");
+    setTimeout(()=>promptEnrichissement(()=>generateBilan(false)), 1200);
+    return;
+  }
+
+  passationActive = true;
+  passationCursor = 0;
+  console.log('[PSEE-DEBUG] PASSATION started | queue.length=', passationQueue.length, '| modules=', lastTriggeredModules);
+
+  // 2. Afficher la banniere de progression
+  updatePassationBanner();
+
+  // 3. Message d'annonce dans le chat
+  const moduleNames = lastTriggeredModules
+    .map(id => PASSATION_MODULE_LABELS[id] || id)
+    .join(', ');
+  const totalQuestions = passationQueue.length;
+  const annonce = `Vous avez partagé beaucoup d'éléments précieux sur les 6 dimensions. Avant de produire votre synthèse, j'aimerais vous poser ${totalQuestions} questions très précises pour fiabiliser les indicateurs cliniques (équivalents aux questionnaires utilisés par les professionnels de santé sur ${moduleNames}).\n\nCela prendra 3 à 5 minutes. Pour chaque question, vous pourrez répondre simplement par exemple : « jamais », « quelques jours », « plus de la moitié des jours », ou « presque tous les jours ».\n\nJe commence par la première question.`;
+  addMsg('ai', annonce);
+  hist.push({role:'assistant', content: annonce});
+
+  // 4. Demander a Haiku de poser le premier item
+  showDots();
+  try{
+    const firstItem = passationQueue[0];
+    const ctx = { moduleId: firstItem.moduleId, currentItemIndex: firstItem.itemIdx };
+    const raw = await callAPI(hist, 'passation_finale', { passationContext: ctx });
+    rmDots();
+    const clean = raw.trim();
+    addMsg('ai', clean);
+    hist.push({role:'assistant', content: raw});
+    autoSaveSession();
+  }catch(e){
+    console.error('[PSEE-DEBUG] PASSATION start error:', e.message);
+    rmDots();
+    showErr('Erreur lors du démarrage de la passation — réessayez');
+    passationActive = false;
+    updatePassationBanner();
+  }
+}
+
+// Affiche / met a jour la banniere de progression de la passation.
+// La banniere est inseree juste sous le bandeau axes (ou retiree si
+// passationActive=false).
+function updatePassationBanner(){
+  let banner = document.getElementById('passation-banner');
+
+  if(!passationActive){
+    if(banner) banner.remove();
+    return;
+  }
+
+  const current = Math.min(passationCursor + 1, passationQueue.length);
+  const total = passationQueue.length;
+  const ratio = Math.min(1, current / total);
+  const moduleId = passationQueue[passationCursor]?.moduleId || passationQueue[0]?.moduleId;
+  const moduleLabel = PASSATION_MODULE_LABELS[moduleId] || '';
+
+  const html = `
+    <div style="background:#EEF7F2;border:1px solid #C8E6C9;border-radius:12px;padding:12px 16px;margin:0 0 12px;display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#2f6b32;font-weight:600;font-family:Arial,sans-serif">
+        <span>Phase finale : questions précises${moduleLabel ? ' · '+moduleLabel : ''}</span>
+        <span style="font-variant-numeric:tabular-nums">${current} / ${total}</span>
+      </div>
+      <div style="height:5px;background:#dfe9df;border-radius:3px;overflow:hidden">
+        <div style="height:100%;background:#3a7531;border-radius:3px;width:${(ratio*100).toFixed(1)}%;transition:width .4s ease"></div>
+      </div>
+    </div>
+  `;
+
+  if(banner){
+    banner.outerHTML = html;
+  } else {
+    // Inserer juste avant la div .axes (les pastilles des 6 axes)
+    const axesEl = document.querySelector('#s3 .axes');
+    if(axesEl && axesEl.parentNode){
+      const tmp = document.createElement('div');
+      tmp.innerHTML = html.trim();
+      const newBanner = tmp.firstElementChild;
+      if(newBanner){
+        newBanner.id = 'passation-banner';
+        axesEl.parentNode.insertBefore(newBanner, axesEl);
+      }
+    }
+  }
 }
 
 async function submitText(){
