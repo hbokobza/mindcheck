@@ -155,13 +155,15 @@ Le JSON DOIT contenir EXACTEMENT ces champs, dans cet ordre :
     { "num": 5, "label": "Corps et risque somatique", "score": 1-4, "obs": "...", "conseil": "..." },
     { "num": 6, "label": "Environnement", "score": 1-4, "obs": "...", "conseil": "..." }
   ],
-  "lectureTransversale": {
-    "porte": "string. 2 a 4 phrases. Ce que la personne porte avec elle en ce moment : les ressources, les appuis, ce qui tient, ce qui fait force. Toujours commencer par cela.",
-    "pese": "string. 2 a 4 phrases. Ce qui pese, ce qui fatigue, ce qui demande de l energie pour etre tenu. Sans dramatiser.",
-    "attention": "string. 2 a 4 phrases. Ce a quoi il est utile de preter attention dans les semaines qui viennent. Tournee vers l action ou la vigilance, pas vers la peur."
+  "forces": {
+    "intro": "string. 2 a 3 phrases narratives. Decrit ce que la personne porte, les ressources et appuis qui tiennent. Ton chaleureux, en ecrivant 'vous portez...', 'vous avez...'. Sert d introduction liante avant la liste de points concrets. NE PAS REPETER ces points dans l intro : l intro raconte, les points enumerent.",
+    "points": ["string courte et concrete 1", "string courte et concrete 2", "..."]
   },
-  "forces": ["string", "string", "..."],
-  "vigilance": ["string", "string", "..."],
+  "vigilance": {
+    "intro": "string. 2 a 3 phrases narratives. Decrit ce qui pese, ce qui demande de l energie pour etre tenu, ce qui fatigue. Ton sobre, sans dramatiser. Sert d introduction liante avant la liste de points concrets. NE PAS REPETER ces points dans l intro : l intro raconte, les points enumerent.",
+    "points": ["string courte et concrete 1", "string courte et concrete 2", "..."]
+  },
+  "attention": "string. 2 a 3 phrases. Ce a quoi il est utile de preter attention dans les semaines qui viennent. Sert de pont vers une eventuelle orientation therapeutique. Tournee vers l action ou la vigilance, pas vers la peur. Exemple : 'Il serait utile de prendre attention a... Si cela persiste, parler a un professionnel pourrait apporter un appui'.",
   "actions": {
     "semaine": "string. Une chose concrete et accessible a essayer cette semaine.",
     "mois": "string. Un mouvement a engager dans le mois.",
@@ -177,11 +179,18 @@ REGLES SUR LES SCORES (1-4)
 
 Les scores doivent etre coherents avec le recit. Ne mets pas tout a 2 par precaution. Ose differencier les axes.
 
-REGLES SUR forces ET vigilance
-- 3 a 5 elements maximum dans chaque liste.
-- Chaque element : une phrase courte, concrete, ancree dans ce qui a ete dit.
+REGLES SUR forces ET vigilance (NOUVEAU FORMAT OBJET)
+- Chaque champ est un objet avec deux cles : "intro" (paragraphe narratif) et "points" (liste concrete).
+- intro = 2 a 3 phrases narratives liantes qui racontent l ensemble. Pas de liste, pas de puces. Style chaleureux, parlant a la personne.
+- points = 3 a 5 elements maximum, phrases courtes, concretes, ancrees dans ce qui a ete dit.
+- IMPORTANT : intro et points ne doivent PAS dire la meme chose. L intro raconte une histoire (vue d ensemble), les points enumerent des elements precis (vue analytique).
 - Forces = appuis, ressources, qualites visibles dans le recit.
 - Vigilance = points qui meritent qu on y revienne, sans jugement.
+
+REGLES SUR attention
+- 2 a 3 phrases. Ce paragraphe sert de pont vers la section orientation therapeute du bilan.
+- Pas de liste. Style chaleureux, parlant a la personne.
+- Tourne vers l action ou la vigilance, pas vers la peur.
 
 TON
 Chaleureux, precis, respectueux. Parle a la personne, pas d elle.
@@ -332,8 +341,14 @@ Le JSON DOIT contenir EXACTEMENT ces champs, dans cet ordre :
   "axes_therapeutiques": [
     { "titre": "string. Axe therapeutique propose.", "cible": "string. Cible clinique precise.", "indications": "string. Approches indiquees (ex: TCC, ACT, EMDR, therapie systemique, MBSR, etc.) en restant prudent — proposition, pas prescription." }
   ],
-  "forces": ["string. Ressources cliniques mobilisables", "..."],
-  "vigilance": ["string. Points de vigilance pour le clinicien", "..."],
+  "forces": {
+    "intro": "string. 2 a 3 phrases narratives. Synthese clinique des ressources mobilisables observees dans le recit (insight, alliance therapeutique potentielle, appuis externes, fonctionnement preserve, etc.). Sert d introduction liante avant la liste de points concrets. NE PAS REPETER ces points dans l intro.",
+    "points": ["string clinique courte 1", "string clinique courte 2", "..."]
+  },
+  "vigilance": {
+    "intro": "string. 2 a 3 phrases narratives. Synthese clinique des points de vigilance pour le clinicien (zones a investiguer rapidement, signaux a surveiller, fragilites a prendre en compte). Sert d introduction liante avant la liste de points concrets. NE PAS REPETER ces points dans l intro.",
+    "points": ["string clinique courte 1", "string clinique courte 2", "..."]
+  },
   "lecture_clinique": {
     "configuration": "string. 2 a 3 phrases. Configuration psychique dominante telle qu elle apparait, formulee prudemment.",
     "dynamique": "string. 2 a 3 phrases. Dynamique principale ou tension centrale qui semble organiser le tableau.",
@@ -366,9 +381,11 @@ REGLES SUR axes_therapeutiques
 - Hierarchie : du plus prioritaire au plus secondaire.
 - Indications : nomme les approches courantes pertinentes en restant nuance ("TCC pour la rumination", "ACT pour l evitement", "MBSR ou pleine conscience pour la regulation emotionnelle", "therapie systemique si dimension familiale", "EMDR si traumatisme avere").
 
-REGLES SUR forces / vigilance
-- 3 a 5 elements chacun.
-- Phrases courtes, cliniques, concretes.
+REGLES SUR forces / vigilance (NOUVEAU FORMAT OBJET)
+- Chaque champ est un objet avec deux cles : "intro" (paragraphe narratif clinique) et "points" (liste concrete).
+- intro = 2 a 3 phrases narratives liantes en langage clinique. Pas de liste, pas de puces. Synthese de la vue d ensemble.
+- points = 3 a 5 elements maximum, phrases courtes, cliniques, concretes.
+- IMPORTANT : intro et points ne doivent PAS dire la meme chose. L intro synthese, les points detaillent.
 - forces = ressources mobilisables en therapie.
 - vigilance = points de vigilance specifiques pour le clinicien.
 
