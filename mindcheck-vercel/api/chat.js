@@ -9,6 +9,7 @@ import {
   COLLECTE_SYS,
   BILAN_BTC_SYS,
   BILAN_BTB_SYS,
+  PASSATION_FINALE_SYS,
   buildCollectePrompt
 } from './systemPrompts.js';
 import { classifyInput, isUnsafeOutput } from './safetyRules.js';
@@ -36,13 +37,67 @@ const MAX_MODULES_PER_SESSION = 2;
 // -----------------------------
 // SYSTEM PROMPT
 // -----------------------------
-function resolveSystemPrompt(mode, triggeredModules = []) {
+function resolveSystemPrompt(mode, triggeredModules = [], passationContext = null) {
   switch (mode) {
     case 'bilan_btc': return BILAN_BTC_SYS;
     case 'bilan_btb': return BILAN_BTB_SYS;
+    case 'passation_finale': return buildPassationFinalePrompt(passationContext);
     case 'collecte':
     default: return buildCollectePrompt(triggeredModules);
   }
+}
+
+// Construit dynamiquement le prompt passation_finale en injectant le contexte
+// du module en cours (PHQ-9 / GAD-7 / PSS-10) et de l'item courant.
+function buildPassationFinalePrompt(ctx) {
+  if (!ctx || !ctx.moduleId || !ctx.currentItemIndex && ctx.currentItemIndex !== 0) {
+    // Fallback : on retourne le prompt brut (Haiku saura repondre raisonnablement)
+    return PASSATION_FINALE_SYS;
+  }
+
+  const moduleSpecs = {
+    PHQ9: {
+      title: 'PHQ-9',
+      timeframe: '14 derniers jours',
+      scaleLabels: 'jamais, quelques jours, plus de la moitie des jours, presque tous les jours',
+      items: PHQ9.items
+    },
+    GAD7: {
+      title: 'GAD-7',
+      timeframe: '14 derniers jours',
+      scaleLabels: 'jamais, quelques jours, plus de la moitie des jours, presque tous les jours',
+      items: GAD7.items
+    },
+    PSS10: {
+      title: 'PSS-10',
+      timeframe: 'dernier mois',
+      scaleLabels: 'jamais, presque jamais, parfois, assez souvent, tres souvent',
+      items: PSS10.items
+    }
+  };
+
+  const spec = moduleSpecs[ctx.moduleId];
+  if (!spec) return PASSATION_FINALE_SYS;
+
+  const item = spec.items[ctx.currentItemIndex];
+  const totalItems = spec.items.length;
+  const itemNumber = ctx.currentItemIndex + 1;
+
+  const contextBlock = `
+
+CONTEXTE DE L'ITEM EN COURS
+Module : ${spec.title}
+Periode : ${spec.timeframe}
+Item courant : ${itemNumber}/${totalItems}
+Texte de l'item : "${item}"
+Echelle de reponse : ${spec.scaleLabels}
+
+INSTRUCTION SPECIFIQUE A CE TOUR
+Pose UNIQUEMENT cet item courant, en le reformulant naturellement (voir les regles de formulation). Termine en proposant explicitement les options de l'echelle.
+N'enchaine pas plusieurs items. Attends la reponse de la personne.
+`;
+
+  return PASSATION_FINALE_SYS + contextBlock;
 }
 
 // -----------------------------
@@ -93,7 +148,8 @@ export default async function handler(req, res) {
     mode,
     action = 'message',
     sessionState = {},
-    moduleSubmission = null
+    moduleSubmission = null,
+    passationContext = null
   } = body || {};
 
   if (!Array.isArray(messages) || messages.length === 0) {
@@ -106,7 +162,7 @@ export default async function handler(req, res) {
 
   // 1. Classification securite du dernier message utilisateur
   let category = 'normal';
-  if (mode === 'collecte' || !mode) {
+  if (mode === 'collecte' || mode === 'passation_finale' || !mode) {
     const lastUserMsg = [...messages].reverse().find(m => m.role === 'user');
     if (lastUserMsg && typeof lastUserMsg.content === 'string') {
       category = classifyInput(lastUserMsg.content);
@@ -277,7 +333,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
         max_tokens: 4096,
-        system: resolveSystemPrompt(mode, triggeredModules),
+        system: resolveSystemPrompt(mode, triggeredModules, passationContext),
         messages: messages
       })
     });
@@ -300,6 +356,10 @@ export default async function handler(req, res) {
       axes,
       clinicalFlags
     };
+    // Liste des modules psychometriques pour lesquels une passation finale
+    // serait pertinente. Le front l'utilise quand COMPLET:[oui] est detecte
+    // pour basculer en mode passation_finale avant de generer le bilan.
+    data.triggeredModules = triggeredModules;
 
     return res.status(200).json(data);
 
