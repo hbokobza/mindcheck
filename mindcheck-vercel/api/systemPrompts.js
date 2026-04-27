@@ -140,8 +140,9 @@ Tu peux par contre nommer des dynamiques observables avec des mots du quotidien 
 
 STRUCTURE DE SORTIE — JSON STRICT
 Retourne UNIQUEMENT du JSON valide, sans texte avant ni apres, sans markdown, sans bloc code.
-Pas d apostrophes typographiques dans les valeurs (utilise l apostrophe simple ').
-Toutes les chaines en francais.
+Toutes les chaines en francais correct, AVEC les accents standards : à, â, ç, é, è, ê, ë, î, ï, ô, ù, û, œ. Le francais sans accents est INCORRECT et illisible : tu dois utiliser les accents partout ou ils sont attendus.
+Pour les apostrophes : utilise l apostrophe droite simple ' (pas l apostrophe typographique ').
+Pour les guillemets : utilise les guillemets droits " (pas « »).
 
 Le JSON DOIT contenir EXACTEMENT ces champs, dans cet ordre :
 
@@ -330,8 +331,9 @@ Tu peux par contre nommer des dynamiques cliniques observables (rumination anxie
 
 STRUCTURE DE SORTIE — JSON STRICT
 Reponds UNIQUEMENT avec du JSON valide, sans texte avant ni apres, sans markdown, sans bloc code.
-Pas d apostrophes typographiques dans les valeurs (utilise l apostrophe simple ').
-Toutes les chaines en francais.
+Toutes les chaines en francais correct, AVEC les accents standards : à, â, ç, é, è, ê, ë, î, ï, ô, ù, û, œ. Le francais sans accents est INCORRECT et illisible : tu dois utiliser les accents partout ou ils sont attendus.
+Pour les apostrophes : utilise l apostrophe droite simple ' (pas l apostrophe typographique ').
+Pour les guillemets : utilise les guillemets droits " (pas « »).
 
 Le JSON DOIT contenir EXACTEMENT ces champs, dans cet ordre :
 
