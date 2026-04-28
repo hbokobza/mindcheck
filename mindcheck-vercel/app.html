@@ -87,7 +87,7 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px}
   .bub.u{max-width:82%}
 
   /* Chat : utiliser dvh pour iOS, flexible */
-  .chat{height:auto;min-height:50dvh;max-height:65dvh;padding:16px}
+ .chat{height:auto;min-height:30dvh;max-height:65dvh;padding:16px}
 
   /* Zone de saisie compacte */
   .input-row{padding:8px 8px 8px 14px;border-radius:14px}
@@ -95,7 +95,8 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px}
   #sbtn{width:36px;height:36px}
 
   /* Bouton "Reprendre session" caché en cours de check-up */
-  #s3 button[onclick="toggleReprise()"]{display:none}
+#s3 button[onclick*="toggleReprise"]{display:none}
+#s3 #reprise-panel{display:none !important}
 
   /* Bouton "Générer ma synthèse" plus compact */
   #s3 > div:last-of-type button[onclick="demanderBilan()"]{padding:12px;font-size:13px}
