@@ -1514,20 +1514,181 @@ function showBilanBTB(data){
   const forcesData = normalizeFV(data.forces);
   const vigilanceData = normalizeFV(data.vigilance);
 
+  // Detection de redflags hautes pour le bandeau d'alerte en tete
+  const redflagsHaute = (data.redflags || []).filter(rf => rf.priorite === 'haute');
+  const hasRedflagHaute = redflagsHaute.length > 0;
+
+  // Bandeau alerte rouge en haut si redflag haute
+  const bandeauAlerteHTML = hasRedflagHaute ? `
+    <div style="background:#FEF2F2;border:2px solid #C0392B;border-left:6px solid #C0392B;border-radius:12px;padding:16px 20px;margin-bottom:14px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <span style="font-size:20px;line-height:1">⚠</span>
+        <span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#C0392B">Signaux d'alerte haute priorité — à vérifier dès la première séance</span>
+      </div>
+      <div style="display:grid;gap:8px">
+        ${redflagsHaute.map(rf => `
+          <div style="background:white;border-radius:8px;padding:10px 12px;border:1px solid rgba(192,57,43,0.2)">
+            <div style="font-size:12px;font-weight:700;color:#C0392B;margin-bottom:3px">${rf.titre}</div>
+            <div style="font-size:11px;color:#3a3a3a;line-height:1.55;margin-bottom:5px">${rf.detail}</div>
+            ${rf.action_recommandee ? `<div style="font-size:10px;color:#666;font-style:italic;margin-top:4px;padding-top:5px;border-top:1px dashed rgba(0,0,0,0.1)"><strong style="font-style:normal;color:#C0392B">Action :</strong> ${rf.action_recommandee}</div>` : ''}
+          </div>
+        `).join('')}
+      </div>
+    </div>` : '';
+
+  // ---- INDICATEURS PSYCHOMETRIQUES BTB (vue clinique, code en avant) ----
+  // Meta des modules : code clinique en titre, nom francais en sous-titre,
+  // seuils colores, item 9 du PHQ-9 mis en evidence (idéation suicidaire)
+  const PSYCHOMETRIC_META_BTB = {
+    PHQ9: {
+      code: 'PHQ-9',
+      fullName: 'Patient Health Questionnaire',
+      nameFr: 'Évaluation de la sévérité dépressive',
+      author: 'Kroenke, Spitzer & Williams (2001)',
+      thresholds: [
+        { max: 4,  color: '#5B9B67', bg: '#e7efe7', label: 'minimal' },
+        { max: 9,  color: '#A9C76F', bg: '#eef4e1', label: 'léger' },
+        { max: 14, color: '#D8A24A', bg: '#f7efdd', label: 'modéré' },
+        { max: 19, color: '#D88A4A', bg: '#fae5d8', label: 'modéré à sévère' },
+        { max: 27, color: '#D97A7A', bg: '#fde0e0', label: 'sévère' }
+      ]
+    },
+    GAD7: {
+      code: 'GAD-7',
+      fullName: 'Generalized Anxiety Disorder Scale',
+      nameFr: 'Évaluation de l\'anxiété généralisée',
+      author: 'Spitzer, Kroenke, Williams & Löwe (2006)',
+      thresholds: [
+        { max: 4,  color: '#5B9B67', bg: '#e7efe7', label: 'minimale' },
+        { max: 9,  color: '#A9C76F', bg: '#eef4e1', label: 'légère' },
+        { max: 14, color: '#D8A24A', bg: '#f7efdd', label: 'modérée' },
+        { max: 21, color: '#D97A7A', bg: '#fde0e0', label: 'sévère' }
+      ]
+    },
+    PSS10: {
+      code: 'PSS-10',
+      fullName: 'Perceived Stress Scale',
+      nameFr: 'Évaluation du stress perçu',
+      author: 'Cohen, Kamarck & Mermelstein (1983)',
+      thresholds: [
+        { max: 13, color: '#5B9B67', bg: '#e7efe7', label: 'faible' },
+        { max: 26, color: '#D8A24A', bg: '#f7efdd', label: 'modéré' },
+        { max: 40, color: '#D97A7A', bg: '#fde0e0', label: 'élevé' }
+      ]
+    }
+  };
+  function getPsychoBandBTB(moduleId, score) {
+    const meta = PSYCHOMETRIC_META_BTB[moduleId];
+    if (!meta) return { color: '#8a897f', bg: '#f0eee9', label: '—' };
+    return meta.thresholds.find(t => score <= t.max) || meta.thresholds[meta.thresholds.length - 1];
+  }
+
+  const indicateurs = Array.isArray(data.indicateurs) ? data.indicateurs : [];
+  const indicateursBTBHTML = indicateurs.length > 0 ? `
+    <div style="background:white;border-radius:14px;padding:16px 18px;border:0.5px solid rgba(0,0,0,0.08)">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#3a7531;margin-bottom:10px">Instruments psychométriques — scores chiffrés</div>
+      <div style="display:grid;gap:10px">
+        ${indicateurs.map(ind => {
+          const meta = PSYCHOMETRIC_META_BTB[ind.id] || { code: ind.id, fullName: '', nameFr: ind.label || '', author: '' };
+          const hasScore = ind.score !== null && ind.score !== undefined;
+          const itemsCovered = ind.items_couverts || 0;
+          const itemsTotal = ind.items_total || 0;
+          const isPartial = hasScore && itemsTotal > 0 && itemsCovered < itemsTotal;
+          const band = hasScore ? getPsychoBandBTB(ind.id, ind.score) : null;
+          const ratio = hasScore ? Math.min(1, ind.score / ind.max) : 0;
+
+          // Pour le PHQ-9 : detection de l'item 9 (ideation suicidaire) elevé
+          // L'item 9 est l'avant-dernier dans la liste (index 8). On peut le
+          // detecter dans l'interpretation si Haiku le mentionne, ou on alerte
+          // generalement si score PHQ-9 eleve avec mention idéation.
+          const isPHQ9HighIdeation = ind.id === 'PHQ9' && hasScore && ind.score >= 15;
+
+          let pastilleHTML = '';
+          if (hasScore) {
+            const labelText = isPartial ? `${band.label} (extrapolé)` : band.label;
+            pastilleHTML = `<span style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:${band.bg};color:${band.color};font-size:10px;font-weight:700;letter-spacing:.02em">${labelText}</span>`;
+          } else {
+            pastilleHTML = `<span style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:#ECEAE3;color:#6d6b63;font-size:10px;font-weight:700;letter-spacing:.02em">passation incomplète</span>`;
+          }
+
+          return `<div style="background:#FAFAFA;border:0.5px solid rgba(0,0,0,0.08);border-radius:8px;padding:12px 14px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:6px">
+              <div style="flex:1;min-width:200px">
+                <div style="font-size:13px;font-weight:700;color:#1B3A6B;margin-bottom:1px">${meta.code}<span style="font-size:11px;color:#666;font-weight:500"> · ${meta.fullName}</span></div>
+                <div style="font-size:10px;color:#666;margin-bottom:2px">${meta.nameFr}</div>
+                ${ind.timeframe ? `<div style="font-size:9px;color:#888;font-style:italic">Période : ${ind.timeframe}</div>` : ''}
+              </div>
+              ${hasScore
+                ? `<div style="text-align:right;flex-shrink:0">
+                     <div style="font-size:22px;font-weight:800;color:#1B3A6B;line-height:1;letter-spacing:-.02em">${ind.score}<span style="font-size:13px;font-weight:500;color:#8a897f;letter-spacing:0">/${ind.max}</span></div>
+                   </div>`
+                : ''}
+            </div>
+            ${hasScore ? `
+              <div style="height:6px;background:#eee;border-radius:3px;overflow:hidden;margin-bottom:8px">
+                <div style="width:${(ratio*100).toFixed(1)}%;height:100%;background:${band.color};border-radius:3px"></div>
+              </div>` : ''}
+            <div>${pastilleHTML}</div>
+            ${ind.interpretation && hasScore ? `<div style="font-size:11px;color:#444;line-height:1.6;margin-top:8px">${ind.interpretation}</div>` : ''}
+            ${!hasScore ? `<div style="font-size:11px;color:#5d5b54;line-height:1.6;margin-top:8px">Couverture insuffisante (${itemsCovered}/${itemsTotal} items). Une passation formelle est recommandée pour un usage diagnostique.</div>` : ''}
+            ${hasScore ? `<div style="font-size:9px;color:#888;margin-top:5px;font-style:italic">Couverture : ${itemsCovered}/${itemsTotal} items${isPartial ? ' (extrapolation par moyenne des items répondus)' : ''}</div>` : ''}
+            ${isPHQ9HighIdeation ? `
+              <div style="margin-top:8px;padding:8px 10px;background:#FEF2F2;border-left:3px solid #C0392B;border-radius:4px">
+                <div style="font-size:10px;color:#C0392B;font-weight:700">⚠ Vigilance item 9 (idéation suicidaire)</div>
+                <div style="font-size:10px;color:#666;margin-top:2px;line-height:1.5">Score PHQ-9 ≥ 15 : investiguer formellement l'idéation suicidaire en première séance (échelle Columbia C-SSRS recommandée).</div>
+              </div>` : ''}
+          </div>`;
+        }).join('')}
+      </div>
+    </div>` : '';
+
+  // Citations auteurs en footer du bloc
+  const citationsHTML = indicateurs.length > 0 ? `
+    <div style="font-size:9px;color:#888;line-height:1.55;font-style:italic;margin-top:-6px">
+      ${indicateurs.map(ind => {
+        const meta = PSYCHOMETRIC_META_BTB[ind.id];
+        return meta?.author ? `${meta.code} : ${meta.author}` : '';
+      }).filter(Boolean).join(' · ')}
+    </div>` : '';
+
+  // Lecture clinique (configuration / dynamique / leviers)
+  const lc = data.lecture_clinique || {};
+  const lectureCliniqueHTML = (lc.configuration || lc.dynamique || lc.leviers) ? `
+    <div style="background:white;border-radius:14px;padding:16px 18px;border:0.5px solid rgba(0,0,0,0.08)">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#3a7531;margin-bottom:12px">Lecture clinique</div>
+      <div style="display:grid;gap:14px">
+        ${lc.configuration ? `
+          <div>
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#1B3A6B;margin-bottom:5px">Configuration</div>
+            <div style="font-size:12px;color:#333;line-height:1.65">${lc.configuration}</div>
+          </div>` : ''}
+        ${lc.dynamique ? `
+          <div>
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#1B3A6B;margin-bottom:5px">Dynamique centrale</div>
+            <div style="font-size:12px;color:#333;line-height:1.65">${lc.dynamique}</div>
+          </div>` : ''}
+        ${lc.leviers ? `
+          <div>
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#1B3A6B;margin-bottom:5px">Leviers thérapeutiques</div>
+            <div style="font-size:12px;color:#333;line-height:1.65">${lc.leviers}</div>
+          </div>` : ''}
+      </div>
+    </div>` : '';
+
   // Matrice axes
   const axesHTML = data.axes.map(ax => {
-    const scoreBadge = ax.score<=1?'background:#FDE8E8;color:#C0392B':ax.score<=2?'background:#FFF3D6;color:#B8860B':'background:#E8F4ED;color:#3a7531';
+    const scoreBadge = ax.score<=1?'background:#FDE8E8;color:#C0392B':ax.score<=2?'background:#FFF3D6;color:#B8860B':ax.score<=3?'background:#EEF4E1;color:#5F8F5D':'background:#E8F4ED;color:#3a7531';
     return `<tr>
-      <td style="font-weight:600">${ax.label}</td>
-      <td><span style="padding:2px 10px;border-radius:20px;font-size:10px;font-weight:600;${scoreBadge}">${ax.score}/4</span></td>
-      <td style="font-size:11px;color:#444;line-height:1.5">${ax.manifestations}</td>
-      <td style="font-size:11px;color:#555">${ax.systemes}</td>
+      <td style="font-weight:600;padding:8px 10px;border-bottom:1px solid #f0f0f0">${ax.label}</td>
+      <td style="padding:8px 10px;border-bottom:1px solid #f0f0f0"><span style="padding:2px 10px;border-radius:20px;font-size:10px;font-weight:600;${scoreBadge}">${ax.score}/4</span></td>
+      <td style="font-size:11px;color:#444;line-height:1.5;padding:8px 10px;border-bottom:1px solid #f0f0f0">${ax.manifestations||''}</td>
+      <td style="font-size:11px;color:#555;padding:8px 10px;border-bottom:1px solid #f0f0f0">${ax.systemes||''}</td>
     </tr>`;
   }).join('');
 
   // Lecture systèmes
   const niv2col = n => n==='rouge'?'#E76F51':n==='orange'?'#E9A820':'#888';
-  const systemesHTML = data.systemes.map(s => `
+  const systemesHTML = (data.systemes||[]).map(s => `
     <div style="background:#FAFAFA;border:0.5px solid rgba(0,0,0,0.08);border-radius:8px;padding:10px 12px;margin-bottom:8px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
         <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#333">${s.nom}</span>
@@ -1536,24 +1697,28 @@ function showBilanBTB(data){
       <div style="font-size:10px;color:#555;line-height:1.55">${s.description}</div>
     </div>`).join('');
 
-  // Red flags
-  const rfHTML = data.redflags.map(rf => {
-    const isHigh = rf.priorite === 'haute';
-    return `<div style="background:${isHigh?'#FEF2F2':'#FFF8E7'};border:1px solid ${isHigh?'#FCA5A5':'#F0D060'};border-radius:10px;padding:10px 14px;margin-bottom:8px">
-      <div style="color:${isHigh?'#C0392B':'#7A5C00'};font-weight:600;font-size:11px;margin-bottom:3px">${isHigh?'▲':'◆'} ${rf.titre}</div>
-      <div style="font-size:11px;color:#555;line-height:1.55">${rf.detail}</div>
-    </div>`;
-  }).join('');
+  // Red flags non-haute (les hautes sont deja dans le bandeau du haut)
+  // On affiche ici les "moyenne" et autres, ainsi qu'un rappel synthetique des hautes
+  const redflagsAutres = (data.redflags||[]).filter(rf => rf.priorite !== 'haute');
+  const rfHTML = redflagsAutres.map(rf => `
+    <div style="background:#FFF8E7;border:1px solid #F0D060;border-radius:10px;padding:10px 14px;margin-bottom:8px">
+      <div style="color:#7A5C00;font-weight:600;font-size:11px;margin-bottom:3px">◆ ${rf.titre} <span style="font-size:9px;font-weight:500;color:#999;margin-left:6px">[priorité ${rf.priorite}]</span></div>
+      <div style="font-size:11px;color:#555;line-height:1.55;margin-bottom:5px">${rf.detail}</div>
+      ${rf.action_recommandee ? `<div style="font-size:10px;color:#666;font-style:italic;margin-top:4px;padding-top:5px;border-top:1px dashed rgba(0,0,0,0.1)"><strong style="font-style:normal;color:#7A5C00">Action :</strong> ${rf.action_recommandee}</div>` : ''}
+    </div>`).join('');
 
-  // Axes thérapeutiques
-  const axThHTML = data.axes_therapeutiques.map(a => `
-    <div style="background:#F0F7F0;border:1px solid #C8E6C9;border-radius:10px;padding:10px 14px;margin-bottom:8px">
-      <div style="color:#3a7531;font-weight:600;font-size:11px;margin-bottom:3px">${a.titre}</div>
-      <div style="font-size:10px;color:#555;line-height:1.55"><strong>Cible :</strong> ${a.cible} — ${a.indications}</div>
+  // Axes thérapeutiques numérotés
+  const axThHTML = (data.axes_therapeutiques||[]).map((a, idx) => `
+    <div style="background:#F0F7F0;border:1px solid #C8E6C9;border-radius:10px;padding:10px 14px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start">
+      <div style="flex-shrink:0;width:24px;height:24px;border-radius:50%;background:#3a7531;color:white;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700">${idx+1}</div>
+      <div style="flex:1">
+        <div style="color:#3a7531;font-weight:700;font-size:11px;margin-bottom:3px">${a.titre}</div>
+        <div style="font-size:10px;color:#555;line-height:1.55"><strong>Cible :</strong> ${a.cible} — ${a.indications}</div>
+      </div>
     </div>`).join('');
 
   const html = `<div id="btb-ov" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);z-index:10000;overflow-y:auto;padding:16px" onclick="if(event.target===this)this.remove()">
-  <div id="btb-doc" style="background:#F4F4F2;max-width:760px;margin:auto;border-radius:20px;overflow:hidden;font-family:Arial,sans-serif">
+  <div id="btb-doc" style="background:#F4F4F2;max-width:820px;margin:auto;border-radius:20px;overflow:hidden;font-family:Arial,sans-serif">
 
     <!-- HEADER BLEU -->
     <div style="background:#1B3A6B;padding:22px 28px 18px">
@@ -1568,6 +1733,13 @@ function showBilanBTB(data){
     </div>
 
     <div style="padding:18px 24px;display:flex;flex-direction:column;gap:14px">
+
+      <!-- BANDEAU ALERTE (uniquement si redflag haute) -->
+      ${bandeauAlerteHTML}
+
+      <!-- INDICATEURS PSYCHOMETRIQUES -->
+      ${indicateursBTBHTML}
+      ${citationsHTML}
 
       <!-- SYNTHESE -->
       <div style="background:#1B3A6B;border-radius:14px;padding:16px 20px;border-left:4px solid #3a7531">
@@ -1589,23 +1761,29 @@ function showBilanBTB(data){
         </table>
       </div>
 
+      <!-- LECTURE CLINIQUE (configuration / dynamique / leviers) -->
+      ${lectureCliniqueHTML}
+
       <!-- LECTURE SYSTÈMES -->
-      <div style="background:white;border-radius:14px;padding:16px 18px;border:0.5px solid rgba(0,0,0,0.08)">
-        <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#3a7531;margin-bottom:10px">Lecture systèmes</div>
-        ${systemesHTML}
-      </div>
+      ${systemesHTML ? `
+        <div style="background:white;border-radius:14px;padding:16px 18px;border:0.5px solid rgba(0,0,0,0.08)">
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#3a7531;margin-bottom:10px">Lecture systèmes</div>
+          ${systemesHTML}
+        </div>` : ''}
 
-      <!-- RED FLAGS -->
-      <div style="background:white;border-radius:14px;padding:16px 18px;border:0.5px solid rgba(0,0,0,0.08)">
-        <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#3a7531;margin-bottom:10px">Signaux d'alerte — hiérarchisés</div>
-        ${rfHTML}
-      </div>
+      <!-- AUTRES SIGNAUX D'ALERTE (priorité moyenne) -->
+      ${rfHTML ? `
+        <div style="background:white;border-radius:14px;padding:16px 18px;border:0.5px solid rgba(0,0,0,0.08)">
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#3a7531;margin-bottom:10px">Autres signaux à investiguer</div>
+          ${rfHTML}
+        </div>` : ''}
 
-      <!-- AXES THERAPEUTIQUES -->
-      <div style="background:white;border-radius:14px;padding:16px 18px;border:0.5px solid rgba(0,0,0,0.08)">
-        <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#3a7531;margin-bottom:10px">Axes thérapeutiques prioritaires</div>
-        ${axThHTML}
-      </div>
+      <!-- AXES THERAPEUTIQUES NUMEROTES -->
+      ${axThHTML ? `
+        <div style="background:white;border-radius:14px;padding:16px 18px;border:0.5px solid rgba(0,0,0,0.08)">
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#3a7531;margin-bottom:10px">Axes thérapeutiques prioritaires</div>
+          ${axThHTML}
+        </div>` : ''}
 
       <!-- FORCES / VIGILANCE (intro narrative + points) -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
@@ -1630,12 +1808,12 @@ function showBilanBTB(data){
       <!-- FOOTER -->
       <div style="font-size:9px;color:#AEADA7;text-align:center;line-height:1.7;border-top:1px solid #E8E4DE;padding-top:12px">
         Ce bilan est généré par IA à partir d'un récit collecté via Psee. Il constitue une aide à la lecture clinique et ne remplace pas l'évaluation du praticien.<br>
-        Usage strictement professionnel et confidentiel.
+        Usage strictement professionnel et confidentiel. Psee n'est pas un service d'urgence — en cas de crise active, le 3114 et le 15 sont les recours appropriés.
       </div>
 
       <!-- BOUTONS -->
       <div style="display:flex;gap:10px;justify-content:center;padding-bottom:8px">
-        <button onclick="printBilanBTB()" style="background:#1B3A6B;color:white;border:none;border-radius:30px;padding:10px 24px;font-family:Arial;font-size:13px;font-weight:500;cursor:pointer">Télécharger BTB en PDF</button>
+        <button onclick="printBilanBTB()" style="background:#1B3A6B;color:white;border:none;border-radius:30px;padding:10px 24px;font-family:Arial;font-size:13px;font-weight:500;cursor:pointer">Télécharger en PDF</button>
         <button onclick="document.getElementById('btb-ov').remove()" style="background:transparent;color:#1B3A6B;border:1.5px solid #1B3A6B;border-radius:30px;padding:10px 24px;font-family:Arial;font-size:13px;font-weight:500;cursor:pointer">Fermer</button>
       </div>
     </div>
