@@ -848,6 +848,7 @@ function applyReferenceScores(narrative, referenceScores) {
     return axe;
   });
   return narrative;
+  }
 async function buildBilanPayload({ mode, messages, state, axes, clinicalFlags, ip }) {
   const isBtb = mode === 'bilan_btb';
   const baseSystemPrompt = isBtb ? BILAN_BTB_SYS : BILAN_BTC_SYS;
