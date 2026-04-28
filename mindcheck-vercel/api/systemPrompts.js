@@ -377,7 +377,7 @@ REGLES STRICTES POUR LE JSON
 Le JSON DOIT contenir EXACTEMENT ces champs, dans cet ordre :
 
 {
-  "synthese": "string. 4 a 6 phrases. Synthese clinique integree, technique, sobre. Ce qui ressort de la passation, hypotheses dominantes, configuration globale.",
+  "synthese_clinique": "string. 5 a 7 phrases. Synthese clinique integree qui combine : (1) ce qui ressort de la passation, (2) hypotheses cliniques dominantes, (3) configuration globale, (4) orientation et pronostic prudent. Technique, sobre, factuelle. Pas de redondance avec les autres sections du bilan.",
   "axes": [
     { "num": 1, "label": "Processus psychiques", "score": 1-4, "manifestations": "string. Manifestations cliniques observees dans le recit, formulees en langage clinique.", "systemes": "string. Systemes impliques (cognitif, anxieux, depressif, traumatique, somatique, social, etc.) avec hypotheses prudentes." },
     { "num": 2, "label": "Ressources psychiques", "score": 1-4, "manifestations": "...", "systemes": "..." },
@@ -386,9 +386,6 @@ Le JSON DOIT contenir EXACTEMENT ces champs, dans cet ordre :
     { "num": 5, "label": "Corps et risque somatique", "score": 1-4, "manifestations": "...", "systemes": "..." },
     { "num": 6, "label": "Environnement", "score": 1-4, "manifestations": "...", "systemes": "..." }
   ],
-  "systemes": [
-    { "nom": "string en MAJUSCULES (ex: SYSTEME ANXIEUX)", "couleur": "rouge|orange|gris", "niveau": "Severe|Modere|Leger|Sub-clinique", "description": "string. 1 a 3 phrases decrivant l etat de ce systeme tel qu il apparait dans le recit." }
-  ],
   "redflags": [
     { "priorite": "haute|moyenne", "titre": "string courte (max 60 caracteres)", "detail": "string. 1 a 2 phrases. Element a verifier en entretien, sans dramatiser.", "action_recommandee": "string. 1 phrase concrete d action clinique recommandee : quoi faire, quand, avec quel outil. Ex: 'Verifier en premiere seance via questionnaire dedie' ou 'Proposer un suivi rapproche les 4 premieres semaines' ou 'Coordonner avec medecin traitant pour bilan somatique'." }
   ],
@@ -396,19 +393,18 @@ Le JSON DOIT contenir EXACTEMENT ces champs, dans cet ordre :
     { "titre": "string. Axe therapeutique propose.", "cible": "string. Cible clinique precise.", "indications": "string. Approches indiquees (ex: TCC, ACT, EMDR, therapie systemique, MBSR, etc.) en restant prudent — proposition, pas prescription." }
   ],
   "forces": {
-    "intro": "string. 2 a 3 phrases narratives. Synthese clinique des ressources mobilisables observees dans le recit (insight, alliance therapeutique potentielle, appuis externes, fonctionnement preserve, etc.). Sert d introduction liante avant la liste de points concrets. NE PAS REPETER ces points dans l intro.",
-    "points": ["string clinique courte 1", "string clinique courte 2", "..."]
+    "intro": "string. EXACTEMENT 2 phrases narratives liantes. Synthese clinique des ressources mobilisables (insight, alliance therapeutique potentielle, appuis externes, fonctionnement preserve, etc.). NE PAS repeter les points concrets ci-dessous.",
+    "points": ["string clinique tres courte 1", "string clinique tres courte 2", "string clinique tres courte 3"]
   },
   "vigilance": {
-    "intro": "string. 2 a 3 phrases narratives. Synthese clinique des points de vigilance pour le clinicien (zones a investiguer rapidement, signaux a surveiller, fragilites a prendre en compte). Sert d introduction liante avant la liste de points concrets. NE PAS REPETER ces points dans l intro.",
-    "points": ["string clinique courte 1", "string clinique courte 2", "..."]
+    "intro": "string. EXACTEMENT 2 phrases narratives liantes. Synthese clinique des points de vigilance prioritaires. NE PAS repeter les points concrets ci-dessous.",
+    "points": ["string clinique tres courte 1", "string clinique tres courte 2", "string clinique tres courte 3"]
   },
   "lecture_clinique": {
     "configuration": "string. 2 a 3 phrases. Configuration psychique dominante telle qu elle apparait, formulee prudemment.",
     "dynamique": "string. 2 a 3 phrases. Dynamique principale ou tension centrale qui semble organiser le tableau.",
     "leviers": "string. 2 a 3 phrases. Ce qui semble pouvoir bouger, et par ou."
-  },
-  "conclusion": "string. 3 a 5 phrases. Conclusion clinique et pronostic prudent. Synthese et orientation pour la suite."
+  }
 }
 
 REGLES SUR LES SCORES (1-4) PAR AXE — ECHELLE DE FRAGILITE A SOLIDITE
@@ -428,11 +424,6 @@ REGLES DE CALIBRATION
   * Sommeil severement perturbe / somatisations marquees : axe Corps et risque somatique <= 2.
   * Ideation suicidaire / lassitude vitale exprimee : axe Regulation emotionnelle = 1 et signaler en redflag haute.
 
-REGLES SUR systemes
-- 3 a 6 systemes maximum.
-- couleur "rouge" pour severe, "orange" pour modere, "gris" pour leger ou sub-clinique.
-- nom = formulation clinique en MAJUSCULES (ex: SYSTEME ANXIEUX, SYSTEME DEPRESSIF, SYSTEME TRAUMATIQUE, SYSTEME SOMATIQUE, SYSTEME COGNITIF, SYSTEME COMPORTEMENTAL, SYSTEME RELATIONNEL, SYSTEME ENVIRONNEMENTAL).
-
 REGLES SUR redflags
 - 0 a 5 elements. Si rien a signaler, retourne un tableau vide [].
 - "haute" = a verifier imperativement en premier entretien (ideation suicidaire meme passive, conduites a risque actives, decompensation possible, mineurs en danger, violences subies / exercees).
@@ -445,13 +436,19 @@ REGLES SUR axes_therapeutiques
 - Hierarchie : du plus prioritaire au plus secondaire.
 - Indications : nomme les approches courantes pertinentes en restant nuance ("TCC pour la rumination", "ACT pour l evitement", "MBSR ou pleine conscience pour la regulation emotionnelle", "therapie systemique si dimension familiale", "EMDR si traumatisme avere").
 
-REGLES SUR forces / vigilance (NOUVEAU FORMAT OBJET)
+REGLES SUR forces / vigilance (FORMAT OBJET COMPACT)
 - Chaque champ est un objet avec deux cles : "intro" (paragraphe narratif clinique) et "points" (liste concrete).
-- intro = 2 a 3 phrases narratives liantes en langage clinique. Pas de liste, pas de puces. Synthese de la vue d ensemble.
-- points = 3 a 5 elements maximum, phrases courtes, cliniques, concretes.
-- IMPORTANT : intro et points ne doivent PAS dire la meme chose. L intro synthese, les points detaillent.
-- forces = ressources mobilisables en therapie.
-- vigilance = points de vigilance specifiques pour le clinicien.
+- intro = EXACTEMENT 2 phrases narratives liantes en langage clinique. Pas de liste, pas de puces. Synthese clinique de la vue d ensemble.
+- points = EXACTEMENT 3 elements maximum, phrases tres courtes, cliniques, concretes. Ne pas depasser 3 points par cote.
+- IMPORTANT : intro et points ne doivent PAS dire la meme chose. L intro synthetise, les points detaillent.
+- forces = ressources mobilisables en therapie (3 points max).
+- vigilance = points de vigilance specifiques pour le clinicien (3 points max).
+
+REGLES SUR synthese_clinique
+- 5 a 7 phrases au total. Pas plus.
+- Doit COMBINER : (1) ce qui ressort de la passation, (2) hypotheses cliniques dominantes, (3) configuration globale, (4) orientation et pronostic prudent.
+- Technique, sobre, factuelle. Vocabulaire clinique standard mais prudent ("compatible avec...", "evoque...", "suggere...").
+- NE PAS repeter les details qui figurent dans les autres sections (matrice, redflags, axes therapeutiques). Ce paragraphe donne la vue d ensemble UNE FOIS, c est tout.
 
 INTERDITS ABSOLUS
 - Ne jamais retourner du texte hors du JSON.
