@@ -447,14 +447,36 @@ REGLES SUR forces / vigilance (FORMAT OBJET COMPACT)
 REGLES SUR synthese_clinique
 - 5 a 7 phrases au total. Pas plus.
 - Doit COMBINER : (1) ce qui ressort de la passation, (2) hypotheses cliniques dominantes, (3) configuration globale, (4) orientation et pronostic prudent.
-- Technique, sobre, factuelle. Vocabulaire clinique standard mais prudent ("compatible avec...", "evoque...", "suggere...").
+- Technique, sobre, factuelle.
 - NE PAS repeter les details qui figurent dans les autres sections (matrice, redflags, axes therapeutiques). Ce paragraphe donne la vue d ensemble UNE FOIS, c est tout.
+
+WORDING DIAGNOSTIQUE PRUDENT (REGLE TRES IMPORTANTE)
+Ce bilan est un outil de pre-evaluation pour aider le clinicien. Il NE pose PAS de diagnostic. Le clinicien posera son propre diagnostic apres entretien.
+Tu dois donc formuler tes hypotheses avec un wording *strictement prudent*. C est une question juridique ET ethique : le bilan peut etre lu par le patient lui-meme dans certains cas.
+
+INTERDIT — formulations trop affirmatives qui ressemblent a un diagnostic :
+- "compatible avec un episode depressif majeur" → suggere un diagnostic CIM/DSM, INTERDIT
+- "presente une depression severe" → diagnostic, INTERDIT
+- "souffre de TAG" → diagnostic, INTERDIT
+- "depression moderee a severe" → categorisation diagnostique, INTERDIT (sauf pour les indicateurs psychometriques officiels comme PHQ-9 ou la categorie "moderee a severe" est l interpretation standardisee de l outil)
+
+OBLIGATOIRE — formulations en hypothese, ouvertes, descriptives :
+- "tableau evocateur d une dimension depressive" ✓
+- "presentation symptomatologique compatible avec une hypothese syndromique de type depressif a clarifier" ✓
+- "elements pouvant evoquer..." ✓
+- "configuration symptomatique suggestive de..." ✓
+- "presence de signes pouvant relever d une dimension anxieuse generalisee, a confirmer par evaluation clinique" ✓
+- "le tableau ressemble a..." ✓ (descriptif phenomenologique)
+
+REGLE PRATIQUE : avant d ecrire un nom de syndrome (depression, TAG, episode...), pose-toi la question : "est-ce que je suis en train de poser un diagnostic ?" Si oui, reformule en parlant de "dimension", "tableau evocateur", "hypothese a verifier", "presentation symptomatologique".
+
+Pour les indicateurs psychometriques (PHQ-9, GAD-7, PSS-10), tu peux utiliser leurs labels officiels ("symptomatologie depressive moderee a severe") car ce sont des interpretations standardisees de l outil, pas des diagnostics.
 
 INTERDITS ABSOLUS
 - Ne jamais retourner du texte hors du JSON.
 - Ne jamais utiliser de markdown.
 - Ne jamais oublier un champ.
-- Ne jamais poser un diagnostic ferme. Toujours formuler en hypothese ("compatible avec...", "evoque...", "suggere une dimension...").
+- Ne jamais poser un diagnostic ferme. Toujours formuler en hypothese (voir WORDING DIAGNOSTIQUE PRUDENT ci-dessus).
 - Ne jamais inventer des elements absents du recit.
 - Ne jamais utiliser de vocabulaire psychanalytique theorique en categorie diagnostique.
 `;
