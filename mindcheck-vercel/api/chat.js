@@ -325,9 +325,13 @@ export default async function handler(req, res) {
         bilanDebug: result.debug
       });
     } catch (err) {
-      console.error('[psee-bilan] failed:', err.message);
+      console.error('[psee-bilan] failed:', err.message, '| stack:', err.stack);
       return res.status(500).json({
-        error: { message: 'Generation du bilan impossible. Reessayez dans un instant.' }
+        error: {
+          message: 'Generation du bilan impossible. Reessayez dans un instant.',
+          // Detail technique pour DevTools (visible cote console front)
+          debug: err.message
+        }
       });
     }
   }
@@ -617,7 +621,7 @@ async function callHaikuJson(systemPrompt, userMessages) {
     },
     body: JSON.stringify({
       model: 'claude-haiku-4-5-20251001',
-      max_tokens: 4096,
+      max_tokens: 8192, // Augmente pour bilans BtoB qui sont denses (anciennement 4096, parfois tronques)
       system: systemPrompt,
       messages: userMessages
     })
@@ -625,22 +629,53 @@ async function callHaikuJson(systemPrompt, userMessages) {
 
   const data = await response.json();
   if (!response.ok) {
-    const err = new Error(data?.error?.message || 'Haiku call failed');
+    console.error('[psee-haiku-json] HTTP error', response.status, data?.error?.message || data);
+    const err = new Error(data?.error?.message || 'Haiku call failed (HTTP ' + response.status + ')');
     err.status = response.status;
     err.data = data;
     throw err;
   }
 
   const text = data.content?.[0]?.text || '';
-  const jsonMatch = text.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) {
-    throw new Error('Haiku response is not JSON: ' + text.slice(0, 200));
+  if (!text) {
+    console.error('[psee-haiku-json] empty response | stop_reason=', data.stop_reason, '| usage=', data.usage);
+    throw new Error('Haiku response is empty (stop_reason: ' + (data.stop_reason || 'unknown') + ')');
   }
+
+  // Detection de troncation (max_tokens atteint sans fin de generation)
+  if (data.stop_reason === 'max_tokens') {
+    console.warn('[psee-haiku-json] response was truncated by max_tokens, attempting to parse anyway');
+  }
+
+  // Strategie de parsing robuste :
+  // 1. Strip markdown fences (```json ... ```)
+  // 2. Trouve le PREMIER { et le DERNIER } (greedy match)
+  // 3. Tente le parse, et en cas d'echec, tente une reparation simple
+  let cleaned = text.trim();
+  cleaned = cleaned.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '');
+
+  const firstBrace = cleaned.indexOf('{');
+  const lastBrace = cleaned.lastIndexOf('}');
+  if (firstBrace === -1 || lastBrace === -1 || lastBrace <= firstBrace) {
+    console.error('[psee-haiku-json] no JSON braces found | text_preview=', text.slice(0, 300));
+    throw new Error('Haiku response contains no JSON: ' + text.slice(0, 200));
+  }
+
+  const jsonStr = cleaned.slice(firstBrace, lastBrace + 1);
+
   let parsed;
   try {
-    parsed = JSON.parse(jsonMatch[0]);
+    parsed = JSON.parse(jsonStr);
   } catch (e) {
-    throw new Error('Haiku JSON parse failed: ' + e.message);
+    // Tentative de reparation : retire les virgules en trop avant } ou ]
+    const repaired = jsonStr.replace(/,(\s*[}\]])/g, '$1');
+    try {
+      parsed = JSON.parse(repaired);
+      console.warn('[psee-haiku-json] JSON parse succeeded after repair (trailing comma fix)');
+    } catch (e2) {
+      console.error('[psee-haiku-json] JSON parse failed | error=', e.message, '| jsonStr length=', jsonStr.length, '| preview=', jsonStr.slice(0, 500), '| end=', jsonStr.slice(-200));
+      throw new Error('Haiku JSON parse failed: ' + e.message);
+    }
   }
   return { parsed, raw: data };
 }
