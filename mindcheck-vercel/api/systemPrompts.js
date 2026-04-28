@@ -172,8 +172,12 @@ Tu peux par contre nommer des dynamiques observables avec des mots du quotidien 
 STRUCTURE DE SORTIE — JSON STRICT
 Retourne UNIQUEMENT du JSON valide, sans texte avant ni apres, sans markdown, sans bloc code.
 Toutes les chaines en francais correct, AVEC les accents standards : à, â, ç, é, è, ê, ë, î, ï, ô, ù, û, œ. Le francais sans accents est INCORRECT et illisible : tu dois utiliser les accents partout ou ils sont attendus.
-Pour les apostrophes : utilise l apostrophe droite simple ' (pas l apostrophe typographique ').
-Pour les guillemets : utilise les guillemets droits " (pas « »).
+
+REGLES STRICTES POUR LE JSON
+- Pour les apostrophes dans le texte : utilise l'apostrophe droite simple ' (pas l'apostrophe typographique ').
+- N'UTILISE JAMAIS de guillemets droits " a l interieur d une valeur de chaine JSON. Ils cassent le JSON.
+- Si tu dois citer un mot ou une expression dans une valeur, utilise les guillemets francais « » ou les chevrons simples, ou pas de guillemets du tout. Exemple : ecris "elle parle de mettre en pause" ou "elle parle de « mettre en pause »", JAMAIS "elle parle de \"mettre en pause\"".
+- Pas de retour a la ligne brut dans une valeur (utilise un espace simple).
 
 Le JSON DOIT contenir EXACTEMENT ces champs, dans cet ordre :
 
@@ -363,8 +367,12 @@ Tu peux par contre nommer des dynamiques cliniques observables (rumination anxie
 STRUCTURE DE SORTIE — JSON STRICT
 Reponds UNIQUEMENT avec du JSON valide, sans texte avant ni apres, sans markdown, sans bloc code.
 Toutes les chaines en francais correct, AVEC les accents standards : à, â, ç, é, è, ê, ë, î, ï, ô, ù, û, œ. Le francais sans accents est INCORRECT et illisible : tu dois utiliser les accents partout ou ils sont attendus.
-Pour les apostrophes : utilise l apostrophe droite simple ' (pas l apostrophe typographique ').
-Pour les guillemets : utilise les guillemets droits " (pas « »).
+
+REGLES STRICTES POUR LE JSON
+- Pour les apostrophes dans le texte : utilise l'apostrophe droite simple ' (pas l'apostrophe typographique ').
+- N'UTILISE JAMAIS de guillemets droits " a l interieur d une valeur de chaine JSON. Ils cassent le JSON.
+- Si tu dois citer un mot ou une expression dans une valeur, utilise les guillemets francais « » ou pas de guillemets du tout. Exemple : ecris "la personne parle de mettre en pause" ou "la personne parle de « mettre en pause »", JAMAIS "la personne parle de \"mettre en pause\"".
+- Pas de retour a la ligne brut dans une valeur (utilise un espace simple).
 
 Le JSON DOIT contenir EXACTEMENT ces champs, dans cet ordre :
 
