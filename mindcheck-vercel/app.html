@@ -1310,11 +1310,11 @@ function showBilan(data){
           // Construction de la pastille (3 cas)
           let pastilleHTML = '';
           if (hasScore) {
-            // Cas 1 ou 2 : score complet ou extrapole, pastille coloree selon seuil clinique
-            const labelText = isPartial ? `${band.label} (extrapolé)` : band.label;
+            // Cas 1 ou 2 : score complet ou estimation indicative, pastille coloree selon seuil clinique
+            const labelText = isPartial ? `${band.label} (estimation indicative)` : band.label;
             pastilleHTML = `<span style="display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;background:${band.bg};color:${band.color};font-size:11px;font-weight:700;letter-spacing:.02em">
               ${labelText}
-              ${isPartial ? `<span title="Score extrapole : tous les items n ont pas ete couverts par l entretien" style="display:inline-flex;width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,.6);color:${band.color};text-align:center;line-height:14px;font-weight:700;font-size:9px;justify-content:center;align-items:center">i</span>` : ''}
+              ${isPartial ? `<span title="Estimation indicative : tous les items n ont pas ete couverts par l entretien. Une passation formelle est recommandee pour un usage diagnostique." style="display:inline-flex;width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,.6);color:${band.color};text-align:center;line-height:14px;font-weight:700;font-size:9px;justify-content:center;align-items:center">i</span>` : ''}
             </span>`;
           } else {
             // Cas 3 : passation incomplete, pastille grise neutre
@@ -1351,7 +1351,7 @@ function showBilan(data){
 
             ${!hasScore ? `<div style="font-size:12px;color:#5d5b54;line-height:1.6;margin-top:10px">Le récit a abordé certains aspects (${itemsCovered}/${itemsTotal} items repérés), mais pas suffisamment pour produire un score fiable. Pour un repère précis, une passation formelle est recommandée.</div>` : ''}
 
-            ${hasScore ? `<div style="font-size:10px;color:#8a897f;margin-top:6px;font-style:italic">${itemsCovered}/${itemsTotal} items couverts par votre récit${isPartial ? ' (score extrapolé par moyenne)' : ''}</div>` : ''}
+            ${hasScore ? `<div style="font-size:10px;color:#8a897f;margin-top:6px;font-style:italic">${itemsCovered}/${itemsTotal} items couverts par votre récit${isPartial ? ' — estimation indicative par moyenne des items répondus' : ''}</div>` : ''}
 
             <div style="font-size:10px;color:#8a897f;margin-top:10px;padding-top:10px;border-top:1px dashed rgba(0,0,0,.08);line-height:1.5">
               <span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#e7efe7;color:#3a7531;text-align:center;line-height:14px;font-weight:700;font-size:10px;margin-right:6px;vertical-align:middle">i</span>
@@ -1605,7 +1605,7 @@ function showBilanBTB(data){
 
           let pastilleHTML = '';
           if (hasScore) {
-            const labelText = isPartial ? `${band.label} (extrapolé)` : band.label;
+            const labelText = isPartial ? `${band.label} (estimation indicative)` : band.label;
             pastilleHTML = `<span style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:${band.bg};color:${band.color};font-size:10px;font-weight:700;letter-spacing:.02em">${labelText}</span>`;
           } else {
             pastilleHTML = `<span style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:#ECEAE3;color:#6d6b63;font-size:10px;font-weight:700;letter-spacing:.02em">passation incomplète</span>`;
@@ -1631,7 +1631,7 @@ function showBilanBTB(data){
             <div>${pastilleHTML}</div>
             ${ind.interpretation && hasScore ? `<div style="font-size:11px;color:#444;line-height:1.6;margin-top:8px">${ind.interpretation}</div>` : ''}
             ${!hasScore ? `<div style="font-size:11px;color:#5d5b54;line-height:1.6;margin-top:8px">Couverture insuffisante (${itemsCovered}/${itemsTotal} items). Une passation formelle est recommandée pour un usage diagnostique.</div>` : ''}
-            ${hasScore ? `<div style="font-size:9px;color:#888;margin-top:5px;font-style:italic">Couverture : ${itemsCovered}/${itemsTotal} items${isPartial ? ' (extrapolation par moyenne des items répondus)' : ''}</div>` : ''}
+            ${hasScore ? `<div style="font-size:9px;color:#888;margin-top:5px;font-style:italic">Couverture : ${itemsCovered}/${itemsTotal} items${isPartial ? ' — estimation indicative (passation incomplète, non utilisable seule pour un usage diagnostique)' : ''}</div>` : ''}
             ${isPHQ9HighIdeation ? `
               <div style="margin-top:8px;padding:8px 10px;background:#FEF2F2;border-left:3px solid #C0392B;border-radius:4px">
                 <div style="font-size:10px;color:#C0392B;font-weight:700">⚠ Vigilance item 9 (idéation suicidaire)</div>
