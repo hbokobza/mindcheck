@@ -14,6 +14,9 @@
   --black: #1A1A18;
   --gray: #6B6B68;
   --white: #fff;
+  --blue-clinical: #1A2A4A;
+  --red-alert: #C0392B;
+  --red-alert-bg: #FCE8E6;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
@@ -63,9 +66,20 @@ nav {
 .hero-panel-wrap { position: relative; padding-bottom: 64px; }
 .hero-panel-blur { position:absolute; inset: 24px -10px -10px 24px; background: linear-gradient(135deg, #dcead9, #ece3d6); border-radius: 28px; filter: blur(24px); opacity: .8; }
 .hero-panel { position:relative; background: white; border-radius: 28px; overflow:hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.14); border: 1px solid rgba(0,0,0,0.06); }
-.panel-top { background: var(--green); color:white; padding: 20px 24px 18px; }
-.panel-top .mini { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.62); margin-bottom: 6px; }
-.panel-top h3 { font-family:'Playfair Display', serif; font-size: 28px; font-weight:700; }
+..panel-top { background: var(--blue-clinical); color:white; padding: 22px 24px 20px; }
+.panel-top .mini { font-size: 10px; letter-spacing: 1.6px; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-bottom: 8px; font-weight: 500; }
+.panel-top h3 { font-family:'Playfair Display', serif; font-size: 24px; font-weight:700; line-height: 1.2; }
+.panel-top h3 em { font-style: normal; font-weight: 400; opacity: 0.85; }
+.alert-block { background: var(--red-alert-bg); border-left: 3px solid var(--red-alert); border-radius: 10px; padding: 12px 14px; margin-bottom: 14px; }
+.alert-block .alert-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; color: var(--red-alert); text-transform: uppercase; margin-bottom: 5px; }
+.alert-block p { font-size: 12px; color: #6B2820; line-height: 1.6; }
+.psy-scores { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.psy-score { background: #F7F4EF; border: 1px solid rgba(0,0,0,0.04); border-radius: 14px; padding: 12px 14px; }
+.psy-score .psy-name { font-size: 11px; font-weight: 600; color: var(--blue-clinical); letter-spacing: 0.5px; }
+.psy-score .psy-val { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: var(--blue-clinical); line-height: 1; margin: 4px 0; }
+.psy-score .psy-val span { font-size: 14px; color: rgba(26,42,74,0.45); font-weight: 400; }
+.psy-score .psy-tag { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 10px; background: #FBE6CD; color: #B36B00; font-weight: 500; }
+.psy-score .psy-tag.light { background: #E0EBE2; color: #4A7A4A; }
 .panel-body { padding: 22px; background: #fff; }
 .block-soft { background: #F7F4EF; border-radius: 18px; padding: 18px; border:1px solid rgba(0,0,0,0.04); margin-bottom: 16px; }
 .block-soft .eyebrow { font-size: 10px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--green); margin-bottom: 8px; font-weight:600; }
@@ -202,28 +216,38 @@ footer p, footer a { font-size: 12px; color: rgba(255,255,255,0.3); text-decorat
     <div class="hero-panel-wrap">
       <div class="hero-panel-blur"></div>
       <div class="hero-panel">
-        <div class="panel-top">
-          <div class="mini">Exemple de sortie professionnelle</div>
-          <h3>Bilan pré-clinique Psee</h3>
+       <div class="panel-top">
+          <div class="mini">Document confidentiel — Usage professionnel exclusif</div>
+          <h3>Bilan pré-clinique <em>Psee Pro</em></h3>
         </div>
         <div class="panel-body">
-          <div class="block-soft">
-            <div class="eyebrow">Synthèse clinique intégrée</div>
-            <p>
-              Le récit fait apparaître une configuration dominée par une anxiété de perte importante, une charge émotionnelle difficile à apaiser et un retentissement corporel digestif ancien, sur fond de ressources relationnelles et professionnelles préservées.
-            </p>
+          <div class="alert-block">
+            <div class="alert-eyebrow">⚠ Signaux d'alerte — à vérifier dès la première séance</div>
+            <p>Idéation suicidaire passive intermittente · Tableau évocateur d'une dimension dépressive significative</p>
+          </div>
+          <div class="psy-scores">
+            <div class="psy-score">
+              <div class="psy-name">PHQ-9</div>
+              <div class="psy-val">17<span>/27</span></div>
+              <span class="psy-tag">modéré à sévère</span>
+            </div>
+            <div class="psy-score">
+              <div class="psy-name">GAD-7</div>
+              <div class="psy-val">8<span>/21</span></div>
+              <span class="psy-tag light">légère</span>
+            </div>
           </div>
           <div class="axes-mini">
-            <div class="axe-mini-card"><div class="num">Axe 01</div><div class="title">Processus psychiques</div><div class="bar"><span class="r2"></span></div></div>
-            <div class="axe-mini-card"><div class="num">Axe 02</div><div class="title">Ressources psychiques</div><div class="bar"><span class="r3"></span></div></div>
+            <div class="axe-mini-card"><div class="num">Axe 01</div><div class="title">Processus psychiques</div><div class="bar"><span class="r1"></span></div></div>
+            <div class="axe-mini-card"><div class="num">Axe 02</div><div class="title">Ressources psychiques</div><div class="bar"><span class="r2"></span></div></div>
             <div class="axe-mini-card"><div class="num">Axe 03</div><div class="title">Comportements & conduites</div><div class="bar"><span class="r2"></span></div></div>
             <div class="axe-mini-card"><div class="num">Axe 04</div><div class="title">Régulation émotionnelle</div><div class="bar"><span class="r1"></span></div></div>
             <div class="axe-mini-card"><div class="num">Axe 05</div><div class="title">Corps & risque somatique</div><div class="bar"><span class="r2"></span></div></div>
-            <div class="axe-mini-card"><div class="num">Axe 06</div><div class="title">Environnement</div><div class="bar"><span class="r3"></span></div></div>
+            <div class="axe-mini-card"><div class="num">Axe 06</div><div class="title">Environnement</div><div class="bar"><span class="r1"></span></div></div>
           </div>
           <div class="dual-boxes">
-            <div class="dual green"><h4>Ressources cliniques</h4>Soutien conjugal stable, continuité professionnelle, liens familiaux investis.</div>
-            <div class="dual gold"><h4>Points de vigilance</h4>Hyperréactivité émotionnelle, pensées de perte, retentissement corporel ancien.</div>
+            <div class="dual green"><h4>Ressources cliniques</h4>Motivation au changement, ancrage spirituel, insight partiel.</div>
+            <div class="dual gold"><h4>Points de vigilance</h4>Idéation passive récurrente, isolement croissant, stresseur non résolu.</div>
           </div>
         </div>
       </div>
