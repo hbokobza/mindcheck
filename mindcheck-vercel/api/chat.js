@@ -791,9 +791,65 @@ function buildTranscriptFromMessages(messages) {
     .join('\n\n');
 }
 
+// -----------------------------------------------------------------------------
+// COHERENCE BTC/BTB : extraction et reutilisation des scores axes
+// -----------------------------------------------------------------------------
+// Les bilans BtoC et BtoB sont generes par deux appels API separes au LLM.
+// Sans precaution, le LLM peut produire des scores differents pour les memes
+// axes (notamment Environnement qui n'a pas de garde-fou psychometrique).
+// Solution : extraire les scores du BtoC apres generation, les stocker en
+// sessionState, et les reinjecter dans le prompt BtoB pour garantir la coherence.
+
+function extractAxisScores(narrative) {
+  if (!narrative || !Array.isArray(narrative.axes)) return null;
+  const scores = {};
+  narrative.axes.forEach(axe => {
+    if (axe && typeof axe.num === 'number' && typeof axe.score === 'number') {
+      scores[`axis${axe.num}`] = axe.score;
+    }
+  });
+  return Object.keys(scores).length === 6 ? scores : null;
+}
+
+function buildBtbScoreInjection(referenceScores) {
+  if (!referenceScores) return '';
+  const lines = Object.entries(referenceScores).map(([key, score]) => {
+    const num = key.replace('axis', '');
+    return `Axe ${num} : score ${score}/4`;
+  });
+  return `
+
+REFERENCE DE SCORING — COHERENCE AVEC LE BILAN PATIENT (REGLE PRIORITAIRE)
+Les scores des 6 axes ont ete etablis lors de la generation du bilan patient (BtoC) pour cette meme session.
+Tu DOIS reutiliser EXACTEMENT ces scores. C'est une question de coherence : le therapeute et le patient doivent voir les memes scores pour pouvoir dialoguer.
+Scores de reference :
+${lines.join('\n')}
+Ton role est de fournir UNIQUEMENT le wording (manifestations, systemes, lecture clinique, redflags, axes therapeutiques, forces, vigilance) AUTOUR de ces scores. Ne les modifie jamais, meme si tu pense qu'ils devraient etre differents.
+`;
+}
+
+function applyReferenceScores(narrative, referenceScores) {
+  if (!narrative || !Array.isArray(narrative.axes) || !referenceScores) return narrative;
+  narrative.axes = narrative.axes.map(axe => {
+    if (axe && typeof axe.num === 'number') {
+      const refScore = referenceScores[`axis${axe.num}`];
+      if (typeof refScore === 'number') {
+        return { ...axe, score: refScore };
+      }
+    }
+    return axe;
+  });
+  return narrative;
 async function buildBilanPayload({ mode, messages, state, axes, clinicalFlags, ip }) {
   const isBtb = mode === 'bilan_btb';
-  const systemPrompt = isBtb ? BILAN_BTB_SYS : BILAN_BTC_SYS;
+  const baseSystemPrompt = isBtb ? BILAN_BTB_SYS : BILAN_BTC_SYS;
+  
+  // Coherence BtoC/BtoB : si on genere un BtoB et qu'on a deja les scores du BtoC en session,
+  // on les injecte dans le prompt pour forcer la reutilisation.
+  const referenceScores = (isBtb && state.btcAxisScores) ? state.btcAxisScores : null;
+  const systemPrompt = referenceScores
+    ? baseSystemPrompt + buildBtbScoreInjection(referenceScores)
+    : baseSystemPrompt;
 
   // Determiner les modules a scorer : on utilise les flags de la session
   // pour detecter quels modules psychometriques meritent un scoring.
@@ -852,6 +908,15 @@ async function buildBilanPayload({ mode, messages, state, axes, clinicalFlags, i
     ].filter(Boolean).join('. ')
   };
 
+  // Garde-fou coherence BtoC/BtoB : si on a des scores de reference (BtoB avec scores BtoC stockes),
+  // on les applique en force au cas ou le LLM aurait quand meme devie.
+  if (referenceScores) {
+    applyReferenceScores(narrative, referenceScores);
+  }
+
+  // Extraction des scores axes pour stockage en session (utile pour generation BtoB ulterieure)
+  const extractedAxisScores = extractAxisScores(narrative);
+
   // Fusion : narratif + indicateurs + passation
   const merged = {
     ...narrative,
@@ -866,10 +931,12 @@ async function buildBilanPayload({ mode, messages, state, axes, clinicalFlags, i
   return {
     payload: merged,
     raw: narrativeRaw,
+    axisScores: extractedAxisScores,
     debug: {
       modulesScored: modulesToScore,
       indicateursCount: indicateurs.length,
-      passationQuality: passationQuality?.label
+      passationQuality: passationQuality?.label,
+      referenceScoresUsed: Boolean(referenceScores)
     }
   };
 }
