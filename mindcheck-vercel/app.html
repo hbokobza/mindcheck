@@ -1686,17 +1686,6 @@ function showBilanBTB(data){
     </tr>`;
   }).join('');
 
-  // Lecture systèmes
-  const niv2col = n => n==='rouge'?'#E76F51':n==='orange'?'#E9A820':'#888';
-  const systemesHTML = (data.systemes||[]).map(s => `
-    <div style="background:#FAFAFA;border:0.5px solid rgba(0,0,0,0.08);border-radius:8px;padding:10px 12px;margin-bottom:8px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-        <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#333">${s.nom}</span>
-        <span style="font-size:9px;font-weight:600;color:${niv2col(s.couleur)}">${s.niveau}</span>
-      </div>
-      <div style="font-size:10px;color:#555;line-height:1.55">${s.description}</div>
-    </div>`).join('');
-
   // Red flags non-haute (les hautes sont deja dans le bandeau du haut)
   // On affiche ici les "moyenne" et autres, ainsi qu'un rappel synthetique des hautes
   const redflagsAutres = (data.redflags||[]).filter(rf => rf.priorite !== 'haute');
@@ -1741,10 +1730,10 @@ function showBilanBTB(data){
       ${indicateursBTBHTML}
       ${citationsHTML}
 
-      <!-- SYNTHESE -->
+      <!-- SYNTHESE CLINIQUE INTEGREE (synthese + pronostic fusionnes) -->
       <div style="background:#1B3A6B;border-radius:14px;padding:16px 20px;border-left:4px solid #3a7531">
-        <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#8AABC8;margin-bottom:8px">Synthèse clinique intégrée</div>
-        <div style="font-size:13px;color:white;line-height:1.75;font-family:Georgia,serif;font-style:italic">${data.synthese}</div>
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#8AABC8;margin-bottom:8px">Synthèse clinique &amp; orientation</div>
+        <div style="font-size:13px;color:white;line-height:1.75;font-family:Georgia,serif;font-style:italic">${data.synthese_clinique || data.synthese || ''}</div>
       </div>
 
       <!-- MATRICE 6 AXES -->
@@ -1763,13 +1752,6 @@ function showBilanBTB(data){
 
       <!-- LECTURE CLINIQUE (configuration / dynamique / leviers) -->
       ${lectureCliniqueHTML}
-
-      <!-- LECTURE SYSTÈMES -->
-      ${systemesHTML ? `
-        <div style="background:white;border-radius:14px;padding:16px 18px;border:0.5px solid rgba(0,0,0,0.08)">
-          <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#3a7531;margin-bottom:10px">Lecture systèmes</div>
-          ${systemesHTML}
-        </div>` : ''}
 
       <!-- AUTRES SIGNAUX D'ALERTE (priorité moyenne) -->
       ${rfHTML ? `
@@ -1797,12 +1779,6 @@ function showBilanBTB(data){
           ${vigilanceData.intro ? `<div style="font-size:12px;color:#5a4408;line-height:1.65;font-style:italic;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid rgba(122,92,0,.2)">${vigilanceData.intro}</div>` : ''}
           ${vigilanceData.points.map(v=>`<div style="font-size:12px;color:#333;margin-bottom:5px;display:flex;gap:8px"><span style="color:#E9A820;flex-shrink:0">◆</span>${v}</div>`).join('')}
         </div>
-      </div>
-
-      <!-- CONCLUSION -->
-      <div style="background:white;border-radius:14px;padding:16px 18px;border-left:4px solid #1B3A6B;border:.5px solid rgba(0,0,0,.08)">
-        <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#3a7531;margin-bottom:8px">Conclusion clinique &amp; pronostic</div>
-        <div style="font-size:12px;color:#333;line-height:1.75">${data.conclusion}</div>
       </div>
 
       <!-- FOOTER -->
