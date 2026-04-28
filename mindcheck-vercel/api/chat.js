@@ -310,18 +310,25 @@ export default async function handler(req, res) {
       // On retourne dans le format attendu par le front : la partie text
       // contient le JSON serialise du payload fusionne (narratif + indicateurs
       // + passation), comme si Haiku avait genere directement ce format.
-      const responseText = JSON.stringify(result.payload);
+const responseText = JSON.stringify(result.payload);
+
+      // Si on vient de generer un BtoC, on stocke les scores axes en session
+      // pour que le BtoB ulterieur puisse les reutiliser et garantir la coherence.
+      const updatedSessionState = {
+        ...state,
+        axes,
+        clinicalFlags
+      };
+      if (mode === 'bilan_btc' && result.axisScores) {
+        updatedSessionState.btcAxisScores = result.axisScores;
+      }
 
       return res.status(200).json({
         content: [{ type: 'text', text: responseText }],
         category,
         model: result.raw?.model || 'claude-haiku-4-5-20251001',
         usage: result.raw?.usage || { input_tokens: 0, output_tokens: 0 },
-        sessionState: {
-          ...state,
-          axes,
-          clinicalFlags
-        },
+        sessionState: updatedSessionState,
         bilanDebug: result.debug
       });
     } catch (err) {
@@ -410,7 +417,8 @@ function normalizeSessionState(sessionState = {}) {
       : [],
     attentionCheckFailed: Boolean(sessionState.attentionCheckFailed),
     pendingModule: sessionState.pendingModule || null,
-    clinicalFlags: sessionState.clinicalFlags || {}
+   clinicalFlags: sessionState.clinicalFlags || {},
+    btcAxisScores: sessionState.btcAxisScores || null
   };
 }
 
