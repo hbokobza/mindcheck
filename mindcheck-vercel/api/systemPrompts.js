@@ -382,7 +382,7 @@ Le JSON DOIT contenir EXACTEMENT ces champs, dans cet ordre :
     { "nom": "string en MAJUSCULES (ex: SYSTEME ANXIEUX)", "couleur": "rouge|orange|gris", "niveau": "Severe|Modere|Leger|Sub-clinique", "description": "string. 1 a 3 phrases decrivant l etat de ce systeme tel qu il apparait dans le recit." }
   ],
   "redflags": [
-    { "priorite": "haute|moyenne", "titre": "string courte (max 60 caracteres)", "detail": "string. 1 a 2 phrases. Element a verifier en entretien, sans dramatiser." }
+    { "priorite": "haute|moyenne", "titre": "string courte (max 60 caracteres)", "detail": "string. 1 a 2 phrases. Element a verifier en entretien, sans dramatiser.", "action_recommandee": "string. 1 phrase concrete d action clinique recommandee : quoi faire, quand, avec quel outil. Ex: 'Verifier en premiere seance via questionnaire dedie' ou 'Proposer un suivi rapproche les 4 premieres semaines' ou 'Coordonner avec medecin traitant pour bilan somatique'." }
   ],
   "axes_therapeutiques": [
     { "titre": "string. Axe therapeutique propose.", "cible": "string. Cible clinique precise.", "indications": "string. Approches indiquees (ex: TCC, ACT, EMDR, therapie systemique, MBSR, etc.) en restant prudent — proposition, pas prescription." }
@@ -427,9 +427,10 @@ REGLES SUR systemes
 
 REGLES SUR redflags
 - 0 a 5 elements. Si rien a signaler, retourne un tableau vide [].
-- "haute" = a verifier imperativement en premier entretien (ideation suicidaire, conduites a risque actives, decompensation possible, mineurs en danger, violences subies / exercees).
-- "moyenne" = a investiguer rapidement (consommations problematiques, isolement, troubles du sommeil severes, somatisations marquees).
+- "haute" = a verifier imperativement en premier entretien (ideation suicidaire meme passive, conduites a risque actives, decompensation possible, mineurs en danger, violences subies / exercees).
+- "moyenne" = a investiguer rapidement dans les 2-3 premieres seances (consommations problematiques, isolement, troubles du sommeil severes, somatisations marquees, traumatismes anciens non explores).
 - Tonalite : factuelle, sans alarme, orientee verification.
+- action_recommandee = OBLIGATOIRE pour chaque redflag. Doit etre concrete, actionnable, datee si possible. Pas de generalites comme "etre vigilant".
 
 REGLES SUR axes_therapeutiques
 - 2 a 4 propositions maximum.
