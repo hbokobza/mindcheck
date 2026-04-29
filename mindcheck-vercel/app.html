@@ -597,6 +597,7 @@ let passationQueue = [];
 let passationCursor = 0;
 // Modules detectes en fin de collecte, mis a jour a chaque tour serveur.
 let lastTriggeredModules = [];
+let sessionState = null; // Stocke l'etat de session (notamment btcAxisScores pour coherence BtoC/BtoB - Lot 4)
 
 // Definition statique : nombre d'items par module (doit correspondre au
 // serveur dans psychometrics.js). Utilise pour construire la queue.
@@ -700,9 +701,10 @@ async function callAPI(messages, mode, extras){
   // Le system prompt vit desormais cote serveur (lib/systemPrompts.js).
   // Le front envoie uniquement le mode ('collecte' | 'bilan_btc' | 'bilan_btb' | 'passation_finale')
   // et l'historique des messages, plus eventuellement passationContext en mode passation.
-  console.log('[PSEE-DEBUG] callAPI START | mode=', mode, '| messages.count=', messages.length, '| extras=', extras||{});
+  console.log('[PSEE-DEBUG] callAPI START | mode=', mode, '| messages.count=', messages.length, '| extras=', extras||{}, '| sessionState=', sessionState ? Object.keys(sessionState) : 'none');
   const payload = { messages, mode };
   if (extras && extras.passationContext) payload.passationContext = extras.passationContext;
+  if (sessionState) payload.sessionState = sessionState;
   const r = await fetch('/api/chat', {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
@@ -710,7 +712,7 @@ async function callAPI(messages, mode, extras){
   });
   console.log('[PSEE-DEBUG] callAPI HTTP status=', r.status, '| ok=', r.ok);
   const d = await r.json();
-  console.log('[PSEE-DEBUG] callAPI JSON received | keys=', Object.keys(d), '| category=', d.category, '| triggeredModules=', d.triggeredModules, '| error?=', d.error?.message||'no');
+  console.log('[PSEE-DEBUG] callAPI JSON received | keys=', Object.keys(d), '| category=', d.category, '| triggeredModules=', d.triggeredModules, '| error?=', d.error?.message||'no', '| btcAxisScoresReceived=', d.sessionState?.btcAxisScores ? 'yes' : 'no');
   if(d.error) throw new Error(d.error.message || 'Erreur API');
   if(d.category && d.category !== 'normal'){
     console.log('[psee-safety] category=' + d.category);
@@ -719,6 +721,11 @@ async function callAPI(messages, mode, extras){
   // de basculer en passation finale quand done arrive.
   if (Array.isArray(d.triggeredModules)) {
     lastTriggeredModules = d.triggeredModules;
+  }
+  // Stockage du sessionState renvoye par le serveur (notamment btcAxisScores
+  // pour la coherence BtoC/BtoB - Lot 4)
+  if (d.sessionState) {
+    sessionState = d.sessionState;
   }
   const out = d.content?.[0]?.text || '';
   if(!out) console.warn('[PSEE-DEBUG] callAPI returning EMPTY string | full d=', JSON.stringify(d).slice(0,300));
@@ -1083,9 +1090,17 @@ async function generateBilan(avecBTB, retryCount){
   showDots();
   try{
     const msgs = [...hist,{role:'user',content:'Génère le bilan JSON maintenant selon la structure demandée.'}];
-    const promises = [callAPI(msgs, 'bilan_btc')];
-    if(avecBTB) promises.push(callAPI(msgs, 'bilan_btb'));
-    const results = await Promise.all(promises);
+    // SERIALISATION : le BtoC doit etre genere AVANT le BtoB pour que les
+    // scores axes soient stockes en sessionState et reutilises par le BtoB
+    // (mecanisme du Lot 4 garantissant la coherence). Pas de Promise.all ici.
+    console.log('[PSEE-DEBUG] generateBilan SEQ START | step=BtoC');
+    const resultBtc = await callAPI(msgs, 'bilan_btc');
+    let resultBtb = null;
+    if(avecBTB) {
+      console.log('[PSEE-DEBUG] generateBilan SEQ STEP | step=BtoB | btcScoresInState=', sessionState?.btcAxisScores ? 'yes' : 'no');
+      resultBtb = await callAPI(msgs, 'bilan_btb');
+    }
+    const results = avecBTB ? [resultBtc, resultBtb] : [resultBtc];
     rmDots();
 
     let dataBTC;
