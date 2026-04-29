@@ -1568,6 +1568,23 @@ function showBilan(data){
 function showBilanBTB(data){
   const date = new Date().toLocaleDateString('fr-FR');
 
+  // ---- RESUME VISUEL DES 6 AXES (barres colorees - reprise du format BtoC) ----
+  // Affiche pour chaque axe : nom, label score, et barre 4 segments
+  const axesResumeBTBHTML = (data.axes || []).map(ax => {
+    const sc = Math.max(1, Math.min(4, Math.round(ax.score)));
+    const meta = getScoreMeta(sc);
+    const segs = [1,2,3,4].map(i =>
+      `<span style="height:8px;border-radius:3px;background:${SCORE_META[i].color};opacity:${i<=sc?'1':'.18'}"></span>`
+    ).join('');
+    return `<div style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <span style="font-size:12px;font-weight:700;font-family:Arial;color:#1f1f1c">${ax.label}</span>
+        <span style="font-size:10px;font-weight:700;color:${meta.color};font-family:Arial">${meta.label}</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:3px">${segs}</div>
+    </div>`;
+  }).join('');
+
   // Helper local : normalise forces/vigilance pour gerer ancien format (tableau)
   // ET nouveau format (objet {intro, points}).
   function normalizeFV(field){
@@ -1806,18 +1823,22 @@ function showBilanBTB(data){
         <div style="font-size:13px;color:white;line-height:1.75;font-family:Georgia,serif;font-style:italic">${data.synthese_clinique || data.synthese || ''}</div>
       </div>
 
-      <!-- RADAR STORA COMPACT (synthese visuelle des 6 axes, charte BtoB) -->
-      <div style="background:white;border-radius:14px;padding:20px 28px;border:0.5px solid rgba(0,0,0,0.08)">
-        <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#1B3A6B;margin-bottom:14px">Cartographie des 6 axes</div>
-        <div style="display:flex;gap:32px;align-items:center;justify-content:space-between;flex-wrap:wrap">
-          <div style="flex-shrink:0">${buildRadarBTB(data.axes)}</div>
-          <div style="flex:0 1 280px;font-size:11px;color:#444;line-height:1.55">
-            <div style="font-style:italic;color:#666;margin-bottom:14px">Vue synthétique du tableau psychosomatique. Le détail clinique figure dans la matrice ci-dessous.</div>
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#D97A7A;flex-shrink:0"></span><span>1 — Fragile</span></div>
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#D8A24A;flex-shrink:0"></span><span>2 — En tension</span></div>
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#A9C76F;flex-shrink:0"></span><span>3 — Stable</span></div>
-            <div style="display:flex;align-items:center;gap:8px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#5B9B67;flex-shrink:0"></span><span>4 — Solide</span></div>
+      <!-- RADAR + SYNTHESE PAR AXE (2 blocs cote a cote, format reprise du BtoC adapte BtoB) -->
+      <div style="display:grid;grid-template-columns:1fr 1.1fr;gap:12px">
+        <div style="background:white;border-radius:14px;padding:14px;border:.5px solid rgba(0,0,0,.08)">
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#1B3A6B;margin-bottom:4px">Cartographie clinique</div>
+          <div style="font-size:9px;color:#AEADA7;margin-bottom:8px">Échelle 1 (Fragile) à 4 (Solide)</div>
+          <div style="display:flex;justify-content:center">${buildRadarBTB(data.axes)}</div>
+          <div style="display:flex;gap:10px;margin-top:10px;justify-content:center;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:5px;font-size:9px;color:#6d6b63"><div style="width:10px;height:10px;border-radius:50%;background:#D97A7A"></div>Fragile</div>
+            <div style="display:flex;align-items:center;gap:5px;font-size:9px;color:#6d6b63"><div style="width:10px;height:10px;border-radius:50%;background:#D8A24A"></div>En tension</div>
+            <div style="display:flex;align-items:center;gap:5px;font-size:9px;color:#6d6b63"><div style="width:10px;height:10px;border-radius:50%;background:#A9C76F"></div>Stable</div>
+            <div style="display:flex;align-items:center;gap:5px;font-size:9px;color:#6d6b63"><div style="width:10px;height:10px;border-radius:50%;background:#5B9B67"></div>Solide</div>
           </div>
+        </div>
+        <div style="background:white;border-radius:14px;padding:14px;border:.5px solid rgba(0,0,0,.08)">
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#1B3A6B;margin-bottom:10px">Synthèse par axe</div>
+          ${axesResumeBTBHTML}
         </div>
       </div>
 
