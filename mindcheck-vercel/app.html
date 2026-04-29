@@ -1807,15 +1807,15 @@ function showBilanBTB(data){
       </div>
 
       <!-- RADAR STORA COMPACT (synthese visuelle des 6 axes, charte BtoB) -->
-      <div style="background:white;border-radius:14px;padding:16px 18px;border:0.5px solid rgba(0,0,0,0.08)">
+      <div style="background:white;border-radius:14px;padding:20px 28px;border:0.5px solid rgba(0,0,0,0.08)">
         <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#1B3A6B;margin-bottom:14px">Cartographie des 6 axes</div>
-        <div style="display:flex;gap:24px;align-items:center;justify-content:center;flex-wrap:wrap">
-          <div style="flex-shrink:0;display:flex;justify-content:center">${buildRadarBTB(data.axes)}</div>
-          <div style="flex:0 1 240px;font-size:11px;color:#444;line-height:1.55">
-            <div style="font-style:italic;color:#666;margin-bottom:12px">Vue synthétique du tableau psychosomatique. Le détail clinique figure dans la matrice ci-dessous.</div>
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#D97A7A;flex-shrink:0"></span><span>1 — Fragile</span></div>
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#D8A24A;flex-shrink:0"></span><span>2 — En tension</span></div>
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#A9C76F;flex-shrink:0"></span><span>3 — Stable</span></div>
+        <div style="display:flex;gap:32px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+          <div style="flex-shrink:0">${buildRadarBTB(data.axes)}</div>
+          <div style="flex:0 1 280px;font-size:11px;color:#444;line-height:1.55">
+            <div style="font-style:italic;color:#666;margin-bottom:14px">Vue synthétique du tableau psychosomatique. Le détail clinique figure dans la matrice ci-dessous.</div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#D97A7A;flex-shrink:0"></span><span>1 — Fragile</span></div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#D8A24A;flex-shrink:0"></span><span>2 — En tension</span></div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#A9C76F;flex-shrink:0"></span><span>3 — Stable</span></div>
             <div style="display:flex;align-items:center;gap:8px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#5B9B67;flex-shrink:0"></span><span>4 — Solide</span></div>
           </div>
         </div>
