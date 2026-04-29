@@ -597,7 +597,6 @@ let passationQueue = [];
 let passationCursor = 0;
 // Modules detectes en fin de collecte, mis a jour a chaque tour serveur.
 let lastTriggeredModules = [];
-let sessionState = null; // Stocke l'etat de session (notamment btcAxisScores pour coherence BtoC/BtoB - Lot 4)
 
 // Definition statique : nombre d'items par module (doit correspondre au
 // serveur dans psychometrics.js). Utilise pour construire la queue.
@@ -701,10 +700,9 @@ async function callAPI(messages, mode, extras){
   // Le system prompt vit desormais cote serveur (lib/systemPrompts.js).
   // Le front envoie uniquement le mode ('collecte' | 'bilan_btc' | 'bilan_btb' | 'passation_finale')
   // et l'historique des messages, plus eventuellement passationContext en mode passation.
-  console.log('[PSEE-DEBUG] callAPI START | mode=', mode, '| messages.count=', messages.length, '| extras=', extras||{}, '| sessionState=', sessionState ? Object.keys(sessionState) : 'none');
+  console.log('[PSEE-DEBUG] callAPI START | mode=', mode, '| messages.count=', messages.length, '| extras=', extras||{});
   const payload = { messages, mode };
   if (extras && extras.passationContext) payload.passationContext = extras.passationContext;
-  if (sessionState) payload.sessionState = sessionState;
   const r = await fetch('/api/chat', {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
@@ -712,7 +710,7 @@ async function callAPI(messages, mode, extras){
   });
   console.log('[PSEE-DEBUG] callAPI HTTP status=', r.status, '| ok=', r.ok);
   const d = await r.json();
-  console.log('[PSEE-DEBUG] callAPI JSON received | keys=', Object.keys(d), '| category=', d.category, '| triggeredModules=', d.triggeredModules, '| error?=', d.error?.message||'no', '| btcAxisScoresReceived=', d.sessionState?.btcAxisScores ? 'yes' : 'no');
+  console.log('[PSEE-DEBUG] callAPI JSON received | keys=', Object.keys(d), '| category=', d.category, '| triggeredModules=', d.triggeredModules, '| error?=', d.error?.message||'no');
   if(d.error) throw new Error(d.error.message || 'Erreur API');
   if(d.category && d.category !== 'normal'){
     console.log('[psee-safety] category=' + d.category);
@@ -721,11 +719,6 @@ async function callAPI(messages, mode, extras){
   // de basculer en passation finale quand done arrive.
   if (Array.isArray(d.triggeredModules)) {
     lastTriggeredModules = d.triggeredModules;
-  }
-  // Stockage du sessionState renvoye par le serveur (notamment btcAxisScores
-  // pour la coherence BtoC/BtoB - Lot 4)
-  if (d.sessionState) {
-    sessionState = d.sessionState;
   }
   const out = d.content?.[0]?.text || '';
   if(!out) console.warn('[PSEE-DEBUG] callAPI returning EMPTY string | full d=', JSON.stringify(d).slice(0,300));
@@ -1090,17 +1083,9 @@ async function generateBilan(avecBTB, retryCount){
   showDots();
   try{
     const msgs = [...hist,{role:'user',content:'Génère le bilan JSON maintenant selon la structure demandée.'}];
-    // SERIALISATION : le BtoC doit etre genere AVANT le BtoB pour que les
-    // scores axes soient stockes en sessionState et reutilises par le BtoB
-    // (mecanisme du Lot 4 garantissant la coherence). Pas de Promise.all ici.
-    console.log('[PSEE-DEBUG] generateBilan SEQ START | step=BtoC');
-    const resultBtc = await callAPI(msgs, 'bilan_btc');
-    let resultBtb = null;
-    if(avecBTB) {
-      console.log('[PSEE-DEBUG] generateBilan SEQ STEP | step=BtoB | btcScoresInState=', sessionState?.btcAxisScores ? 'yes' : 'no');
-      resultBtb = await callAPI(msgs, 'bilan_btb');
-    }
-    const results = avecBTB ? [resultBtc, resultBtb] : [resultBtc];
+    const promises = [callAPI(msgs, 'bilan_btc')];
+    if(avecBTB) promises.push(callAPI(msgs, 'bilan_btb'));
+    const results = await Promise.all(promises);
     rmDots();
 
     let dataBTC;
@@ -1222,6 +1207,36 @@ function buildRadar(axes,baseline){
   let bLegend='';
   if(baseline)bLegend=`<g><line x1="8" y1="${S-8}" x2="22" y2="${S-8}" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="4,3"/><text x="26" y="${S-4}" font-size="8" fill="#888" font-family="Arial">Précédent (${baseline.date})</text><line x1="112" y1="${S-8}" x2="126" y2="${S-8}" stroke="#7A9A7A" stroke-width="2"/><text x="130" y="${S-4}" font-size="8" fill="#888" font-family="Arial">Actuel</text></g>`;
   return`<svg width="${S}" height="${S}" viewBox="0 0 ${S} ${S}" overflow="visible">${grid}${lines}${baseSh}<polygon points="${dataPts}" fill="rgba(120,160,120,0.10)" stroke="#8AAA8A" stroke-width="2" stroke-linejoin="round"/>${baseDots}${dots}${labels}${bLegend}</svg>`;
+}
+
+// Version compacte du radar pour le bilan BtoB (charte bleu marine, sans baseline)
+// Plus petit que le BtoC, sert de synthese visuelle au-dessus de la matrice detaillee
+function buildRadarBTB(axes){
+  const S=240,cx=120,cy=120,maxR=68,n=6,maxVal=4;
+  function pt(i,v){const a=(i*2*Math.PI/n)-Math.PI/2,d=(Math.min(v,maxVal)/maxVal)*maxR;return[cx+d*Math.cos(a),cy+d*Math.sin(a)];}
+  let grid='',lines='',dots='',labels='';
+  // Grille gris clair (4 anneaux)
+  [1,2,3,4].forEach(ring=>{
+    const pts=axes.map((_,i)=>pt(i,ring).join(',')).join(' ');
+    grid+=`<polygon points="${pts}" fill="none" stroke="#DDD5C8" stroke-width="${ring===4?1:.4}"/>`;
+  });
+  // Lignes radiales
+  for(let i=0;i<n;i++){const[x,y]=pt(i,maxVal);lines+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#DDD5C8" stroke-width=".5"/>`;}
+  // Polygone de donnees en bleu marine (charte BtoB)
+  const dataPts=axes.map((ax,i)=>pt(i,ax.score).join(',')).join(' ');
+  // Points colores selon score
+  axes.forEach((ax,i)=>{
+    const[x,y]=pt(i,ax.score),col=scoreColor(ax.score);
+    dots+=`<circle cx="${x}" cy="${y}" r="5" fill="${col}" stroke="white" stroke-width="1.5"/>`;
+    const a=(i*2*Math.PI/n)-Math.PI/2,lx=cx+(maxR+30)*Math.cos(a),ly=cy+(maxR+30)*Math.sin(a);
+    const anch=lx<cx-10?'end':lx>cx+10?'start':'middle';
+    const words=ax.label.split(' ');const mid=Math.ceil(words.length/2);
+    const l1=words.slice(0,mid).join(' '),l2=words.slice(mid).join(' ');
+    labels+=l2
+      ?`<text text-anchor="${anch}" font-size="8" font-family="Arial" fill="#1B3A6B" font-weight="700"><tspan x="${lx}" y="${ly-3}">${l1}</tspan><tspan x="${lx}" dy="9">${l2}</tspan></text>`
+      :`<text x="${lx}" y="${ly+3}" text-anchor="${anch}" font-size="8" font-family="Arial" fill="#1B3A6B" font-weight="700">${l1}</text>`;
+  });
+  return`<svg width="${S}" height="${S}" viewBox="0 0 ${S} ${S}" overflow="visible">${grid}${lines}<polygon points="${dataPts}" fill="rgba(27,58,107,0.12)" stroke="#1B3A6B" stroke-width="1.8" stroke-linejoin="round"/>${dots}${labels}</svg>`;
 }
 
 const PICTOS = {
@@ -1789,6 +1804,21 @@ function showBilanBTB(data){
       <div style="background:#1B3A6B;border-radius:14px;padding:16px 20px;border-left:4px solid #3a7531">
         <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#8AABC8;margin-bottom:8px">Synthèse clinique &amp; orientation</div>
         <div style="font-size:13px;color:white;line-height:1.75;font-family:Georgia,serif;font-style:italic">${data.synthese_clinique || data.synthese || ''}</div>
+      </div>
+
+      <!-- RADAR STORA COMPACT (synthese visuelle des 6 axes, charte BtoB) -->
+      <div style="background:white;border-radius:14px;padding:16px 18px;border:0.5px solid rgba(0,0,0,0.08)">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#1B3A6B;margin-bottom:10px">Cartographie des 6 axes — Modèle Stora (2001)</div>
+        <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap">
+          <div style="flex-shrink:0">${buildRadarBTB(data.axes)}</div>
+          <div style="flex:1;min-width:200px;font-size:11px;color:#444;line-height:1.55">
+            <div style="font-style:italic;color:#666;margin-bottom:10px">Vue synthétique du tableau psychosomatique. Le détail clinique figure dans la matrice ci-dessous.</div>
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#D97A7A;flex-shrink:0"></span><span>1 — Fragile</span></div>
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#D8A24A;flex-shrink:0"></span><span>2 — En tension</span></div>
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#A9C76F;flex-shrink:0"></span><span>3 — Stable</span></div>
+            <div style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#5B9B67;flex-shrink:0"></span><span>4 — Solide</span></div>
+          </div>
+        </div>
       </div>
 
       <!-- MATRICE 6 AXES -->
