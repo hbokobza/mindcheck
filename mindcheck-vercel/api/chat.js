@@ -688,18 +688,21 @@ async function callHaikuJson(systemPrompt, userMessages) {
   return { parsed, raw: data };
 }
 
-function buildIndicateurFromScoring(moduleId, scoredArray) {
+function buildIndicateurFromScoring(moduleId, scoredArray, auditId = null) {
   const module = getPsychometricModule(moduleId);
   if (!module) return null;
 
   const totalItems = module.items.length;
   const validValues = [];
   const validIndexes = [];
+  const nullIndexes = [];
 
   scoredArray.forEach((v, i) => {
     if (v !== null && v !== undefined && Number.isFinite(Number(v))) {
       validValues.push(Number(v));
       validIndexes.push(i);
+    } else {
+      nullIndexes.push(i);
     }
   });
 
@@ -710,8 +713,26 @@ function buildIndicateurFromScoring(moduleId, scoredArray) {
   const maxPerItem = moduleId === 'PSS10' ? 4 : 3;
   const maxTotal = totalItems * maxPerItem;
 
+  // Helper de log d'audit (anonyme, RGPD-friendly)
+  const logAudit = (decision, finalScore) => {
+    console.log('[psee-psychometrics-audit] ' + JSON.stringify({
+      auditId,
+      module: moduleId,
+      itemsCovered,
+      itemsTotal: totalItems,
+      coverage: Math.round(coverage * 100) / 100,
+      nullIndexes,
+      rawValues: scoredArray.map(v =>
+        v !== null && v !== undefined && Number.isFinite(Number(v)) ? Number(v) : null
+      ),
+      decision,
+      finalScore
+    }));
+  };
+
   // Si couverture insuffisante : pas de score, indicateur partiel
   if (coverage < BILAN_COVERAGE_THRESHOLD) {
+    logAudit('incomplete', null);
     return {
       id: moduleId,
       label: module.title,
@@ -743,6 +764,9 @@ function buildIndicateurFromScoring(moduleId, scoredArray) {
   const score = scoreModule(moduleId, filledArray);
   const interpretation = interpretModule(moduleId, score);
 
+  const decision = itemsCovered === totalItems ? 'complete' : 'extrapolated';
+  logAudit(decision, Math.round(score));
+
   return {
     id: moduleId,
     label: module.title,
@@ -759,7 +783,7 @@ function buildIndicateurFromScoring(moduleId, scoredArray) {
   };
 }
 
-async function scoreModulesFromTranscript(transcript, modulesToScore) {
+async function scoreModulesFromTranscript(transcript, modulesToScore, auditId = null) {
   if (!modulesToScore || modulesToScore.length === 0) return [];
 
   try {
@@ -775,7 +799,7 @@ async function scoreModulesFromTranscript(transcript, modulesToScore) {
     for (const moduleId of modulesToScore) {
       const arr = parsed[moduleId];
       if (!Array.isArray(arr)) continue;
-      const indicateur = buildIndicateurFromScoring(moduleId, arr);
+      const indicateur = buildIndicateurFromScoring(moduleId, arr, auditId);
       if (indicateur) indicateurs.push(indicateur);
     }
     return indicateurs;
@@ -864,6 +888,18 @@ async function buildBilanPayload({ mode, messages, state, axes, clinicalFlags, i
   // pour detecter quels modules psychometriques meritent un scoring.
   const modulesToScore = detectSuspicion(clinicalFlags);
 
+  // Audit instrumentation : auditId aleatoire 8 caracteres pour correler
+  // les logs d'un meme bilan dans Vercel sans exposer de donnees patient.
+  const auditId = Math.random().toString(36).slice(2, 10);
+  if (modulesToScore.length > 0) {
+    console.log('[psee-psychometrics-audit] ' + JSON.stringify({
+      auditId,
+      event: 'start',
+      mode,
+      modules: modulesToScore
+    }));
+  }
+
   const transcript = buildTranscriptFromMessages(messages);
 
   // Appel narratif (Haiku produit le JSON principal)
@@ -871,7 +907,7 @@ async function buildBilanPayload({ mode, messages, state, axes, clinicalFlags, i
 
   // Appel scoring en parallele (uniquement si modules detectes)
   const scoringPromise = modulesToScore.length > 0
-    ? scoreModulesFromTranscript(transcript, modulesToScore)
+    ? scoreModulesFromTranscript(transcript, modulesToScore, auditId)
     : Promise.resolve([]);
 
   let narrative, indicateurs, narrativeRaw;
