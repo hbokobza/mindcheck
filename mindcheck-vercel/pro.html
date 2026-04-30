@@ -66,41 +66,13 @@ nav {
 .hero-panel-wrap { position: relative; padding-bottom: 64px; }
 .hero-panel-blur { position:absolute; inset: 24px -10px -10px 24px; background: linear-gradient(135deg, #dcead9, #ece3d6); border-radius: 28px; filter: blur(24px); opacity: .8; }
 .hero-panel { position:relative; background: white; border-radius: 28px; overflow:hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.14); border: 1px solid rgba(0,0,0,0.06); }
-..panel-top { background: var(--blue-clinical); color:white; padding: 22px 24px 20px; }
-.panel-top .mini { font-size: 10px; letter-spacing: 1.6px; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-bottom: 8px; font-weight: 500; }
-.panel-top h3 { font-family:'Playfair Display', serif; font-size: 24px; font-weight:700; line-height: 1.2; }
-.panel-top h3 em { font-style: normal; font-weight: 400; opacity: 0.85; }
-.alert-block { background: var(--red-alert-bg); border-left: 3px solid var(--red-alert); border-radius: 10px; padding: 12px 14px; margin-bottom: 14px; }
-.alert-block .alert-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; color: var(--red-alert); text-transform: uppercase; margin-bottom: 5px; }
-.alert-block p { font-size: 12px; color: #6B2820; line-height: 1.6; }
-.psy-scores { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-.psy-score { background: #F7F4EF; border: 1px solid rgba(0,0,0,0.04); border-radius: 14px; padding: 12px 14px; }
-.psy-score .psy-name { font-size: 11px; font-weight: 600; color: var(--blue-clinical); letter-spacing: 0.5px; }
-.psy-score .psy-val { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: var(--blue-clinical); line-height: 1; margin: 4px 0; }
-.psy-score .psy-val span { font-size: 14px; color: rgba(26,42,74,0.45); font-weight: 400; }
-.psy-score .psy-tag { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 10px; background: #FBE6CD; color: #B36B00; font-weight: 500; }
-.psy-score .psy-tag.light { background: #E0EBE2; color: #4A7A4A; }
-.panel-body { padding: 22px; background: #fff; }
-.block-soft { background: #F7F4EF; border-radius: 18px; padding: 18px; border:1px solid rgba(0,0,0,0.04); margin-bottom: 16px; }
-.block-soft .eyebrow { font-size: 10px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--green); margin-bottom: 8px; font-weight:600; }
-.block-soft p { font-size: 14px; color: #4d4c47; line-height: 1.8; }
-.axes-mini { display:grid; grid-template-columns: repeat(2,1fr); gap: 12px; margin-bottom: 16px; }
-.axe-mini-card { border:1px solid rgba(0,0,0,0.05); border-radius:16px; padding: 14px; background:#fff; }
-.axe-mini-card .num { font-size: 10px; color: rgba(0,0,0,0.3); letter-spacing:1px; margin-bottom: 5px; }
-.axe-mini-card .title { font-size: 13px; font-weight: 500; line-height: 1.4; margin-bottom: 10px; }
-.bar { height: 8px; border-radius: 999px; background: #EDE6D8; overflow:hidden; }
-.bar > span { display:block; height:100%; border-radius:999px; }
-.r1 { width: 28%; background: #D97A7A; }
-.r2 { width: 52%; background: #D8A24A; }
-.r3 { width: 76%; background: #A9C76F; }
-.r4 { width: 92%; background: #5B9B67; }
-.dual-boxes { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-.dual { border-radius:16px; padding: 15px; font-size: 13px; line-height: 1.7; border:1px solid rgba(0,0,0,0.04); }
-.dual h4 { font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 6px; }
-.dual.green { background: #E8F2E8; }
-.dual.green h4 { color: var(--green); }
-.dual.gold { background: #F7EFDD; }
-.dual.gold h4 { color: #B58B21; }
+.hero-panel-fade { position: relative; }
+.hero-panel-screenshot { display: block; width: 100%; height: auto; border-radius: 28px; }
+.hero-panel-fade::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 110px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.95) 80%, #fff 100%);
+  pointer-events: none; border-bottom-left-radius: 28px; border-bottom-right-radius: 28px;
+}
 .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--green); margin-bottom: 14px; }
 .section-title { font-family: 'Playfair Display', serif; font-size: 40px; line-height: 1.15; font-weight: 700; margin-bottom: 20px; }
 .section-text { font-size: 16px; color: var(--gray); line-height: 1.85; margin-bottom: 16px; }
@@ -193,7 +165,6 @@ footer p, footer a { font-size: 12px; color: rgba(255,255,255,0.3); text-decorat
   .outputs-grid, .practice-grid, .flux-grid { grid-template-columns: 1fr; }
   .flux-card { padding: 28px 24px; }
   .flux-card h3 { font-size: 23px; }
-  .axes-mini, .dual-boxes { grid-template-columns: 1fr; }
   .section-title { font-size: 34px; }
   .pricing-price { font-size: 56px; }
   footer { flex-direction: column; gap: 14px; text-align: center; padding: 28px 20px; }
@@ -235,39 +206,8 @@ footer p, footer a { font-size: 12px; color: rgba(255,255,255,0.3); text-decorat
     <div class="hero-panel-wrap">
       <div class="hero-panel-blur"></div>
       <div class="hero-panel">
-       <div class="panel-top">
-          <div class="mini">Document confidentiel — Usage professionnel exclusif</div>
-          <h3>Bilan pré-clinique <em>Psee Pro</em></h3>
-        </div>
-        <div class="panel-body">
-          <div class="alert-block">
-            <div class="alert-eyebrow">⚠ Signaux d'alerte — à vérifier dès la première séance</div>
-            <p>Idéation suicidaire passive intermittente · Tableau évocateur d'une dimension dépressive significative</p>
-          </div>
-          <div class="psy-scores">
-            <div class="psy-score">
-              <div class="psy-name">PHQ-9</div>
-              <div class="psy-val">17<span>/27</span></div>
-              <span class="psy-tag">modéré à sévère</span>
-            </div>
-            <div class="psy-score">
-              <div class="psy-name">GAD-7</div>
-              <div class="psy-val">8<span>/21</span></div>
-              <span class="psy-tag light">légère</span>
-            </div>
-          </div>
-          <div class="axes-mini">
-            <div class="axe-mini-card"><div class="num">Axe 01</div><div class="title">Processus psychiques</div><div class="bar"><span class="r1"></span></div></div>
-            <div class="axe-mini-card"><div class="num">Axe 02</div><div class="title">Ressources psychiques</div><div class="bar"><span class="r2"></span></div></div>
-            <div class="axe-mini-card"><div class="num">Axe 03</div><div class="title">Comportements & conduites</div><div class="bar"><span class="r2"></span></div></div>
-            <div class="axe-mini-card"><div class="num">Axe 04</div><div class="title">Régulation émotionnelle</div><div class="bar"><span class="r1"></span></div></div>
-            <div class="axe-mini-card"><div class="num">Axe 05</div><div class="title">Corps & risque somatique</div><div class="bar"><span class="r2"></span></div></div>
-            <div class="axe-mini-card"><div class="num">Axe 06</div><div class="title">Environnement</div><div class="bar"><span class="r1"></span></div></div>
-          </div>
-          <div class="dual-boxes">
-            <div class="dual green"><h4>Ressources cliniques</h4>Motivation au changement, ancrage spirituel, insight partiel.</div>
-            <div class="dual gold"><h4>Points de vigilance</h4>Idéation passive récurrente, isolement croissant, stresseur non résolu.</div>
-          </div>
+        <div class="hero-panel-fade">
+          <img src="bilan-btb-vitrine.png" alt="Aperçu d'un bilan clinique Psee Pro" class="hero-panel-screenshot">
         </div>
       </div>
     </div>
