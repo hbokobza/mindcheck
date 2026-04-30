@@ -206,6 +206,10 @@ footer p, footer a { font-size: 12px; color: rgba(255,255,255,0.3); text-decorat
   .matching-title, .matching-sub { grid-column: 1; }
   .comment-content { padding: 56px 24px; }
   footer { flex-direction: column; gap: 14px; text-align: center; padding: 28px 20px; }
+  /* Force le passage en colonne unique sur mobile pour les sections en grille inline */
+  .mobile-stack { grid-template-columns: 1fr !important; gap: 32px !important; }
+  .mobile-stack-padding { padding: 48px 24px !important; }
+  .mobile-footer-grid { grid-template-columns: 1fr 1fr !important; gap: 32px !important; }
 }
 </style>
 </head>
@@ -502,10 +506,10 @@ footer p, footer a { font-size: 12px; color: rgba(255,255,255,0.3); text-decorat
 
 
 <!-- SECTION CHECKUP FUSIONNEE -->
-<section style="background:var(--white);display:grid;grid-template-columns:1fr 1fr;align-items:stretch;min-height:580px" id="checkup">
+<section class="mobile-stack" style="background:var(--white);display:grid;grid-template-columns:1fr 1fr;align-items:stretch;min-height:580px" id="checkup">
 
   <!-- GAUCHE : texte -->
-  <div style="padding:64px 52px 64px 64px;display:flex;flex-direction:column;justify-content:center">
+  <div class="mobile-stack-padding" style="padding:64px 52px 64px 64px;display:flex;flex-direction:column;justify-content:center">
     <p class="eyebrow">Le check-up Psee</p>
     <h2 class="section-title" style="margin-bottom:16px">Un bilan structuré pour faire le point sur votre santé psychique</h2>
     <p class="section-text" style="margin-bottom:24px">Psee n'est ni un test de divertissement, ni une thérapie, ni un diagnostic médical. C'est un check-up psychique conçu pour vous aider à mieux comprendre votre état psychique à un moment donné, à repérer d'éventuels déséquilibres, et à envisager la suite de manière plus claire.</p>
@@ -592,7 +596,7 @@ footer p, footer a { font-size: 12px; color: rgba(255,255,255,0.3); text-decorat
 <section class="section-therapeutes" id="orientation">
 
   <!-- TITRE + 3 items dégagés -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;margin-bottom:52px">
+  <div class="mobile-stack" style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;margin-bottom:52px">
 
     <!-- Gauche : titre + texte -->
     <div>
@@ -663,7 +667,7 @@ footer p, footer a { font-size: 12px; color: rgba(255,255,255,0.3); text-decorat
 <footer style="background:#1A1A18;padding:56px 64px 32px">
   
   <!-- Ligne principale : 4 colonnes -->
-  <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px">
+  <div class="mobile-footer-grid" style="display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px">
     
     <!-- Colonne 1 : Logo + app -->
     <div>
