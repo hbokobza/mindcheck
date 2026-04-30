@@ -131,11 +131,12 @@ nav {
 .axe-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
 .axe-card:hover img { transform: scale(1.05); }
 .axe-overlay {
-  position: absolute; bottom: 0; left: 0; right: 0; top: 38%;
-  background: linear-gradient(to top, rgba(26,26,24,0.95) 0%, rgba(26,26,24,0.7) 60%, rgba(26,26,24,0) 100%);
-  padding: 16px 18px 14px;
+  position: absolute; bottom: 0; left: 0; right: 0; top: 0;
+  background: linear-gradient(to top, rgba(26,26,24,0.95) 0%, rgba(26,26,24,0.82) 45%, rgba(26,26,24,0.4) 75%, rgba(26,26,24,0) 100%);
+  padding: 14px 18px;
+  display: flex; flex-direction: column; justify-content: flex-end;
 }
-.axe-num { font-size: 10px; color: rgba(255,255,255,0.4); margin-bottom: 4px; letter-spacing: 1px; }
+.axe-num { font-size: 10px; color: rgba(255,255,255,0.55); margin-bottom: 4px; letter-spacing: 1px; position: absolute; top: 14px; left: 18px; }
 .axe-title { font-family: 'Playfair Display', serif; font-size: 17px; color: white; font-weight: 700; margin-bottom: 5px; }
 .axe-desc { font-size: 12px; color: rgba(255,255,255,0.65); line-height: 1.5; }
 
