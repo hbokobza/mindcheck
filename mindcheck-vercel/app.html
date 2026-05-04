@@ -1556,6 +1556,12 @@ function showBilan(data){
         </div>
       </div>
 
+      <!-- METHODOLOGIE (statique - ajout V2) -->
+      <div style="background:#FAF7F2;border-left:3px solid #3a7531;border-radius:6px;padding:12px 16px;font-size:10px;color:#6B6B68;line-height:1.7;font-style:italic;font-family:Georgia,serif">
+        <span style="font-style:normal;font-weight:700;color:#1A4A2E;font-size:9px;text-transform:uppercase;letter-spacing:1.5px">Méthodologie</span><br>
+        Ce bilan est généré à partir d'un échange conversationnel piloté par une intelligence artificielle. Le traitement de l'information combine trois éléments : des échelles psychométriques reconnues mondialement (PHQ-9, GAD-7, PSS-10), une observation des traces linguistiques implicites du récit, et le paradigme AAP (Automated Assessment Paradigm), tel que décrit dans la littérature scientifique récente.
+      </div>
+
       <!-- FOOTER -->
       <div style="font-size:9px;color:#BBB;text-align:center;line-height:1.6;padding-bottom:6px">
         Ce bilan est généré à partir de votre récit auto-déclaré. Il ne constitue pas un diagnostic médical ou psychologique.<br>
@@ -1801,6 +1807,79 @@ function showBilanBTB(data){
       </div>
     </div>`).join('');
 
+  // === ANALYSE LINGUISTIQUE IMPLICITE (NOUVEAU V2) ===
+  // Bloc affiche entre la matrice 6 axes et la lecture clinique.
+  // Restitue les marqueurs LIWC observes (pronoms, absolutistes, valence,
+  // temporalite, langage interieur) + une synthese observationnelle.
+  // Garde de compatibilite : si le champ est absent (ancien bilan), bloc vide.
+  const al = data.analyse_linguistique;
+  const analyseLinguistiqueHTML = al ? `
+    <div style="background:white;border-radius:14px;padding:16px 18px;border:0.5px solid rgba(0,0,0,0.08)">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#1B3A6B;margin-bottom:8px">Analyse linguistique implicite</div>
+      <div style="font-size:11px;color:#6d6b63;font-style:italic;margin-bottom:14px;line-height:1.6">Marqueurs observés sur l'ensemble du récit, hors contenu déclaré. Méthodologie inspirée des travaux récents en linguistique clinique.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div>
+          <div style="font-size:10px;font-weight:700;color:#1B3A6B;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.6px">Pronoms 1<sup>ère</sup> personne</div>
+          <div style="font-size:12px;color:#333;line-height:1.6">${al.pronoms_je || '<em style="color:#999">non observable</em>'}</div>
+        </div>
+        <div>
+          <div style="font-size:10px;font-weight:700;color:#1B3A6B;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.6px">Marqueurs absolutistes</div>
+          <div style="font-size:12px;color:#333;line-height:1.6">${al.marqueurs_absolutistes || '<em style="color:#999">non observable</em>'}</div>
+        </div>
+        <div>
+          <div style="font-size:10px;font-weight:700;color:#1B3A6B;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.6px">Valence émotionnelle</div>
+          <div style="font-size:12px;color:#333;line-height:1.6">${al.valence_emotionnelle || '<em style="color:#999">non observable</em>'}</div>
+        </div>
+        <div>
+          <div style="font-size:10px;font-weight:700;color:#1B3A6B;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.6px">Temporalité dominante</div>
+          <div style="font-size:12px;color:#333;line-height:1.6">${al.temporalite_dominante || '<em style="color:#999">non observable</em>'}</div>
+        </div>
+        <div style="grid-column:1/-1">
+          <div style="font-size:10px;font-weight:700;color:#1B3A6B;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.6px">Langage intérieur</div>
+          <div style="font-size:12px;color:#333;line-height:1.6">${al.langage_interieur || '<em style="color:#999">non observable</em>'}</div>
+        </div>
+      </div>
+      ${al.observations ? `
+      <div style="margin-top:14px;padding-top:12px;border-top:0.5px dashed rgba(0,0,0,0.1)">
+        <div style="font-size:11px;font-weight:700;color:#3a7531;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.6px">Observations</div>
+        <div style="font-size:12px;color:#1f1f1c;line-height:1.65;font-style:italic;font-family:Georgia,serif">${al.observations}</div>
+      </div>` : ''}
+    </div>` : '';
+
+  // === MECANISMES TRANSDIAGNOSTIQUES (NOUVEAU V2) ===
+  // Liste des processus identifies (parmi les 8 retenus) avec leur saillance
+  // (0-3), les axes concernes, le cercle d'auto-entretien, et la direction
+  // de travail clinique generique. Tri par saillance decroissante.
+  // Garde de compatibilite : si le champ est absent ou vide, bloc vide.
+  const mecanismesArr = (data.mecanismes_transdiagnostiques || [])
+    .slice()
+    .sort((a, b) => (b.salience || 0) - (a.salience || 0));
+  const mecanismesItemsHTML = mecanismesArr.map(m => {
+    const sal = Math.max(0, Math.min(3, m.salience || 0));
+    const dots = [1,2,3].map(i =>
+      `<div style="width:14px;height:14px;border-radius:3px;background:${i <= sal ? '#1A4A2E' : '#E5DFD2'}"></div>`
+    ).join('');
+    return `
+      <div style="display:flex;gap:14px;padding:12px 0;border-bottom:0.5px solid rgba(0,0,0,0.06)">
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:600;color:#1f1f1c;margin-bottom:3px">${m.processus || ''}</div>
+          ${m.axes_concernes ? `<div style="font-size:10px;color:#6d6b63;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.4px">Axes concernés : ${m.axes_concernes}</div>` : ''}
+          ${m.mecanisme_circulaire ? `<div style="font-size:11px;color:#444;line-height:1.55;margin-bottom:4px"><strong style="color:#1B3A6B">Cercle d'auto-entretien :</strong> ${m.mecanisme_circulaire}</div>` : ''}
+          ${m.direction_travail ? `<div style="font-size:11px;color:#444;line-height:1.55"><strong style="color:#1B3A6B">Direction de travail :</strong> ${m.direction_travail}</div>` : ''}
+        </div>
+        <div style="display:flex;gap:3px;align-items:flex-start;padding-top:4px;flex-shrink:0">
+          ${dots}
+          <span style="font-size:10px;font-weight:700;color:#1A4A2E;margin-left:6px;align-self:center">${sal}/3</span>
+        </div>
+      </div>`;
+  }).join('');
+  const mecanismesBlocHTML = mecanismesItemsHTML ? `
+    <div style="background:white;border-radius:14px;padding:16px 18px;border:0.5px solid rgba(0,0,0,0.08)">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#1B3A6B;margin-bottom:6px">Mécanismes transdiagnostiques identifiés</div>
+      <div style="font-size:11px;color:#6d6b63;margin-bottom:8px;line-height:1.6">Saillance évaluée sur 0–3 : 0 = absent, 1 = mention isolée, 2 = présent et nommé, 3 = central et récurrent. Cadre RDoC / approche processuelle (Wade et al., 2025).</div>
+      ${mecanismesItemsHTML}
+    </div>` : '';
+
   const html = `<div id="btb-ov" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);z-index:10000;overflow-y:auto;padding:16px" onclick="if(event.target===this)this.remove()">
   <div id="btb-doc" style="background:#F4F4F2;max-width:820px;margin:auto;border-radius:20px;overflow:hidden;font-family:Arial,sans-serif">
 
@@ -1864,6 +1943,12 @@ function showBilanBTB(data){
         </table>
       </div>
 
+      <!-- ANALYSE LINGUISTIQUE IMPLICITE (NOUVEAU V2) -->
+      ${analyseLinguistiqueHTML}
+
+      <!-- MECANISMES TRANSDIAGNOSTIQUES (NOUVEAU V2) -->
+      ${mecanismesBlocHTML}
+
       <!-- LECTURE CLINIQUE (configuration / dynamique / leviers) -->
       ${lectureCliniqueHTML}
 
@@ -1893,6 +1978,12 @@ function showBilanBTB(data){
           ${vigilanceData.intro ? `<div style="font-size:12px;color:#5a4408;line-height:1.65;font-style:italic;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid rgba(122,92,0,.2)">${vigilanceData.intro}</div>` : ''}
           ${vigilanceData.points.map(v=>`<div style="font-size:12px;color:#333;margin-bottom:5px;display:flex;gap:8px"><span style="color:#E9A820;flex-shrink:0">◆</span>${v}</div>`).join('')}
         </div>
+      </div>
+
+      <!-- METHODOLOGIE (statique - ajout V2) -->
+      <div style="background:#F0F4FA;border-left:3px solid #1B3A6B;border-radius:6px;padding:12px 16px;font-size:10px;color:#4A4A45;line-height:1.7;font-style:italic;font-family:Georgia,serif">
+        <span style="font-style:normal;font-weight:700;color:#1B3A6B;font-size:9px;text-transform:uppercase;letter-spacing:1.5px">Méthodologie</span><br>
+        Ce bilan combine trois méthodes : (1) le scoring d'échelles psychométriques validées internationalement (PHQ-9, GAD-7, PSS-10), (2) une analyse linguistique implicite inspirée des recherches récentes en linguistique clinique menées à l'INSERM et à l'Université Paris-Cité, (3) le paradigme AAP (Automated Assessment Paradigm — JMIR Mental Health, 2026). Il constitue une aide à la lecture pré-consultation et ne se substitue ni au diagnostic ni à l'évaluation clinique humaine.
       </div>
 
       <!-- FOOTER -->
