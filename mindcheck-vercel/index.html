@@ -26,12 +26,13 @@
   --psee-grey-medium: #6B6B68;
   --psee-grey-light: #E5E2DC;
 
+  --section-image-height: 560px;
+
   --font-display: 'Playfair Display', Georgia, serif;
   --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-
 html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 
 body {
@@ -62,10 +63,7 @@ a { color: inherit; text-decoration: none; }
   align-items: center;
 }
 
-.nav-logo a {
-  display: flex;
-  align-items: center;
-}
+.nav-logo a { display: flex; align-items: center; }
 
 .nav-logo-text {
   font-family: var(--font-display);
@@ -136,9 +134,7 @@ a { color: inherit; text-decoration: none; }
   width: 100%;
 }
 
-.hero-text {
-  max-width: 600px;
-}
+.hero-text { max-width: 600px; }
 
 .hero-eyebrow {
   font-family: var(--font-body);
@@ -160,10 +156,7 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: -0.02em;
 }
 
-.hero-title em {
-  font-style: italic;
-  font-weight: 500;
-}
+.hero-title em { font-style: italic; font-weight: 500; }
 
 .hero-sub {
   font-family: var(--font-body);
@@ -229,11 +222,7 @@ a { color: inherit; text-decoration: none; }
   box-shadow: 0 4px 16px rgba(31, 77, 51, 0.1);
 }
 
-.badge-icon {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 6px;
-}
+.badge-icon { display: flex; justify-content: center; margin-bottom: 6px; }
 
 .badge-icon svg {
   width: 22px;
@@ -261,7 +250,7 @@ a { color: inherit; text-decoration: none; }
   line-height: 1.3;
 }
 
-/* SECTION POURQUOI */
+/* SECTION POURQUOI - V3 : photo main-phone, dimension standardisée */
 .section-pourquoi {
   padding: 0;
   background: var(--psee-cream);
@@ -269,14 +258,13 @@ a { color: inherit; text-decoration: none; }
   overflow: hidden;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  align-items: center;
-  min-height: 600px;
+  align-items: stretch;
+  min-height: var(--section-image-height);
 }
 
 .pourquoi-image-wrap {
   position: relative;
-  height: 100%;
-  min-height: 600px;
+  height: var(--section-image-height);
   order: 2;
 }
 
@@ -300,8 +288,11 @@ a { color: inherit; text-decoration: none; }
 }
 
 .pourquoi-content {
-  padding: 100px 0 100px 80px;
+  padding: 80px 0 80px 80px;
   max-width: 580px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   position: relative;
   z-index: 3;
   order: 1;
@@ -327,10 +318,7 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: -0.01em;
 }
 
-.section-title em {
-  font-style: italic;
-  font-weight: 500;
-}
+.section-title em { font-style: italic; font-weight: 500; }
 
 .section-text {
   font-family: var(--font-body);
@@ -341,16 +329,16 @@ a { color: inherit; text-decoration: none; }
   max-width: 560px;
 }
 
-/* SECTION 6 AXES */
+/* SECTION 6 AXES - V3 : 6 colonnes sur 1 ligne */
 .section-axes {
-  padding: 120px 48px;
+  padding: 100px 48px;
   background: var(--psee-cream-dark);
 }
 
 .section-axes-header {
   text-align: center;
   max-width: 760px;
-  margin: 0 auto 80px;
+  margin: 0 auto 64px;
 }
 
 .section-axes-header .section-text {
@@ -360,16 +348,16 @@ a { color: inherit; text-decoration: none; }
 
 .axes-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 32px;
-  max-width: 1100px;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+  max-width: 1280px;
   margin: 0 auto;
 }
 
 .axe-card {
   background: var(--psee-white);
-  border-radius: 16px;
-  padding: 36px 32px;
+  border-radius: 14px;
+  padding: 24px 16px;
   text-align: center;
   transition: transform 0.3s, box-shadow 0.3s;
 }
@@ -379,9 +367,9 @@ a { color: inherit; text-decoration: none; }
 }
 
 .axe-icon {
-  width: 88px;
-  height: 88px;
-  margin: 0 auto 24px;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
 }
 
 .axe-icon img { width: 100%; height: 100%; }
@@ -389,67 +377,237 @@ a { color: inherit; text-decoration: none; }
 .axe-verb {
   font-family: var(--font-body);
   font-weight: 500;
-  font-size: 12px;
-  letter-spacing: 2px;
+  font-size: 10px;
+  letter-spacing: 1.8px;
   text-transform: uppercase;
   color: var(--psee-green);
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .axe-name {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 22px;
-  line-height: 1.3;
+  font-size: 17px;
+  line-height: 1.25;
   color: var(--psee-green-dark);
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .axe-desc {
   font-family: var(--font-body);
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: 12px;
+  line-height: 1.5;
   color: var(--psee-grey-medium);
 }
 
-/* SECTION COMMENT */
+/* SECTION COMMENT - V3 : mockups iPhone CSS placeholder */
 .section-comment {
-  padding: 120px 48px;
+  padding: 0;
   background: var(--psee-cream);
-}
-
-.comment-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 80px;
-  align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.comment-image {
-  width: 100%;
-  border-radius: 16px;
+  align-items: stretch;
+  min-height: var(--section-image-height);
   overflow: hidden;
-  position: relative;
-  aspect-ratio: 4 / 3;
 }
 
-.comment-image img {
+.comment-mockups-wrap {
+  position: relative;
+  height: var(--section-image-height);
+  background: linear-gradient(135deg, var(--psee-cream) 0%, var(--psee-cream-dark) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Mockups CSS */
+.mockups-stack {
+  position: relative;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.comment-content { max-width: 520px; }
+.mockup {
+  position: absolute;
+  width: 220px;
+  height: 440px;
+  background: var(--psee-black);
+  border-radius: 32px;
+  padding: 8px;
+  box-shadow: 0 24px 60px rgba(31, 77, 51, 0.18), 0 12px 24px rgba(31, 77, 51, 0.12);
+  transition: transform 0.4s ease;
+}
 
-.comment-steps { list-style: none; margin-top: 32px; }
+.mockup-screen {
+  width: 100%;
+  height: 100%;
+  background: var(--psee-cream);
+  border-radius: 26px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.mockup-header {
+  background: var(--psee-green-dark);
+  color: white;
+  padding: 18px 14px 12px;
+  font-family: var(--font-body);
+}
+
+.mockup-header h4 {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.mockup-header span {
+  font-size: 9px;
+  opacity: 0.8;
+  letter-spacing: 0.5px;
+}
+
+.mockup-body {
+  padding: 12px;
+  flex: 1;
+  font-size: 9px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Mockup 1 — Entretien */
+.mockup-1 {
+  transform: rotate(-8deg) translateX(-110px) translateY(20px);
+  z-index: 1;
+}
+
+.mockup-chat-bubble {
+  background: var(--psee-cream-dark);
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 9px;
+  color: var(--psee-black);
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+
+.mockup-chat-bubble.user {
+  background: var(--psee-green-dark);
+  color: white;
+  margin-left: 30px;
+}
+
+/* Mockup 2 — Bilan (centré, en avant) */
+.mockup-2 {
+  z-index: 3;
+  transform: translateY(-10px);
+}
+
+.mockup-cartography {
+  background: white;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 8px;
+}
+
+.mockup-cartography-title {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--psee-green-dark);
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+.mockup-radar-svg {
+  width: 100%;
+  height: 80px;
+  display: block;
+}
+
+.mockup-axe-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 8px;
+  border-bottom: 1px solid #f0ebe2;
+}
+
+.mockup-axe-row:last-child { border-bottom: none; }
+
+.mockup-tag {
+  background: var(--psee-coral);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 7px;
+  font-weight: 500;
+}
+
+.mockup-tag.solide { background: var(--psee-green); }
+.mockup-tag.attention { background: var(--psee-orange); }
+.mockup-tag.tension { background: var(--psee-coral); }
+
+/* Mockup 3 — Orientation */
+.mockup-3 {
+  transform: rotate(8deg) translateX(110px) translateY(20px);
+  z-index: 2;
+}
+
+.mockup-pro-card {
+  background: white;
+  border-radius: 10px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.mockup-pro-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--psee-green-light);
+  flex-shrink: 0;
+}
+
+.mockup-pro-info { flex: 1; }
+.mockup-pro-name { font-size: 9px; font-weight: 600; color: var(--psee-green-dark); }
+.mockup-pro-role { font-size: 7px; color: var(--psee-grey-medium); }
+
+.mockup-cta {
+  background: var(--psee-green-dark);
+  color: white;
+  border-radius: 8px;
+  padding: 8px;
+  text-align: center;
+  font-size: 9px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.comment-content {
+  padding: 80px 80px 80px 0;
+  max-width: 580px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.comment-steps { list-style: none; margin-top: 28px; }
 
 .comment-step {
   display: flex;
   gap: 20px;
   align-items: flex-start;
-  padding: 20px 0;
+  padding: 18px 0;
   border-bottom: 1px solid var(--psee-grey-light);
 }
 
@@ -486,60 +644,132 @@ a { color: inherit; text-decoration: none; }
   line-height: 1.55;
 }
 
-/* SECTION ORIENTATION avec photo therapeute */
+/* SECTION ORIENTATION - V3 : MARKETPLACE INVERSÉE */
 .section-orientation {
-  padding: 0;
-  background: var(--psee-green-dark);
-  color: var(--psee-white);
-  position: relative;
+  padding: 100px 48px;
+  background: var(--psee-cream-dark);
+}
+
+.orientation-header {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  align-items: stretch;
-  min-height: 560px;
+  gap: 80px;
+  max-width: 1280px;
+  margin: 0 auto 64px;
+  align-items: start;
 }
 
-.orientation-image-wrap {
-  position: relative;
+.orientation-header-left {
+  max-width: 460px;
+}
+
+.orientation-header-left .section-title {
+  margin-bottom: 24px;
+}
+
+.orientation-header-left .section-text {
+  font-size: 16px;
+  color: var(--psee-grey-medium);
+}
+
+.orientation-features {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.orientation-feature {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.feature-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--psee-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.feature-icon svg {
+  width: 20px;
+  height: 20px;
+  stroke: var(--psee-green);
+  fill: none;
+  stroke-width: 2;
+}
+
+.feature-content h4 {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--psee-black);
+  margin-bottom: 6px;
+}
+
+.feature-content p {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--psee-grey-medium);
+}
+
+.orientation-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.pro-card {
+  background: var(--psee-white);
+  border-radius: 16px;
   overflow: hidden;
-  min-height: 560px;
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.orientation-image-wrap img {
+.pro-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(31, 77, 51, 0.1);
+}
+
+.pro-card-image {
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  background: var(--psee-cream);
+}
+
+.pro-card-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
 }
 
-.orientation-image-wrap::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 35%;
-  height: 100%;
-  background: linear-gradient(to left, var(--psee-green-dark) 0%, rgba(31, 77, 51, 0.4) 60%, transparent 100%);
-  z-index: 2;
-  pointer-events: none;
+.pro-card-body {
+  padding: 24px 28px 28px;
 }
 
-.orientation-content {
-  padding: 100px 80px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  max-width: 600px;
+.pro-card-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 21px;
+  color: var(--psee-green-dark);
+  margin-bottom: 6px;
 }
 
-.section-orientation .section-title { color: var(--psee-white); }
-.section-orientation .section-text { color: rgba(255, 255, 255, 0.85); }
-.section-orientation .eyebrow { color: var(--psee-green-light); }
-
-.orientation-note {
-  margin-top: 16px;
+.pro-card-desc {
+  font-family: var(--font-body);
   font-size: 14px;
-  opacity: 0.7;
-  font-style: italic;
+  line-height: 1.6;
+  color: var(--psee-grey-medium);
 }
 
 /* SECTION CTA FINAL */
@@ -607,11 +837,7 @@ a { color: inherit; text-decoration: none; }
   margin-bottom: 24px;
 }
 
-.footer-social {
-  display: flex;
-  gap: 12px;
-  margin-top: 8px;
-}
+.footer-social { display: flex; gap: 12px; margin-top: 8px; }
 
 .social-link {
   width: 40px;
@@ -681,11 +907,19 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* RESPONSIVE */
+@media (max-width: 1280px) {
+  .axes-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .axe-card { padding: 28px 20px; }
+  .axe-icon { width: 72px; height: 72px; }
+  .axe-name { font-size: 19px; }
+  .axe-desc { font-size: 13px; }
+}
+
 @media (max-width: 1024px) {
   .hero-title { font-size: 56px; }
-  .axes-grid { grid-template-columns: repeat(2, 1fr); }
-  .pourquoi-content { padding: 80px 0 80px 40px; }
-  .orientation-content { padding: 80px 40px; }
+  .pourquoi-content { padding: 60px 40px 60px 40px; }
+  .comment-content { padding: 60px 40px 60px 0; }
+  .orientation-header { grid-template-columns: 1fr; gap: 40px; }
 }
 
 @media (max-width: 768px) {
@@ -721,11 +955,11 @@ a { color: inherit; text-decoration: none; }
   .badge { padding: 12px 10px; }
   .badge-label { font-size: 15px; }
 
-  .section-pourquoi {
+  .section-pourquoi, .section-comment {
     grid-template-columns: 1fr;
     min-height: auto;
   }
-  .pourquoi-image-wrap {
+  .pourquoi-image-wrap, .comment-mockups-wrap {
     height: 300px;
     min-height: 300px;
     order: 1;
@@ -737,39 +971,21 @@ a { color: inherit; text-decoration: none; }
     bottom: 0;
     background: linear-gradient(to top, var(--psee-cream) 0%, rgba(245, 242, 236, 0.5) 50%, transparent 100%);
   }
-  .pourquoi-content {
+  .pourquoi-content, .comment-content {
     padding: 60px 24px;
     max-width: 100%;
     order: 2;
   }
 
-  .section-axes, .section-comment, .section-cta { padding: 80px 20px; }
+  /* Mockups mobile */
+  .mockup { width: 140px; height: 280px; }
+  .mockup-1 { transform: rotate(-6deg) translateX(-65px) translateY(15px); }
+  .mockup-3 { transform: rotate(6deg) translateX(65px) translateY(15px); }
 
+  .section-axes, .section-orientation, .section-cta { padding: 80px 20px; }
   .section-title { font-size: 30px; }
-  .comment-grid { grid-template-columns: 1fr; gap: 40px; }
-  .axes-grid { grid-template-columns: 1fr; gap: 20px; }
-  .axe-card { padding: 28px 24px; }
-
-  .section-orientation {
-    grid-template-columns: 1fr;
-    min-height: auto;
-  }
-  .orientation-image-wrap {
-    height: 280px;
-    min-height: 280px;
-  }
-  .orientation-image-wrap::after {
-    width: 100%;
-    height: 50%;
-    top: auto;
-    bottom: 0;
-    right: 0;
-    background: linear-gradient(to top, var(--psee-green-dark) 0%, rgba(31, 77, 51, 0.4) 50%, transparent 100%);
-  }
-  .orientation-content {
-    padding: 60px 24px;
-    max-width: 100%;
-  }
+  .axes-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .orientation-cards { grid-template-columns: 1fr; gap: 20px; }
 
   .cta-title { font-size: 36px; }
 
@@ -791,6 +1007,7 @@ a { color: inherit; text-decoration: none; }
   .hero-title { font-size: 34px; }
   .hero-eyebrow, .eyebrow { font-size: 11px; letter-spacing: 2px; }
   .section-title { font-size: 28px; }
+  .axes-grid { grid-template-columns: 1fr; gap: 14px; }
 }
 </style>
 </head>
@@ -860,7 +1077,7 @@ a { color: inherit; text-decoration: none; }
   </div>
 </section>
 
-<!-- SECTION POURQUOI -->
+<!-- SECTION POURQUOI - V3 : photo main-phone -->
 <section class="section-pourquoi" id="pourquoi">
   <div class="pourquoi-content">
     <p class="eyebrow">Pourquoi Psee</p>
@@ -884,11 +1101,11 @@ a { color: inherit; text-decoration: none; }
     </p>
   </div>
   <div class="pourquoi-image-wrap">
-    <img src="assets/femme-canape.png" alt="Un temps pour soi, en toute sérénité" />
+    <img src="assets/main-phone.png" alt="Découvrez votre cartographie psychique" />
   </div>
 </section>
 
-<!-- SECTION 6 AXES -->
+<!-- SECTION 6 AXES - V3 : 6 colonnes sur 1 ligne -->
 <section class="section-axes" id="axes">
   <div class="section-axes-header">
     <p class="eyebrow">Les 6 dimensions</p>
@@ -906,98 +1123,250 @@ a { color: inherit; text-decoration: none; }
       <div class="axe-icon"><img src="assets/Icone_Cerveau_mecanique.svg" alt="" /></div>
       <p class="axe-verb">Comprendre</p>
       <h3 class="axe-name">Processus psychiques</h3>
-      <p class="axe-desc">La manière dont vos pensées s'organisent, ce qui revient en boucle, ce qui vous occupe l'esprit.</p>
+      <p class="axe-desc">La manière dont vos pensées s'organisent.</p>
     </div>
     <div class="axe-card">
       <div class="axe-icon"><img src="assets/Icone_Plante.svg" alt="" /></div>
       <p class="axe-verb">Explorer</p>
       <h3 class="axe-name">Ressources psychiques</h3>
-      <p class="axe-desc">Vos appuis intérieurs, votre énergie disponible, ce qui vous porte au quotidien.</p>
+      <p class="axe-desc">Vos appuis intérieurs et votre énergie.</p>
     </div>
     <div class="axe-card">
       <div class="axe-icon"><img src="assets/Icone_Cerveau_fleches.svg" alt="" /></div>
       <p class="axe-verb">Développer</p>
       <h3 class="axe-name">Comportements et conduites</h3>
-      <p class="axe-desc">Vos habitudes installées, vos réactions face aux situations, ce que vous mettez en place.</p>
+      <p class="axe-desc">Vos habitudes et vos réactions.</p>
     </div>
     <div class="axe-card">
       <div class="axe-icon"><img src="assets/Icone_Coeur.svg" alt="" /></div>
       <p class="axe-verb">Connecter</p>
       <h3 class="axe-name">Régulation émotionnelle</h3>
-      <p class="axe-desc">Comment vous vivez et exprimez vos émotions, comment elles vous traversent et se régulent.</p>
+      <p class="axe-desc">Comment vous vivez vos émotions.</p>
     </div>
     <div class="axe-card">
       <div class="axe-icon"><img src="assets/Icone_Personnage.svg" alt="" /></div>
       <p class="axe-verb">S'écouter</p>
       <h3 class="axe-name">Corps et risque somatique</h3>
-      <p class="axe-desc">Votre sommeil, vos tensions corporelles, vos signaux physiques, votre vitalité.</p>
+      <p class="axe-desc">Sommeil, tensions, signaux physiques.</p>
     </div>
     <div class="axe-card">
       <div class="axe-icon"><img src="assets/Icone_Maison.svg" alt="" /></div>
       <p class="axe-verb">S'harmoniser</p>
       <h3 class="axe-name">Environnement</h3>
-      <p class="axe-desc">Vos liens familiaux, amicaux, professionnels, le contexte dans lequel vous évoluez.</p>
+      <p class="axe-desc">Vos liens et votre contexte de vie.</p>
     </div>
   </div>
 </section>
 
-<!-- SECTION COMMENT -->
+<!-- SECTION COMMENT - V3 : mockups iPhone CSS -->
 <section class="section-comment" id="comment">
-  <div class="comment-grid">
-    <div class="comment-image">
-      <img src="assets/main-phone.png" alt="Découvrez votre cartographie psychique" />
-    </div>
-    <div class="comment-content">
-      <p class="eyebrow">Comment ça marche</p>
-      <h2 class="section-title">Un parcours <em>simple</em> et structuré</h2>
-      <p class="section-text">
-        Un échange guidé en quelques étapes, pour aboutir à un bilan
-        clair et personnalisé.
-      </p>
+  <div class="comment-mockups-wrap">
+    <div class="mockups-stack">
 
-      <ul class="comment-steps">
-        <li class="comment-step">
-          <div class="step-num">1</div>
-          <div class="step-text">
-            <strong>Vous prenez le temps</strong>
-            <span>15 minutes pour répondre à votre rythme, dans un cadre confidentiel.</span>
+      <!-- Mockup 1 : Entretien -->
+      <div class="mockup mockup-1">
+        <div class="mockup-screen">
+          <div class="mockup-header">
+            <h4>Psee</h4>
+            <span>ENTRETIEN EN COURS</span>
           </div>
-        </li>
-        <li class="comment-step">
-          <div class="step-num">2</div>
-          <div class="step-text">
-            <strong>Vous explorez les 6 dimensions</strong>
-            <span>Un dialogue guidé qui s'adapte à ce que vous partagez.</span>
+          <div class="mockup-body">
+            <div class="mockup-chat-bubble">Comment vous sentez-vous physiquement en ce moment ? Sommeil, tensions, énergie ?</div>
+            <div class="mockup-chat-bubble user">Je dors mal depuis 3 semaines, beaucoup de stress au travail.</div>
+            <div class="mockup-chat-bubble">Je comprends. Le stress professionnel peut profondément affecter le sommeil. Et du côté de vos relations proches ?</div>
           </div>
-        </li>
-        <li class="comment-step">
-          <div class="step-num">3</div>
-          <div class="step-text">
-            <strong>Vous recevez votre bilan</strong>
-            <span>Une cartographie claire, des repères concrets, et des pistes pour la suite.</span>
+        </div>
+      </div>
+
+      <!-- Mockup 2 : Bilan (centré) -->
+      <div class="mockup mockup-2">
+        <div class="mockup-screen">
+          <div class="mockup-header">
+            <h4>Votre bilan est prêt</h4>
+            <span>PS-7X2K · 12 AVRIL</span>
           </div>
-        </li>
-      </ul>
+          <div class="mockup-body">
+            <div class="mockup-cartography">
+              <div class="mockup-cartography-title">VOTRE CARTOGRAPHIE</div>
+              <svg class="mockup-radar-svg" viewBox="0 0 100 80">
+                <polygon points="50,8 85,28 78,62 22,62 15,28" fill="none" stroke="#1F4D33" stroke-width="0.5" opacity="0.3"/>
+                <polygon points="50,15 75,32 70,58 30,58 25,32" fill="#2F703F" fill-opacity="0.2" stroke="#2F703F" stroke-width="1"/>
+                <circle cx="50" cy="8" r="2" fill="#1F4D33"/>
+                <circle cx="85" cy="28" r="2" fill="#1F4D33"/>
+                <circle cx="78" cy="62" r="2" fill="#1F4D33"/>
+                <circle cx="22" cy="62" r="2" fill="#1F4D33"/>
+                <circle cx="15" cy="28" r="2" fill="#1F4D33"/>
+              </svg>
+            </div>
+            <div class="mockup-axe-row">
+              <span>Processus psy.</span>
+              <span class="mockup-tag tension">Tension</span>
+            </div>
+            <div class="mockup-axe-row">
+              <span>Ressources</span>
+              <span class="mockup-tag solide">Solide</span>
+            </div>
+            <div class="mockup-axe-row">
+              <span>Comportements</span>
+              <span class="mockup-tag attention">Attention</span>
+            </div>
+            <div class="mockup-axe-row">
+              <span>Corps somatique</span>
+              <span class="mockup-tag tension">Tension</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mockup 3 : Orientation marketplace -->
+      <div class="mockup mockup-3">
+        <div class="mockup-screen">
+          <div class="mockup-header">
+            <h4>Vers votre thérapeute</h4>
+            <span>ORIENTATION CIBLÉE</span>
+          </div>
+          <div class="mockup-body">
+            <div style="background:#FCE8E2; border-radius:8px; padding:8px; margin-bottom:8px;">
+              <div style="font-size:9px; font-weight:600; color:#A04428; margin-bottom:4px;">3 axes en tension</div>
+              <div style="font-size:8px; color:#6B6B68; line-height:1.4;">Une consultation préventive est conseillée.</div>
+            </div>
+            <div style="background:#fff; border-radius:8px; padding:10px; text-align:center; margin-bottom:8px;">
+              <div style="font-size:10px; font-weight:600; color:#1F4D33; margin-bottom:6px;">Vous souhaitez être accompagné·e ?</div>
+              <div style="font-size:8px; color:#6B6B68; line-height:1.4;">Psee met en relation avec des thérapeutes adaptés à votre profil.</div>
+            </div>
+            <div class="mockup-pro-card">
+              <div class="mockup-pro-avatar" style="background:#89BF89;"></div>
+              <div class="mockup-pro-info">
+                <div class="mockup-pro-name">Dr. Martin</div>
+                <div class="mockup-pro-role">Psychologue · se propose</div>
+              </div>
+            </div>
+            <div class="mockup-pro-card">
+              <div class="mockup-pro-avatar" style="background:#F4A261;"></div>
+              <div class="mockup-pro-info">
+                <div class="mockup-pro-name">Dr. Dupont</div>
+                <div class="mockup-pro-role">Psychothérapeute · se propose</div>
+              </div>
+            </div>
+            <div class="mockup-cta">Recevoir des propositions</div>
+          </div>
+        </div>
+      </div>
+
     </div>
+  </div>
+  <div class="comment-content">
+    <p class="eyebrow">Comment ça marche</p>
+    <h2 class="section-title">Un parcours <em>simple</em> et structuré</h2>
+    <p class="section-text">
+      Un échange guidé en quelques étapes, pour aboutir à un bilan
+      clair et personnalisé.
+    </p>
+
+    <ul class="comment-steps">
+      <li class="comment-step">
+        <div class="step-num">1</div>
+        <div class="step-text">
+          <strong>Vous prenez le temps</strong>
+          <span>15 minutes pour répondre à votre rythme, dans un cadre confidentiel.</span>
+        </div>
+      </li>
+      <li class="comment-step">
+        <div class="step-num">2</div>
+        <div class="step-text">
+          <strong>Vous explorez les 6 dimensions</strong>
+          <span>Un dialogue guidé qui s'adapte à ce que vous partagez.</span>
+        </div>
+      </li>
+      <li class="comment-step">
+        <div class="step-num">3</div>
+        <div class="step-text">
+          <strong>Vous recevez votre bilan</strong>
+          <span>Une cartographie claire, des repères concrets, et des pistes pour la suite.</span>
+        </div>
+      </li>
+    </ul>
   </div>
 </section>
 
-<!-- SECTION ORIENTATION avec photo therapeute -->
+<!-- SECTION ORIENTATION - V3 : MARKETPLACE INVERSÉE -->
 <section class="section-orientation">
-  <div class="orientation-image-wrap">
-    <img src="assets/therapeute.jpg" alt="Un accompagnement humain par un professionnel" />
+
+  <div class="orientation-header">
+    <div class="orientation-header-left">
+      <p class="eyebrow">Résultats &amp; orientation</p>
+      <h2 class="section-title">
+        Une orientation plus lisible <em>grâce au check-up</em>
+      </h2>
+      <p class="section-text">
+        Le check-up Psee permet de mieux comprendre votre situation
+        pour envisager plus clairement la suite.
+      </p>
+    </div>
+
+    <div class="orientation-features">
+      <div class="orientation-feature">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
+        </div>
+        <div class="feature-content">
+          <h4>Synthèse personnalisée</h4>
+          <p>Le check-up met en évidence vos ressources, vos fragilités éventuelles et les tensions qui méritent attention.</p>
+        </div>
+      </div>
+
+      <div class="orientation-feature">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/></svg>
+        </div>
+        <div class="feature-content">
+          <h4>Clarification du besoin</h4>
+          <p>La synthèse permet de distinguer plus lisiblement ce qui relève d'un besoin d'écoute, d'un accompagnement psychothérapeutique, d'un avis psychiatrique ou d'un simple point de vigilance.</p>
+        </div>
+      </div>
+
+      <div class="orientation-feature">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M7 17l9-9M9 8h7v7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="feature-content">
+          <h4>Orientation thérapeutique</h4>
+          <p>Après votre check-up, Psee active une mise en relation clinique ciblée : votre profil anonymisé est présenté à des praticiens adaptés. Les professionnels intéressés se manifestent. Vous choisissez en toute liberté.</p>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="orientation-content">
-    <p class="eyebrow">Orientation</p>
-    <h2 class="section-title">Si besoin, des <em>professionnels</em> sont là pour vous</h2>
-    <p class="section-text">
-      Psee n'est ni un diagnostic, ni une thérapie. À l'issue de votre
-      check-up, si vous le souhaitez, vous accédez à un annuaire de
-      psychologues, psychothérapeutes et psychiatres prêts à vous
-      accompagner.
-    </p>
-    <p class="orientation-note">Cet accès est gratuit pour tous, abonnés ou non.</p>
+
+  <div class="orientation-cards">
+    <div class="pro-card">
+      <div class="pro-card-image">
+        <img src="assets/pro-psychologue.jpg" alt="Psychologue clinicien" />
+      </div>
+      <div class="pro-card-body">
+        <h3 class="pro-card-title">Psychologue clinicien</h3>
+        <p class="pro-card-desc">Évaluation, soutien psychique et accompagnement</p>
+      </div>
+    </div>
+    <div class="pro-card">
+      <div class="pro-card-image">
+        <img src="assets/pro-therapeute.jpg" alt="Psychothérapeute" />
+      </div>
+      <div class="pro-card-body">
+        <h3 class="pro-card-title">Psychothérapeute</h3>
+        <p class="pro-card-desc">Prise en charge structurée selon votre problématique</p>
+      </div>
+    </div>
+    <div class="pro-card">
+      <div class="pro-card-image">
+        <img src="assets/pro-psychiatre.jpg" alt="Psychiatre" />
+      </div>
+      <div class="pro-card-body">
+        <h3 class="pro-card-title">Psychiatre</h3>
+        <p class="pro-card-desc">Évaluation spécialisée lorsque la situation le nécessite</p>
+      </div>
+    </div>
   </div>
+
 </section>
 
 <!-- SECTION CTA FINAL -->
