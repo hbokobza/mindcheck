@@ -1617,60 +1617,114 @@ function showBilanBTB(data){
       .replace(/>/g, '&gt;');
   }
 
-  // === SCORES PSYCHOMÉTRIQUES ===
-  // Reprend les indicateurs du data.indicateurs (calculés serveur)
-  // ou les valeurs par défaut si absents. Affiche les 3 chips.
-  const indicateurs = data.indicateurs || {};
+  // === SCORES PSYCHOMÉTRIQUES (CORRIGÉ V3.1) ===
+  // data.indicateurs est un TABLEAU côté serveur (cf showBilan BtC),
+  // pas un objet keyé par PHQ9/GAD7/PSS10.
+  // Chaque entrée a la structure : {id, score, max, items_couverts, items_total, label, ...}
+  const indicateurs = Array.isArray(data.indicateurs) ? data.indicateurs : [];
 
-  function scorePsychoCard(code, name, periode, score, max, label, intensity, couvAlert, alertHTML) {
-    const fillPct = Math.round((score / max) * 100);
-    return `
-      <div style="padding:18px 18px 16px;border:1px solid #e5e6e0;border-radius:14px;background:#fbfbfa;display:flex;flex-direction:column;gap:8px;min-height:130px">
-        <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
-          <div>
-            <div style="color:#243f70;font-weight:800;font-size:18px;font-family:Georgia,serif">${code} <span style="font-size:12px;color:#666;font-weight:600;font-family:Arial">· ${escapeHTML(name)}</span></div>
-            <div style="color:#6b6b6b;font-size:11px;margin-top:2px">${escapeHTML(periode)}</div>
-          </div>
-          <div style="color:#243f70;font-size:30px;font-weight:800;line-height:1">${score}<span style="font-size:14px;color:#666;font-weight:600">/${max}</span></div>
-        </div>
-        <div style="height:7px;background:#eee;border-radius:999px;margin:6px 0 4px;overflow:hidden">
-          <div style="height:100%;background:#dfa24c;border-radius:999px;width:${fillPct}%"></div>
-        </div>
-        <span style="display:inline-block;padding:5px 11px;border-radius:999px;background:#fff0d9;color:#c98228;font-weight:800;font-size:11px;align-self:flex-start">${escapeHTML(label)}</span>
-        ${couvAlert ? `<div style="font-size:10px;color:#777;font-style:italic;margin-top:2px">${escapeHTML(couvAlert)}</div>` : ''}
-        ${alertHTML || ''}
-      </div>`;
+  // Métadonnées identiques à celles de showBilan BtC
+  const PSYCHO_META_BTB = {
+    PHQ9: {
+      code: 'PHQ-9',
+      name: 'Patient Health Questionnaire',
+      periode: 'Sévérité dépressive · 14 derniers jours',
+      thresholds: [
+        { max: 4,  color: '#5B9B67', bg: '#e7efe7', label: 'minimal' },
+        { max: 9,  color: '#A9C76F', bg: '#eef4e1', label: 'léger' },
+        { max: 14, color: '#D8A24A', bg: '#f7efdd', label: 'modéré' },
+        { max: 19, color: '#D88A4A', bg: '#fae5d8', label: 'modéré à sévère' },
+        { max: 27, color: '#D97A7A', bg: '#fde0e0', label: 'sévère' }
+      ]
+    },
+    GAD7: {
+      code: 'GAD-7',
+      name: 'Generalized Anxiety Disorder Scale',
+      periode: 'Anxiété généralisée · 14 derniers jours',
+      thresholds: [
+        { max: 4,  color: '#5B9B67', bg: '#e7efe7', label: 'minimale' },
+        { max: 9,  color: '#A9C76F', bg: '#eef4e1', label: 'légère' },
+        { max: 14, color: '#D8A24A', bg: '#f7efdd', label: 'modérée' },
+        { max: 21, color: '#D97A7A', bg: '#fde0e0', label: 'sévère' }
+      ]
+    },
+    PSS10: {
+      code: 'PSS-10',
+      name: 'Perceived Stress Scale',
+      periode: 'Stress perçu · dernier mois',
+      thresholds: [
+        { max: 13, color: '#5B9B67', bg: '#e7efe7', label: 'faible' },
+        { max: 26, color: '#D8A24A', bg: '#f7efdd', label: 'modéré' },
+        { max: 40, color: '#D97A7A', bg: '#fde0e0', label: 'élevé' }
+      ]
+    }
+  };
+
+  function getBandBTB(moduleId, score) {
+    const meta = PSYCHO_META_BTB[moduleId];
+    if (!meta) return { color: '#8a897f', bg: '#f0eee9', label: '—' };
+    return meta.thresholds.find(t => score <= t.max) || meta.thresholds[meta.thresholds.length - 1];
   }
 
-  // Récupération des indicateurs (mêmes données que showBilan BtC)
-  const phq = indicateurs.PHQ9;
-  const gad = indicateurs.GAD7;
-  const pss = indicateurs.PSS10;
+  // Reconstitution d'un mapping {PHQ9, GAD7, PSS10} à partir du tableau
+  const indMap = {};
+  indicateurs.forEach(ind => { if (ind && ind.id) indMap[ind.id] = ind; });
+  const phq = indMap.PHQ9;
+  const gad = indMap.GAD7;
+  const pss = indMap.PSS10;
 
-  // Détection item 9 PHQ-9 (idéation suicidaire)
-  // 1) Si data.item9_present existe (champ V3), on l'utilise
-  // 2) Sinon, fallback : si PHQ-9 >= 15 OU score PHQ-9 item 9 connu
+  // Détection item 9 PHQ-9 (idéation suicidaire) - posture observationnelle wellness
   const item9Present = data.item9_present === true ||
     (phq && phq.itemScores && Number(phq.itemScores[8]) >= 1) ||
-    (phq && phq.score >= 15);
+    (phq && phq.score != null && phq.score >= 15);
 
-  // Alerte item 9 — wording observationnel wellness safe (ambre, pas rouge)
   const item9AlertHTML = item9Present ? `
-    <div style="margin-top:8px;background:#fff7e0;border-left:4px solid #d8a24a;border-radius:6px;padding:8px 10px;color:#7c5a0f;font-size:11px;line-height:1.45">
+    <div style="margin-top:10px;background:#fff7e0;border-left:4px solid #d8a24a;border-radius:6px;padding:9px 11px;color:#7c5a0f;font-size:11px;line-height:1.45">
       <b>Item 9 — point d'attention</b><br>
       Score ≥ 1 sur l'item relatif aux idées de mort ou d'auto-dommage. Observation à intégrer à votre lecture clinique.
     </div>` : '';
 
-  // Construction des 3 cards psychométriques
-  const phqCard = phq && phq.score != null
-    ? scorePsychoCard('PHQ-9', 'Patient Health Questionnaire', 'Sévérité dépressive · 14 derniers jours', phq.score, 27, phq.bandLabel || 'modéré', 'orange', phq.coverageNote || '', item9AlertHTML)
-    : '<div style="padding:18px;color:#999;font-style:italic;font-size:12px">PHQ-9 non calculable (couverture insuffisante)</div>';
-  const gadCard = gad && gad.score != null
-    ? scorePsychoCard('GAD-7', 'Generalized Anxiety Disorder Scale', 'Anxiété généralisée · 14 derniers jours', gad.score, 21, gad.bandLabel || 'modérée', 'orange', gad.coverageNote || '', '')
-    : '<div style="padding:18px;color:#999;font-style:italic;font-size:12px">GAD-7 non calculable (couverture insuffisante)</div>';
-  const pssCard = pss && pss.score != null
-    ? scorePsychoCard('PSS-10', 'Perceived Stress Scale', 'Stress perçu · dernier mois', pss.score, 40, pss.bandLabel || 'modéré', 'orange', pss.coverageNote || '', '')
-    : '<div style="padding:18px;color:#999;font-style:italic;font-size:12px">PSS-10 non calculable (couverture insuffisante)</div>';
+  // Card uniforme pour les 3 instruments — utilise les mêmes seuils colorés que le BtC
+  function scorePsychoCardBTB(moduleId, ind, alertHTML) {
+    const meta = PSYCHO_META_BTB[moduleId];
+    if (!ind || ind.score == null) {
+      return `<div style="padding:18px;border:1px dashed #d8d6cf;border-radius:14px;background:#fafaf7;color:#999;font-style:italic;font-size:12px;display:flex;flex-direction:column;gap:6px;min-height:130px;justify-content:center;text-align:center">
+        <div style="color:#243f70;font-weight:800;font-style:normal;font-size:14px;font-family:Georgia,serif">${meta ? meta.code : moduleId}</div>
+        <div>Non calculable<br><span style="font-size:10px">couverture insuffisante</span></div>
+      </div>`;
+    }
+    const score = ind.score;
+    const max = ind.max || meta.thresholds[meta.thresholds.length - 1].max;
+    const band = getBandBTB(moduleId, score);
+    const fillPct = Math.round((score / max) * 100);
+    const itemsCovered = ind.items_couverts || 0;
+    const itemsTotal = ind.items_total || 0;
+    const isPartial = itemsTotal > 0 && itemsCovered < itemsTotal;
+    const labelText = isPartial ? `${band.label} (estimation indicative)` : band.label;
+    const couvNote = itemsTotal > 0 ? `${itemsCovered}/${itemsTotal} items couverts par le récit` : '';
+
+    return `
+      <div style="padding:18px 18px 16px;border:1px solid #e5e6e0;border-radius:14px;background:#fbfbfa;display:flex;flex-direction:column;gap:8px;min-height:130px">
+        <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
+          <div style="flex:1;min-width:0">
+            <div style="color:#243f70;font-weight:800;font-size:17px;font-family:Georgia,serif">${meta.code}</div>
+            <div style="color:#666;font-size:11px;margin-top:1px">${escapeHTML(meta.name)}</div>
+            <div style="color:#888;font-size:10px;margin-top:3px;font-style:italic">${escapeHTML(meta.periode)}</div>
+          </div>
+          <div style="color:#243f70;font-size:28px;font-weight:800;line-height:1;flex-shrink:0">${score}<span style="font-size:13px;color:#666;font-weight:600">/${max}</span></div>
+        </div>
+        <div style="height:7px;background:#eee;border-radius:999px;margin:4px 0;overflow:hidden">
+          <div style="height:100%;background:${band.color};border-radius:999px;width:${fillPct}%"></div>
+        </div>
+        <span style="display:inline-block;padding:5px 11px;border-radius:999px;background:${band.bg};color:${band.color};font-weight:800;font-size:11px;align-self:flex-start">${escapeHTML(labelText)}</span>
+        ${couvNote ? `<div style="font-size:10px;color:#888;font-style:italic;margin-top:2px">${escapeHTML(couvNote)}</div>` : ''}
+        ${alertHTML || ''}
+      </div>`;
+  }
+
+  const phqCard = scorePsychoCardBTB('PHQ9', phq, item9AlertHTML);
+  const gadCard = scorePsychoCardBTB('GAD7', gad, '');
+  const pssCard = scorePsychoCardBTB('PSS10', pss, '');
 
   // === SYNTHÈSE CLINIQUE EN BLEU CLAIR ===
   const syntheseHTML = `
@@ -1698,9 +1752,9 @@ function showBilanBTB(data){
     return SCORE_META[s].color;
   });
 
-  // SVG du radar (compact pour le grid)
+  // SVG du radar (compact pour le grid) — viewBox élargi pour ne pas tronquer les labels
   const radarSVG = `
-    <svg viewBox="-130 -130 260 260" width="240" height="240" aria-label="Radar">
+    <svg viewBox="-160 -135 320 280" width="240" height="220" aria-label="Radar" style="max-width:100%;height:auto">
       <polygon points="0,-100 86.6,-50 86.6,50 0,100 -86.6,50 -86.6,-50" fill="none" stroke="#dbcdb7" stroke-width="0.7"/>
       <polygon points="0,-66 57.2,-33 57.2,33 0,66 -57.2,33 -57.2,-33" fill="none" stroke="#e8ded0" stroke-width="0.7"/>
       <polygon points="0,-33 28.6,-16.5 28.6,16.5 0,33 -28.6,16.5 -28.6,-16.5" fill="none" stroke="#e8ded0" stroke-width="0.7"/>
@@ -1712,13 +1766,13 @@ function showBilanBTB(data){
       <line x1="0" y1="0" x2="-86.6" y2="-50" stroke="#e8ded0" stroke-width="0.5"/>
       <polygon points="${radarPolygon}" fill="rgba(36,63,112,0.18)" stroke="#243f70" stroke-width="2" stroke-linejoin="round"/>
       ${radarPoints.map((p, i) => `<circle cx="${p[0]}" cy="${p[1]}" r="6" fill="${radarColors[i]}"/>`).join('')}
-      <g fill="#243f70" font-weight="800" font-size="9" text-anchor="middle" font-family="Arial">
-        <text x="0" y="-110">Processus</text>
-        <text x="100" y="-50">Ressources</text>
-        <text x="100" y="58">Comportements</text>
-        <text x="0" y="118">Régulation</text>
-        <text x="-100" y="58">Corps</text>
-        <text x="-100" y="-50">Environnement</text>
+      <g fill="#243f70" font-weight="800" font-size="10" font-family="Arial">
+        <text x="0" y="-115" text-anchor="middle">Processus</text>
+        <text x="105" y="-55" text-anchor="start">Ressources</text>
+        <text x="105" y="63" text-anchor="start">Comportements</text>
+        <text x="0" y="125" text-anchor="middle">Régulation</text>
+        <text x="-105" y="63" text-anchor="end">Corps</text>
+        <text x="-105" y="-55" text-anchor="end">Environnement</text>
       </g>
     </svg>`;
 
@@ -1816,9 +1870,11 @@ function showBilanBTB(data){
     </section>` : '';
 
   // === MÉCANISMES TRANSDIAGNOSTIQUES (CARDS COMPACTES AVEC BOUCLE COURTE) ===
+  // Limité à 4 mécanismes maximum pour préserver le grid (sinon le 5e tombe seul sur la 2e ligne)
   const mecanismes = (data.mecanismes_transdiagnostiques || [])
     .slice()
-    .sort((a, b) => (b.salience || 0) - (a.salience || 0));
+    .sort((a, b) => (b.salience || 0) - (a.salience || 0))
+    .slice(0, 4);
 
   const mecanismeCards = mecanismes.map(m => {
     const sal = Math.max(0, Math.min(3, m.salience || 0));
