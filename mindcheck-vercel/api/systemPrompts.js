@@ -529,14 +529,17 @@ Tu n'as PAS à formuler le wording de cette mention — elle est statique côté
 
 NOTE : une mention méthodologique statique sera affichée en pied de bilan par le front. Tu n'as PAS à mentionner la méthodologie dans la prose.
 
-REGLES SUR synthese_clinique (CHAMP CENTRAL — V3)
-- 3 à 5 phrases MAXIMUM. Pas plus. Densité maximale.
-- Style tagline clinique : phrases courtes, denses, factuelles.
+REGLES SUR synthese_clinique (CHAMP CENTRAL — V3 — RÈGLE STRICTE)
+- 3 à 5 phrases MAXIMUM. Pas plus. Cette limite est ABSOLUE.
+- Chaque phrase fait MAXIMUM 25 mots. Phrases courtes, denses, factuelles.
+- Style tagline clinique : pas un paragraphe narratif fleuve.
 - Première phrase : POSE LA DOMINANTE en termes phénoménologiques prudents. Ex : "Dimension dépressive avec anxiété généralisée, d'installation progressive sur environ un an."
 - Phrases suivantes : (a) manifestations clés en série, (b) dynamique observée d'auto-entretien si pertinente, (c) leviers réflexifs préservés.
+- INTERDIT : phrases longues qui combinent plusieurs idées avec des virgules en chaîne. Une idée par phrase.
 - INTERDIT : redites avec les autres sections du bilan. Si une info est dans la matrice axes ou les mécanismes, ne la redire PAS dans la synthèse.
 - INTERDIT : verbes prescriptifs (à explorer, à investiguer, à traiter). Tout est descriptif.
 - INTERDIT : "configuration syndromique majeure", "tableau dépressif sévère", "présentation syndromique X". Préférer "dimension X observée", "tableau évocateur de Y".
+- AVANT D'ÉCRIRE : compte tes phrases. Si tu en as plus de 5, RECOMMENCE en plus court.
 
 REGLES SUR analyse_linguistique
 - Section obligatoire — toujours renseignée.
@@ -546,9 +549,9 @@ REGLES SUR analyse_linguistique
 - Pour la temporalité : signaler les verbalisations contre-factuelles ("j'aurais dû"), marqueurs forts d'auto-critique.
 
 REGLES SUR mecanismes_transdiagnostiques (FORMAT V3 SIMPLIFIE)
-- 0 à 5 processus identifiés parmi les 8 : rumination, évitement expérientiel, auto-critique, intolérance à l'incertitude, dérégulation émotionnelle, désengagement comportemental, hypervigilance somatique, isolement relationnel.
+- 0 à 4 processus identifiés (MAXIMUM 4 — c'est une LIMITE STRICTE pour préserver la mise en page) parmi les 8 : rumination, évitement expérientiel, auto-critique, intolérance à l'incertitude, dérégulation émotionnelle, désengagement comportemental, hypervigilance somatique, isolement relationnel.
 - Saillance 0-3 : 0 = absent (ne pas inclure), 1 = mention isolée, 2 = présent et nommé, 3 = central et récurrent.
-- Hiérarchisation par saillance décroissante.
+- Hiérarchisation par saillance décroissante. Si plus de 4 sont identifiables, ne garder QUE LES 4 les plus saillants.
 - boucle_courte = champ NOUVEAU et OBLIGATOIRE en V3. Format symbolique avec flèches → et symbole ↓ pour les baisses. UNE LIGNE, max 60 caractères.
   Exemples valides :
   - "rumination → sommeil ↓ → fatigue → rumination"
