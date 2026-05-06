@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -424,41 +425,25 @@ a { color: inherit; text-decoration: none; }
 
 /* SECTION POURQUOI - V6 : photo prend plus de place, pas tronquée à droite */
 .section-pourquoi {
-  padding: 0;
-  background: var(--psee-cream);
+  padding: 80px 80px 80px 80px;
+  background-color: var(--psee-cream);
+  background-image: url('assets/femme-canape.png');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
   position: relative;
-  overflow: hidden;
-  display: grid;
-  grid-template-columns: 0.85fr 1.15fr; /* image plus grande */
-  align-items: stretch;
   min-height: var(--section-image-height);
-}
-
-.pourquoi-image-wrap {
-  position: relative;
-  height: 100%;
-  min-height: var(--section-image-height);
-  order: 2;
-  overflow: hidden;
-}
-
-/* Photo déjà dégradée à gauche dans le fichier source - pas besoin de gradient CSS supplémentaire */
-.pourquoi-image-wrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 80% center; /* compromis : femme/jean tirés vers la gauche du cadre, dégradé encore visible */
+  display: flex;
+  align-items: center;
 }
 
 .pourquoi-content {
-  padding: 80px 0 80px 80px;
   max-width: 540px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   position: relative;
   z-index: 3;
-  order: 1;
 }
 
 .eyebrow {
@@ -1037,7 +1022,8 @@ a { color: inherit; text-decoration: none; }
   .hero-mockup { width: 200px; height: 400px; }
   .hero-mockup-1 { transform: rotate(-9deg) translateX(-95px) translateY(15px); }
   .hero-mockup-3 { transform: rotate(9deg) translateX(95px) translateY(15px); }
-  .pourquoi-content, .comment-content, .orientation-content { padding: 60px 40px; }
+  .comment-content, .orientation-content { padding: 60px 40px; }
+  .section-pourquoi { padding: 60px 40px; }
 }
 
 /* ============================================================
@@ -1109,28 +1095,27 @@ a { color: inherit; text-decoration: none; }
   .badge-label { font-size: 13px; margin-bottom: 2px; }
   .badge-sub { font-size: 9px; letter-spacing: 0; }
 
-  /* POURQUOI mobile — photo prend toute la place avant le texte */
+  /* POURQUOI mobile — photo en haut, texte sur cream en-dessous */
   .section-pourquoi {
-    grid-template-columns: 1fr;
+    background-image: none;
+    background-color: var(--psee-cream);
+    padding: 0;
+    flex-direction: column;
+    align-items: stretch;
     min-height: auto;
   }
-  .pourquoi-image-wrap {
-    height: 360px;
-    min-height: 360px;
-    order: 1;
-  }
-  .pourquoi-image-wrap img {
-    object-position: center center;
+  .section-pourquoi::before {
+    content: '';
+    display: block;
+    height: 320px;
+    background-image: url('assets/femme-canape.png');
+    background-size: cover;
+    background-position: 70% center;
+    background-repeat: no-repeat;
   }
   .pourquoi-content {
-    padding: 40px 24px 56px;
+    padding: 32px 24px 56px;
     max-width: 100%;
-    order: 2;
-    margin-top: -28px;
-    background: var(--psee-cream);
-    border-radius: 28px 28px 0 0;
-    position: relative;
-    z-index: 3;
   }
 
   /* AXES mobile — scroll horizontal app-like */
@@ -1434,9 +1419,6 @@ a { color: inherit; text-decoration: none; }
       Anonyme, accessible, structuré : c'est le check-up que vous vous devez
       quand quelque chose vous interroge.
     </p>
-  </div>
-  <div class="pourquoi-image-wrap">
-    <img src="assets/femme-canape.png" alt="Un temps pour soi, en toute sérénité" />
   </div>
 </section>
 
