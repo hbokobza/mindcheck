@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -551,40 +550,27 @@ a { color: inherit; text-decoration: none; }
   color: var(--psee-grey-medium);
 }
 
-/* SECTION COMMENT - V6 : photo plus à gauche, dégradé uniquement à droite, "15 min" */
+/* SECTION COMMENT — photo main+phone en background, texte sur le dégradé à gauche */
 .section-comment {
-  padding: 0;
-  background: var(--psee-cream);
-  display: grid;
-  grid-template-columns: 0.85fr 1.15fr; /* texte à gauche, image à droite */
-  align-items: stretch;
-  min-height: var(--section-image-height);
-  overflow: hidden;
-}
-
-.comment-image-wrap {
+  padding: 80px 80px 80px 80px;
+  background-color: var(--psee-cream);
+  background-image: url('assets/main-phone.png');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
   position: relative;
-  height: 100%;
   min-height: var(--section-image-height);
-  overflow: hidden;
-  order: 2; /* image à droite */
-}
-
-/* Photo déjà dégradée à gauche dans le fichier source - pas de gradient CSS supplémentaire */
-.comment-image-wrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center center;
+  display: flex;
+  align-items: center;
 }
 
 .comment-content {
-  padding: 80px 40px 80px 80px;
   max-width: 580px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  order: 1; /* texte à gauche */
+  position: relative;
+  z-index: 3;
 }
 
 .comment-steps { list-style: none; margin-top: 28px; }
@@ -1022,8 +1008,9 @@ a { color: inherit; text-decoration: none; }
   .hero-mockup { width: 200px; height: 400px; }
   .hero-mockup-1 { transform: rotate(-9deg) translateX(-95px) translateY(15px); }
   .hero-mockup-3 { transform: rotate(9deg) translateX(95px) translateY(15px); }
-  .comment-content, .orientation-content { padding: 60px 40px; }
+  .orientation-content { padding: 60px 40px; }
   .section-pourquoi { padding: 60px 40px; }
+  .section-comment { padding: 60px 40px; }
 }
 
 /* ============================================================
@@ -1151,28 +1138,27 @@ a { color: inherit; text-decoration: none; }
   .axe-verb { font-size: 9px; margin-bottom: 6px; }
   .axe-desc { font-size: 13px; }
 
-  /* COMMENT mobile */
+  /* COMMENT mobile — photo en haut, texte sur cream en-dessous */
   .section-comment {
-    grid-template-columns: 1fr;
+    background-image: none;
+    background-color: var(--psee-cream);
+    padding: 0;
+    flex-direction: column;
+    align-items: stretch;
     min-height: auto;
   }
-  .comment-image-wrap {
+  .section-comment::before {
+    content: '';
+    display: block;
     height: 320px;
-    min-height: 320px;
-    order: 1;
-  }
-  .comment-image-wrap img {
-    object-position: center center;
+    background-image: url('assets/main-phone.png');
+    background-size: cover;
+    background-position: 70% center;
+    background-repeat: no-repeat;
   }
   .comment-content {
-    padding: 40px 24px 56px;
+    padding: 32px 24px 56px;
     max-width: 100%;
-    order: 2;
-    margin-top: -28px;
-    background: var(--psee-cream);
-    border-radius: 28px 28px 0 0;
-    position: relative;
-    z-index: 3;
   }
 
   /* ORIENTATION mobile */
@@ -1477,9 +1463,6 @@ a { color: inherit; text-decoration: none; }
 
 <!-- SECTION COMMENT - "15 min" au lieu de "10 à 15 min" -->
 <section class="section-comment" id="comment">
-  <div class="comment-image-wrap">
-    <img src="assets/main-phone.png" alt="Un parcours simple en 3 étapes" />
-  </div>
   <div class="comment-content">
     <p class="eyebrow">Comment ça marche ?</p>
     <h2 class="section-title">
