@@ -107,9 +107,7 @@ a { color: inherit; text-decoration: none; }
 .nav-cta:hover { background: #163823; }
 .nav-cta:active { transform: translateY(1px); }
 
-/* ============================================================
-   HERO V5 — INVERSÉ : MOCKUPS IPHONE À DROITE
-   ============================================================ */
+/* HERO V6 — mockups iPhone à droite, texte à gauche */
 .hero {
   position: relative;
   min-height: 92vh;
@@ -198,7 +196,7 @@ a { color: inherit; text-decoration: none; }
   font-size: 17px;
 }
 
-/* PASTILLES - Avec icône € corrigée */
+/* PASTILLES desktop (4 colonnes cartes) */
 .hero-badges {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -248,9 +246,9 @@ a { color: inherit; text-decoration: none; }
   line-height: 1.3;
 }
 
-/* ============================================================
-   HERO MOCKUPS - 3 TÉLÉPHONES À DROITE
-   ============================================================ */
+/* PASTILLES mobile (1 ligne pillules) — créé via media query plus bas */
+
+/* HERO MOCKUPS - 3 téléphones à droite */
 .hero-mockups-wrap {
   position: relative;
   height: 100%;
@@ -321,7 +319,6 @@ a { color: inherit; text-decoration: none; }
   gap: 8px;
 }
 
-/* Mockup 1 (gauche) - Entretien */
 .hero-mockup-1 {
   transform: rotate(-9deg) translateX(-130px) translateY(20px);
   z-index: 1;
@@ -343,7 +340,6 @@ a { color: inherit; text-decoration: none; }
   margin-left: 30px;
 }
 
-/* Mockup 2 (centre) - Bilan */
 .hero-mockup-2 {
   z-index: 3;
   transform: translateY(-12px);
@@ -388,7 +384,6 @@ a { color: inherit; text-decoration: none; }
 .hero-tag.attention { background: var(--psee-orange); }
 .hero-tag.tension { background: var(--psee-coral); }
 
-/* Mockup 3 (droite) - Orientation */
 .hero-mockup-3 {
   transform: rotate(9deg) translateX(130px) translateY(20px);
   z-index: 2;
@@ -427,16 +422,14 @@ a { color: inherit; text-decoration: none; }
   margin-top: 4px;
 }
 
-/* ============================================================
-   SECTION POURQUOI (avec photo femme canapé maintenant)
-   ============================================================ */
+/* SECTION POURQUOI - V6 : photo prend plus de place, pas tronquée à droite */
 .section-pourquoi {
   padding: 0;
   background: var(--psee-cream);
   position: relative;
   overflow: hidden;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 0.85fr 1.15fr; /* image plus grande */
   align-items: stretch;
   min-height: var(--section-image-height);
 }
@@ -454,9 +447,9 @@ a { color: inherit; text-decoration: none; }
   position: absolute;
   top: 0;
   left: 0;
-  width: 50%;
+  width: 30%; /* dégradé plus court à gauche pour montrer plus la photo */
   height: 100%;
-  background: linear-gradient(to right, var(--psee-cream) 0%, rgba(245, 242, 236, 0.5) 60%, transparent 100%);
+  background: linear-gradient(to right, var(--psee-cream) 0%, rgba(245, 242, 236, 0.4) 70%, transparent 100%);
   z-index: 2;
   pointer-events: none;
 }
@@ -465,12 +458,12 @@ a { color: inherit; text-decoration: none; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  object-position: 60% center; /* recadrage qui montre toute la photo, ne tronque pas */
 }
 
 .pourquoi-content {
   padding: 80px 0 80px 80px;
-  max-width: 580px;
+  max-width: 540px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -525,7 +518,7 @@ a { color: inherit; text-decoration: none; }
 .section-axes-header .section-text {
   margin: 0 auto;
   text-align: center;
-  max-width: 560px; /* Plus serré pour mettre "autour" à la ligne */
+  max-width: 560px;
   word-break: keep-all;
   overflow-wrap: normal;
 }
@@ -584,14 +577,12 @@ a { color: inherit; text-decoration: none; }
   color: var(--psee-grey-medium);
 }
 
-/* ============================================================
-   SECTION COMMENT - V5 : photo main+phone + nouveau contenu 3 étapes
-   ============================================================ */
+/* SECTION COMMENT - V6 : photo plus à gauche, dégradé uniquement à droite, "15 min" */
 .section-comment {
   padding: 0;
   background: var(--psee-cream);
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.15fr 0.85fr; /* image prend plus de place */
   align-items: stretch;
   min-height: var(--section-image-height);
   overflow: hidden;
@@ -605,12 +596,13 @@ a { color: inherit; text-decoration: none; }
   order: 1;
 }
 
+/* Dégradé UNIQUEMENT à droite (face au texte), PAS à gauche */
 .comment-image-wrap::after {
   content: "";
   position: absolute;
   top: 0;
   right: 0;
-  width: 40%;
+  width: 35%;
   height: 100%;
   background: linear-gradient(to left, var(--psee-cream) 0%, rgba(245, 242, 236, 0.5) 60%, transparent 100%);
   z-index: 2;
@@ -621,25 +613,16 @@ a { color: inherit; text-decoration: none; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  object-position: 40% center; /* main+phone bien centrée à gauche du cadre */
 }
 
 .comment-content {
   padding: 80px 80px 80px 40px;
-  max-width: 620px;
+  max-width: 580px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   order: 2;
-}
-
-.comment-tagline {
-  font-family: var(--font-display);
-  font-weight: 500;
-  font-style: italic;
-  font-size: 22px;
-  color: var(--psee-green);
-  margin-bottom: 12px;
 }
 
 .comment-steps { list-style: none; margin-top: 28px; }
@@ -729,9 +712,7 @@ a { color: inherit; text-decoration: none; }
   line-height: 1.5;
 }
 
-/* ============================================================
-   SECTION ORIENTATION V5 — wording renforcé "Précision clinique"
-   ============================================================ */
+/* SECTION ORIENTATION V6 — SIMPLIFIÉE : photo + texte uniquement (pas de features) */
 .section-orientation {
   padding: 0;
   background: var(--psee-cream-dark);
@@ -782,69 +763,7 @@ a { color: inherit; text-decoration: none; }
 
 .orientation-content .section-text {
   font-size: 16px;
-  margin-bottom: 16px;
-}
-
-.orientation-features {
-  display: flex;
-  flex-direction: column;
-  gap: 22px;
-  margin-top: 24px;
-}
-
-.orientation-feature {
-  display: grid;
-  grid-template-columns: 44px 1fr;
-  gap: 18px;
-  align-items: start;
-}
-
-.feature-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 2px solid var(--psee-green);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-
-.feature-icon svg {
-  width: 18px;
-  height: 18px;
-  stroke: var(--psee-green);
-  fill: none;
-  stroke-width: 2;
-}
-
-.feature-content h4 {
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 15px;
-  color: var(--psee-black);
-  margin-bottom: 4px;
-}
-
-.feature-content p {
-  font-family: var(--font-body);
-  font-size: 13px;
-  line-height: 1.55;
-  color: var(--psee-grey-medium);
-}
-
-.orientation-note-bottom {
-  margin-top: 28px;
-  padding: 16px 20px;
-  background: rgba(255, 255, 255, 0.6);
-  border-left: 3px solid var(--psee-green);
-  border-radius: 4px;
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: var(--psee-grey-medium);
-  line-height: 1.5;
-  font-style: italic;
+  margin-bottom: 18px;
 }
 
 /* SECTION CTA FINAL */
@@ -1139,27 +1058,28 @@ a { color: inherit; text-decoration: none; }
   .hero-mockup { width: 200px; height: 400px; }
   .hero-mockup-1 { transform: rotate(-9deg) translateX(-95px) translateY(15px); }
   .hero-mockup-3 { transform: rotate(9deg) translateX(95px) translateY(15px); }
-  .pourquoi-content { padding: 60px 40px; }
-  .comment-content, .orientation-content { padding: 60px 40px; }
+  .pourquoi-content, .comment-content, .orientation-content { padding: 60px 40px; }
 }
 
-/* RESPONSIVE MOBILE */
+/* ============================================================
+   RESPONSIVE MOBILE V6 — REFONTE APP-LIKE
+   ============================================================ */
 @media (max-width: 768px) {
   .nav { padding: 14px 20px; }
   .nav-logo-text { font-size: 30px; }
   .nav-link { display: none; }
   .nav-cta { padding: 10px 18px; font-size: 13px; }
 
-  /* HERO mobile : mockups en haut, texte en dessous */
+  /* HERO mobile */
   .hero {
     grid-template-columns: 1fr;
     min-height: auto;
   }
   .hero-mockups-wrap {
-    height: 420px;
-    min-height: 420px;
+    height: 380px;
+    min-height: 380px;
     order: 1;
-    padding: 30px 0 0;
+    padding: 24px 0 0;
   }
   .hero-mockup {
     width: 150px;
@@ -1172,8 +1092,8 @@ a { color: inherit; text-decoration: none; }
     transform: rotate(8deg) translateX(72px) translateY(10px);
   }
   .hero-content-wrap {
-    padding: 36px 24px 56px;
-    margin-top: -32px;
+    padding: 32px 24px 48px;
+    margin-top: -28px;
     background: var(--psee-cream);
     border-radius: 28px 28px 0 0;
     position: relative;
@@ -1182,15 +1102,35 @@ a { color: inherit; text-decoration: none; }
     order: 2;
   }
   .hero-text { max-width: 100%; }
-  .hero-eyebrow { font-size: 11px; letter-spacing: 2px; }
-  .hero-title { font-size: 36px; line-height: 1.08; }
-  .hero-sub { font-size: 16px; }
-  .btn-primary { padding: 16px 28px; font-size: 15px; }
-  .hero-badges { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-  .badge { padding: 12px 10px; }
-  .badge-label { font-size: 15px; }
+  .hero-eyebrow { font-size: 11px; letter-spacing: 2px; margin-bottom: 16px; }
+  .hero-title { font-size: 34px; line-height: 1.08; margin-bottom: 20px; }
+  .hero-sub { font-size: 15px; margin-bottom: 24px; }
 
-  /* POURQUOI mobile */
+  /* CTA mobile pleine largeur app-like */
+  .hero-cta-block { width: 100%; gap: 16px; }
+  .hero-cta-block .btn-primary {
+    width: 100%;
+    padding: 17px 28px;
+    font-size: 16px;
+    border-radius: 28px;
+  }
+
+  /* PASTILLES MOBILE — 1 ligne pillules compactes (refonte V6) */
+  .hero-badges {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    max-width: 100%;
+  }
+  .badge {
+    padding: 10px 4px 8px;
+    border-radius: 12px;
+  }
+  .badge-icon { margin-bottom: 4px; }
+  .badge-icon svg { width: 16px; height: 16px; stroke-width: 2; }
+  .badge-label { font-size: 13px; margin-bottom: 2px; }
+  .badge-sub { font-size: 9px; letter-spacing: 0; }
+
+  /* POURQUOI mobile — photo prend toute la place avant le texte */
   .section-pourquoi {
     grid-template-columns: 1fr;
     min-height: auto;
@@ -1201,7 +1141,7 @@ a { color: inherit; text-decoration: none; }
     order: 1;
   }
   .pourquoi-image-wrap img {
-    object-position: 70% center;
+    object-position: 60% center;
   }
   .pourquoi-image-wrap::after {
     width: 100%;
@@ -1212,7 +1152,7 @@ a { color: inherit; text-decoration: none; }
     background: linear-gradient(to top, var(--psee-cream) 0%, rgba(245, 242, 236, 0.3) 70%, transparent 100%);
   }
   .pourquoi-content {
-    padding: 48px 24px 56px;
+    padding: 40px 24px 56px;
     max-width: 100%;
     order: 2;
     margin-top: -28px;
@@ -1222,15 +1162,38 @@ a { color: inherit; text-decoration: none; }
     z-index: 3;
   }
 
-  /* AXES mobile */
-  .section-axes { padding: 72px 20px; }
-  .section-title { font-size: 30px; }
-  .axes-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
-  .axe-card { padding: 22px 14px; }
+  /* AXES mobile — scroll horizontal app-like */
+  .section-axes {
+    padding: 56px 0;
+  }
+  .section-axes-header {
+    padding: 0 24px;
+    margin-bottom: 32px;
+  }
+  .section-title { font-size: 28px; }
+  .axes-grid {
+    display: flex;
+    grid-template-columns: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 24px;
+    gap: 12px;
+    scroll-padding: 0 24px;
+  }
+  .axes-grid::-webkit-scrollbar { display: none; }
+  .axes-grid { scrollbar-width: none; }
+
+  .axe-card {
+    flex: 0 0 70%;
+    min-width: 220px;
+    padding: 24px 20px;
+    scroll-snap-align: start;
+  }
   .axe-icon { width: 60px; height: 60px; margin-bottom: 14px; }
-  .axe-name { font-size: 15px; margin-bottom: 6px; }
+  .axe-name { font-size: 16px; margin-bottom: 6px; }
   .axe-verb { font-size: 9px; margin-bottom: 6px; }
-  .axe-desc { font-size: 12px; }
+  .axe-desc { font-size: 13px; }
 
   /* COMMENT mobile */
   .section-comment {
@@ -1243,7 +1206,7 @@ a { color: inherit; text-decoration: none; }
     order: 1;
   }
   .comment-image-wrap img {
-    object-position: 75% center;
+    object-position: 30% center;
   }
   .comment-image-wrap::after {
     width: 100%;
@@ -1254,7 +1217,7 @@ a { color: inherit; text-decoration: none; }
     background: linear-gradient(to top, var(--psee-cream) 0%, rgba(245, 242, 236, 0.3) 70%, transparent 100%);
   }
   .comment-content {
-    padding: 48px 24px 56px;
+    padding: 40px 24px 56px;
     max-width: 100%;
     order: 2;
     margin-top: -28px;
@@ -1286,7 +1249,7 @@ a { color: inherit; text-decoration: none; }
     background: linear-gradient(to top, var(--psee-cream-dark) 0%, rgba(235, 230, 219, 0.4) 70%, transparent 100%);
   }
   .orientation-content {
-    padding: 48px 24px 56px;
+    padding: 40px 24px 56px;
     max-width: 100%;
     order: 2;
     margin-top: -28px;
@@ -1296,16 +1259,25 @@ a { color: inherit; text-decoration: none; }
     z-index: 3;
   }
 
-  .section-cta { padding: 72px 24px; }
-  .cta-title { font-size: 36px; }
-  .cta-checklist { padding: 24px 24px; }
-  .cta-checklist li { font-size: 15px; padding: 8px 0; }
-  .btn-primary-large { padding: 18px 28px; font-size: 16px; }
+  /* CTA section mobile */
+  .section-cta { padding: 56px 24px; }
+  .cta-title { font-size: 32px; }
+  .cta-checklist { padding: 22px 22px; }
+  .cta-checklist li { font-size: 14px; padding: 8px 0; gap: 14px; }
+  .cta-check { width: 22px; height: 22px; }
+  .cta-check svg { width: 11px; height: 11px; }
+  .btn-primary-large {
+    padding: 18px 28px;
+    font-size: 16px;
+    width: 100%;
+  }
 
-  .section-faq { padding: 72px 24px; }
+  /* FAQ mobile */
+  .section-faq { padding: 56px 24px; }
   .faq-item summary { padding: 18px 22px; font-size: 15px; }
   .faq-content { padding: 0 22px 20px; font-size: 14px; }
 
+  /* FOOTER mobile */
   .footer { padding: 48px 24px 24px; }
   .footer-content {
     grid-template-columns: 1fr;
@@ -1320,10 +1292,11 @@ a { color: inherit; text-decoration: none; }
 }
 
 @media (max-width: 480px) {
-  .hero-title { font-size: 32px; }
-  .section-title { font-size: 28px; }
-  .cta-title { font-size: 32px; }
-  .axes-grid { grid-template-columns: 1fr; gap: 12px; }
+  .hero-title { font-size: 30px; }
+  .section-title { font-size: 26px; }
+  .cta-title { font-size: 28px; }
+  .badge-label { font-size: 12px; }
+  .badge-sub { font-size: 8px; }
 }
 </style>
 </head>
@@ -1343,7 +1316,7 @@ a { color: inherit; text-decoration: none; }
   </div>
 </nav>
 
-<!-- HERO V5 — INVERSÉ : MOCKUPS À DROITE -->
+<!-- HERO -->
 <section class="hero">
   <div class="hero-content-wrap">
     <div class="hero-text">
@@ -1358,7 +1331,6 @@ a { color: inherit; text-decoration: none; }
         <a href="app.html" class="btn-primary">Commencer mon check-up</a>
 
         <div class="hero-badges">
-          <!-- Badge 9€ avec nouvelle icône (étiquette de prix au lieu du $) -->
           <div class="badge">
             <div class="badge-icon">
               <svg viewBox="0 0 24 24" fill="none">
@@ -1395,11 +1367,9 @@ a { color: inherit; text-decoration: none; }
     </div>
   </div>
 
-  <!-- 3 MOCKUPS IPHONE -->
   <div class="hero-mockups-wrap">
     <div class="hero-mockups-stack">
 
-      <!-- Mockup 1 : Entretien -->
       <div class="hero-mockup hero-mockup-1">
         <div class="hero-mockup-screen">
           <div class="hero-mockup-header">
@@ -1414,7 +1384,6 @@ a { color: inherit; text-decoration: none; }
         </div>
       </div>
 
-      <!-- Mockup 2 : Bilan (centré) -->
       <div class="hero-mockup hero-mockup-2">
         <div class="hero-mockup-screen">
           <div class="hero-mockup-header">
@@ -1442,7 +1411,6 @@ a { color: inherit; text-decoration: none; }
         </div>
       </div>
 
-      <!-- Mockup 3 : Orientation -->
       <div class="hero-mockup hero-mockup-3">
         <div class="hero-mockup-screen">
           <div class="hero-mockup-header">
@@ -1481,7 +1449,7 @@ a { color: inherit; text-decoration: none; }
   </div>
 </section>
 
-<!-- SECTION POURQUOI - Photo lifestyle femme canapé déplacée ici -->
+<!-- SECTION POURQUOI -->
 <section class="section-pourquoi" id="pourquoi">
   <div class="pourquoi-content">
     <p class="eyebrow">Pourquoi Psee</p>
@@ -1509,7 +1477,7 @@ a { color: inherit; text-decoration: none; }
   </div>
 </section>
 
-<!-- SECTION 6 AXES - max-width réduit pour mettre "autour" à la ligne -->
+<!-- SECTION 6 AXES -->
 <section class="section-axes" id="axes">
   <div class="section-axes-header">
     <p class="eyebrow">Les 6 dimensions</p>
@@ -1562,7 +1530,7 @@ a { color: inherit; text-decoration: none; }
   </div>
 </section>
 
-<!-- SECTION COMMENT - V5 : photo main+phone + nouveau contenu 3 étapes Harold -->
+<!-- SECTION COMMENT - "15 min" au lieu de "10 à 15 min" -->
 <section class="section-comment" id="comment">
   <div class="comment-image-wrap">
     <img src="assets/main-phone.png" alt="Un parcours simple en 3 étapes" />
@@ -1578,7 +1546,7 @@ a { color: inherit; text-decoration: none; }
         <div class="step-num">1</div>
         <div class="step-text">
           <strong>Répondez à une évaluation guidée</strong>
-          <span>Questions claires et ciblées, 10 à 15 min.</span>
+          <span>Questions claires et ciblées, 15 min.</span>
         </div>
       </li>
       <li class="comment-step">
@@ -1609,7 +1577,7 @@ a { color: inherit; text-decoration: none; }
   </div>
 </section>
 
-<!-- SECTION ORIENTATION V5 — Wording "Précision clinique" -->
+<!-- SECTION ORIENTATION V6 — SIMPLIFIÉE : juste texte + photo -->
 <section class="section-orientation">
   <div class="orientation-image-wrap">
     <img src="assets/therapeute.jpg" alt="Un accompagnement humain par un professionnel adapté" />
@@ -1635,42 +1603,6 @@ a { color: inherit; text-decoration: none; }
       demande se manifestent. Vous choisissez en toute liberté, en sachant
       pourquoi.
     </p>
-
-    <div class="orientation-features">
-      <div class="orientation-feature">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
-        </div>
-        <div class="feature-content">
-          <h4>Synthèse personnalisée</h4>
-          <p>Le check-up met en évidence vos ressources, vos fragilités éventuelles et les tensions qui méritent attention.</p>
-        </div>
-      </div>
-
-      <div class="orientation-feature">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/></svg>
-        </div>
-        <div class="feature-content">
-          <h4>Clarification du besoin</h4>
-          <p>Distinguer ce qui relève d'un besoin d'écoute, d'un accompagnement psychothérapeutique, d'un avis psychiatrique ou d'un simple point de vigilance.</p>
-        </div>
-      </div>
-
-      <div class="orientation-feature">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><path d="M7 17l9-9M9 8h7v7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="feature-content">
-          <h4>Mise en relation ciblée</h4>
-          <p>Les professionnels intéressés se manifestent. Vous choisissez en toute liberté, sans engagement.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="orientation-note-bottom">
-      Vous restez libre de choisir. Aucun engagement, aucune obligation.
-    </div>
   </div>
 </section>
 
@@ -1683,7 +1615,7 @@ a { color: inherit; text-decoration: none; }
     </h2>
 
     <ul class="cta-checklist">
-      <li><div class="cta-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>Évaluation guidée (10 à 15 min)</span></li>
+      <li><div class="cta-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>Évaluation guidée (15 min)</span></li>
       <li><div class="cta-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>Synthèse immédiate et personnalisée</span></li>
       <li><div class="cta-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>Accès aux 6 axes d'analyse</span></li>
       <li><div class="cta-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>Suivis libres pendant 30 jours</span></li>
@@ -1722,7 +1654,7 @@ a { color: inherit; text-decoration: none; }
       <details class="faq-item">
         <summary><span>Combien de temps dure le check-up ?</span><span class="faq-toggle"></span></summary>
         <div class="faq-content">
-          <p>Comptez 10 à 15 minutes pour le check-up complet, en répondant à votre rythme. Vous pouvez prendre des pauses si besoin et reprendre où vous en étiez.</p>
+          <p>Comptez environ 15 minutes pour le check-up complet, en répondant à votre rythme. Vous pouvez prendre des pauses si besoin et reprendre où vous en étiez.</p>
           <p>L'évaluation s'adapte à ce que vous partagez : plus vous prenez le temps de répondre en détail, plus la synthèse sera précise.</p>
         </div>
       </details>
