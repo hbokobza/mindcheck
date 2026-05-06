@@ -107,60 +107,28 @@ a { color: inherit; text-decoration: none; }
 .nav-cta:hover { background: #163823; }
 .nav-cta:active { transform: translateY(1px); }
 
-/* Mobile burger menu */
-.nav-burger {
-  display: none;
-  width: 32px;
-  height: 32px;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  flex-direction: column;
-  justify-content: center;
-  gap: 5px;
-  padding: 4px;
-}
-.nav-burger span {
-  display: block;
-  width: 100%;
-  height: 2px;
-  background: var(--psee-green-dark);
-  border-radius: 1px;
-}
-
-/* HERO */
+/* ============================================================
+   HERO V5 — INVERSÉ : MOCKUPS IPHONE À DROITE
+   ============================================================ */
 .hero {
   position: relative;
   min-height: 92vh;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   align-items: center;
-  background-color: var(--psee-cream);
+  background: linear-gradient(135deg, var(--psee-cream) 0%, var(--psee-cream-dark) 100%);
   overflow: hidden;
 }
 
-.hero-bg {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('assets/femme-canape.png');
-  background-size: cover;
-  background-position: center right;
-  background-repeat: no-repeat;
-  z-index: 0;
-}
-
-.hero-content {
-  position: relative;
+.hero-content-wrap {
+  padding: 80px 48px 80px 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   z-index: 2;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 80px 48px;
-  width: 100%;
 }
 
-.hero-text { max-width: 600px; }
+.hero-text { max-width: 560px; }
 
 .hero-eyebrow {
   font-family: var(--font-body);
@@ -175,7 +143,7 @@ a { color: inherit; text-decoration: none; }
 .hero-title {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 68px;
+  font-size: 60px;
   line-height: 1.05;
   color: var(--psee-green-dark);
   margin-bottom: 28px;
@@ -187,11 +155,11 @@ a { color: inherit; text-decoration: none; }
 .hero-sub {
   font-family: var(--font-body);
   font-weight: 400;
-  font-size: 19px;
+  font-size: 18px;
   line-height: 1.55;
   color: var(--psee-black);
   margin-bottom: 36px;
-  max-width: 540px;
+  max-width: 520px;
 }
 
 .hero-cta-block {
@@ -230,21 +198,19 @@ a { color: inherit; text-decoration: none; }
   font-size: 17px;
 }
 
-/* PASTILLES */
+/* PASTILLES - Avec icône € corrigée */
 .hero-badges {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 12px;
-  max-width: 600px;
+  max-width: 540px;
   width: 100%;
   margin-top: 8px;
 }
 
 .badge {
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(31, 77, 51, 0.15);
+  background: var(--psee-white);
+  border: 1px solid rgba(31, 77, 51, 0.12);
   border-radius: 14px;
   padding: 14px 12px;
   text-align: center;
@@ -252,7 +218,7 @@ a { color: inherit; text-decoration: none; }
 }
 .badge:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(31, 77, 51, 0.1);
+  box-shadow: 0 6px 18px rgba(31, 77, 51, 0.12);
 }
 
 .badge-icon { display: flex; justify-content: center; margin-bottom: 6px; }
@@ -282,7 +248,188 @@ a { color: inherit; text-decoration: none; }
   line-height: 1.3;
 }
 
-/* SECTION POURQUOI - V4 : photo pleine hauteur */
+/* ============================================================
+   HERO MOCKUPS - 3 TÉLÉPHONES À DROITE
+   ============================================================ */
+.hero-mockups-wrap {
+  position: relative;
+  height: 100%;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.hero-mockups-stack {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-height: 720px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-mockup {
+  position: absolute;
+  width: 240px;
+  height: 480px;
+  background: var(--psee-black);
+  border-radius: 36px;
+  padding: 8px;
+  box-shadow: 0 30px 70px rgba(31, 77, 51, 0.22), 0 14px 28px rgba(31, 77, 51, 0.14);
+  transition: transform 0.4s ease;
+}
+
+.hero-mockup-screen {
+  width: 100%;
+  height: 100%;
+  background: var(--psee-cream);
+  border-radius: 28px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-mockup-header {
+  background: var(--psee-green-dark);
+  color: white;
+  padding: 18px 14px 12px;
+  font-family: var(--font-body);
+}
+
+.hero-mockup-header h4 {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.hero-mockup-header span {
+  font-size: 10px;
+  opacity: 0.8;
+  letter-spacing: 0.5px;
+}
+
+.hero-mockup-body {
+  padding: 14px;
+  flex: 1;
+  font-size: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Mockup 1 (gauche) - Entretien */
+.hero-mockup-1 {
+  transform: rotate(-9deg) translateX(-130px) translateY(20px);
+  z-index: 1;
+}
+
+.hero-chat-bubble {
+  background: var(--psee-cream-dark);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 10px;
+  color: var(--psee-black);
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+
+.hero-chat-bubble.user {
+  background: var(--psee-green-dark);
+  color: white;
+  margin-left: 30px;
+}
+
+/* Mockup 2 (centre) - Bilan */
+.hero-mockup-2 {
+  z-index: 3;
+  transform: translateY(-12px);
+}
+
+.hero-cartography {
+  background: white;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 8px;
+}
+
+.hero-cartography-title {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--psee-green-dark);
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+.hero-radar-svg { width: 100%; height: 90px; display: block; }
+
+.hero-axe-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  font-size: 9px;
+  border-bottom: 1px solid #f0ebe2;
+}
+.hero-axe-row:last-child { border-bottom: none; }
+
+.hero-tag {
+  background: var(--psee-coral);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 8px;
+  font-weight: 500;
+}
+.hero-tag.solide { background: var(--psee-green); }
+.hero-tag.attention { background: var(--psee-orange); }
+.hero-tag.tension { background: var(--psee-coral); }
+
+/* Mockup 3 (droite) - Orientation */
+.hero-mockup-3 {
+  transform: rotate(9deg) translateX(130px) translateY(20px);
+  z-index: 2;
+}
+
+.hero-pro-card {
+  background: white;
+  border-radius: 12px;
+  padding: 9px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.hero-pro-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--psee-green-light);
+  flex-shrink: 0;
+}
+
+.hero-pro-info { flex: 1; }
+.hero-pro-name { font-size: 10px; font-weight: 600; color: var(--psee-green-dark); }
+.hero-pro-role { font-size: 8px; color: var(--psee-grey-medium); }
+
+.hero-mock-cta {
+  background: var(--psee-green-dark);
+  color: white;
+  border-radius: 10px;
+  padding: 9px;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+/* ============================================================
+   SECTION POURQUOI (avec photo femme canapé maintenant)
+   ============================================================ */
 .section-pourquoi {
   padding: 0;
   background: var(--psee-cream);
@@ -363,7 +510,7 @@ a { color: inherit; text-decoration: none; }
   max-width: 560px;
 }
 
-/* SECTION 6 AXES - V4 : césure mots corrigée */
+/* SECTION 6 AXES */
 .section-axes {
   padding: 100px 48px;
   background: var(--psee-cream-dark);
@@ -378,7 +525,7 @@ a { color: inherit; text-decoration: none; }
 .section-axes-header .section-text {
   margin: 0 auto;
   text-align: center;
-  max-width: 640px;
+  max-width: 560px; /* Plus serré pour mettre "autour" à la ligne */
   word-break: keep-all;
   overflow-wrap: normal;
 }
@@ -437,7 +584,9 @@ a { color: inherit; text-decoration: none; }
   color: var(--psee-grey-medium);
 }
 
-/* SECTION COMMENT - V4 : mockups iPhone CSS */
+/* ============================================================
+   SECTION COMMENT - V5 : photo main+phone + nouveau contenu 3 étapes
+   ============================================================ */
 .section-comment {
   padding: 0;
   background: var(--psee-cream);
@@ -448,186 +597,49 @@ a { color: inherit; text-decoration: none; }
   overflow: hidden;
 }
 
-.comment-mockups-wrap {
+.comment-image-wrap {
   position: relative;
   height: 100%;
   min-height: var(--section-image-height);
-  background: linear-gradient(135deg, var(--psee-cream) 0%, var(--psee-cream-dark) 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   overflow: hidden;
+  order: 1;
 }
 
-.mockups-stack {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.mockup {
+.comment-image-wrap::after {
+  content: "";
   position: absolute;
-  width: 220px;
-  height: 440px;
-  background: var(--psee-black);
-  border-radius: 32px;
-  padding: 8px;
-  box-shadow: 0 24px 60px rgba(31, 77, 51, 0.18), 0 12px 24px rgba(31, 77, 51, 0.12);
-  transition: transform 0.4s ease;
+  top: 0;
+  right: 0;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(to left, var(--psee-cream) 0%, rgba(245, 242, 236, 0.5) 60%, transparent 100%);
+  z-index: 2;
+  pointer-events: none;
 }
 
-.mockup-screen {
+.comment-image-wrap img {
   width: 100%;
   height: 100%;
-  background: var(--psee-cream);
-  border-radius: 26px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-.mockup-header {
-  background: var(--psee-green-dark);
-  color: white;
-  padding: 18px 14px 12px;
-  font-family: var(--font-body);
-}
-
-.mockup-header h4 {
-  font-family: var(--font-display);
-  font-size: 15px;
-  font-weight: 600;
-  margin-bottom: 2px;
-}
-
-.mockup-header span {
-  font-size: 9px;
-  opacity: 0.8;
-  letter-spacing: 0.5px;
-}
-
-.mockup-body {
-  padding: 12px;
-  flex: 1;
-  font-size: 9px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.mockup-1 {
-  transform: rotate(-8deg) translateX(-110px) translateY(20px);
-  z-index: 1;
-}
-
-.mockup-chat-bubble {
-  background: var(--psee-cream-dark);
-  border-radius: 10px;
-  padding: 8px 10px;
-  font-size: 9px;
-  color: var(--psee-black);
-  line-height: 1.4;
-  margin-bottom: 4px;
-}
-
-.mockup-chat-bubble.user {
-  background: var(--psee-green-dark);
-  color: white;
-  margin-left: 30px;
-}
-
-.mockup-2 {
-  z-index: 3;
-  transform: translateY(-10px);
-}
-
-.mockup-cartography {
-  background: white;
-  border-radius: 10px;
-  padding: 10px;
-  margin-bottom: 8px;
-}
-
-.mockup-cartography-title {
-  font-size: 9px;
-  font-weight: 600;
-  color: var(--psee-green-dark);
-  margin-bottom: 8px;
-  letter-spacing: 0.5px;
-}
-
-.mockup-radar-svg { width: 100%; height: 80px; display: block; }
-
-.mockup-axe-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 4px 0;
-  font-size: 8px;
-  border-bottom: 1px solid #f0ebe2;
-}
-.mockup-axe-row:last-child { border-bottom: none; }
-
-.mockup-tag {
-  background: var(--psee-coral);
-  color: white;
-  padding: 2px 6px;
-  border-radius: 6px;
-  font-size: 7px;
-  font-weight: 500;
-}
-
-.mockup-tag.solide { background: var(--psee-green); }
-.mockup-tag.attention { background: var(--psee-orange); }
-.mockup-tag.tension { background: var(--psee-coral); }
-
-.mockup-3 {
-  transform: rotate(8deg) translateX(110px) translateY(20px);
-  z-index: 2;
-}
-
-.mockup-pro-card {
-  background: white;
-  border-radius: 10px;
-  padding: 8px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 6px;
-}
-
-.mockup-pro-avatar {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: var(--psee-green-light);
-  flex-shrink: 0;
-}
-
-.mockup-pro-info { flex: 1; }
-.mockup-pro-name { font-size: 9px; font-weight: 600; color: var(--psee-green-dark); }
-.mockup-pro-role { font-size: 7px; color: var(--psee-grey-medium); }
-
-.mockup-cta {
-  background: var(--psee-green-dark);
-  color: white;
-  border-radius: 8px;
-  padding: 8px;
-  text-align: center;
-  font-size: 9px;
-  font-weight: 600;
-  margin-top: 4px;
+  object-fit: cover;
+  object-position: center;
 }
 
 .comment-content {
-  padding: 80px 80px 80px 0;
-  max-width: 580px;
+  padding: 80px 80px 80px 40px;
+  max-width: 620px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  order: 2;
+}
+
+.comment-tagline {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-style: italic;
+  font-size: 22px;
+  color: var(--psee-green);
+  margin-bottom: 12px;
 }
 
 .comment-steps { list-style: none; margin-top: 28px; }
@@ -636,15 +648,15 @@ a { color: inherit; text-decoration: none; }
   display: flex;
   gap: 20px;
   align-items: flex-start;
-  padding: 18px 0;
+  padding: 22px 0;
   border-bottom: 1px solid var(--psee-grey-light);
 }
 .comment-step:last-child { border-bottom: none; }
 
 .step-num {
   flex-shrink: 0;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: var(--psee-green-dark);
   color: var(--psee-white);
@@ -653,16 +665,16 @@ a { color: inherit; text-decoration: none; }
   justify-content: center;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 16px;
+  font-size: 17px;
 }
 
 .step-text strong {
   display: block;
   font-family: var(--font-body);
   font-weight: 600;
-  font-size: 16px;
+  font-size: 17px;
   color: var(--psee-green-dark);
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 .step-text span {
@@ -672,7 +684,54 @@ a { color: inherit; text-decoration: none; }
   line-height: 1.55;
 }
 
-/* SECTION ORIENTATION - V4 : refonte avec 1 photo unique */
+.comment-footer {
+  margin-top: 28px;
+  padding: 18px 22px;
+  background: var(--psee-cream-dark);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.comment-footer-icon {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--psee-green-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.comment-footer-icon svg {
+  width: 18px;
+  height: 18px;
+  stroke: white;
+  fill: none;
+  stroke-width: 2;
+}
+
+.comment-footer-text strong {
+  display: block;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--psee-green-dark);
+  margin-bottom: 2px;
+}
+
+.comment-footer-text span {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--psee-grey-medium);
+  line-height: 1.5;
+}
+
+/* ============================================================
+   SECTION ORIENTATION V5 — wording renforcé "Précision clinique"
+   ============================================================ */
 .section-orientation {
   padding: 0;
   background: var(--psee-cream-dark);
@@ -721,11 +780,16 @@ a { color: inherit; text-decoration: none; }
   order: 2;
 }
 
+.orientation-content .section-text {
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+
 .orientation-features {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  margin-top: 12px;
+  gap: 22px;
+  margin-top: 24px;
 }
 
 .orientation-feature {
@@ -783,7 +847,7 @@ a { color: inherit; text-decoration: none; }
   font-style: italic;
 }
 
-/* SECTION CTA FINAL - V4 : refonte forte "Faites le point" */
+/* SECTION CTA FINAL */
 .section-cta {
   padding: 120px 48px;
   background: var(--psee-cream);
@@ -815,10 +879,7 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: -0.02em;
 }
 
-.cta-title em {
-  font-style: italic;
-  font-weight: 500;
-}
+.cta-title em { font-style: italic; font-weight: 500; }
 
 .cta-checklist {
   background: var(--psee-cream-light);
@@ -867,7 +928,7 @@ a { color: inherit; text-decoration: none; }
   font-family: var(--font-body);
 }
 
-/* SECTION FAQ - V4 NOUVELLE */
+/* SECTION FAQ */
 .section-faq {
   padding: 120px 48px;
   background: var(--psee-cream-dark);
@@ -917,10 +978,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 .faq-item summary::-webkit-details-marker { display: none; }
-
-.faq-item summary:hover {
-  color: var(--psee-green-dark);
-}
+.faq-item summary:hover { color: var(--psee-green-dark); }
 
 .faq-toggle {
   width: 28px;
@@ -1076,33 +1134,44 @@ a { color: inherit; text-decoration: none; }
 }
 
 @media (max-width: 1024px) {
-  .hero-title { font-size: 56px; }
+  .hero-title { font-size: 48px; }
+  .hero-content-wrap { padding: 60px 40px; }
+  .hero-mockup { width: 200px; height: 400px; }
+  .hero-mockup-1 { transform: rotate(-9deg) translateX(-95px) translateY(15px); }
+  .hero-mockup-3 { transform: rotate(9deg) translateX(95px) translateY(15px); }
   .pourquoi-content { padding: 60px 40px; }
-  .comment-content { padding: 60px 40px 60px 0; }
-  .orientation-content { padding: 60px 40px; }
+  .comment-content, .orientation-content { padding: 60px 40px; }
 }
 
-/* RESPONSIVE MOBILE - V4 : optimisation app-like */
+/* RESPONSIVE MOBILE */
 @media (max-width: 768px) {
   .nav { padding: 14px 20px; }
   .nav-logo-text { font-size: 30px; }
   .nav-link { display: none; }
   .nav-cta { padding: 10px 18px; font-size: 13px; }
 
-  /* HERO mobile : photo plein écran sans bandes blanches */
+  /* HERO mobile : mockups en haut, texte en dessous */
   .hero {
+    grid-template-columns: 1fr;
     min-height: auto;
-    flex-direction: column;
-    padding: 0;
   }
-  .hero-bg {
-    position: relative;
-    width: 100vw;
-    height: 380px;
-    background-position: 70% center; /* recadrer pour montrer le visage */
-    background-size: cover;
+  .hero-mockups-wrap {
+    height: 420px;
+    min-height: 420px;
+    order: 1;
+    padding: 30px 0 0;
   }
-  .hero-content {
+  .hero-mockup {
+    width: 150px;
+    height: 300px;
+  }
+  .hero-mockup-1 {
+    transform: rotate(-8deg) translateX(-72px) translateY(10px);
+  }
+  .hero-mockup-3 {
+    transform: rotate(8deg) translateX(72px) translateY(10px);
+  }
+  .hero-content-wrap {
     padding: 36px 24px 56px;
     margin-top: -32px;
     background: var(--psee-cream);
@@ -1110,17 +1179,18 @@ a { color: inherit; text-decoration: none; }
     position: relative;
     z-index: 5;
     box-shadow: 0 -8px 24px rgba(31, 77, 51, 0.06);
+    order: 2;
   }
   .hero-text { max-width: 100%; }
   .hero-eyebrow { font-size: 11px; letter-spacing: 2px; }
-  .hero-title { font-size: 38px; line-height: 1.08; }
+  .hero-title { font-size: 36px; line-height: 1.08; }
   .hero-sub { font-size: 16px; }
   .btn-primary { padding: 16px 28px; font-size: 15px; }
   .hero-badges { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .badge { padding: 12px 10px; }
   .badge-label { font-size: 15px; }
 
-  /* POURQUOI mobile : photo plein écran */
+  /* POURQUOI mobile */
   .section-pourquoi {
     grid-template-columns: 1fr;
     min-height: auto;
@@ -1131,7 +1201,7 @@ a { color: inherit; text-decoration: none; }
     order: 1;
   }
   .pourquoi-image-wrap img {
-    object-position: 75% center; /* main avec téléphone bien visible */
+    object-position: 70% center;
   }
   .pourquoi-image-wrap::after {
     width: 100%;
@@ -1152,7 +1222,7 @@ a { color: inherit; text-decoration: none; }
     z-index: 3;
   }
 
-  /* AXES mobile : 2 colonnes plus aérées */
+  /* AXES mobile */
   .section-axes { padding: 72px 20px; }
   .section-title { font-size: 30px; }
   .axes-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
@@ -1167,10 +1237,21 @@ a { color: inherit; text-decoration: none; }
     grid-template-columns: 1fr;
     min-height: auto;
   }
-  .comment-mockups-wrap {
-    height: 360px;
-    min-height: 360px;
+  .comment-image-wrap {
+    height: 320px;
+    min-height: 320px;
     order: 1;
+  }
+  .comment-image-wrap img {
+    object-position: 75% center;
+  }
+  .comment-image-wrap::after {
+    width: 100%;
+    height: 30%;
+    top: auto;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(to top, var(--psee-cream) 0%, rgba(245, 242, 236, 0.3) 70%, transparent 100%);
   }
   .comment-content {
     padding: 48px 24px 56px;
@@ -1182,9 +1263,6 @@ a { color: inherit; text-decoration: none; }
     position: relative;
     z-index: 3;
   }
-  .mockup { width: 140px; height: 280px; }
-  .mockup-1 { transform: rotate(-6deg) translateX(-65px) translateY(15px); }
-  .mockup-3 { transform: rotate(6deg) translateX(65px) translateY(15px); }
 
   /* ORIENTATION mobile */
   .section-orientation {
@@ -1197,7 +1275,7 @@ a { color: inherit; text-decoration: none; }
     order: 1;
   }
   .orientation-image-wrap img {
-    object-position: center 30%; /* visages thérapeute + patiente bien visibles */
+    object-position: center 30%;
   }
   .orientation-image-wrap::after {
     width: 100%;
@@ -1218,19 +1296,16 @@ a { color: inherit; text-decoration: none; }
     z-index: 3;
   }
 
-  /* CTA mobile */
   .section-cta { padding: 72px 24px; }
   .cta-title { font-size: 36px; }
   .cta-checklist { padding: 24px 24px; }
   .cta-checklist li { font-size: 15px; padding: 8px 0; }
   .btn-primary-large { padding: 18px 28px; font-size: 16px; }
 
-  /* FAQ mobile */
   .section-faq { padding: 72px 24px; }
   .faq-item summary { padding: 18px 22px; font-size: 15px; }
   .faq-content { padding: 0 22px 20px; font-size: 14px; }
 
-  /* FOOTER mobile */
   .footer { padding: 48px 24px 24px; }
   .footer-content {
     grid-template-columns: 1fr;
@@ -1245,7 +1320,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 @media (max-width: 480px) {
-  .hero-title { font-size: 34px; }
+  .hero-title { font-size: 32px; }
   .section-title { font-size: 28px; }
   .cta-title { font-size: 32px; }
   .axes-grid { grid-template-columns: 1fr; gap: 12px; }
@@ -1268,10 +1343,9 @@ a { color: inherit; text-decoration: none; }
   </div>
 </nav>
 
-<!-- HERO -->
+<!-- HERO V5 — INVERSÉ : MOCKUPS À DROITE -->
 <section class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-content">
+  <div class="hero-content-wrap">
     <div class="hero-text">
       <p class="hero-eyebrow">Check-up psychique</p>
       <h1 class="hero-title">Le <em>check-up</em> psychique qui aide à y voir plus clair</h1>
@@ -1284,23 +1358,35 @@ a { color: inherit; text-decoration: none; }
         <a href="app.html" class="btn-primary">Commencer mon check-up</a>
 
         <div class="hero-badges">
+          <!-- Badge 9€ avec nouvelle icône (étiquette de prix au lieu du $) -->
           <div class="badge">
-            <div class="badge-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" stroke-linecap="round"/></svg></div>
+            <div class="badge-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" stroke="currentColor" stroke-linejoin="round"/>
+                <line x1="7" y1="7" x2="7.01" y2="7" stroke="currentColor" stroke-linecap="round"/>
+              </svg>
+            </div>
             <div class="badge-label">9 €</div>
             <div class="badge-sub">accès complet</div>
           </div>
           <div class="badge">
-            <div class="badge-icon"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor"/><path d="M12 6v6l4 2" stroke="currentColor" stroke-linecap="round"/></svg></div>
+            <div class="badge-icon">
+              <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor"/><path d="M12 6v6l4 2" stroke="currentColor" stroke-linecap="round"/></svg>
+            </div>
             <div class="badge-label">15 min</div>
             <div class="badge-sub">tout au long</div>
           </div>
           <div class="badge">
-            <div class="badge-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4z" stroke="currentColor" stroke-linejoin="round"/></svg></div>
+            <div class="badge-icon">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4z" stroke="currentColor" stroke-linejoin="round"/></svg>
+            </div>
             <div class="badge-label">100 %</div>
             <div class="badge-sub">anonyme</div>
           </div>
           <div class="badge">
-            <div class="badge-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" stroke="currentColor" stroke-linejoin="round"/></svg></div>
+            <div class="badge-icon">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" stroke="currentColor" stroke-linejoin="round"/></svg>
+            </div>
             <div class="badge-label">30 jours</div>
             <div class="badge-sub">de suivi libre</div>
           </div>
@@ -1308,9 +1394,94 @@ a { color: inherit; text-decoration: none; }
       </div>
     </div>
   </div>
+
+  <!-- 3 MOCKUPS IPHONE -->
+  <div class="hero-mockups-wrap">
+    <div class="hero-mockups-stack">
+
+      <!-- Mockup 1 : Entretien -->
+      <div class="hero-mockup hero-mockup-1">
+        <div class="hero-mockup-screen">
+          <div class="hero-mockup-header">
+            <h4>Psee</h4>
+            <span>ENTRETIEN EN COURS</span>
+          </div>
+          <div class="hero-mockup-body">
+            <div class="hero-chat-bubble">Comment vous sentez-vous physiquement en ce moment ? Sommeil, tensions, énergie ?</div>
+            <div class="hero-chat-bubble user">Je dors mal depuis 3 semaines, beaucoup de stress au travail.</div>
+            <div class="hero-chat-bubble">Je comprends. Le stress professionnel peut profondément affecter le sommeil. Et du côté de vos relations proches ?</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mockup 2 : Bilan (centré) -->
+      <div class="hero-mockup hero-mockup-2">
+        <div class="hero-mockup-screen">
+          <div class="hero-mockup-header">
+            <h4>Votre bilan est prêt</h4>
+            <span>PS-7X2K · 12 AVRIL</span>
+          </div>
+          <div class="hero-mockup-body">
+            <div class="hero-cartography">
+              <div class="hero-cartography-title">VOTRE CARTOGRAPHIE</div>
+              <svg class="hero-radar-svg" viewBox="0 0 100 80">
+                <polygon points="50,8 85,28 78,62 22,62 15,28" fill="none" stroke="#1F4D33" stroke-width="0.5" opacity="0.3"/>
+                <polygon points="50,15 75,32 70,58 30,58 25,32" fill="#2F703F" fill-opacity="0.2" stroke="#2F703F" stroke-width="1"/>
+                <circle cx="50" cy="8" r="2" fill="#1F4D33"/>
+                <circle cx="85" cy="28" r="2" fill="#1F4D33"/>
+                <circle cx="78" cy="62" r="2" fill="#1F4D33"/>
+                <circle cx="22" cy="62" r="2" fill="#1F4D33"/>
+                <circle cx="15" cy="28" r="2" fill="#1F4D33"/>
+              </svg>
+            </div>
+            <div class="hero-axe-row"><span>Processus psy.</span><span class="hero-tag tension">Tension</span></div>
+            <div class="hero-axe-row"><span>Ressources</span><span class="hero-tag solide">Solide</span></div>
+            <div class="hero-axe-row"><span>Comportements</span><span class="hero-tag attention">Attention</span></div>
+            <div class="hero-axe-row"><span>Corps somatique</span><span class="hero-tag tension">Tension</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mockup 3 : Orientation -->
+      <div class="hero-mockup hero-mockup-3">
+        <div class="hero-mockup-screen">
+          <div class="hero-mockup-header">
+            <h4>Vers votre thérapeute</h4>
+            <span>ORIENTATION CIBLÉE</span>
+          </div>
+          <div class="hero-mockup-body">
+            <div style="background:#FCE8E2; border-radius:8px; padding:9px; margin-bottom:8px;">
+              <div style="font-size:10px; font-weight:600; color:#A04428; margin-bottom:4px;">3 axes en tension</div>
+              <div style="font-size:9px; color:#6B6B68; line-height:1.4;">Une consultation préventive est conseillée.</div>
+            </div>
+            <div style="background:#fff; border-radius:8px; padding:10px; text-align:center; margin-bottom:8px;">
+              <div style="font-size:10px; font-weight:600; color:#1F4D33; margin-bottom:6px;">Vous souhaitez être accompagné·e ?</div>
+              <div style="font-size:9px; color:#6B6B68; line-height:1.4;">Psee met en relation avec des thérapeutes adaptés à votre profil.</div>
+            </div>
+            <div class="hero-pro-card">
+              <div class="hero-pro-avatar" style="background:#89BF89;"></div>
+              <div class="hero-pro-info">
+                <div class="hero-pro-name">Dr. Martin</div>
+                <div class="hero-pro-role">Psychologue · se propose</div>
+              </div>
+            </div>
+            <div class="hero-pro-card">
+              <div class="hero-pro-avatar" style="background:#F4A261;"></div>
+              <div class="hero-pro-info">
+                <div class="hero-pro-name">Dr. Dupont</div>
+                <div class="hero-pro-role">Psychothérapeute · se propose</div>
+              </div>
+            </div>
+            <div class="hero-mock-cta">Recevoir des propositions</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </section>
 
-<!-- SECTION POURQUOI -->
+<!-- SECTION POURQUOI - Photo lifestyle femme canapé déplacée ici -->
 <section class="section-pourquoi" id="pourquoi">
   <div class="pourquoi-content">
     <p class="eyebrow">Pourquoi Psee</p>
@@ -1334,11 +1505,11 @@ a { color: inherit; text-decoration: none; }
     </p>
   </div>
   <div class="pourquoi-image-wrap">
-    <img src="assets/main-phone.png" alt="Découvrez votre cartographie psychique" />
+    <img src="assets/femme-canape.png" alt="Un temps pour soi, en toute sérénité" />
   </div>
 </section>
 
-<!-- SECTION 6 AXES -->
+<!-- SECTION 6 AXES - max-width réduit pour mettre "autour" à la ligne -->
 <section class="section-axes" id="axes">
   <div class="section-axes-header">
     <p class="eyebrow">Les 6 dimensions</p>
@@ -1391,123 +1562,54 @@ a { color: inherit; text-decoration: none; }
   </div>
 </section>
 
-<!-- SECTION COMMENT -->
+<!-- SECTION COMMENT - V5 : photo main+phone + nouveau contenu 3 étapes Harold -->
 <section class="section-comment" id="comment">
-  <div class="comment-mockups-wrap">
-    <div class="mockups-stack">
-
-      <div class="mockup mockup-1">
-        <div class="mockup-screen">
-          <div class="mockup-header">
-            <h4>Psee</h4>
-            <span>ENTRETIEN EN COURS</span>
-          </div>
-          <div class="mockup-body">
-            <div class="mockup-chat-bubble">Comment vous sentez-vous physiquement en ce moment ? Sommeil, tensions, énergie ?</div>
-            <div class="mockup-chat-bubble user">Je dors mal depuis 3 semaines, beaucoup de stress au travail.</div>
-            <div class="mockup-chat-bubble">Je comprends. Le stress professionnel peut profondément affecter le sommeil. Et du côté de vos relations proches ?</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="mockup mockup-2">
-        <div class="mockup-screen">
-          <div class="mockup-header">
-            <h4>Votre bilan est prêt</h4>
-            <span>PS-7X2K · 12 AVRIL</span>
-          </div>
-          <div class="mockup-body">
-            <div class="mockup-cartography">
-              <div class="mockup-cartography-title">VOTRE CARTOGRAPHIE</div>
-              <svg class="mockup-radar-svg" viewBox="0 0 100 80">
-                <polygon points="50,8 85,28 78,62 22,62 15,28" fill="none" stroke="#1F4D33" stroke-width="0.5" opacity="0.3"/>
-                <polygon points="50,15 75,32 70,58 30,58 25,32" fill="#2F703F" fill-opacity="0.2" stroke="#2F703F" stroke-width="1"/>
-                <circle cx="50" cy="8" r="2" fill="#1F4D33"/>
-                <circle cx="85" cy="28" r="2" fill="#1F4D33"/>
-                <circle cx="78" cy="62" r="2" fill="#1F4D33"/>
-                <circle cx="22" cy="62" r="2" fill="#1F4D33"/>
-                <circle cx="15" cy="28" r="2" fill="#1F4D33"/>
-              </svg>
-            </div>
-            <div class="mockup-axe-row"><span>Processus psy.</span><span class="mockup-tag tension">Tension</span></div>
-            <div class="mockup-axe-row"><span>Ressources</span><span class="mockup-tag solide">Solide</span></div>
-            <div class="mockup-axe-row"><span>Comportements</span><span class="mockup-tag attention">Attention</span></div>
-            <div class="mockup-axe-row"><span>Corps somatique</span><span class="mockup-tag tension">Tension</span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="mockup mockup-3">
-        <div class="mockup-screen">
-          <div class="mockup-header">
-            <h4>Vers votre thérapeute</h4>
-            <span>ORIENTATION CIBLÉE</span>
-          </div>
-          <div class="mockup-body">
-            <div style="background:#FCE8E2; border-radius:8px; padding:8px; margin-bottom:8px;">
-              <div style="font-size:9px; font-weight:600; color:#A04428; margin-bottom:4px;">3 axes en tension</div>
-              <div style="font-size:8px; color:#6B6B68; line-height:1.4;">Une consultation préventive est conseillée.</div>
-            </div>
-            <div style="background:#fff; border-radius:8px; padding:10px; text-align:center; margin-bottom:8px;">
-              <div style="font-size:10px; font-weight:600; color:#1F4D33; margin-bottom:6px;">Vous souhaitez être accompagné·e ?</div>
-              <div style="font-size:8px; color:#6B6B68; line-height:1.4;">Psee met en relation avec des thérapeutes adaptés à votre profil.</div>
-            </div>
-            <div class="mockup-pro-card">
-              <div class="mockup-pro-avatar" style="background:#89BF89;"></div>
-              <div class="mockup-pro-info">
-                <div class="mockup-pro-name">Dr. Martin</div>
-                <div class="mockup-pro-role">Psychologue · se propose</div>
-              </div>
-            </div>
-            <div class="mockup-pro-card">
-              <div class="mockup-pro-avatar" style="background:#F4A261;"></div>
-              <div class="mockup-pro-info">
-                <div class="mockup-pro-name">Dr. Dupont</div>
-                <div class="mockup-pro-role">Psychothérapeute · se propose</div>
-              </div>
-            </div>
-            <div class="mockup-cta">Recevoir des propositions</div>
-          </div>
-        </div>
-      </div>
-
-    </div>
+  <div class="comment-image-wrap">
+    <img src="assets/main-phone.png" alt="Un parcours simple en 3 étapes" />
   </div>
   <div class="comment-content">
-    <p class="eyebrow">Comment ça marche</p>
-    <h2 class="section-title">Un parcours <em>simple</em> et structuré</h2>
-    <p class="section-text">
-      Un échange guidé en quelques étapes, pour aboutir à un bilan
-      clair et personnalisé.
-    </p>
+    <p class="eyebrow">Comment ça marche ?</p>
+    <h2 class="section-title">
+      <em>3 étapes</em> simples
+    </h2>
 
     <ul class="comment-steps">
       <li class="comment-step">
         <div class="step-num">1</div>
         <div class="step-text">
-          <strong>Vous prenez le temps</strong>
-          <span>15 minutes pour répondre à votre rythme, dans un cadre confidentiel.</span>
+          <strong>Répondez à une évaluation guidée</strong>
+          <span>Questions claires et ciblées, 10 à 15 min.</span>
         </div>
       </li>
       <li class="comment-step">
         <div class="step-num">2</div>
         <div class="step-text">
-          <strong>Vous explorez les 6 dimensions</strong>
-          <span>Un dialogue guidé qui s'adapte à ce que vous partagez.</span>
+          <strong>Recevez votre synthèse immédiate</strong>
+          <span>Analyse selon 6 axes, points forts, points de vigilance et conseils.</span>
         </div>
       </li>
       <li class="comment-step">
         <div class="step-num">3</div>
         <div class="step-text">
-          <strong>Vous recevez votre bilan</strong>
-          <span>Une cartographie claire, des repères concrets, et des pistes pour la suite.</span>
+          <strong>Choisissez la suite en toute liberté</strong>
+          <span>Suivi libre pendant 30 jours et orientation si vous le souhaitez.</span>
         </div>
       </li>
     </ul>
+
+    <div class="comment-footer">
+      <div class="comment-footer-icon">
+        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke-linejoin="round"/><path d="M7 11V7a5 5 0 0 1 10 0v4" stroke-linecap="round"/></svg>
+      </div>
+      <div class="comment-footer-text">
+        <strong>Confidentiel &amp; sécurisé</strong>
+        <span>Vos données sont anonymisées et hébergées en France.</span>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- SECTION ORIENTATION - V4 : photo unique + accroche refondue -->
+<!-- SECTION ORIENTATION V5 — Wording "Précision clinique" -->
 <section class="section-orientation">
   <div class="orientation-image-wrap">
     <img src="assets/therapeute.jpg" alt="Un accompagnement humain par un professionnel adapté" />
@@ -1518,9 +1620,20 @@ a { color: inherit; text-decoration: none; }
       Un accompagnement <em>adapté</em>, si vous le souhaitez
     </h2>
     <p class="section-text">
-      Si votre situation le nécessite, votre profil anonymisé peut être
-      proposé à des thérapeutes sélectionnés. Vous recevez des propositions
-      d'accompagnement adaptées à vos besoins.
+      Trouver le bon thérapeute, c'est rarement une question de proximité
+      géographique. C'est une question de pertinence clinique — savoir qui peut
+      entendre ce que vous vivez et travailler avec.
+    </p>
+    <p class="section-text">
+      Le check-up Psee révèle votre signature psychique : ce qui vous traverse,
+      ce qui mérite attention, ce sur quoi appuyer. Cette lecture devient un
+      repère précieux pour orienter votre choix.
+    </p>
+    <p class="section-text">
+      Votre profil anonymisé est présenté à des thérapeutes dont la pratique
+      correspond à ce que vous traversez. Ceux qui se reconnaissent dans votre
+      demande se manifestent. Vous choisissez en toute liberté, en sachant
+      pourquoi.
     </p>
 
     <div class="orientation-features">
@@ -1561,7 +1674,7 @@ a { color: inherit; text-decoration: none; }
   </div>
 </section>
 
-<!-- SECTION CTA FINAL - V4 : refonte forte -->
+<!-- SECTION CTA FINAL -->
 <section class="section-cta">
   <div class="cta-content">
     <p class="cta-eyebrow">Offre découverte</p>
@@ -1570,42 +1683,12 @@ a { color: inherit; text-decoration: none; }
     </h2>
 
     <ul class="cta-checklist">
-      <li>
-        <div class="cta-check">
-          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <span>Évaluation guidée (10 à 15 min)</span>
-      </li>
-      <li>
-        <div class="cta-check">
-          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <span>Synthèse immédiate et personnalisée</span>
-      </li>
-      <li>
-        <div class="cta-check">
-          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <span>Accès aux 6 axes d'analyse</span>
-      </li>
-      <li>
-        <div class="cta-check">
-          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <span>Suivis libres pendant 30 jours</span>
-      </li>
-      <li>
-        <div class="cta-check">
-          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <span>Orientation si vous le souhaitez</span>
-      </li>
-      <li>
-        <div class="cta-check">
-          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <span>100 % anonyme et sécurisé</span>
-      </li>
+      <li><div class="cta-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>Évaluation guidée (10 à 15 min)</span></li>
+      <li><div class="cta-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>Synthèse immédiate et personnalisée</span></li>
+      <li><div class="cta-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>Accès aux 6 axes d'analyse</span></li>
+      <li><div class="cta-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>Suivis libres pendant 30 jours</span></li>
+      <li><div class="cta-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>Orientation si vous le souhaitez</span></li>
+      <li><div class="cta-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>100 % anonyme et sécurisé</span></li>
     </ul>
 
     <a href="app.html" class="btn-primary btn-primary-large">Commencer mon check-up</a>
@@ -1616,7 +1699,7 @@ a { color: inherit; text-decoration: none; }
   </div>
 </section>
 
-<!-- SECTION FAQ - V4 NOUVELLE -->
+<!-- SECTION FAQ -->
 <section class="section-faq" id="faq">
   <div class="faq-container">
     <div class="faq-header">
@@ -1629,10 +1712,7 @@ a { color: inherit; text-decoration: none; }
     <div class="faq-list">
 
       <details class="faq-item">
-        <summary>
-          <span>Psee remplace-t-il une consultation ?</span>
-          <span class="faq-toggle"></span>
-        </summary>
+        <summary><span>Psee remplace-t-il une consultation ?</span><span class="faq-toggle"></span></summary>
         <div class="faq-content">
           <p>Non. Psee n'est ni un diagnostic, ni une thérapie, ni un substitut à un professionnel de santé. C'est un outil de pré-orientation qui vous aide à mettre des mots sur ce que vous vivez et à mieux comprendre votre situation.</p>
           <p>Si votre check-up révèle des éléments qui méritent attention, Psee peut vous mettre en relation avec des psychologues, psychothérapeutes ou psychiatres prêts à vous accompagner.</p>
@@ -1640,10 +1720,7 @@ a { color: inherit; text-decoration: none; }
       </details>
 
       <details class="faq-item">
-        <summary>
-          <span>Combien de temps dure le check-up ?</span>
-          <span class="faq-toggle"></span>
-        </summary>
+        <summary><span>Combien de temps dure le check-up ?</span><span class="faq-toggle"></span></summary>
         <div class="faq-content">
           <p>Comptez 10 à 15 minutes pour le check-up complet, en répondant à votre rythme. Vous pouvez prendre des pauses si besoin et reprendre où vous en étiez.</p>
           <p>L'évaluation s'adapte à ce que vous partagez : plus vous prenez le temps de répondre en détail, plus la synthèse sera précise.</p>
@@ -1651,10 +1728,7 @@ a { color: inherit; text-decoration: none; }
       </details>
 
       <details class="faq-item">
-        <summary>
-          <span>Mes données sont-elles sécurisées ?</span>
-          <span class="faq-toggle"></span>
-        </summary>
+        <summary><span>Mes données sont-elles sécurisées ?</span><span class="faq-toggle"></span></summary>
         <div class="faq-content">
           <p>Oui, votre confidentialité est notre priorité. Le check-up est 100 % anonyme : aucune donnée personnelle identifiante n'est collectée pour réaliser votre bilan.</p>
           <p>Vos données sont hébergées en France, chiffrées, et vous gardez le contrôle complet de votre profil. Vous pouvez le supprimer à tout moment.</p>
@@ -1662,10 +1736,7 @@ a { color: inherit; text-decoration: none; }
       </details>
 
       <details class="faq-item">
-        <summary>
-          <span>Que contient ma synthèse ?</span>
-          <span class="faq-toggle"></span>
-        </summary>
+        <summary><span>Que contient ma synthèse ?</span><span class="faq-toggle"></span></summary>
         <div class="faq-content">
           <p>Votre synthèse comprend une cartographie de votre équilibre psychique sur 6 axes : processus psychiques, ressources, comportements, régulation émotionnelle, corps, et environnement.</p>
           <p>Vous y trouverez les points forts qui sont vos appuis, les zones qui méritent attention, et des pistes concrètes pour la suite. Si pertinent, des suggestions d'orientation vous sont proposées.</p>
@@ -1673,10 +1744,7 @@ a { color: inherit; text-decoration: none; }
       </details>
 
       <details class="faq-item">
-        <summary>
-          <span>Puis-je faire plusieurs suivis ?</span>
-          <span class="faq-toggle"></span>
-        </summary>
+        <summary><span>Puis-je faire plusieurs suivis ?</span><span class="faq-toggle"></span></summary>
         <div class="faq-content">
           <p>Oui. Pendant les 30 jours qui suivent votre bilan initial, vous pouvez réaliser autant de suivis libres que vous souhaitez, sans coût supplémentaire.</p>
           <p>C'est utile pour observer vos évolutions, ajuster votre lecture de la situation, ou simplement vous écouter régulièrement. Tout est inclus dans l'offre découverte à 9 €.</p>
