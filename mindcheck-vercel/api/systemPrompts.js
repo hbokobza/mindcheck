@@ -492,7 +492,7 @@ LE JSON DOIT CONTENIR EXACTEMENT CES CHAMPS, DANS CET ORDRE :
 {
   "synthese_clinique": "string. 3 à 5 phrases DENSES et PERCUTANTES. Pose la dominante observée en termes serrés. PAS de paragraphe long, PAS de redondance. Style : tagline clinique. La PREMIÈRE phrase doit poser la dominante (ex: 'Dimension dépressive avec anxiété généralisée, d'installation progressive sur environ un an.'). Les suivantes ajoutent : manifestations clés, dynamique observée, leviers réflexifs. Évite toute formulation prescriptive.",
   "axes": [
-    { "num": 1, "label": "Processus psychiques", "score": 1-4, "manifestations": "string. Manifestations cliniques observées dans le récit, formulées en langage clinique. 2-3 phrases.", "systemes": "string. Systèmes impliqués (cognitif, anxieux, dépressif, traumatique, somatique, social, etc.) avec hypothèses prudentes. 2-3 phrases." },
+    { "num": 1, "label": "Processus psychiques", "score": 1-4, "manifestations": "string. UNE PHRASE COURTE de MAX 30 mots. Manifestations cliniques observées dans le récit, formulées en langage clinique condensé. JAMAIS de paragraphe.", "systemes": "string. UNE PHRASE COURTE de MAX 30 mots. Systèmes impliqués (cognitif, anxieux, dépressif, somatique, social, etc.) avec hypothèses prudentes condensées. JAMAIS de paragraphe." },
     { "num": 2, "label": "Ressources psychiques", "score": 1-4, "manifestations": "...", "systemes": "..." },
     { "num": 3, "label": "Comportements et conduites", "score": 1-4, "manifestations": "...", "systemes": "..." },
     { "num": 4, "label": "Régulation émotionnelle", "score": 1-4, "manifestations": "...", "systemes": "..." },
@@ -500,23 +500,23 @@ LE JSON DOIT CONTENIR EXACTEMENT CES CHAMPS, DANS CET ORDRE :
     { "num": 6, "label": "Environnement", "score": 1-4, "manifestations": "...", "systemes": "..." }
   ],
   "analyse_linguistique": {
-    "pronoms_je": "string. 1-2 phrases. Densité observée des pronoms à la 1ère personne du singulier (je, moi, me, mon) sur l'ensemble du récit. Indique 'élevée', 'moyenne' ou 'faible'. Si élevée, le préciser comme marqueur classique de focus auto-centré (rumination, dépression). Norme moyenne adulte francophone : 6-7%.",
-    "marqueurs_absolutistes": "string. 1-2 phrases. Présence de marqueurs absolutistes (toujours, jamais, tout, rien, personne) dans le récit. Indique 'marquée', 'modérée' ou 'absente'.",
-    "valence_emotionnelle": "string. 1-2 phrases. Tonalité émotionnelle dominante du récit (négative / mixte / positive). Préciser si une asymétrie est observée.",
-    "temporalite_dominante": "string. 1-2 phrases. Temporalité dominante (passé, présent, futur, conditionnel). Mentionner les verbalisations contre-factuelles si présentes ('j'aurais dû', 'il aurait fallu').",
-    "langage_interieur": "string. 1-2 phrases. Caractérisation du langage intérieur sur 3 dimensions : explicatif vs évaluatif, positif vs négatif, dialogique vs monologique.",
-    "observations": "string. 2-3 phrases. Synthèse observationnelle de ce que l'analyse linguistique apporte au-delà du contenu déclaré."
+    "pronoms_je": "string. FORMAT ULTRA COURT : qualification + 3-8 mots de précision. MAX 12 mots. Exemple BIEN : 'élevés, focus auto-centré ruminatif'. Exemple INTERDIT : 'Densité très élevée de pronoms de première personne (je, moi, mon). Récit centré sur expérience interne, auto-observation constante.'",
+    "marqueurs_absolutistes": "string. FORMAT ULTRA COURT : qualification + 3-8 mots. MAX 12 mots. Exemple BIEN : 'modérés (presque tous, quasi permanente)'. Exemple INTERDIT : phrase complète développée.",
+    "valence_emotionnelle": "string. FORMAT ULTRA COURT : qualification + 3-8 mots. MAX 12 mots. Exemple BIEN : 'fortement négative, asymétrie nette'. Exemple INTERDIT : phrase complète développée.",
+    "temporalite_dominante": "string. FORMAT ULTRA COURT : qualification + 3-8 mots. MAX 12 mots. Exemple BIEN : 'présent de l habitude + contre-factuels'. Exemple INTERDIT : phrase complète développée.",
+    "langage_interieur": "string. FORMAT ULTRA COURT : qualification + 3-8 mots. MAX 12 mots. Exemple BIEN : 'évaluatif, monologique, auto-critique'. Exemple INTERDIT : phrase complète développée.",
+    "observations": "string. UNE SEULE PHRASE de MAX 25 mots, en synthèse. Exemple BIEN : 'Configuration linguistique cohérente avec un repli auto-centré ruminatif et une perception de chronicité plutôt que de crise aigue.'"
   },
   "mecanismes_transdiagnostiques": [
     { "processus": "string. Nom technique (rumination, évitement expérientiel, auto-critique, intolérance à l'incertitude, dérégulation émotionnelle, désengagement comportemental, hypervigilance somatique, isolement relationnel).", "salience": 0-3, "boucle_courte": "string. UNE LIGNE OBLIGATOIREMENT. Format symbolique avec flèches Unicode → et symbole ↓ pour les baisses. Maximum 60 caractères. Exemple : 'rumination → sommeil ↓ → fatigue → rumination'." }
   ],
   "themes_attention": [
-    { "titre": "string. Titre court du thème (max 60 caractères). Style descriptif observationnel, JAMAIS prescriptif. Exemples acceptables : 'Boucle rumination–sommeil–fatigue', 'Anhédonie et platitude affective', 'Retrait relationnel et non-communication', 'Auto-exigence et culpabilité'. Exemples INTERDITS : 'Interrompre la rumination', 'Réactiver le plaisir', 'Reconstruire le lien'.", "manifestations": "string. 1-2 phrases. Ce qui est observé dans le récit, formulé en langage clinique descriptif.", "observation_clinique": "string. 1-2 phrases. Observation réflexive sur ce thème : sa temporalité, sa structure, sa logique d'auto-entretien éventuelle. JAMAIS de proposition d'action ou d'intervention." }
+    { "titre": "string. Titre court du thème (max 60 caractères). Style descriptif observationnel, JAMAIS prescriptif. Exemples acceptables : 'Boucle rumination–sommeil–fatigue', 'Anhédonie et platitude affective', 'Retrait relationnel et non-communication', 'Auto-exigence et culpabilité'. Exemples INTERDITS : 'Interrompre la rumination', 'Réactiver le plaisir', 'Reconstruire le lien'.", "manifestations": "string. UNE PHRASE COURTE de MAX 25 mots. Ce qui est observé dans le récit, en langage clinique condensé. JAMAIS plusieurs phrases.", "observation_clinique": "string. UNE PHRASE COURTE de MAX 25 mots. Note réflexive sur le thème : temporalité, structure, logique d'auto-entretien. JAMAIS d'action proposée." }
   ],
   "ressources_observees": {
-    "intro": "string. 2-3 phrases narratives en langage clinique. Vue d'ensemble des éléments du récit qui paraissent constituer des appuis pour le travail clinique à venir. Style chaleureux mais clinique.",
+    "intro": "string. UNE PHRASE de MAX 20 mots. Vue d'ensemble très courte. Exemple BIEN : 'Le récit contient plusieurs éléments réflexifs et structurels qui constituent des appuis cliniques.' (15 mots) Exemple INTERDIT : intro narrative de 2-3 phrases.",
     "elements": [
-      { "titre": "string. Titre court de la ressource (max 60 caractères). Exemples : 'Insight et capacité de verbalisation', 'Environnement objectivement stable', 'Absence de décompensation aiguë'.", "detail": "string. 2-3 phrases. Description clinique de la ressource observée." }
+      { "titre": "string. Titre court (max 50 caractères). Exemples : 'Insight et capacité de verbalisation', 'Environnement objectivement stable', 'Absence de décompensation aiguë'.", "detail": "string. UNE PHRASE COURTE de MAX 20 mots. Description condensée. Exemple BIEN : 'Capacité fine à différencier ses états et identifier les connections causales entre symptômes.' (13 mots) Exemple INTERDIT : 'Capacité fine à différencier ses états (« lourdeur constante, pas tristesse intense »), à identifier des connections causales (« pensées trop → pas sommeil »), et à reconnaître la dégradation progressive. Cet auto-observation réflexive suggère une capacité à externaliser ses processus.' (40 mots — beaucoup trop long)" }
     ]
   },
   "item9_present": false
@@ -541,12 +541,40 @@ REGLES SUR synthese_clinique (CHAMP CENTRAL — V3 — RÈGLE STRICTE)
 - INTERDIT : "configuration syndromique majeure", "tableau dépressif sévère", "présentation syndromique X". Préférer "dimension X observée", "tableau évocateur de Y".
 - AVANT D'ÉCRIRE : compte tes phrases. Si tu en as plus de 5, RECOMMENCE en plus court.
 
-REGLES SUR analyse_linguistique
-- Section obligatoire — toujours renseignée.
-- Si récit trop court, écrire "non observable sur ce récit" plutôt qu'inventer.
-- Une citation par sous-champ maximum, entre guillemets français.
-- Ordres de grandeur (élevée, modérée, absente) plutôt que pourcentages chiffrés.
-- Pour la temporalité : signaler les verbalisations contre-factuelles ("j'aurais dû"), marqueurs forts d'auto-critique.
+REGLES SUR analyse_linguistique (FORMAT ULTRA CONDENSÉ — V3.3)
+- Section secondaire — affichée en encart compact, pas en bloc principal.
+- CONTRAINTE CAPITALE : chaque sous-champ (pronoms_je, marqueurs_absolutistes, valence_emotionnelle, temporalite_dominante, langage_interieur) = UNE QUALIFICATION COURTE de MAXIMUM 12 mots. Format : "qualification + 3-8 mots de précision". PAS DE PHRASE COMPLÈTE NARRATIVE.
+- Le champ observations = UNE SEULE PHRASE de MAXIMUM 25 mots en synthèse globale.
+- Si récit trop court : écrire "non observable" plutôt qu'inventer.
+- Avant d'écrire chaque champ, compte tes mots. Si > 12 mots (ou > 25 pour observations), recommence.
+
+EXEMPLES POUR CHAQUE SOUS-CHAMP (PRENDS-LES COMME RÉFÉRENCE STRICTE)
+
+pronoms_je :
+- BIEN : "élevés, focus auto-centré ruminatif" (5 mots)
+- BIEN : "moyens, équilibre entre auto-observation et description externe" (8 mots)
+- INTERDIT : "Densité très élevée de pronoms de première personne (je, moi, mon). Récit centré sur expérience interne, auto-observation constante. Cette prévalence, couplée à la tonalité négative, peut indiquer un focus ruminatif." (38 mots — beaucoup trop long)
+
+marqueurs_absolutistes :
+- BIEN : "modérés (presque tous, quasi permanente)" (5 mots)
+- BIEN : "absents, formulation nuancée" (3 mots)
+- INTERDIT : "Présence modérée de marqueurs absolutistes : presque tous les jours, quasi permanente, difficile à contrôler. Formulation générale peu extrême." (20 mots — trop long)
+
+valence_emotionnelle :
+- BIEN : "fortement négative, asymétrie nette" (4 mots)
+- BIEN : "mixte avec dominante préoccupée" (4 mots)
+
+temporalite_dominante :
+- BIEN : "présent de l habitude + contre-factuels (j aurais dû)" (8 mots)
+- BIEN : "focalisation sur le passé non résolu" (6 mots)
+
+langage_interieur :
+- BIEN : "évaluatif, monologique, auto-critique dominante" (5 mots)
+- BIEN : "explicatif et nuancé, dialogue intérieur préservé" (6 mots)
+
+observations :
+- BIEN : "Configuration linguistique cohérente avec un repli auto-centré ruminatif. Perception de chronicité plutôt que crise aigue." (16 mots)
+- INTERDIT : "L'analyse linguistique confirme un repli auto-critique persistant avec prédominance ruminative. L'absence de marqueurs extrêmes nuance légèrement la sévérité cognitive, suggérant une préservation partielle de la flexibilité de pensée. La prévalence du présent de l'habitude indique une perception de chronicité, renforçant l'hypothèse d'une installation progressive." (44 mots — beaucoup trop long)
 
 REGLES SUR mecanismes_transdiagnostiques (FORMAT V3 SIMPLIFIE)
 - 0 à 4 processus identifiés (MAXIMUM 4 — c'est une LIMITE STRICTE pour préserver la mise en page) parmi les 8 : rumination, évitement expérientiel, auto-critique, intolérance à l'incertitude, dérégulation émotionnelle, désengagement comportemental, hypervigilance somatique, isolement relationnel.
@@ -562,28 +590,48 @@ REGLES SUR mecanismes_transdiagnostiques (FORMAT V3 SIMPLIFIE)
 - INTERDIT V3 : ne plus mentionner "axes_concernes", "mecanisme_circulaire" (paragraphe long), "direction_travail" (qui était prescriptive). La boucle courte SUFFIT pour le clinicien.
 - Si aucun processus identifié, retourner [].
 
-REGLES SUR themes_attention (NOUVEAU CHAMP V3 — REMPLACE axes_therapeutiques ET redflags)
-- 3 à 5 thèmes cliniques observés.
+REGLES SUR themes_attention (NOUVEAU CHAMP V3 — DENSITÉ MAXIMALE V3.2)
+- 3 à 4 thèmes cliniques observés (PAS 5).
 - titre = NOM DU THÈME, formulation DESCRIPTIVE et OBSERVATIONNELLE. Jamais d'infinitif d'action.
-- manifestations = ce qui est observé dans le récit.
-- observation_clinique = note réflexive sur le thème (temporalité, structure, logique). PAS d'action proposée.
+- CONTRAINTE STRICTE : manifestations = UNE SEULE PHRASE de MAXIMUM 25 mots. observation_clinique = UNE SEULE PHRASE de MAXIMUM 25 mots.
 - Hiérarchiser par importance clinique apparente (au sens descriptif, pas au sens "à traiter en premier").
 - INTERDIT : mention d'école thérapeutique (TCC, ACT, EMDR, MBSR, etc.).
 - INTERDIT : "Cible :", "Levier :", "Indication :", "Recommandation :". Toute formulation prescriptive.
 - INTERDIT : "à traiter", "à investiguer", "à explorer" (sauf en formulation strictement passive : "X est présent dans le récit").
+- INTERDIT : phrases longues à virgules en chaîne combinant plusieurs idées. Une idée par phrase.
+- Avant d'écrire, compte tes mots. Si dépassement, recommence en plus court.
 
-REGLES SUR ressources_observees (NOUVEAU FORMAT V3)
-- intro = paragraphe narratif clinique de 2-3 phrases, style chaleureux mais factuel.
-- elements = 2 à 4 ressources observées maximum.
-- titre court par ressource (max 60 caractères).
-- detail = 2-3 phrases descriptives sur l'élément observé.
+REGLES SUR ressources_observees (FORMAT TRÈS CONDENSÉ — V3.3)
+- intro = UNE SEULE PHRASE de MAXIMUM 20 mots. JAMAIS un paragraphe narratif développé.
+- elements = MAXIMUM 3 ressources observées (PAS 4).
+- titre court par ressource (max 50 caractères).
+- detail = UNE SEULE PHRASE de MAXIMUM 20 mots. JAMAIS plusieurs phrases.
 - Aucune formulation à l'impératif. Aucun "à mobiliser", "à activer", "à utiliser comme appui".
+
+EXEMPLES POUR ressources_observees.elements[].detail
+- BIEN : "Capacité fine à différencier ses états et identifier les connections causales entre symptômes." (13 mots)
+- BIEN : "Réseau objectivement présent et fonctionnel, non mobilisé actuellement mais disponible." (10 mots)
+- INTERDIT : "Capacité fine à différencier ses états (« lourdeur constante, pas tristesse intense »), à identifier des connections causales (« pensées trop → pas sommeil »), et à reconnaître la dégradation progressive. Cet auto-observation réflexive suggère une capacité à externaliser ses processus et à créer une certaine distance vis-à-vis de ses pensées." (47 mots — beaucoup trop long)
+
+- Avant d'écrire, compte tes mots. Si dépassement, recommence en plus court.
 
 REGLES SUR LES SCORES (1-4) PAR AXE
 1 = Fragile : zone fortement impactée
 2 = En tension : dysfonctionnement clinique avéré
 3 = Stable : quelques signaux, fonctionnement adapté
 4 = Solide : ressource préservée
+
+EXEMPLES POUR axes[].manifestations ET axes[].systemes (FORMAT CONDENSÉ V3.3)
+
+axes[].manifestations (MAX 30 mots — UNE phrase) :
+- BIEN : "Rumination marquée sur erreurs passées, anticipation anxieuse permanente, pensées négatives auto-référencées, difficulté de concentration." (13 mots)
+- BIEN : "Désengagement progressif des activités plaisantes, effort volontaire pour tâches simples, fluctuations d'appétit, irritabilité accrue." (14 mots)
+- INTERDIT : "Rumination marquée sur erreurs passées et décisions, avec auto-reproche intense. Anticipation anxieuse permanente de problèmes mineurs. Pensées négatives auto-référencées (« ne pas être à la hauteur »). Difficulté de concentration avec relecture répétée et oublis. Lassitude passagère exprimée sans plan d'action précis." (44 mots — beaucoup trop long, plusieurs phrases)
+
+axes[].systemes (MAX 30 mots — UNE phrase) :
+- BIEN : "Système cognitif dominé par pensée négative auto-critique. Boucle hypothétique : rumination → inefficacité → dépréciation." (14 mots avec demi-phrase explicative)
+- BIEN : "Cycle d'évitement : fatigue → retrait → réduction renforcement → fatigue. Système comportemental réduit." (13 mots)
+- INTERDIT : "Système cognitif dominé par la pensée négative prépondérante et auto-critique. Processus anxieux d'anticipation diffuse sans objet clairement identifié. Hypothèse : boucle rumination–inefficacité–dépréciation de soi. Système attentionnel contracté, focalisé sur menaces internes (pensées) et externe (vigilance)." (37 mots, plusieurs phrases)
 
 REGLES DE CALIBRATION (COHERENCE PSYCHOMETRIQUE)
 - Différencier les axes. Tous à 2 ou tous à 3 = mauvais bilan.
@@ -635,6 +683,27 @@ INTERDITS ABSOLUS V3
 - Ne jamais prescrire une fréquence ou un cadre de prise en charge.
 - Ne jamais mentionner LIWC, INSERM, AAP dans la prose : la mention méthodologique est statique en pied de bilan.
 - Ne jamais utiliser le format "axes_therapeutiques" ou "redflags" de l'ancienne version V2 — ces champs SONT SUPPRIMÉS en V3.
+
+VÉRIFICATION FINALE OBLIGATOIRE — DENSITÉ V3.3 (LECTURE EN 3 MINUTES)
+Avant de retourner le JSON, RELIS chaque champ et vérifie ces plafonds :
+- synthese_clinique : 3 à 5 phrases courtes (max 25 mots/phrase)
+- axes[].manifestations : 1 phrase, MAX 30 mots
+- axes[].systemes : 1 phrase, MAX 30 mots
+- analyse_linguistique.{pronoms_je, marqueurs_absolutistes, valence_emotionnelle, temporalite_dominante, langage_interieur} : QUALIFICATION COURTE, MAX 12 mots chacun (pas une phrase complète, juste qualification + précision brève)
+- analyse_linguistique.observations : 1 phrase, MAX 25 mots
+- mecanismes_transdiagnostiques : MAX 4 entrées
+- mecanismes_transdiagnostiques[].boucle_courte : MAX 60 caractères
+- themes_attention : 3 à 4 entrées
+- themes_attention[].manifestations : 1 phrase, MAX 25 mots
+- themes_attention[].observation_clinique : 1 phrase, MAX 25 mots
+- ressources_observees.intro : 1 phrase, MAX 25 mots
+- ressources_observees.elements : MAX 3 entrées
+- ressources_observees.elements[].detail : 1 phrase, MAX 20 mots
+
+Si UN SEUL champ dépasse son plafond, réécris-le en plus court AVANT de retourner le JSON.
+RAPPEL CONTEXTE : ce bilan est lu par un thérapeute en moins de 3 minutes avant une consultation.
+Au-delà, il décroche. Toute redondance ou verbosité est un échec du bilan.
+La densité d'information par mot est le critère qualité numéro 1.
 `;
 
 // =============================================================================
