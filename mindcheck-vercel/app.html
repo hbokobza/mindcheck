@@ -1834,39 +1834,36 @@ function showBilanBTB(data){
       </div>
     </section>`;
 
-  // === ANALYSE LINGUISTIQUE IMPLICITE ===
+  // === ANALYSE LINGUISTIQUE IMPLICITE — V3.3 ULTRA COMPACTE ===
+  // Format inline avec mini-tags + 1 phrase de synthèse
+  // Section secondaire : densité visuelle minimale, lecture optionnelle
   const al = data.analyse_linguistique;
-  const analyseLinguistiqueHTML = al ? `
-    <section style="margin:18px 24px 0;background:white;border:1px solid #e5e6e0;border-radius:18px;padding:24px">
-      <div style="font-size:12px;letter-spacing:0.32em;color:#243f70;font-weight:800;text-transform:uppercase;margin-bottom:8px">Analyse linguistique implicite</div>
-      <div style="font-size:12px;color:#6b6b6b;font-style:italic;margin-bottom:18px;line-height:1.6">Marqueurs observés sur l'ensemble du récit, hors contenu déclaré. Méthodologie inspirée des travaux récents en linguistique clinique.</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
-        <div>
-          <div style="font-size:11px;font-weight:700;color:#243f70;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.6px">Pronoms 1<sup>ère</sup> personne</div>
-          <div style="font-size:12px;color:#333;line-height:1.6">${escapeHTML(al.pronoms_je || 'non observable')}</div>
-        </div>
-        <div>
-          <div style="font-size:11px;font-weight:700;color:#243f70;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.6px">Marqueurs absolutistes</div>
-          <div style="font-size:12px;color:#333;line-height:1.6">${escapeHTML(al.marqueurs_absolutistes || 'non observable')}</div>
-        </div>
-        <div>
-          <div style="font-size:11px;font-weight:700;color:#243f70;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.6px">Valence émotionnelle</div>
-          <div style="font-size:12px;color:#333;line-height:1.6">${escapeHTML(al.valence_emotionnelle || 'non observable')}</div>
-        </div>
-        <div>
-          <div style="font-size:11px;font-weight:700;color:#243f70;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.6px">Temporalité dominante</div>
-          <div style="font-size:12px;color:#333;line-height:1.6">${escapeHTML(al.temporalite_dominante || 'non observable')}</div>
-        </div>
-        <div style="grid-column:1/-1">
-          <div style="font-size:11px;font-weight:700;color:#243f70;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.6px">Langage intérieur</div>
-          <div style="font-size:12px;color:#333;line-height:1.6">${escapeHTML(al.langage_interieur || 'non observable')}</div>
-        </div>
+  const linguTags = [];
+  if (al) {
+    if (al.pronoms_je) linguTags.push({ label: 'Pronoms 1<sup>ère</sup> pers.', value: al.pronoms_je });
+    if (al.marqueurs_absolutistes) linguTags.push({ label: 'Absolutistes', value: al.marqueurs_absolutistes });
+    if (al.valence_emotionnelle) linguTags.push({ label: 'Valence', value: al.valence_emotionnelle });
+    if (al.temporalite_dominante) linguTags.push({ label: 'Temporalité', value: al.temporalite_dominante });
+    if (al.langage_interieur) linguTags.push({ label: 'Langage intérieur', value: al.langage_interieur });
+  }
+  const analyseLinguistiqueHTML = al && linguTags.length > 0 ? `
+    <section style="margin:18px 24px 0;background:#fafaf7;border:1px solid #e5e6e0;border-radius:14px;padding:14px 18px">
+      <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:8px">
+        <div style="font-size:10px;letter-spacing:0.32em;color:#243f70;font-weight:800;text-transform:uppercase">Analyse linguistique</div>
+        <div style="font-size:10px;color:#888;font-style:italic">Marqueurs implicites du récit</div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px 14px;margin-bottom:8px">
+        ${linguTags.map(t => `
+          <div style="font-size:11px;color:#333;line-height:1.4">
+            <span style="color:#243f70;font-weight:700">${t.label}</span>
+            <span style="color:#888;margin:0 3px">·</span>
+            <span>${escapeHTML(t.value)}</span>
+          </div>`).join('')}
       </div>
       ${al.observations ? `
-      <div style="margin-top:18px;padding-top:14px;border-top:0.5px dashed rgba(0,0,0,0.1)">
-        <div style="font-size:12px;font-weight:700;color:#3a7531;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.6px">Observations</div>
-        <div style="font-size:13px;color:#1f1f1c;line-height:1.65;font-style:italic;font-family:Georgia,serif">${escapeHTML(al.observations)}</div>
-      </div>` : ''}
+        <div style="font-size:11.5px;color:#3a4a35;line-height:1.5;font-style:italic;font-family:Georgia,serif;padding-top:8px;border-top:0.5px dashed rgba(0,0,0,0.08)">
+          ${escapeHTML(al.observations)}
+        </div>` : ''}
     </section>` : '';
 
   // === MÉCANISMES TRANSDIAGNOSTIQUES (CARDS COMPACTES AVEC BOUCLE COURTE) ===
@@ -1925,31 +1922,35 @@ function showBilanBTB(data){
       </div>
     </section>` : '';
 
-  // === RESSOURCES OBSERVÉES (PLEINE LARGEUR) ===
+  // === RESSOURCES OBSERVÉES — V3.3 COMPACT (3 cards max, intro discrète) ===
   const ressources = data.ressources_observees;
   let ressourcesHTML = '';
   if (ressources && (ressources.intro || (ressources.elements && ressources.elements.length))) {
-    const ressItems = (ressources.elements || []).map(e => `
-      <div style="background:white;border:1px solid #d7ece0;border-radius:14px;padding:16px">
-        <h3 style="margin:0 0 8px;color:#3a7531;font-size:14px;font-weight:800">${escapeHTML(e.titre || '')}</h3>
-        <p style="margin:0;font-size:12px;color:#333;line-height:1.55">${escapeHTML(e.detail || '')}</p>
+    const ressItems = (ressources.elements || []).slice(0, 3).map(e => `
+      <div style="background:white;border:1px solid #d7ece0;border-radius:12px;padding:12px 14px">
+        <h3 style="margin:0 0 5px;color:#3a7531;font-size:13px;font-weight:800;line-height:1.3">${escapeHTML(e.titre || '')}</h3>
+        <p style="margin:0;font-size:11.5px;color:#333;line-height:1.5">${escapeHTML(e.detail || '')}</p>
       </div>`).join('');
     ressourcesHTML = `
-      <section style="margin:18px 24px 0;background:#f3faf5;border:1px solid #cee2d5;border-radius:18px;padding:24px">
-        <div style="font-size:12px;letter-spacing:0.32em;color:#3a7531;font-weight:800;text-transform:uppercase;margin-bottom:14px">Ressources observées</div>
-        ${ressources.intro ? `<p style="font-family:Georgia,serif;font-style:italic;font-size:15px;line-height:1.55;color:#1f3d29;margin:0 0 18px;max-width:920px">${escapeHTML(ressources.intro)}</p>` : ''}
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">${ressItems}</div>
+      <section style="margin:18px 24px 0;background:#f3faf5;border:1px solid #cee2d5;border-radius:14px;padding:16px 18px">
+        <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:${ressources.intro ? '8' : '12'}px">
+          <div style="font-size:10px;letter-spacing:0.32em;color:#3a7531;font-weight:800;text-transform:uppercase">Ressources observées</div>
+          ${ressources.intro ? `<div style="font-size:11px;color:#3a4a35;font-style:italic;flex:1;min-width:200px">${escapeHTML(ressources.intro)}</div>` : ''}
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px">${ressItems}</div>
       </section>`;
   } else if (data.forces && (data.forces.intro || (data.forces.points && data.forces.points.length))) {
-    // Fallback compatibilité ancien format V2
-    const points = (data.forces.points || []).map(p =>
-      `<div style="background:white;border:1px solid #d7ece0;border-radius:14px;padding:14px;font-size:13px;color:#333;line-height:1.55">${escapeHTML(p)}</div>`
+    // Fallback compatibilité ancien format V2 (limité à 3)
+    const points = (data.forces.points || []).slice(0, 3).map(p =>
+      `<div style="background:white;border:1px solid #d7ece0;border-radius:12px;padding:12px 14px;font-size:11.5px;color:#333;line-height:1.5">${escapeHTML(p)}</div>`
     ).join('');
     ressourcesHTML = `
-      <section style="margin:18px 24px 0;background:#f3faf5;border:1px solid #cee2d5;border-radius:18px;padding:24px">
-        <div style="font-size:12px;letter-spacing:0.32em;color:#3a7531;font-weight:800;text-transform:uppercase;margin-bottom:14px">Ressources observées</div>
-        ${data.forces.intro ? `<p style="font-family:Georgia,serif;font-style:italic;font-size:15px;line-height:1.55;color:#1f3d29;margin:0 0 18px">${escapeHTML(data.forces.intro)}</p>` : ''}
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">${points}</div>
+      <section style="margin:18px 24px 0;background:#f3faf5;border:1px solid #cee2d5;border-radius:14px;padding:16px 18px">
+        <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:${data.forces.intro ? '8' : '12'}px">
+          <div style="font-size:10px;letter-spacing:0.32em;color:#3a7531;font-weight:800;text-transform:uppercase">Ressources observées</div>
+          ${data.forces.intro ? `<div style="font-size:11px;color:#3a4a35;font-style:italic;flex:1;min-width:200px">${escapeHTML(data.forces.intro)}</div>` : ''}
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px">${points}</div>
       </section>`;
   }
 
