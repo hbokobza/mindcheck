@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -864,24 +865,25 @@ a { color: inherit; text-decoration: none; }
   .nav-link { display: none; }
   .nav-cta { padding: 10px 18px; font-size: 13px; }
 
-  /* HERO mobile — image en bandeau, texte sur cream */
+  /* HERO mobile — image en bandeau plus grand, texte sur cream */
   .hero {
     grid-template-columns: 1fr;
-    min-height: auto;
+    min-height: 100vh; /* hero remplit l'écran, pas de débordement */
     gap: 0;
     padding-right: 0;
   }
   .hero-image-wrap {
-    width: calc(100% - 32px);
-    height: auto;
-    margin: 16px;
-    aspect-ratio: 2500 / 1440;
+    width: calc(100% - 16px);
+    height: 46vh; /* image occupe ~la moitié de l'écran */
+    margin: 8px 8px 0;
+    aspect-ratio: auto;
     background-position: center center;
+    background-size: cover;
     order: 1;
     border-radius: 20px;
   }
   .hero-content-wrap {
-    padding: 16px 24px 48px;
+    padding: 24px 24px 32px;
     background: var(--psee-cream);
     order: 2;
   }
