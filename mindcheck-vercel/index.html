@@ -112,10 +112,12 @@ a { color: inherit; text-decoration: none; }
   position: relative;
   min-height: 92vh;
   display: grid;
-  grid-template-columns: 480px 1fr; /* colonne fixe pour le texte, le reste pour l'image */
+  grid-template-columns: minmax(440px, 1fr) 1.4fr; /* texte à gauche, image plus large à droite */
   align-items: center;
   background-color: var(--psee-cream);
   overflow: hidden;
+  gap: 40px;
+  padding-right: 40px;
 }
 
 .hero-content-wrap {
@@ -128,12 +130,15 @@ a { color: inherit; text-decoration: none; }
 
 .hero-image-wrap {
   position: relative;
-  height: 100%;
-  width: 100%;
+  height: calc(100% - 80px);
+  margin: 40px 0;
+  border-radius: 24px;
+  background-color: var(--psee-cream-dark);
   background-image: url('assets/hero-smartphones.jpg');
   background-size: cover;
-  background-position: left center; /* image cadrée à gauche pour montrer les 4 smartphones */
+  background-position: center center;
   background-repeat: no-repeat;
+  overflow: hidden;
 }
 
 .hero-text { max-width: 100%; }
@@ -842,9 +847,9 @@ a { color: inherit; text-decoration: none; }
 }
 
 @media (max-width: 1024px) {
-  .hero { grid-template-columns: 400px 1fr; }
+  .hero { grid-template-columns: minmax(360px, 1fr) 1.2fr; gap: 24px; padding-right: 24px; }
   .hero-title { font-size: 48px; }
-  .hero-content-wrap { padding: 60px 40px; }
+  .hero-content-wrap { padding: 60px 32px 60px 60px; }
   .orientation-content { padding: 60px 40px; }
   .section-pourquoi { padding: 60px 40px; }
   .section-comment { padding: 60px 40px; }
@@ -863,16 +868,20 @@ a { color: inherit; text-decoration: none; }
   .hero {
     grid-template-columns: 1fr;
     min-height: auto;
+    gap: 0;
+    padding-right: 0;
   }
   .hero-image-wrap {
-    width: 100%;
+    width: calc(100% - 32px);
     height: auto;
+    margin: 16px;
     aspect-ratio: 2500 / 1440;
     background-position: center center;
     order: 1;
+    border-radius: 20px;
   }
   .hero-content-wrap {
-    padding: 32px 24px 48px;
+    padding: 16px 24px 48px;
     background: var(--psee-cream);
     order: 2;
   }
