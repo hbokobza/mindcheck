@@ -111,10 +111,13 @@ a { color: inherit; text-decoration: none; }
 .hero {
   position: relative;
   min-height: 92vh;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
   align-items: center;
-  background: linear-gradient(135deg, var(--psee-cream) 0%, var(--psee-cream-dark) 100%);
+  background-color: var(--psee-cream);
+  background-image: url('assets/hero-smartphones.jpg');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
   overflow: hidden;
 }
 
@@ -124,6 +127,8 @@ a { color: inherit; text-decoration: none; }
   flex-direction: column;
   justify-content: center;
   z-index: 2;
+  max-width: 38%; /* texte calé avant le premier smartphone (~40% de la largeur) */
+  position: relative;
 }
 
 .hero-text { max-width: 560px; }
@@ -249,24 +254,7 @@ a { color: inherit; text-decoration: none; }
 /* PASTILLES mobile (1 ligne pillules) — créé via media query plus bas */
 
 /* HERO MOCKUPS - 3 téléphones à droite */
-/* HERO IMAGE — composition de 4 smartphones montrant l'expérience Psee */
-.hero-image-wrap {
-  position: relative;
-  height: 100%;
-  min-height: 600px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 20px;
-}
-
-.hero-image {
-  width: 100%;
-  height: auto;
-  max-height: 700px;
-  object-fit: contain;
-  display: block;
-}
+/* HERO — image en background, texte calé à gauche */
 
 /* SECTION POURQUOI - V6 : photo prend plus de place, pas tronquée à droite */
 .section-pourquoi {
@@ -850,9 +838,7 @@ a { color: inherit; text-decoration: none; }
 
 @media (max-width: 1024px) {
   .hero-title { font-size: 48px; }
-  .hero-content-wrap { padding: 60px 40px; }
-  .hero-image-wrap { padding: 30px 20px; min-height: 480px; }
-  .hero-image { max-height: 560px; }
+  .hero-content-wrap { padding: 60px 40px; max-width: 50%; }
   .orientation-content { padding: 60px 40px; }
   .section-pourquoi { padding: 60px 40px; }
   .section-comment { padding: 60px 40px; }
@@ -867,30 +853,28 @@ a { color: inherit; text-decoration: none; }
   .nav-link { display: none; }
   .nav-cta { padding: 10px 18px; font-size: 13px; }
 
-  /* HERO mobile */
+  /* HERO mobile — image en bandeau, texte sur cream */
   .hero {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: stretch;
+    background-image: none;
+    background-color: var(--psee-cream);
     min-height: auto;
   }
-  .hero-image-wrap {
-    height: auto;
-    min-height: auto;
-    order: 1;
-    padding: 16px 16px 0;
-  }
-  .hero-image {
-    max-height: none;
+  .hero::before {
+    content: '';
+    display: block;
     width: 100%;
+    aspect-ratio: 2500 / 1440;
+    background-image: url('assets/hero-smartphones.jpg');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
   }
   .hero-content-wrap {
     padding: 32px 24px 48px;
-    margin-top: -28px;
+    max-width: 100%;
     background: var(--psee-cream);
-    border-radius: 28px 28px 0 0;
-    position: relative;
-    z-index: 5;
-    box-shadow: 0 -8px 24px rgba(31, 77, 51, 0.06);
-    order: 2;
   }
   .hero-text { max-width: 100%; }
   .hero-eyebrow { font-size: 11px; letter-spacing: 2px; margin-bottom: 16px; }
@@ -1138,10 +1122,6 @@ a { color: inherit; text-decoration: none; }
         </div>
       </div>
     </div>
-  </div>
-
-  <div class="hero-image-wrap">
-    <img src="assets/hero-smartphones.jpg" alt="Psee sur smartphone : entretien guidé, cartographie psychique, conversation thérapeutique et bilan personnalisé" class="hero-image" />
   </div>
 </section>
 
