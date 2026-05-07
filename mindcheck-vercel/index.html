@@ -873,11 +873,11 @@ a { color: inherit; text-decoration: none; }
   }
   .hero-image-wrap {
     width: calc(100% - 16px);
-    height: 32vh; /* image plus compacte : on zoome via background-size pour resserrer sur les smartphones */
+    height: 42vh;
     margin: 8px 8px 0;
     aspect-ratio: auto;
-    background-position: 56% center; /* léger décalage à droite pour ne plus rogner le smartphone gauche */
-    background-size: 130% auto; /* zoom dans l'image source pour réduire l'espace cream autour des smartphones */
+    background-position: center center;
+    background-size: cover;
     background-repeat: no-repeat;
     order: 1;
     border-radius: 20px;
