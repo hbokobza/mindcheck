@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="Psee — Le check-up psychique qui aide à y voir plus clair. Un temps pour faire le point sur votre équilibre.">
+<meta name="theme-color" content="#1F4D33">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Psee — Le check-up psychique qui aide à y voir plus clair</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+
+<link rel="icon" type="image/svg+xml" href="assets/Icone_App_Psee.svg">
+<link rel="apple-touch-icon" href="assets/Icone_App_Psee.svg">
+
+<style>
+:root {
+  --psee-green-dark: #1F4D33;
+  --psee-green: #2F703F;
+  --psee-green-light: #89BF89;
+  --psee-orange: #F4A261;
+  --psee-coral: #E76F51;
+  --psee-cream: #F5F2EC;
+  --psee-cream-dark: #EBE6DB;
+  --psee-cream-light: #FAF7F1;
+  --psee-white: #FFFFFF;
+  --psee-black: #1A1A1A;
+  --psee-grey-medium: #6B6B68;
+  --psee-grey-light: #E5E2DC;
+
+  --section-image-height: 580px;
+
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+body {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--psee-black);
+  background-color: var(--psee-cream);
+  overflow-x: hidden;
+}
+
+img, svg { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+
+/* NAVIGATION */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(245, 242, 236, 0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--psee-grey-light);
+  padding: 16px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-logo a { display: flex; align-items: center; }
+
+.nav-logo-text {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 40px;
+  color: var(--psee-green-dark);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.nav-link {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--psee-black);
+  transition: color 0.2s;
+}
+.nav-link:hover { color: var(--psee-green-dark); }
+
+.nav-cta {
+  background: var(--psee-green-dark);
+  color: var(--psee-white);
+  padding: 12px 24px;
+  border-radius: 28px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+  transition: background 0.2s, transform 0.1s;
+}
+.nav-cta:hover { background: #163823; }
+.nav-cta:active { transform: translateY(1px); }
+
+/* HERO V6 — mockups iPhone à droite, texte à gauche */
+.hero {
+  position: relative;
+  min-height: 92vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  background: linear-gradient(135deg, var(--psee-cream) 0%, var(--psee-cream-dark) 100%);
+  overflow: hidden;
+}
+
+.hero-content-wrap {
+  padding: 80px 48px 80px 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 2;
+}
+
+.hero-text { max-width: 560px; }
+
+.hero-eyebrow {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--psee-green-dark);
+  margin-bottom: 24px;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 60px;
+  line-height: 1.05;
+  color: var(--psee-green-dark);
+  margin-bottom: 28px;
+  letter-spacing: -0.02em;
+}
+
+.hero-title em { font-style: italic; font-weight: 500; }
+
+.hero-sub {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--psee-black);
+  margin-bottom: 36px;
+  max-width: 520px;
+}
+
+.hero-cta-block {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.btn-primary {
+  display: inline-block;
+  background: var(--psee-green-dark);
+  color: var(--psee-white);
+  padding: 18px 40px;
+  border-radius: 32px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 16px;
+  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+  box-shadow: 0 4px 20px rgba(31, 77, 51, 0.18);
+  cursor: pointer;
+  border: none;
+  text-align: center;
+}
+.btn-primary:hover {
+  background: #163823;
+  box-shadow: 0 6px 24px rgba(31, 77, 51, 0.28);
+  transform: translateY(-1px);
+}
+.btn-primary:active { transform: translateY(1px); }
+
+.btn-primary-large {
+  width: 100%;
+  max-width: 420px;
+  padding: 22px 40px;
+  font-size: 17px;
+}
+
+/* PASTILLES desktop (4 colonnes cartes) */
+.hero-badges {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  max-width: 540px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.badge {
+  background: var(--psee-white);
+  border: 1px solid rgba(31, 77, 51, 0.12);
+  border-radius: 14px;
+  padding: 14px 12px;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(31, 77, 51, 0.12);
+}
+
+.badge-icon { display: flex; justify-content: center; margin-bottom: 6px; }
+.badge-icon svg {
+  width: 22px;
+  height: 22px;
+  stroke: var(--psee-green-dark);
+  fill: none;
+  stroke-width: 1.8;
+}
+
+.badge-label {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 17px;
+  color: var(--psee-green-dark);
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.badge-sub {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 11px;
+  color: var(--psee-grey-medium);
+  letter-spacing: 0.2px;
+  line-height: 1.3;
+}
+
+/* PASTILLES mobile (1 ligne pillules) — créé via media query plus bas */
+
+/* HERO MOCKUPS - 3 téléphones à droite */
+/* HERO IMAGE — composition de 4 smartphones montrant l'expérience Psee */
+.hero-image-wrap {
+  position: relative;
+  height: 100%;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.hero-image {
+  width: 100%;
+  height: auto;
+  max-height: 700px;
+  object-fit: contain;
+  display: block;
+}
+
+/* SECTION POURQUOI - V6 : photo prend plus de place, pas tronquée à droite */
+.section-pourquoi {
+  padding: 80px 80px 80px 80px;
+  background-color: var(--psee-cream);
+  background-image: url('assets/femme-canape.png');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  position: relative;
+  min-height: var(--section-image-height);
+  display: flex;
+  align-items: center;
+}
+
+.pourquoi-content {
+  max-width: 540px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  z-index: 3;
+}
+
+.eyebrow {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--psee-green-dark);
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 44px;
+  line-height: 1.15;
+  color: var(--psee-green-dark);
+  margin-bottom: 28px;
+  letter-spacing: -0.01em;
+}
+
+.section-title em { font-style: italic; font-weight: 500; }
+
+.section-text {
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--psee-black);
+  margin-bottom: 18px;
+  max-width: 560px;
+}
+
+/* SECTION 6 AXES */
+.section-axes {
+  padding: 100px 48px;
+  background: var(--psee-cream-dark);
+}
+
+.section-axes-header {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 64px;
+}
+
+.section-axes-header .section-text {
+  margin: 0 auto;
+  text-align: center;
+  max-width: 560px;
+  word-break: keep-all;
+  overflow-wrap: normal;
+}
+
+.axes-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.axe-card {
+  background: var(--psee-white);
+  border-radius: 14px;
+  padding: 24px 16px;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.axe-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(31, 77, 51, 0.08);
+}
+
+.axe-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+}
+
+.axe-icon img { width: 100%; height: 100%; }
+
+.axe-verb {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: var(--psee-green);
+  margin-bottom: 8px;
+}
+
+.axe-name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 1.25;
+  color: var(--psee-green-dark);
+  margin-bottom: 8px;
+}
+
+.axe-desc {
+  font-family: var(--font-body);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--psee-grey-medium);
+}
+
+/* SECTION COMMENT — photo main+phone en background, texte sur le dégradé à gauche */
+.section-comment {
+  padding: 80px 80px 80px 80px;
+  background-color: var(--psee-cream);
+  background-image: url('assets/main-phone.png');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  position: relative;
+  min-height: var(--section-image-height);
+  display: flex;
+  align-items: center;
+}
+
+.comment-content {
+  max-width: 580px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  z-index: 3;
+}
+
+.comment-steps { list-style: none; margin-top: 28px; }
+
+.comment-step {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--psee-grey-light);
+}
+.comment-step:last-child { border-bottom: none; }
+
+.step-num {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--psee-green-dark);
+  color: var(--psee-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 17px;
+}
+
+.step-text strong {
+  display: block;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 17px;
+  color: var(--psee-green-dark);
+  margin-bottom: 6px;
+}
+
+.step-text span {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--psee-grey-medium);
+  line-height: 1.55;
+}
+
+.comment-footer {
+  margin-top: 28px;
+  padding: 18px 22px;
+  background: var(--psee-cream-dark);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.comment-footer-icon {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--psee-green-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.comment-footer-icon svg {
+  width: 18px;
+  height: 18px;
+  stroke: white;
+  fill: none;
+  stroke-width: 2;
+}
+
+.comment-footer-text strong {
+  display: block;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--psee-green-dark);
+  margin-bottom: 2px;
+}
+
+.comment-footer-text span {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--psee-grey-medium);
+  line-height: 1.5;
+}
+
+/* SECTION ORIENTATION V6 — SIMPLIFIÉE : photo + texte uniquement (pas de features) */
+.section-orientation {
+  padding: 0;
+  background: var(--psee-cream-dark);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  min-height: var(--section-image-height);
+  overflow: hidden;
+}
+
+.orientation-image-wrap {
+  position: relative;
+  height: 100%;
+  min-height: var(--section-image-height);
+  overflow: hidden;
+  order: 1;
+}
+
+.orientation-image-wrap::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(to left, var(--psee-cream-dark) 0%, rgba(235, 230, 219, 0.4) 60%, transparent 100%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.orientation-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.orientation-content {
+  padding: 80px 80px 80px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 620px;
+  position: relative;
+  z-index: 3;
+  order: 2;
+}
+
+.orientation-content .section-text {
+  font-size: 16px;
+  margin-bottom: 18px;
+}
+
+/* SECTION CTA FINAL */
+.section-cta {
+  padding: 120px 48px;
+  background: var(--psee-cream);
+}
+
+.cta-content {
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.cta-eyebrow {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--psee-green);
+  margin-bottom: 20px;
+}
+
+.cta-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 56px;
+  line-height: 1.1;
+  color: var(--psee-green-dark);
+  margin-bottom: 36px;
+  letter-spacing: -0.02em;
+}
+
+.cta-title em { font-style: italic; font-weight: 500; }
+
+.cta-checklist {
+  background: var(--psee-cream-light);
+  border: 1px solid var(--psee-grey-light);
+  border-radius: 16px;
+  padding: 32px 40px;
+  margin: 0 auto 36px;
+  max-width: 540px;
+  text-align: left;
+  list-style: none;
+}
+
+.cta-checklist li {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 0;
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--psee-black);
+}
+
+.cta-check {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--psee-green-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cta-check svg {
+  width: 13px;
+  height: 13px;
+  stroke: white;
+  fill: none;
+  stroke-width: 3;
+}
+
+.cta-sub-mention {
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--psee-grey-medium);
+  font-family: var(--font-body);
+}
+
+/* SECTION FAQ */
+.section-faq {
+  padding: 120px 48px;
+  background: var(--psee-cream-dark);
+}
+
+.faq-container {
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+.faq-header {
+  text-align: center;
+  margin-bottom: 56px;
+}
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.faq-item {
+  background: var(--psee-white);
+  border-radius: 14px;
+  border: 1px solid var(--psee-grey-light);
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+
+.faq-item[open] {
+  box-shadow: 0 4px 16px rgba(31, 77, 51, 0.08);
+}
+
+.faq-item summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 22px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--psee-black);
+  transition: color 0.2s;
+}
+
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary:hover { color: var(--psee-green-dark); }
+
+.faq-toggle {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.faq-toggle::before,
+.faq-toggle::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 14px;
+  height: 2px;
+  background: var(--psee-green);
+  transform: translate(-50%, -50%);
+  transition: transform 0.3s ease;
+}
+
+.faq-toggle::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.faq-item[open] .faq-toggle::after {
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+
+.faq-content {
+  padding: 0 28px 24px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--psee-grey-medium);
+}
+
+.faq-content p { margin-bottom: 12px; }
+.faq-content p:last-child { margin-bottom: 0; }
+
+/* FOOTER */
+.footer {
+  background: var(--psee-black);
+  color: var(--psee-white);
+  padding: 64px 48px 32px;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 48px;
+  margin-bottom: 48px;
+}
+
+.footer-logo {
+  display: inline-block;
+  color: var(--psee-white);
+  margin-bottom: 20px;
+  line-height: 0;
+}
+
+.footer-logo svg {
+  height: 48px;
+  width: auto;
+  display: block;
+}
+
+.footer-brand p {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.6);
+  max-width: 280px;
+  margin-bottom: 24px;
+}
+
+.footer-social { display: flex; gap: 12px; margin-top: 8px; }
+
+.social-link {
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.social-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.social-link svg {
+  width: 18px;
+  height: 18px;
+  fill: rgba(255, 255, 255, 0.7);
+  transition: fill 0.2s;
+}
+
+.social-link:hover svg { fill: var(--psee-white); }
+
+.footer-col h4 {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.footer-col ul { list-style: none; }
+.footer-col li { margin-bottom: 10px; }
+
+.footer-col a {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  transition: color 0.2s;
+}
+.footer-col a:hover { color: var(--psee-white); }
+
+.footer-disclaimer {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 16px;
+  line-height: 1.5;
+}
+
+.footer-bottom {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 32px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* RESPONSIVE TABLET */
+@media (max-width: 1280px) {
+  .axes-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .axe-card { padding: 28px 20px; }
+  .axe-icon { width: 72px; height: 72px; }
+  .axe-name { font-size: 19px; }
+  .axe-desc { font-size: 13px; }
+}
+
+@media (max-width: 1024px) {
+  .hero-title { font-size: 48px; }
+  .hero-content-wrap { padding: 60px 40px; }
+  .hero-image-wrap { padding: 30px 20px; min-height: 480px; }
+  .hero-image { max-height: 560px; }
+  .orientation-content { padding: 60px 40px; }
+  .section-pourquoi { padding: 60px 40px; }
+  .section-comment { padding: 60px 40px; }
+}
+
+/* ============================================================
+   RESPONSIVE MOBILE V6 — REFONTE APP-LIKE
+   ============================================================ */
+@media (max-width: 768px) {
+  .nav { padding: 14px 20px; }
+  .nav-logo-text { font-size: 30px; }
+  .nav-link { display: none; }
+  .nav-cta { padding: 10px 18px; font-size: 13px; }
+
+  /* HERO mobile */
+  .hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+  .hero-image-wrap {
+    height: auto;
+    min-height: auto;
+    order: 1;
+    padding: 16px 16px 0;
+  }
+  .hero-image {
+    max-height: none;
+    width: 100%;
+  }
+  .hero-content-wrap {
+    padding: 32px 24px 48px;
+    margin-top: -28px;
+    background: var(--psee-cream);
+    border-radius: 28px 28px 0 0;
+    position: relative;
+    z-index: 5;
+    box-shadow: 0 -8px 24px rgba(31, 77, 51, 0.06);
+    order: 2;
+  }
+  .hero-text { max-width: 100%; }
+  .hero-eyebrow { font-size: 11px; letter-spacing: 2px; margin-bottom: 16px; }
+  .hero-title { font-size: 34px; line-height: 1.08; margin-bottom: 20px; }
+  .hero-sub { font-size: 15px; margin-bottom: 24px; }
+
+  /* CTA mobile pleine largeur app-like */
+  .hero-cta-block { width: 100%; gap: 16px; }
+  .hero-cta-block .btn-primary {
+    width: 100%;
+    padding: 17px 28px;
+    font-size: 16px;
+    border-radius: 28px;
+  }
+
+  /* PASTILLES MOBILE — 1 ligne pillules compactes (refonte V6) */
+  .hero-badges {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    max-width: 100%;
+  }
+  .badge {
+    padding: 10px 4px 8px;
+    border-radius: 12px;
+  }
+  .badge-icon { margin-bottom: 4px; }
+  .badge-icon svg { width: 16px; height: 16px; stroke-width: 2; }
+  .badge-label { font-size: 13px; margin-bottom: 2px; }
+  .badge-sub { font-size: 9px; letter-spacing: 0; }
+
+  /* POURQUOI mobile — photo en haut, texte sur cream en-dessous */
+  .section-pourquoi {
+    background-image: none;
+    background-color: var(--psee-cream);
+    padding: 0;
+    flex-direction: column;
+    align-items: stretch;
+    min-height: auto;
+  }
+  .section-pourquoi::before {
+    content: '';
+    display: block;
+    height: 320px;
+    background-image: url('assets/femme-canape.png');
+    background-size: cover;
+    background-position: 70% center;
+    background-repeat: no-repeat;
+  }
+  .pourquoi-content {
+    padding: 32px 24px 56px;
+    max-width: 100%;
+  }
+
+  /* AXES mobile — scroll horizontal app-like */
+  .section-axes {
+    padding: 56px 0;
+  }
+  .section-axes-header {
+    padding: 0 24px;
+    margin-bottom: 32px;
+  }
+  .section-title { font-size: 28px; }
+  .axes-grid {
+    display: flex;
+    grid-template-columns: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 24px;
+    gap: 12px;
+    scroll-padding: 0 24px;
+  }
+  .axes-grid::-webkit-scrollbar { display: none; }
+  .axes-grid { scrollbar-width: none; }
+
+  .axe-card {
+    flex: 0 0 70%;
+    min-width: 220px;
+    padding: 24px 20px;
+    scroll-snap-align: start;
+  }
+  .axe-icon { width: 60px; height: 60px; margin-bottom: 14px; }
+  .axe-name { font-size: 16px; margin-bottom: 6px; }
+  .axe-verb { font-size: 9px; margin-bottom: 6px; }
+  .axe-desc { font-size: 13px; }
+
+  /* COMMENT mobile — photo en haut, texte sur cream en-dessous */
+  .section-comment {
+    background-image: none;
+    background-color: var(--psee-cream);
+    padding: 0;
+    flex-direction: column;
+    align-items: stretch;
+    min-height: auto;
+  }
+  .section-comment::before {
+    content: '';
+    display: block;
+    height: 320px;
+    background-image: url('assets/main-phone.png');
+    background-size: cover;
+    background-position: 70% center;
+    background-repeat: no-repeat;
+  }
+  .comment-content {
+    padding: 32px 24px 56px;
+    max-width: 100%;
+  }
+
+  /* ORIENTATION mobile */
+  .section-orientation {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+  .orientation-image-wrap {
+    height: 320px;
+    min-height: 320px;
+    order: 1;
+  }
+  .orientation-image-wrap img {
+    object-position: center 30%;
+  }
+  .orientation-image-wrap::after {
+    width: 100%;
+    height: 30%;
+    top: auto;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(to top, var(--psee-cream-dark) 0%, rgba(235, 230, 219, 0.4) 70%, transparent 100%);
+  }
+  .orientation-content {
+    padding: 40px 24px 56px;
+    max-width: 100%;
+    order: 2;
+    margin-top: -28px;
+    background: var(--psee-cream-dark);
+    border-radius: 28px 28px 0 0;
+    position: relative;
+    z-index: 3;
+  }
+
+  /* CTA section mobile */
+  .section-cta { padding: 56px 24px; }
+  .cta-title { font-size: 32px; }
+  .cta-checklist { padding: 22px 22px; }
+  .cta-checklist li { font-size: 14px; padding: 8px 0; gap: 14px; }
+  .cta-check { width: 22px; height: 22px; }
+  .cta-check svg { width: 11px; height: 11px; }
+  .btn-primary-large {
+    padding: 18px 28px;
+    font-size: 16px;
+    width: 100%;
+  }
+
+  /* FAQ mobile */
+  .section-faq { padding: 56px 24px; }
+  .faq-item summary { padding: 18px 22px; font-size: 15px; }
+  .faq-content { padding: 0 22px 20px; font-size: 14px; }
+
+  /* FOOTER mobile */
+  .footer { padding: 48px 24px 24px; }
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    margin-bottom: 32px;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title { font-size: 30px; }
+  .section-title { font-size: 26px; }
+  .cta-title { font-size: 28px; }
+  .badge-label { font-size: 12px; }
+  .badge-sub { font-size: 8px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav class="nav">
+  <div class="nav-logo">
+    <a href="/"><span class="nav-logo-text">Psee</span></a>
+  </div>
+  <div class="nav-links">
+    <a href="#pourquoi" class="nav-link">Pourquoi Psee</a>
+    <a href="#axes" class="nav-link">Les 6 dimensions</a>
+    <a href="#comment" class="nav-link">Comment ça marche</a>
+    <a href="#faq" class="nav-link">FAQ</a>
+    <a href="app.html" class="nav-cta">Commencer mon check-up</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content-wrap">
+    <div class="hero-text">
+      <p class="hero-eyebrow">Check-up psychique</p>
+      <h1 class="hero-title">Le <em>check-up</em> psychique qui aide à y voir plus clair</h1>
+      <p class="hero-sub">
+        Un check-up psychique en 15 minutes pour faire le point sur votre équilibre,
+        repérer ce qui mérite attention, et envisager la suite avec plus de clarté.
+      </p>
+
+      <div class="hero-cta-block">
+        <a href="app.html" class="btn-primary">Commencer mon check-up</a>
+
+        <div class="hero-badges">
+          <div class="badge">
+            <div class="badge-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" stroke="currentColor" stroke-linejoin="round"/>
+                <line x1="7" y1="7" x2="7.01" y2="7" stroke="currentColor" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="badge-label">9 €</div>
+            <div class="badge-sub">accès complet</div>
+          </div>
+          <div class="badge">
+            <div class="badge-icon">
+              <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor"/><path d="M12 6v6l4 2" stroke="currentColor" stroke-linecap="round"/></svg>
+            </div>
+            <div class="badge-label">15 min</div>
+            <div class="badge-sub">tout au long</div>
+          </div>
+          <div class="badge">
+            <div class="badge-icon">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4z" stroke="currentColor" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="badge-label">100 %</div>
+            <div class="badge-sub">anonyme</div>
+          </div>
+          <div class="badge">
+            <div class="badge-icon">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" stroke="currentColor" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="badge-label">30 jours</div>
+            <div class="badge-sub">de suivi libre</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-image-wrap">
+    <img src="assets/hero-smartphones.jpg" alt="Psee sur smartphone : entretien guidé, cartographie psychique, conversation thérapeutique et bilan personnalisé" class="hero-image" />
+  </div>
+</section>
+
+<!-- SECTION POURQUOI -->
+<section class="section-pourquoi" id="pourquoi">
+  <div class="pourquoi-content">
+    <p class="eyebrow">Pourquoi Psee</p>
+    <h2 class="section-title">
+      Parce qu'on ne sait pas toujours <em>mettre des mots</em> sur ce qu'on traverse
+    </h2>
+    <p class="section-text">
+      Quelque chose ne va pas tout à fait, mais c'est difficile à nommer.
+      Une fatigue qui s'installe, une irritabilité qu'on ne s'explique pas,
+      le sentiment de tourner en rond. On hésite à consulter — pas assez grave
+      pour ça — mais on aimerait y voir plus clair.
+    </p>
+    <p class="section-text">
+      Psee répond à ce moment précis. Un espace pour faire le point, sans
+      jugement, sans engagement. Vous prenez le temps de vous écouter, et vous
+      repartez avec des repères concrets.
+    </p>
+    <p class="section-text">
+      Anonyme, accessible, structuré : c'est le check-up que vous vous devez
+      quand quelque chose vous interroge.
+    </p>
+  </div>
+</section>
+
+<!-- SECTION 6 AXES -->
+<section class="section-axes" id="axes">
+  <div class="section-axes-header">
+    <p class="eyebrow">Les 6 dimensions</p>
+    <h2 class="section-title">
+      Six axes pour explorer votre <em>équilibre psychique</em>
+    </h2>
+    <p class="section-text">
+      Une cartographie complète qui prend en compte ce qui se passe en vous,
+      autour de vous, et dans votre corps.
+    </p>
+  </div>
+
+  <div class="axes-grid">
+    <div class="axe-card">
+      <div class="axe-icon"><img src="assets/Icone_Cerveau_mecanique.svg" alt="" /></div>
+      <p class="axe-verb">Comprendre</p>
+      <h3 class="axe-name">Processus psychiques</h3>
+      <p class="axe-desc">La manière dont vos pensées s'organisent.</p>
+    </div>
+    <div class="axe-card">
+      <div class="axe-icon"><img src="assets/Icone_Plante.svg" alt="" /></div>
+      <p class="axe-verb">Explorer</p>
+      <h3 class="axe-name">Ressources psychiques</h3>
+      <p class="axe-desc">Vos appuis intérieurs et votre énergie.</p>
+    </div>
+    <div class="axe-card">
+      <div class="axe-icon"><img src="assets/Icone_Cerveau_fleches.svg" alt="" /></div>
+      <p class="axe-verb">Développer</p>
+      <h3 class="axe-name">Comportements et conduites</h3>
+      <p class="axe-desc">Vos habitudes et vos réactions.</p>
+    </div>
+    <div class="axe-card">
+      <div class="axe-icon"><img src="assets/Icone_Coeur.svg" alt="" /></div>
+      <p class="axe-verb">Connecter</p>
+      <h3 class="axe-name">Régulation émotionnelle</h3>
+      <p class="axe-desc">Comment vous vivez vos émotions.</p>
+    </div>
+    <div class="axe-card">
+      <div class="axe-icon"><img src="assets/Icone_Personnage.svg" alt="" /></div>
+      <p class="axe-verb">S'écouter</p>
+      <h3 class="axe-name">Corps et risque somatique</h3>
+      <p class="axe-desc">Sommeil, tensions, signaux physiques.</p>
+    </div>
+    <div class="axe-card">
+      <div class="axe-icon"><img src="assets/Icone_Maison.svg" alt="" /></div>
+      <p class="axe-verb">S'harmoniser</p>
+      <h3 class="axe-name">Environnement</h3>
+      <p class="axe-desc">Vos liens et votre contexte de vie.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION COMMENT - "15 min" au lieu de "10 à 15 min" -->
+<section class="section-comment" id="comment">
+  <div class="comment-content">
+    <p class="eyebrow">Comment ça marche ?</p>
+    <h2 class="section-title">
+      <em>3 étapes</em> simples
+    </h2>
+
+    <ul class="comment-steps">
+      <li class="comment-step">
+        <div class="step-num">1</div>
+        <div class="step-text">
+          <strong>Répondez à une évaluation guidée</strong>
+          <span>Questions claires et ciblées, 15 min.</span>
+        </div>
+      </li>
+      <li class="comment-step">
+        <div class="step-num">2</div>
+        <div class="step-text">
+          <strong>Recevez votre synthèse immédiate</strong>
+          <span>Analyse selon 6 axes, points forts, points de vigilance et conseils.</span>
+        </div>
+      </li>
+      <li class="comment-step">
+        <div class="step-num">3</div>
+        <div class="step-text">
+          <strong>Choisissez la suite en toute liberté</strong>
+          <span>Suivi libre pendant 30 jours et orientation si vous le souhaitez.</span>
+        </div>
+      </li>
+    </ul>
+
+    <div class="comment-footer">
+      <div class="comment-footer-icon">
+        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke-linejoin="round"/><path d="M7 11V7a5 5 0 0 1 10 0v4" stroke-linecap="round"/></svg>
+      </div>
+      <div class="comment-footer-text">
+        <strong>Confidentiel &amp; sécurisé</strong>
+        <span>Vos données sont anonymisées et hébergées en France.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION ORIENTATION V6 — SIMPLIFIÉE : juste texte + photo -->
+<section class="section-orientation">
+  <div class="orientation-image-wrap">
+    <img src="assets/therapeute.jpg" alt="Un accompagnement humain par un professionnel adapté" />
+  </div>
+  <div class="orientation-content">
+    <p class="eyebrow">Orientation personnalisée</p>
+    <h2 class="section-title">
+      Un accompagnement <em>adapté</em>, si vous le souhaitez
+    </h2>
+    <p class="section-text">
+      Trouver le bon thérapeute, c'est rarement une question de proximité
+      géographique. C'est une question de pertinence clinique — savoir qui peut
+      entendre ce que vous vivez et travailler avec.
+    </p>
+    <p class="section-text">
+      Le check-up Psee révèle votre signature psychique : ce qui vous traverse,
+      ce qui mérite attention, ce sur quoi appuyer. Cette lecture devient un
+      repère précieux pour orienter votre choix.
+    </p>
+    <p class="section-text">
+      Votre profil anonymisé est présenté à des thérapeutes dont la pratique
+      correspond à ce que vous traversez. Ceux qui se reconnaissent dans votre
+      demande se manifestent. Vous choisissez en toute liberté, en sachant
+      pourquoi.
+    </p>
+  </div>
+</section>
+
+<!-- SECTION CTA FINAL -->
+<section class="section-cta">
+  <div class="cta-content">
+    <p class="cta-eyebrow">Offre découverte</p>
+    <h2 class="cta-title">
+      Faites le point sur votre <em>équilibre psychique</em>
+    </h2>
+
+    <ul class="cta-checklist">
+      <li><div class="cta-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>Évaluation guidée (15 min)</span></li>
+      <li><div class="cta-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>Synthèse immédiate et personnalisée</span></li>
+      <li><div class="cta-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>Accès aux 6 axes d'analyse</span></li>
+      <li><div class="cta-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>Suivis libres pendant 30 jours</span></li>
+      <li><div class="cta-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>Orientation si vous le souhaitez</span></li>
+      <li><div class="cta-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>100 % anonyme et sécurisé</span></li>
+    </ul>
+
+    <a href="app.html" class="btn-primary btn-primary-large">Commencer mon check-up</a>
+
+    <p class="cta-sub-mention">
+      9 € · Accès 30 jours · Bilan initial + suivis libres
+    </p>
+  </div>
+</section>
+
+<!-- SECTION FAQ -->
+<section class="section-faq" id="faq">
+  <div class="faq-container">
+    <div class="faq-header">
+      <p class="eyebrow">FAQ</p>
+      <h2 class="section-title">
+        Vos questions les plus <em>fréquentes</em>
+      </h2>
+    </div>
+
+    <div class="faq-list">
+
+      <details class="faq-item">
+        <summary><span>Psee remplace-t-il une consultation ?</span><span class="faq-toggle"></span></summary>
+        <div class="faq-content">
+          <p>Non. Psee n'est ni un diagnostic, ni une thérapie, ni un substitut à un professionnel de santé. C'est un outil de pré-orientation qui vous aide à mettre des mots sur ce que vous vivez et à mieux comprendre votre situation.</p>
+          <p>Si votre check-up révèle des éléments qui méritent attention, Psee peut vous mettre en relation avec des psychologues, psychothérapeutes ou psychiatres prêts à vous accompagner.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary><span>Combien de temps dure le check-up ?</span><span class="faq-toggle"></span></summary>
+        <div class="faq-content">
+          <p>Comptez environ 15 minutes pour le check-up complet, en répondant à votre rythme. Vous pouvez prendre des pauses si besoin et reprendre où vous en étiez.</p>
+          <p>L'évaluation s'adapte à ce que vous partagez : plus vous prenez le temps de répondre en détail, plus la synthèse sera précise.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary><span>Mes données sont-elles sécurisées ?</span><span class="faq-toggle"></span></summary>
+        <div class="faq-content">
+          <p>Oui, votre confidentialité est notre priorité. Le check-up est 100 % anonyme : aucune donnée personnelle identifiante n'est collectée pour réaliser votre bilan.</p>
+          <p>Vos données sont hébergées en France, chiffrées, et vous gardez le contrôle complet de votre profil. Vous pouvez le supprimer à tout moment.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary><span>Que contient ma synthèse ?</span><span class="faq-toggle"></span></summary>
+        <div class="faq-content">
+          <p>Votre synthèse comprend une cartographie de votre équilibre psychique sur 6 axes : processus psychiques, ressources, comportements, régulation émotionnelle, corps, et environnement.</p>
+          <p>Vous y trouverez les points forts qui sont vos appuis, les zones qui méritent attention, et des pistes concrètes pour la suite. Si pertinent, des suggestions d'orientation vous sont proposées.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary><span>Puis-je faire plusieurs suivis ?</span><span class="faq-toggle"></span></summary>
+        <div class="faq-content">
+          <p>Oui. Pendant les 30 jours qui suivent votre bilan initial, vous pouvez réaliser autant de suivis libres que vous souhaitez, sans coût supplémentaire.</p>
+          <p>C'est utile pour observer vos évolutions, ajuster votre lecture de la situation, ou simplement vous écouter régulièrement. Tout est inclus dans l'offre découverte à 9 €.</p>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-brand">
+      <a href="/" class="footer-logo" aria-label="Psee">
+        <svg viewBox="80 185 422 182" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+          <path fill="currentColor" d="M167.08,192.68c-4.14,0-7.42.04-9.82.13-2.4.08-4.81.17-7.21.25-2.41.09-5.14.17-8.2.25-3.07.09-7.33.13-12.8.13h-41.51v7.7c15.74,0,19.58,4.97,19.58,14.91v116.82c0,11.93-3.5,17.9-18.58,17.9v7.46h71.83v-7.46c-16.41,0-24.61-6.3-24.61-18.89v-48.47c4.8,1,9.73,1.7,14.79,2.11,5.05.41,10.23.62,15.54.62,9.77,0,18.23-1.16,25.35-3.48,7.12-2.32,13.01-5.55,17.65-9.7,4.64-4.14,8.08-8.95,10.31-14.42,2.24-5.47,3.36-11.35,3.36-17.65,0-32.15-18.56-48.22-55.68-48.22ZM190.63,253.83c-1.16,4.47-3.02,8.41-5.59,11.81-2.57,3.4-5.8,6.13-9.7,8.2-3.89,2.08-8.57,3.11-14.04,3.11-6.13,0-6.89-.25-11.86-.74-4.97-.5-9.53-1.16-13.67-1.99v-59.9c0-8.78,3.48-13.17,10.44-13.17h6.46c29.66,0,39.7,12.93,39.7,38.78,0,4.81-.58,9.45-1.74,13.92Z"/>
+          <path fill="currentColor" d="M390.95,268.87c-3.15-5.88-6.88-10.4-11.18-13.55-4.31-3.15-8.91-5.26-13.8-6.34-4.89-1.08-9.57-1.62-14.04-1.62-7.29,0-13.92,1.58-19.88,4.72-5.97,3.15-11.06,7.38-15.29,12.68-4.23,5.31-7.5,11.35-9.82,18.14-2.32,6.8-3.48,13.92-3.48,21.38s1.08,14.5,3.23,21.13c2.15,6.63,5.34,12.35,9.57,17.15,4.23,4.81,9.48,8.62,15.78,11.43,6.3,2.82,13.59,4.23,21.87,4.23,9.94,0,17.91-2.45,25.2-7.59,6.72-4.73,12.8-11.37,16.99-19.62l.1-.2c.08-.22.14-.45.14-.69,0-.6-.19-1.16-.62-1.55-.78-.52-1.19-.57-1.75-.44-.53.12-1.21.82-1.21.82,0,0-7.95,9.4-12.78,13.2-5.06,3.98-11.87,5.91-18.83,5.91-5.31,0-8.82-1.06-13.13-3.29-4.31-2.24-7.95-5.34-10.94-9.32-2.98-3.98-5.3-8.62-6.96-13.92-1.62-5.19-2.44-14.03-2.47-19.86l22.24-4.09,39.72-6.68h0s6.73-1.14,6.73-1.14h0c.34-.06.53-.09.53-.09-.99-9.61-2.79-14.91-5.93-20.79ZM364.14,290.25l-18.58,3.48-12.96,2.17c-3.65,0-5.49-1.54-5.49-3.53,0-3.98,1.12-13.06,2.28-16.79,1.16-3.73,2.86-7.04,5.1-9.94,2.24-2.9,4.93-5.22,8.08-6.96,3.15-1.74,4.13-2.12,8.37-2.61,7.08-.81,12.55,2.36,16.28,7.08,3.73,4.72,5.84,10.24,6.34,16.53,0,6.82-2.46,9.29-9.41,10.57Z"/>
+          <path fill="currentColor" d="M493.42,289.75c.34-.06.53-.09.53-.09-.99-9.61-2.79-14.91-5.93-20.79-3.15-5.88-6.88-10.4-11.18-13.55-4.31-3.15-8.91-5.26-13.8-6.34-4.89-1.08-9.57-1.62-14.04-1.62-7.29,0-13.92,1.58-19.88,4.72-5.97,3.15-11.06,7.38-15.29,12.68-4.23,5.31-7.5,11.35-9.82,18.14-2.32,6.8-3.48,13.92-3.48,21.38s1.08,14.5,3.23,21.13c2.15,6.63,5.34,12.35,9.57,17.15,4.23,4.81,9.48,8.62,15.78,11.43,6.3,2.82,13.59,4.23,21.87,4.23,9.94,0,17.91-2.45,25.2-7.59,6.72-4.73,12.8-11.37,16.99-19.62l.1-.2c.08-.22.14-.45.14-.69,0-.6-.19-1.16-.62-1.55-.78-.52-1.19-.57-1.75-.44-.53.12-1.21.82-1.21.82,0,0-7.95,9.4-12.78,13.2-5.06,3.98-11.87,5.91-18.83,5.91-5.31,0-8.82-1.06-13.13-3.29-4.31-2.24-7.95-5.34-10.94-9.32-2.98-3.98-5.3-8.62-6.96-13.92-1.62-5.19-2.44-14.03-2.47-19.86l22.24-4.09,39.72-6.68h0s6.73-1.14,6.73-1.14h0ZM461.2,290.25l-18.58,3.48-12.96,2.17c-3.65,0-5.49-1.54-5.49-3.53,0-3.98,1.12-13.06,2.28-16.79,1.16-3.73,2.86-7.04,5.1-9.94,2.24-2.9,4.93-5.22,8.08-6.96,3.15-1.74,4.13-2.12,8.37-2.61,7.08-.81,12.55,2.36,16.28,7.08,3.73,4.72,5.84,10.24,6.34,16.53,0,6.82-2.46,9.29-9.41,10.57Z"/>
+          <path fill="currentColor" d="M282.72,298.34c-4.62-3.06-9.65-5.76-15.09-8.1-5.44-2.33-10.49-4.65-15.15-6.94-4.66-2.29-8.53-4.72-11.61-7.27-3.09-2.56-4.82-5.19-4.83-9.1-.01-5.97,2.32-9.12,6.9-11.78,3.89-2.27,9.36-2.6,14.36-1.91,13.06,1.79,25.97,10.14,33.03,28.08l2.17.11v-20.9c-4.14-3.48-5.46-4.57-10.8-7.77-6.9-4.45-15.78-6.75-23.22-7.13-6.24-.32-11.66.21-16.24,1.59-4.59,1.38-8.39,3.45-11.4,6.19-3.01,2.75-5.31,6.04-6.9,9.88-1.59,3.85-2.5,8.06-2.74,12.66-.24,4.6.61,10.77,2.77,14.38,2.16,3.61,4.95,6.78,8.37,9.52,3.42,2.74,7.16,5.11,11.23,7.11,4.07,2,7.89,3.7,11.47,5.07,4.6,1.78,8.59,3.48,11.99,5.1,3.39,1.63,6.22,3.31,8.47,5.04,2.25,1.74,3.88,3.79,4.89,6.14,1.01,2.36,1.8,5.19,1.26,8.38-1.72,10.18-9.18,13.21-22.33,13.41l-.71-.03c-14.63-.76-28.6-12.2-36.45-32.13l-2.45-.13v23.18c4.66,3.92,6.08,5.09,12.04,8.67,7.66,4.95,17.51,8.1,25.78,8.53l2.21.03c4.89-.43,9.76-.84,14.27-2.39,4.51-1.56,8.53-3.7,12.06-6.43,3.53-2.72,6.35-6.09,8.47-10.08,2.12-3.99,3.31-8.55,3.58-13.67.3-5.8-.96-12.5-3.96-16.59-3.01-4.09-6.81-7.66-11.43-10.73Z"/>
+        </svg>
+      </a>
+      <p>Le check-up psychique qui aide à y voir plus clair. Un temps pour vous, des repères pour la suite.</p>
+
+      <div class="footer-social">
+        <a href="https://instagram.com/psee" class="social-link" aria-label="Instagram" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </a>
+        <a href="https://linkedin.com/company/psee" class="social-link" aria-label="LinkedIn" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        </a>
+        <a href="https://facebook.com/psee" class="social-link" aria-label="Facebook" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4>Produit</h4>
+      <ul>
+        <li><a href="#pourquoi">Pourquoi Psee</a></li>
+        <li><a href="#axes">Les 6 dimensions</a></li>
+        <li><a href="#comment">Comment ça marche</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="pro.html">Psee Pro</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Légal</h4>
+      <ul>
+        <li><a href="/cgu">CGU</a></li>
+        <li><a href="/mentions">Mentions légales</a></li>
+        <li><a href="/privacy">Politique de confidentialité</a></li>
+        <li><a href="/cookies">Cookies</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="mailto:contact@psee.fr">contact@psee.fr</a></li>
+      </ul>
+      <p class="footer-disclaimer">
+        Psee n'est pas un dispositif médical. Ce service ne remplace pas l'avis d'un professionnel de santé.
+      </p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Psee. Tous droits réservés.</span>
+    <span>Un temps pour vous · Y voir plus clair</span>
+  </div>
+</footer>
+
+</body>
+</html>
