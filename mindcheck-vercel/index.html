@@ -136,7 +136,7 @@ a { color: inherit; text-decoration: none; }
   background-color: var(--psee-cream-dark);
   background-image: url('assets/hero-smartphones.jpg');
   background-size: cover;
-  background-position: center center;
+  background-position: 15% center; /* décalé à gauche pour smartphone gauche entièrement visible */
   background-repeat: no-repeat;
   overflow: hidden;
 }
@@ -873,10 +873,10 @@ a { color: inherit; text-decoration: none; }
   }
   .hero-image-wrap {
     width: calc(100% - 16px);
-    height: 42vh;
+    height: 36vh; /* réduit pour faire remonter le texte d'environ 1cm */
     margin: 8px 8px 0;
     aspect-ratio: auto;
-    background-position: center center;
+    background-position: 5% center; /* fortement décalé à gauche pour montrer le "Psee" du smartphone gauche */
     background-size: cover;
     background-repeat: no-repeat;
     order: 1;
