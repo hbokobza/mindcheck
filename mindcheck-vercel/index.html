@@ -1094,11 +1094,15 @@ a { color: inherit; text-decoration: none; }
   .badge-label { font-size: 12px; }
   .badge-sub { font-size: 8px; }
 }
+/* ========================================
+   PSEE — OVERRIDES (swap images + tailles)
+   ======================================== */
+
 /* HERO — femme en fond pleine largeur, texte par-dessus */
 .hero {
   background-image: url('assets/femme-canape.png') !important;
   background-size: cover !important;
-background-position: right center !important;
+  background-position: right center !important;
   background-repeat: no-repeat !important;
 }
 .hero-image-wrap {
@@ -1106,13 +1110,42 @@ background-position: right center !important;
   background-color: transparent !important;
 }
 
-/* SECTION POURQUOI — smartphones */
+/* SECTION POURQUOI — smartphones (à la place de la femme) */
 .section-pourquoi {
   background-image: url('assets/hero-smartphones.jpg') !important;
   background-size: 70% !important;
   background-position: center center !important;
 }
 
+/* DESKTOP — décale le texte du hero vers la droite + élargit la colonne */
+@media (min-width: 1025px) {
+  .hero {
+    grid-template-columns: minmax(640px, 1.1fr) 1fr !important;
+  }
+  .hero-content-wrap {
+    padding-left: 160px !important;
+  }
+  /* Tailles texte / bouton / pastilles ajustées au modèle */
+  .hero-title {
+    font-size: 52px !important;
+  }
+  .btn-primary-large {
+    padding: 16px 36px !important;
+    font-size: 15px !important;
+    max-width: 320px !important;
+  }
+  .badge {
+    padding: 10px 8px !important;
+  }
+  .badge-label {
+    font-size: 15px !important;
+  }
+  .badge-sub {
+    font-size: 10px !important;
+  }
+}
+
+/* MOBILE — femme en fond du hero entier, image-wrap masquée */
 @media (max-width: 768px) {
   .hero {
     background-image: url('assets/femme-canape.png') !important;
@@ -1128,7 +1161,7 @@ background-position: right center !important;
     background-position: center center !important;
   }
 }
-}</style>
+</style>
 </head>
 <body>
 
