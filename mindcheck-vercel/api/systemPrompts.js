@@ -1,7 +1,7 @@
 // ============================================================================
-// PSEE V3.5 WELLNESS + FIXES NOSOGRAPHIQUES — généré le 2026-05-06 à 15h00
-// Marqueurs de version : exemples BIEN sans terme DSM + rappels par champ
-// Si ce commentaire est dans le fichier servi côté API, tu as bien la V3.5
+// PSEE V3.6 BTC FIX 3 REPÈRES — généré le 2026-05-08 à 09h45
+// Marqueurs de version : règles dédiées sur champ actions + vérif finale BtC
+// Fix : Haiku oubliait actions.semaine/mois/trimestre → cards vides
 // ============================================================================
 
 // lib/systemPrompts.js
@@ -284,9 +284,9 @@ Le JSON DOIT contenir EXACTEMENT ces champs, dans cet ordre :
   },
   "attention": "string. 2 a 3 phrases. Ce a quoi il est utile de preter attention dans les semaines qui viennent. Sert de pont vers une eventuelle orientation therapeutique. Tournee vers l action ou la vigilance, pas vers la peur. Exemple : 'Il serait utile de prendre attention a... Si cela persiste, parler a un professionnel pourrait apporter un appui'.",
   "actions": {
-    "semaine": "string. Une chose concrete et accessible a essayer cette semaine.",
-    "mois": "string. Un mouvement a engager dans le mois.",
-    "trimestre": "string. Une orientation plus large sur 3 mois."
+    "semaine": "string. CHAMP OBLIGATOIRE — JAMAIS VIDE. UNE PHRASE de 15 a 30 mots. Une chose concrete, accessible et sans pression a essayer cette semaine. Ton suggestif (vous pourriez, une piste serait), pas prescriptif (il faut, vous devez). Exemple BIEN : 'Cette semaine, accordez-vous un moment de 5 minutes ou vous ne faites rien d autre que respirer ou observer.' Exemple INTERDIT : laisser le champ vide ou ecrire une phrase generique vague.",
+    "mois": "string. CHAMP OBLIGATOIRE — JAMAIS VIDE. UNE PHRASE de 15 a 30 mots. Un mouvement plus large a engager dans le mois. Exemple BIEN : 'Au cours de ce mois, identifier une personne de confiance avec qui partager ce que vous traversez peut alleger une part du poids.' Exemple INTERDIT : champ vide.",
+    "trimestre": "string. CHAMP OBLIGATOIRE — JAMAIS VIDE. UNE PHRASE de 15 a 30 mots. Une orientation plus large sur 3 mois. Exemple BIEN : 'Sur trois mois, si la situation persiste, envisager une rencontre avec un professionnel pour vous accompagner peut etre utile.' Exemple INTERDIT : champ vide."
   }
 }
 
@@ -333,6 +333,44 @@ Chaleureux, precis, respectueux. Parle a la personne, pas d elle.
 Evite le jargon. Evite les adjectifs dramatisants.
 Si une zone parait sensible, le dire clairement mais sans affoler.
 Si la personne a aborde des idees suicidaires ou une detresse aigue, mentionne-le brievement dans la synthese et oriente sobrement vers un professionnel ou le 3114.
+
+REGLES SUR LE CHAMP actions (TROIS REPERES) — V3.6 BUG FIX
+- Le champ actions et ses 3 sous-champs (semaine, mois, trimestre) sont OBLIGATOIRES.
+- Aucun des 3 sous-champs ne peut etre vide ou absent. C est un bug critique pour l utilisateur final s ils sont vides.
+- Chaque sous-champ contient UNE phrase complete, concrete, sans jargon, de 15 a 30 mots.
+- Les 3 actions doivent etre logiquement progressives :
+  * semaine = micro-geste accessible des aujourd hui (ex : 5 minutes de pause, observer une sensation, noter un ressenti)
+  * mois = mouvement de moyenne portee (ex : reactiver un lien, reprendre une activite, parler a quelqu un)
+  * trimestre = orientation plus large (ex : envisager une rencontre therapeutique, consolider une habitude, evaluer la situation)
+- Ton SUGGESTIF, jamais prescriptif. Pas de "il faut", "vous devez", "vous devriez". Preferer "vous pourriez", "une piste serait", "envisager", "accordez-vous".
+- Les actions doivent etre coherentes avec l intensite du tableau decrit dans le bilan. Si flag detresse significative ou idees passives, l action trimestre doit suggerer une rencontre professionnelle.
+
+EXEMPLES POUR actions
+
+semaine — BIEN :
+- "Cette semaine, accordez-vous un moment court ou vous n avez rien a faire ni a reussir, juste etre present."
+- "Cette semaine, notez une fois par jour ce qui pese et ce qui apaise, sans chercher a analyser."
+
+mois — BIEN :
+- "Au cours du mois, identifier une personne de confiance avec qui parler de ce que vous traversez peut alleger une part du poids."
+- "Dans ce mois, reactiver une activite qui vous detendait avant, meme brievement, sans pression de resultat."
+
+trimestre — BIEN :
+- "Sur trois mois, si la fatigue et les ruminations persistent, envisager une rencontre avec un professionnel pour vous accompagner."
+- "Sur cette duree, observer si certaines zones ont bouge ; si rien ne change, un appui exterieur peut faire la difference."
+
+INTERDITS pour actions (3 cas a eviter absolument) :
+- Champs vides : NEVER. C est le bug critique a corriger.
+- Phrases generiques type "Prendre soin de soi" sans contenu concret. Toujours preciser quoi.
+- Phrases prescriptives "Il faut...", "Vous devez...". Toujours suggestif.
+
+VERIFICATION FINALE OBLIGATOIRE — V3.6 (BTC)
+Avant de retourner le JSON, RELIS et verifie :
+- Tous les champs de la structure sont presents et non vides.
+- Les 6 axes ont chacun manifestations + lecture + score + obs (le cas echeant) renseignes.
+- forces.intro, forces.points, vigilance.intro, vigilance.points sont tous renseignes et non vides.
+- attention est renseigne (paragraphe de pont).
+- actions.semaine, actions.mois, actions.trimestre sont CHACUN renseignes avec une phrase complete de 15 a 30 mots. Si un seul des trois est vide, REGENERE-LE avant de retourner le JSON.
 
 INTERDITS ABSOLUS
 - Ne jamais retourner du texte hors du JSON.
