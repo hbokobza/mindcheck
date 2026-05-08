@@ -1094,7 +1094,21 @@ a { color: inherit; text-decoration: none; }
   .badge-label { font-size: 12px; }
   .badge-sub { font-size: 8px; }
 }
-</style>
+/* SWAP IMAGES HERO ↔ POURQUOI */
+.hero-image-wrap {
+  background-image: url('assets/femme-canape.png') !important;
+}
+.section-pourquoi {
+  background-image: url('assets/hero-smartphones.jpg') !important;
+}
+@media (max-width: 768px) {
+  .hero-image-wrap {
+    background-image: url('assets/femme-canape.png') !important;
+  }
+  .section-pourquoi::before {
+    background-image: url('assets/hero-smartphones-mobile.jpg') !important;
+  }
+}</style>
 </head>
 <body>
 
