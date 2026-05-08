@@ -2451,12 +2451,17 @@ function reprendreParCode(){
       }
 
       if (quality.isShort || quality.looksLikeOnlyYesNo) {
-        securityState.consecutiveShortMsgs += 1;
+        // FIX: en phase finale (PHQ-9/GAD-7/PSS-10), les réponses courtes type "jamais", "non",
+        // "quelques jours" sont conformes au protocole psychométrique et ne doivent PAS être
+        // comptabilisées comme désengagement. On ne touche au compteur qu'en phase collecte.
+        if (!passationActive) {
+          securityState.consecutiveShortMsgs += 1;
+        }
       } else {
         securityState.consecutiveShortMsgs = 0;
       }
 
-      if (securityState.consecutiveShortMsgs >= SECURITY_CONFIG.MAX_CONSECUTIVE_SHORT_USER_MSGS) {
+      if (!passationActive && securityState.consecutiveShortMsgs >= SECURITY_CONFIG.MAX_CONSECUTIVE_SHORT_USER_MSGS) {
         console.warn('[PSEE-DEBUG] REFRAMING triggered — message swallowed | consecutiveShortMsgs=', securityState.consecutiveShortMsgs);
         addMsg('ai', reframingPrompt());
         securityState.consecutiveShortMsgs = 0;
