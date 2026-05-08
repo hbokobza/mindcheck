@@ -1117,17 +1117,18 @@ a { color: inherit; text-decoration: none; }
   background-position: center center !important;
 }
 
-/* DESKTOP — décale le texte du hero vers la droite + élargit la colonne */
+/* DESKTOP — décale le texte vers la droite, colonne calibrée pour titre sur 3 lignes */
 @media (min-width: 1025px) {
   .hero {
-    grid-template-columns: minmax(640px, 1.1fr) 1fr !important;
+    grid-template-columns: 1fr 1fr !important;
   }
   .hero-content-wrap {
     padding-left: 160px !important;
   }
-  /* Tailles texte / bouton / pastilles ajustées au modèle */
+  /* Titre : on garde le 60px d'origine, mais ligne calibrée pour 3 lignes */
   .hero-title {
-    font-size: 52px !important;
+    font-size: 60px !important;
+    line-height: 1.05 !important;
   }
   .btn-primary-large {
     padding: 16px 36px !important;
