@@ -1146,20 +1146,24 @@ a { color: inherit; text-decoration: none; }
   }
 }
 
-/* MOBILE — femme en fond du hero entier, image-wrap masquée */
+/* MOBILE — femme en banner haut du hero, smartphones en banner haut de pourquoi */
 @media (max-width: 768px) {
+  /* Hero : on annule le fond pleine largeur, on remet l'image en banner */
   .hero {
+    background-image: none !important;
+  }
+  .hero-image-wrap {
+    display: block !important;
     background-image: url('assets/femme-canape.png') !important;
     background-size: cover !important;
     background-position: center !important;
+    background-color: transparent !important;
   }
-  .hero-image-wrap {
-    display: none !important;
-  }
+  /* Section pourquoi : smartphones en banner haut, image en cover */
   .section-pourquoi::before {
     background-image: url('assets/hero-smartphones-mobile.jpg') !important;
-    background-size: 70% !important;
-    background-position: center center !important;
+    background-size: cover !important;
+    background-position: center !important;
   }
 }
 </style>
