@@ -37,7 +37,7 @@ export default function middleware(request) {
   return new Response('Authentification requise', {
     status: 401,
     headers: {
-      'WWW-Authenticate': 'Basic realm="Psee — accès en pré-lancement"',
+      'WWW-Authenticate': 'Basic realm="Psee"',
     },
   });
 }
