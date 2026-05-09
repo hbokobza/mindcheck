@@ -1176,7 +1176,7 @@ a { color: inherit; text-decoration: none; }
     border-radius: 0 !important;
     background-image: url('assets/femme-canape.png') !important;
     background-size: cover !important;
-     background-position: 70% center !important;
+    background-position: left center !important;
     background-color: transparent !important;
   }
   /* Section pourquoi : 3 smartphones (au lieu de la version 2 phones) en banner haut */
@@ -1213,6 +1213,48 @@ a { color: inherit; text-decoration: none; }
   }
   .cta-title {
     font-size: 30px !important;
+  }
+}
+
+/* IPHONE PAYSAGE — annule les overrides mobile et restaure le rendu desktop
+   Cible les écrans courts en paysage (max-height: 500px) avec hover non précis (= mobile en paysage)
+   Cette règle vient APRÈS les blocs mobile, elle gagne donc en cascade */
+@media (max-height: 500px) and (orientation: landscape) {
+  /* HERO — restaure le fond pleine largeur desktop */
+  .hero {
+    background-image: url('assets/femme-canape.png') !important;
+    background-size: cover !important;
+    background-position: right center !important;
+    background-repeat: no-repeat !important;
+  }
+  .hero-image-wrap {
+    background-image: none !important;
+    background-color: transparent !important;
+    width: auto !important;
+    margin: initial !important;
+    border-radius: initial !important;
+    display: none !important;
+  }
+  /* SECTION POURQUOI — restaure les smartphones desktop dans la moitié droite */
+  .section-pourquoi {
+    background-image: url('assets/hero-smartphones.jpg') !important;
+    background-size: 62% !important;
+    background-position: right center !important;
+  }
+  .section-pourquoi::before {
+    background-image: none !important;
+    display: none !important;
+  }
+  /* Tailles desktop pour titres et logo */
+  .nav-logo-text {
+    font-size: 42px !important;
+  }
+  .hero-title {
+    font-size: 56px !important;
+    line-height: 1.2 !important;
+  }
+  .section-title {
+    line-height: 1.3 !important;
   }
 }
 </style>
