@@ -54,33 +54,41 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px}
 .btn-outline:hover{background:#F0F7F4}
 .reperes{background:#F7F4EF;border-radius:10px;padding:14px 16px;margin:12px 0;font-size:13px;color:#555;line-height:1.9}
 .btn-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
-.axes{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
-.ax{font-size:11px;padding:3px 10px;border-radius:20px;border:1px solid #D8F3DC;background:white;color:#AEADA7}
-.ax.lit{background:#D8F3DC;color:#1F4D33;font-weight:500;border-color:#95D5B2}
+.axes{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;justify-content:center}
+.ax{font-size:12px;padding:6px 14px;border-radius:18px;border:1px solid rgba(26,74,46,0.12);background:transparent;color:#9A9892;font-weight:400;letter-spacing:0.1px;transition:all 0.25s ease}
+.ax.lit{background:rgba(58,117,49,0.06);color:#1A4A2E;font-weight:500;border-color:#1A4A2E}
 .mode-row{display:flex;gap:8px;margin-bottom:12px}
 .mb{padding:7px 20px;border-radius:24px;border:1px solid #D8D8D0;background:white;color:#666;cursor:pointer;font-family:inherit;font-size:13px}
 .mb.on{background:#1A1A18;color:white;border-color:#1A1A18;font-weight:500}
-.chat{background:white;border:1px solid #E0DDD8;border-radius:16px;padding:24px;height:60vh;min-height:460px;overflow-y:auto;margin-bottom:8px;display:flex;flex-direction:column;gap:14px}
-.msg{display:flex;gap:8px;align-items:flex-start}
+.chat{background:transparent;border:none;border-radius:0;padding:8px 0;height:auto;min-height:200px;max-height:55vh;overflow-y:auto;margin-bottom:20px;display:flex;flex-direction:column;gap:18px}
+/* Titre d'accueil affiché tant qu'aucun message n'a été échangé */
+#s3-welcome{text-align:center;padding:60px 20px 40px;font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:32px;color:#1A4A2E;line-height:1.25;letter-spacing:-0.4px;white-space:nowrap}
+#s3.has-messages #s3-welcome{display:none}
+#s3.has-messages .chat{min-height:300px}
+@media (max-width:768px){
+  #s3-welcome{font-size:22px;white-space:normal;padding:30px 12px 24px}
+}
+.msg{display:flex;gap:12px;align-items:flex-start}
 .msg.u{flex-direction:row-reverse}
-.av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0}
-.av.ai{background:#D8F3DC;color:#1F4D33;font-family:Georgia,serif;font-size:12px}
+.av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
+.av.ai{background:rgba(58,117,49,0.15);color:#1A4A2E;font-family:'Playfair Display',Georgia,serif;font-size:14px}
 .av.u{background:#1A1A18;color:white;font-size:10px}
-.bub{max-width:78%;padding:14px 18px;font-size:16px;line-height:1.7;font-weight:300}
-.bub.ai{background:#F7F4EF;border-radius:4px 14px 14px 14px;color:#1A1A18}
-.bub.u{background:#1A1A18;color:white;border-radius:14px 4px 14px 14px;max-width:70%}
-.bub.ok{background:#D8F3DC;border-radius:4px 14px 14px 14px;color:#1A1A18}
+.bub{max-width:82%;padding:14px 18px;font-size:16px;line-height:1.65;font-weight:400}
+.bub.ai{background:rgba(245,240,232,0.6);border-radius:4px 16px 16px 16px;color:#1A1A18}
+.bub.u{background:#1A1A18;color:white;border-radius:16px 4px 16px 16px;max-width:78%}
+.bub.ok{background:#D8F3DC;border-radius:4px 16px 16px 16px;color:#1A1A18}
 .dots{display:flex;gap:5px;padding:14px 18px;background:#F7F4EF;border-radius:4px 14px 14px 14px}
 .d{width:6px;height:6px;border-radius:50%;background:#AEADA7;animation:pulse 1.3s infinite}
 .d:nth-child(2){animation-delay:.18s}.d:nth-child(3){animation-delay:.36s}
 @keyframes pulse{0%,80%,100%{opacity:.25;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
-.input-row{display:flex;gap:10px;align-items:flex-end;background:white;border:1px solid #E0DDD8;border-radius:18px;padding:16px 16px 16px 22px;box-shadow:0 2px 12px rgba(31,77,51,0.06);transition:border-color 0.2s, box-shadow 0.2s}
-.input-row:focus-within{border-color:#1F4D33;box-shadow:0 4px 18px rgba(31,77,51,0.1)}
-#inp{flex:1;border:none;outline:none;font-family:inherit;font-size:17px;font-weight:400;color:#1A1A18;background:transparent;resize:none;min-height:88px;max-height:240px;line-height:1.6;padding:4px 0}
-#inp::placeholder{color:#9A9892;font-style:italic}
-#sbtn{width:40px;height:40px;border-radius:50%;background:#1F4D33;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background 0.15s}
-#sbtn:hover{background:#2d5c26}
-.disc{font-size:11px;color:#AEADA7;text-align:center;margin-top:12px;line-height:1.6}
+.input-row{display:flex;gap:10px;align-items:flex-end;background:white;border:1px solid #E0DDD8;border-radius:24px;padding:20px 22px 14px;box-shadow:0 4px 24px rgba(26,74,46,0.06);transition:border-color 0.2s, box-shadow 0.2s}
+.input-row:focus-within{border-color:#1A4A2E;box-shadow:0 6px 32px rgba(26,74,46,0.1)}
+#inp{flex:1;border:none;outline:none;font-family:inherit;font-size:17px;font-weight:400;color:#1A1A18;background:transparent;resize:none;min-height:88px;max-height:280px;line-height:1.6;padding:0}
+#inp::placeholder{color:#9A9892;font-style:italic;font-weight:300}
+#sbtn{width:42px;height:42px;border-radius:50%;background:#1A4A2E;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background 0.2s, transform 0.15s;align-self:flex-end}
+#sbtn:hover{background:#3A7531;transform:scale(1.05)}
+.disc{font-size:11px;color:#9A9892;text-align:center;margin-top:14px;line-height:1.6;font-weight:400}
+.composer-hint{font-size:11px;color:#9A9892;text-align:center;margin-top:8px;font-weight:400}
 .err{background:#FDE8E8;color:#C0392B;font-size:12px;padding:8px 12px;border-radius:8px;margin-bottom:8px;display:none}
   @media (max-width: 768px) {
   /* Header compact */
@@ -99,9 +107,9 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px}
  .chat{height:auto;min-height:30dvh;max-height:65dvh;padding:16px}
 
   /* Zone de saisie compacte */
-  .input-row{padding:12px 12px 12px 18px;border-radius:16px}
+  .input-row{padding:14px 16px 10px;border-radius:18px}
   #inp{font-size:16px;min-height:64px;max-height:160px}
-  #sbtn{width:36px;height:36px}
+  #sbtn{width:38px;height:38px}
 
   /* Bouton "Reprendre session" caché en cours de check-up */
 #s3 button[onclick*="toggleReprise"]{display:none}
@@ -184,38 +192,40 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px}
     <span class="ax" id="a6">Environnement</span>
   </div>
   <div class="err" id="err"></div>
+  <div id="s3-welcome">Qu'est-ce qui se passe pour vous en ce moment ?</div>
   <div class="chat" id="chat"></div>
   <div id="text-area">
     <div class="input-row">
-      <textarea id="inp" placeholder="Commencez où vous voulez. Ce qui vous traverse, ce qui vous a poussé à venir, ou simplement comment vous allez aujourd'hui." rows="1"></textarea>
+      <textarea id="inp" placeholder="Prenez votre temps. Écrivez comme cela vient." rows="1"></textarea>
       <button id="sbtn" onclick="submitText()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
       </button>
     </div>
+    <p class="composer-hint">Confidentiel · Ne remplace pas un avis médical</p>
   </div>
   <!-- BARRE D'ACTION -->
-  <div style="padding:8px 16px 6px;display:flex;flex-direction:column;gap:6px">
+  <div style="padding:20px 16px 6px;display:flex;flex-direction:column;gap:10px;align-items:center">
 
     <!-- Bouton secondaire : reprendre une session interrompue -->
-    <button onclick="toggleReprise()" style="width:100%;background:transparent;border:1.5px solid #D8D4CE;border-radius:10px;padding:10px;font-family:inherit;font-size:12px;font-weight:500;cursor:pointer;color:#6B6B68;display:flex;align-items:center;justify-content:center;gap:6px;letter-spacing:-0.2px">
+    <button onclick="toggleReprise()" style="background:transparent;border:1px solid rgba(26,74,46,0.2);border-radius:24px;padding:10px 22px;font-family:inherit;font-size:13px;font-weight:400;cursor:pointer;color:#6B6B68;display:flex;align-items:center;justify-content:center;gap:6px;letter-spacing:0;transition:all 0.2s">
       ↩ Reprendre une session interrompue
     </button>
 
     <!-- Panel reprise dépliable -->
-    <div id="reprise-panel" style="display:none;background:#F5F0E8;border-radius:10px;padding:14px">
+    <div id="reprise-panel" style="display:none;background:#F5F0E8;border-radius:10px;padding:14px;width:100%;max-width:480px">
       <p style="font-size:13px;color:#555;margin-bottom:10px;line-height:1.6">
         Entrez votre code de session (ex&nbsp;: <strong>PS-7X2K-ABCD</strong>) pour retrouver un entretien sauvegardé sur cet appareil.
       </p>
       <div style="display:flex;gap:8px">
         <input id="code-reprise" placeholder="PS-7X2K-ABCD" style="flex:1;border:1.5px solid #D8D4CE;border-radius:8px;padding:9px 12px;font-size:13px;font-family:inherit;color:#444;outline:none;background:white"/>
-        <button onclick="reprendreParCode()" style="background:#1F4D33;color:white;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap">
+        <button onclick="reprendreParCode()" style="background:#1A4A2E;color:white;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap">
           Reprendre →
         </button>
       </div>
     </div>
 
-    <!-- Bouton principal EN BAS -->
-    <button onclick="demanderBilan()" style="width:100%;background:#1F4D33;color:white;border:none;border-radius:12px;padding:14px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:0.2px">
+    <!-- Bouton principal -->
+    <button onclick="demanderBilan()" style="background:#1A4A2E;color:white;border:none;border-radius:24px;padding:11px 26px;font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;letter-spacing:0;transition:background 0.2s">
       Générer ma synthèse →
     </button>
 
@@ -668,6 +678,9 @@ function startSession(m){
 function addMsg(role,text,cls){
   const c=document.getElementById('chat');
   if(!c){console.warn('[PSEE-DEBUG] addMsg: #chat introuvable, message ignore'); return;}
+  // Masque le titre d'accueil dès le premier message
+  const s3=document.getElementById('s3');
+  if(s3 && !s3.classList.contains('has-messages')) s3.classList.add('has-messages');
   const d=document.createElement('div');
   d.className='msg'+(role==='u'?' u':'');
   const bCls=role==='u'?'u':(cls||'ai');
