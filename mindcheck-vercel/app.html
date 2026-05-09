@@ -74,9 +74,10 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px}
 .d{width:6px;height:6px;border-radius:50%;background:#AEADA7;animation:pulse 1.3s infinite}
 .d:nth-child(2){animation-delay:.18s}.d:nth-child(3){animation-delay:.36s}
 @keyframes pulse{0%,80%,100%{opacity:.25;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
-.input-row{display:flex;gap:10px;align-items:flex-end;background:white;border:1px solid #E0DDD8;border-radius:16px;padding:12px 12px 12px 18px}
-#inp{flex:1;border:none;outline:none;font-family:inherit;font-size:16px;font-weight:300;color:#1A1A18;background:transparent;resize:none;min-height:32px;max-height:200px;line-height:1.7;padding:6px 0}
-#inp::placeholder{color:#AEADA7}
+.input-row{display:flex;gap:10px;align-items:flex-end;background:white;border:1px solid #E0DDD8;border-radius:18px;padding:16px 16px 16px 22px;box-shadow:0 2px 12px rgba(31,77,51,0.06);transition:border-color 0.2s, box-shadow 0.2s}
+.input-row:focus-within{border-color:#1F4D33;box-shadow:0 4px 18px rgba(31,77,51,0.1)}
+#inp{flex:1;border:none;outline:none;font-family:inherit;font-size:17px;font-weight:400;color:#1A1A18;background:transparent;resize:none;min-height:88px;max-height:240px;line-height:1.6;padding:4px 0}
+#inp::placeholder{color:#9A9892;font-style:italic}
 #sbtn{width:40px;height:40px;border-radius:50%;background:#1F4D33;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background 0.15s}
 #sbtn:hover{background:#2d5c26}
 .disc{font-size:11px;color:#AEADA7;text-align:center;margin-top:12px;line-height:1.6}
@@ -98,8 +99,8 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px}
  .chat{height:auto;min-height:30dvh;max-height:65dvh;padding:16px}
 
   /* Zone de saisie compacte */
-  .input-row{padding:8px 8px 8px 14px;border-radius:14px}
-  #inp{font-size:16px;min-height:28px;max-height:140px}
+  .input-row{padding:12px 12px 12px 18px;border-radius:16px}
+  #inp{font-size:16px;min-height:64px;max-height:160px}
   #sbtn{width:36px;height:36px}
 
   /* Bouton "Reprendre session" caché en cours de check-up */
@@ -186,7 +187,7 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px}
   <div class="chat" id="chat"></div>
   <div id="text-area">
     <div class="input-row">
-      <textarea id="inp" placeholder="Racontez, prenez le temps qu'il vous faut… plus l'échange est riche, plus la synthèse sera juste." rows="1"></textarea>
+      <textarea id="inp" placeholder="Commencez où vous voulez. Ce qui vous traverse, ce qui vous a poussé à venir, ou simplement comment vous allez aujourd'hui." rows="1"></textarea>
       <button id="sbtn" onclick="submitText()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
       </button>
@@ -358,7 +359,7 @@ Pour chaque axe : 1 question d'ouverture + 1 question de ciblage.
 Si la reponse est insuffisante (moins de 20 mots, trop vague, non illustree, purement evaluative comme "ca va" ou "ca depend") : utilise 1 relance parmi celles prevues pour l'axe.
 Objectif par axe : obtenir nature / intensite / frequence / anciennete / retentissement.
 Une seule question a la fois. Jamais deux dans le meme message.
-Commence simplement par demander ce qui amene la personne aujourd'hui, dans un ton calme, neutre et non interpretatif. Pas d'effusions, pas de formules d'accueil therapeutiques.
+Commence par un premier message qui pose simplement le cadre en deux temps, sans theatraliser : (1) une phrase d'accueil chaleureuse mais sobre qui rappelle ce qu'on va faire ensemble (un echange d'environ quinze minutes pour faire le point sur six dimensions de votre equilibre, sans bonne ou mauvaise reponse), (2) une invitation ouverte a commencer la ou la personne le souhaite — ce qui la traverse en ce moment, ce qui l'a poussee a venir, ou simplement comment elle va aujourd'hui. Pas d'effusions, pas de formules d'accueil therapeutiques. Pas de "qu'est-ce qui vous amene ?" sec. La premiere prise de parole doit donner envie de parler, pas mettre face a une consigne.
 
 AXE 1 — PROCESSUS PSYCHIQUES
 Q1 : Comment fonctionne votre esprit en ce moment : plutot clair, encombre, ralenti, agite, envahi ?
