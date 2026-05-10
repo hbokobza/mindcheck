@@ -1290,6 +1290,91 @@ a { color: inherit; text-decoration: none; }
     font-size: 28px !important;
   }
 }
+
+/* MOBILE PORTRAIT (<=768px) — pictos sobres entre le titre et le sous-titre,
+   en ligne horizontale avec icône + chiffre + légende et séparateurs verticaux */
+@media (max-width: 768px) {
+  /* Reordonne hero-text en flex column pour pouvoir placer les badges entre titre et sous-titre */
+  .hero-text {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .hero-text .hero-eyebrow { order: 1 !important; }
+  .hero-text .hero-title { order: 2 !important; }
+  /* Badges remontent entre titre et sous-titre */
+  .hero-text .hero-cta-block .hero-badges { order: 3 !important; }
+  .hero-text .hero-sub { order: 4 !important; }
+  /* CTA reste en bas */
+  .hero-text .hero-cta-block .btn-primary { order: 5 !important; }
+
+  /* Le hero-cta-block contient CTA + badges, on le rend transparent pour que
+     ses enfants se positionnent dans l'ordre du parent .hero-text */
+  .hero-text .hero-cta-block {
+    display: contents !important;
+  }
+
+  /* Restyle des badges : ligne horizontale, sans cadre, séparés par traits verticaux */
+  .hero-badges {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+    align-items: stretch !important;
+    gap: 0 !important;
+    margin: 18px 0 22px !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+  .hero-badges .badge {
+    flex: 1 1 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 8px !important;
+    border-right: 1px solid rgba(26,74,46,0.18) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 6px !important;
+    text-align: center !important;
+  }
+  .hero-badges .badge:last-child {
+    border-right: none !important;
+  }
+  .hero-badges .badge-icon {
+    width: 22px !important;
+    height: 22px !important;
+    background: transparent !important;
+    color: #1A4A2E !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+  }
+  .hero-badges .badge-icon svg {
+    width: 22px !important;
+    height: 22px !important;
+    stroke-width: 1.6 !important;
+  }
+  .hero-badges .badge-label {
+    font-family: 'Playfair Display', Georgia, serif !important;
+    font-style: italic !important;
+    font-weight: 700 !important;
+    font-size: 17px !important;
+    color: #1A4A2E !important;
+    line-height: 1.1 !important;
+    margin: 0 !important;
+  }
+  .hero-badges .badge-sub {
+    font-size: 10px !important;
+    color: #6B6B68 !important;
+    font-weight: 400 !important;
+    line-height: 1.3 !important;
+    margin: 0 !important;
+  }
+}
 </style>
 </head>
 <body>
