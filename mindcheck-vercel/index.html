@@ -1291,9 +1291,10 @@ a { color: inherit; text-decoration: none; }
   }
 }
 
-/* MOBILE PORTRAIT (<=768px) — pictos sobres entre le titre et le sous-titre,
-   en ligne horizontale avec icône + chiffre + légende et séparateurs verticaux */
-@media (max-width: 768px) {
+/* PICTOS SOBRES — universel (desktop / paysage iPhone / mobile portrait)
+   Position : entre le titre et le sous-titre via order CSS
+   Style : icône fine + chiffre Playfair italique + légende, séparateurs verticaux */
+@media (min-width: 320px) {
   /* Reordonne hero-text en flex column pour pouvoir placer les badges entre titre et sous-titre */
   .hero-text {
     display: flex !important;
@@ -1304,7 +1305,7 @@ a { color: inherit; text-decoration: none; }
   /* Badges remontent entre titre et sous-titre */
   .hero-text .hero-cta-block .hero-badges { order: 3 !important; }
   .hero-text .hero-sub { order: 4 !important; }
-  /* CTA reste en bas */
+  /* CTA en bas */
   .hero-text .hero-cta-block .btn-primary { order: 5 !important; }
 
   /* Le hero-cta-block contient CTA + badges, on le rend transparent pour que
@@ -1318,21 +1319,23 @@ a { color: inherit; text-decoration: none; }
     display: flex !important;
     flex-direction: row !important;
     flex-wrap: nowrap !important;
-    justify-content: space-between !important;
+    justify-content: flex-start !important;
     align-items: stretch !important;
     gap: 0 !important;
-    margin: 18px 0 22px !important;
+    margin: 22px 0 26px !important;
     padding: 0 !important;
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
+    max-width: 540px !important;
+    width: 100% !important;
   }
   .hero-badges .badge {
     flex: 1 1 0 !important;
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
-    padding: 0 8px !important;
+    padding: 0 12px !important;
     border-right: 1px solid rgba(26,74,46,0.18) !important;
     display: flex !important;
     flex-direction: column !important;
@@ -1341,12 +1344,16 @@ a { color: inherit; text-decoration: none; }
     gap: 6px !important;
     text-align: center !important;
   }
+  .hero-badges .badge:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
   .hero-badges .badge:last-child {
     border-right: none !important;
   }
   .hero-badges .badge-icon {
-    width: 22px !important;
-    height: 22px !important;
+    width: 24px !important;
+    height: 24px !important;
     background: transparent !important;
     color: #1A4A2E !important;
     padding: 0 !important;
@@ -1354,25 +1361,71 @@ a { color: inherit; text-decoration: none; }
     border: none !important;
   }
   .hero-badges .badge-icon svg {
-    width: 22px !important;
-    height: 22px !important;
+    width: 24px !important;
+    height: 24px !important;
+    stroke: #1A4A2E !important;
     stroke-width: 1.6 !important;
   }
   .hero-badges .badge-label {
     font-family: 'Playfair Display', Georgia, serif !important;
     font-style: italic !important;
     font-weight: 700 !important;
-    font-size: 17px !important;
+    font-size: 19px !important;
     color: #1A4A2E !important;
     line-height: 1.1 !important;
     margin: 0 !important;
   }
   .hero-badges .badge-sub {
-    font-size: 10px !important;
+    font-size: 11px !important;
     color: #6B6B68 !important;
     font-weight: 400 !important;
     line-height: 1.3 !important;
     margin: 0 !important;
+  }
+}
+
+/* MOBILE PORTRAIT (<=768px) — pictos un peu plus compacts */
+@media (max-width: 768px) {
+  .hero-badges {
+    margin: 18px 0 22px !important;
+  }
+  .hero-badges .badge {
+    padding: 0 8px !important;
+    gap: 6px !important;
+  }
+  .hero-badges .badge-icon,
+  .hero-badges .badge-icon svg {
+    width: 22px !important;
+    height: 22px !important;
+  }
+  .hero-badges .badge-label {
+    font-size: 17px !important;
+  }
+  .hero-badges .badge-sub {
+    font-size: 10px !important;
+  }
+}
+
+/* PAYSAGE iPhone — pictos très compacts */
+@media (min-width: 769px) and (max-height: 500px) and (orientation: landscape) {
+  .hero-badges {
+    margin: 12px 0 14px !important;
+    max-width: 380px !important;
+  }
+  .hero-badges .badge {
+    padding: 0 8px !important;
+    gap: 4px !important;
+  }
+  .hero-badges .badge-icon,
+  .hero-badges .badge-icon svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+  .hero-badges .badge-label {
+    font-size: 14px !important;
+  }
+  .hero-badges .badge-sub {
+    font-size: 9px !important;
   }
 }
 </style>
