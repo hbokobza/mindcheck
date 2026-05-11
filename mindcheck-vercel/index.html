@@ -848,7 +848,7 @@ a { color: inherit; text-decoration: none; }
 
 /* FOOTER */
 .footer {
-  background: var(--psee-black);
+  background: var(--psee-green-dark);
   color: var(--psee-white);
   padding: 64px 48px 32px;
 }
@@ -1766,7 +1766,7 @@ a { color: inherit; text-decoration: none; }
 .pourquoi-v2-illus {
   width: 100%;
   aspect-ratio: 3 / 4;
-  background-image: url('assets/tete-brouillee.jpg');
+  background-image: url('assets/tete-brouillee.png');
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
@@ -2090,13 +2090,10 @@ a { color: inherit; text-decoration: none; }
    ============================================= */
 .section-axes,
 .section-orientation,
-.section-faq {
+.section-faq,
+.section-cta {
   background-color: var(--psee-cream) !important;
   background: var(--psee-cream) !important;
-}
-.section-cta {
-  background-color: var(--psee-cream-dark) !important;
-  background: var(--psee-cream-dark) !important;
 }
 
 /* =============================================
@@ -2167,6 +2164,110 @@ a { color: inherit; text-decoration: none; }
     letter-spacing: 2.2px !important;
     margin: 0 0 10px !important;
   }
+}
+
+
+/* =============================================
+   AJUSTEMENTS POST-AUDIT
+   ============================================= */
+
+/* Pourquoi v2 — illustration plus grande et sans rectangle */
+.pourquoi-v2-illus {
+  background-size: contain !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+@media (min-width: 769px) {
+  .pourquoi-v2-grid {
+    grid-template-columns: 440px 1fr !important;
+    gap: 72px !important;
+    max-width: 1200px !important;
+    padding: 0 40px !important;
+  }
+  .pourquoi-v2-illus {
+    aspect-ratio: 1 / 1 !important;
+    width: 100% !important;
+    max-width: 440px !important;
+  }
+}
+
+/* Orientation — bullets style aligné sur captures */
+.orientation-bullets {
+  list-style: none;
+  padding: 0;
+  margin: 32px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.orientation-bullets li {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+.orientation-bullet-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--psee-cream-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--psee-green-dark);
+  flex-shrink: 0;
+}
+.orientation-bullet-icon svg { width: 22px; height: 22px; }
+.orientation-bullet-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 8px;
+}
+.orientation-bullet-text strong {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--psee-black);
+}
+.orientation-bullet-text span {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--psee-grey-medium);
+}
+.orientation-disclaimer {
+  margin-top: 32px;
+  background: var(--psee-cream-dark);
+  border-radius: 12px;
+  padding: 18px 22px;
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 14px;
+  align-items: center;
+}
+.orientation-disclaimer-icon {
+  color: var(--psee-green-dark);
+  display: flex;
+}
+.orientation-disclaimer-icon svg { width: 22px; height: 22px; }
+.orientation-disclaimer p {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--psee-grey-medium);
+}
+@media (max-width: 768px) {
+  .orientation-bullets { gap: 24px; }
+  .orientation-bullets li { grid-template-columns: 40px 1fr; gap: 16px; }
+  .orientation-bullet-icon { width: 40px; height: 40px; }
+  .orientation-bullet-icon svg { width: 18px; height: 18px; }
+  .orientation-bullet-text strong { font-size: 16px; }
+  .orientation-bullet-text span { font-size: 15px; }
+  .orientation-disclaimer p { font-size: 14px; }
 }
 
 </style>
@@ -2244,6 +2345,7 @@ a { color: inherit; text-decoration: none; }
   <div class="pourquoi-v2-grid">
     <div class="pourquoi-v2-illus" role="img" aria-label="Illustration : tête de profil avec des pensées emmêlées"></div>
     <div class="pourquoi-v2-text">
+      <p class="eyebrow">Pourquoi Psee</p>
       <h2 class="section-title">
         On peut se sentir moins bien sans savoir <em>ce qui se passe</em>.
       </h2>
@@ -2283,8 +2385,8 @@ a { color: inherit; text-decoration: none; }
           <path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>
         </svg>
       </div>
-      <h3 class="etape-titre">Répondez à une<br>évaluation guidée</h3>
-      <p class="etape-desc">Questions claires et ciblées, 15 minutes.</p>
+      <h3 class="etape-titre">Évaluation guidée</h3>
+      <p class="etape-desc">Questions claires et ciblées, en 15 minutes.</p>
     </div>
 
     <div class="etape">
@@ -2298,8 +2400,8 @@ a { color: inherit; text-decoration: none; }
           <line x1="8" y1="9" x2="11" y2="9"/>
         </svg>
       </div>
-      <h3 class="etape-titre">Recevez votre<br>synthèse immédiate</h3>
-      <p class="etape-desc">Analyse selon 6 axes, points forts, points de vigilance et conseils.</p>
+      <h3 class="etape-titre">Synthèse immédiate</h3>
+      <p class="etape-desc">Analyse selon 6 axes, points forts et points de vigilance.</p>
     </div>
 
     <div class="etape">
@@ -2313,8 +2415,8 @@ a { color: inherit; text-decoration: none; }
           <path d="M12 19v3"/>
         </svg>
       </div>
-      <h3 class="etape-titre">Choisissez si vous<br>souhaitez aller plus loin</h3>
-      <p class="etape-desc">Orientation vers les praticiens adaptés, ou rien.</p>
+      <h3 class="etape-titre">Orientation libre</h3>
+      <p class="etape-desc">Vers des praticiens adaptés. Ou rien.</p>
     </div>
   </div>
 
@@ -2393,22 +2495,53 @@ a { color: inherit; text-decoration: none; }
     <h2 class="section-title">
       Un accompagnement <em>adapté</em>, si vous le souhaitez
     </h2>
-    <p class="section-text">
-      Trouver le bon thérapeute, c'est rarement une question de proximité
-      géographique. C'est une question de pertinence clinique — savoir qui peut
-      entendre ce que vous vivez et travailler avec.
-    </p>
-    <p class="section-text">
-      Le check-up Psee révèle votre signature psychique : ce qui vous traverse,
-      ce qui mérite attention, ce sur quoi appuyer. Cette lecture devient un
-      repère précieux pour orienter votre choix.
-    </p>
-    <p class="section-text">
-      Votre profil anonymisé est présenté à des thérapeutes dont la pratique
-      correspond à ce que vous traversez. Ceux qui se reconnaissent dans votre
-      demande se manifestent. Vous choisissez en toute liberté, en sachant
-      pourquoi.
-    </p>
+    <ul class="orientation-bullets">
+      <li>
+        <div class="orientation-bullet-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="3.5"/>
+            <path d="M5 21c0-3.866 3.134-7 7-7s7 3.134 7 7"/>
+          </svg>
+        </div>
+        <div class="orientation-bullet-text">
+          <strong>Psee identifie votre profil psychique et vos besoins.</strong>
+          <span>Pas seulement votre localisation.</span>
+        </div>
+      </li>
+      <li>
+        <div class="orientation-bullet-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="4 12 10 18 20 6"/>
+          </svg>
+        </div>
+        <div class="orientation-bullet-text">
+          <strong>Nous vous orientons vers des praticiens dont la pratique correspond à ce que vous traversez.</strong>
+        </div>
+      </li>
+      <li>
+        <div class="orientation-bullet-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="5" y="11" width="14" height="10" rx="1.5"/>
+            <path d="M8 11V7a4 4 0 0 1 8 0v4"/>
+          </svg>
+        </div>
+        <div class="orientation-bullet-text">
+          <strong>Vous choisissez librement.</strong>
+          <span>En toute transparence et sans pression.</span>
+        </div>
+      </li>
+    </ul>
+    <div class="orientation-disclaimer">
+      <div class="orientation-disclaimer-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s-8-4-8-12V5l8-3 8 3v5c0 8-8 12-8 12z"/>
+        </svg>
+      </div>
+      <p>
+        Vous restez libre de consulter ou non. Cette orientation ne remplace pas
+        l'avis d'un professionnel de santé.
+      </p>
+    </div>
   </div>
 </section>
 
