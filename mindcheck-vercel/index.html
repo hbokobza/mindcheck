@@ -2270,6 +2270,256 @@ a { color: inherit; text-decoration: none; }
   .orientation-disclaimer p { font-size: 14px; }
 }
 
+
+/* =============================================
+   SÉPARATIONS ENTRE SECTIONS — fil discret + air
+   ============================================= */
+
+/* Filet horizontal très discret en bas de chaque section principale */
+.hero,
+.section-pourquoi-v2,
+.section-etapes,
+.section-axes,
+.section-orientation,
+.section-cta {
+  border-bottom: 1px solid rgba(31, 77, 51, 0.08) !important;
+}
+
+/* Respiration verticale uniforme entre sections (desktop) */
+@media (min-width: 769px) {
+  .section-pourquoi-v2,
+  .section-etapes,
+  .section-axes,
+  .section-orientation,
+  .section-cta,
+  .section-faq {
+    padding-top: 104px !important;
+    padding-bottom: 104px !important;
+  }
+}
+@media (max-width: 768px) {
+  .section-pourquoi-v2,
+  .section-etapes,
+  .section-axes,
+  .section-orientation,
+  .section-cta,
+  .section-faq {
+    padding-top: 64px !important;
+    padding-bottom: 64px !important;
+  }
+}
+
+/* =============================================
+   AJUSTEMENT NOUVELLE ILLUSTRATION
+   La nouvelle tête est légèrement plus haute
+   que large (~0.91:1). On enlève la contrainte
+   aspect-ratio pour la laisser s'afficher
+   naturellement.
+   ============================================= */
+.pourquoi-v2-illus {
+  aspect-ratio: auto !important;
+  height: 480px !important;
+}
+@media (max-width: 768px) {
+  .pourquoi-v2-illus {
+    height: 280px !important;
+    max-width: 240px !important;
+  }
+}
+
+
+/* =============================================
+   SECTION ÉTAPES — refonte 2 colonnes avec photo
+   ============================================= */
+.section-etapes {
+  padding: 0 !important;
+  background-image: url('assets/etapes-phone.jpg') !important;
+  background-size: 50% auto !important;
+  background-position: right center !important;
+  background-repeat: no-repeat !important;
+  background-color: var(--psee-cream) !important;
+  min-height: 620px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+.etapes-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 104px 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+.etapes-text {
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+}
+.etapes-text .etapes-eyebrow {
+  margin-bottom: 18px !important;
+}
+.etapes-text .etapes-title {
+  margin-bottom: 48px !important;
+}
+.etapes-text .etapes-title em {
+  font-style: italic;
+  font-weight: 500;
+}
+
+.etapes-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.etape-row {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 22px;
+  padding: 22px 0;
+  border-top: 1px solid rgba(31, 77, 51, 0.1);
+  align-items: start;
+}
+.etape-row:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+.etape-row:last-child {
+  padding-bottom: 0;
+}
+.etape-row .etape-num {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  background: var(--psee-green-dark) !important;
+  color: var(--psee-cream) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-family: var(--font-display) !important;
+  font-weight: 700 !important;
+  font-size: 15px !important;
+  font-style: italic !important;
+  margin: 0 !important;
+  flex-shrink: 0;
+}
+.etape-body {
+  padding-top: 6px;
+}
+.etape-row .etape-titre {
+  font-family: var(--font-body) !important;
+  font-weight: 500 !important;
+  font-style: normal !important;
+  font-size: 17px !important;
+  line-height: 1.4 !important;
+  color: var(--psee-green-dark) !important;
+  margin: 0 0 6px !important;
+  letter-spacing: 0 !important;
+}
+.etape-row .etape-desc {
+  font-family: var(--font-body) !important;
+  font-size: 15px !important;
+  line-height: 1.55 !important;
+  color: var(--psee-grey-medium) !important;
+  margin: 0 !important;
+}
+
+/* Carte Confidentiel & sécurisé */
+.etapes-card {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 16px;
+  align-items: center;
+  background: var(--psee-cream-dark);
+  border-radius: 12px;
+  padding: 18px 22px;
+  max-width: 460px;
+}
+.etapes-card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--psee-cream-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--psee-green-dark);
+}
+.etapes-card-icon svg { width: 20px; height: 20px; }
+.etapes-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.etapes-card-body strong {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 15px;
+  color: var(--psee-green-dark);
+}
+.etapes-card-body span {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--psee-grey-medium);
+  line-height: 1.4;
+}
+
+/* La colonne photo : la section a déjà l'image en background sur 50% droit, 
+   donc le div .etapes-photo sert juste à occuper la grille. */
+.etapes-photo {
+  min-height: 1px;
+}
+
+/* =============================================
+   MOBILE — photo en bandeau haut, texte dessous
+   ============================================= */
+@media (max-width: 900px) {
+  .section-etapes {
+    background-image: none !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    min-height: auto !important;
+    padding: 0 !important;
+  }
+  .etapes-container {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 0;
+  }
+  .etapes-photo {
+    order: -1;
+    height: 280px;
+    background-image: url('assets/etapes-phone.jpg');
+    background-size: cover;
+    background-position: 70% center;
+    background-repeat: no-repeat;
+  }
+  .etapes-text {
+    padding: 48px 24px 64px;
+    max-width: 100%;
+  }
+  .etapes-text .etapes-title {
+    margin-bottom: 36px !important;
+  }
+  .etape-row {
+    grid-template-columns: 36px 1fr;
+    gap: 16px;
+    padding: 18px 0;
+  }
+  .etape-row .etape-num {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 14px !important;
+  }
+  .etapes-card {
+    max-width: 100%;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -2369,66 +2619,51 @@ a { color: inherit; text-decoration: none; }
   </div>
 </section>
 
-<!-- SECTION COMMENT CA MARCHE — 3 etapes simples -->
+<!-- SECTION COMMENT CA MARCHE — 2 colonnes : texte gauche + photo droite -->
 <section class="section-etapes" id="comment">
-  <div class="etapes-header">
-    <p class="etapes-eyebrow">Comment ça marche</p>
-    <h2 class="etapes-title">3 étapes simples</h2>
-  </div>
+  <div class="etapes-container">
+    <div class="etapes-text">
+      <p class="etapes-eyebrow">Comment ça marche</p>
+      <h2 class="etapes-title">3 <em>étapes</em> simples</h2>
 
-  <div class="etapes-grid">
-    <div class="etape">
-      <div class="etape-num">1</div>
-      <div class="etape-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 20h9"/>
-          <path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>
-        </svg>
+      <ul class="etapes-list">
+        <li class="etape-row">
+          <div class="etape-num">1</div>
+          <div class="etape-body">
+            <h3 class="etape-titre">Évaluation guidée</h3>
+            <p class="etape-desc">Questions claires et ciblées, en 15 minutes.</p>
+          </div>
+        </li>
+        <li class="etape-row">
+          <div class="etape-num">2</div>
+          <div class="etape-body">
+            <h3 class="etape-titre">Synthèse immédiate</h3>
+            <p class="etape-desc">Analyse selon 6 axes, points forts et points de vigilance.</p>
+          </div>
+        </li>
+        <li class="etape-row">
+          <div class="etape-num">3</div>
+          <div class="etape-body">
+            <h3 class="etape-titre">Orientation libre</h3>
+            <p class="etape-desc">Vers des praticiens adaptés. Ou rien.</p>
+          </div>
+        </li>
+      </ul>
+
+      <div class="etapes-card">
+        <div class="etapes-card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="5" y="11" width="14" height="10" rx="1.5"/>
+            <path d="M8 11V7a4 4 0 0 1 8 0v4"/>
+          </svg>
+        </div>
+        <div class="etapes-card-body">
+          <strong>Confidentiel &amp; sécurisé</strong>
+          <span>Vos données sont anonymisées et hébergées en France.</span>
+        </div>
       </div>
-      <h3 class="etape-titre">Évaluation guidée</h3>
-      <p class="etape-desc">Questions claires et ciblées, en 15 minutes.</p>
     </div>
-
-    <div class="etape">
-      <div class="etape-num">2</div>
-      <div class="etape-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-          <polyline points="14 2 14 8 20 8"/>
-          <line x1="8" y1="13" x2="16" y2="13"/>
-          <line x1="8" y1="17" x2="16" y2="17"/>
-          <line x1="8" y1="9" x2="11" y2="9"/>
-        </svg>
-      </div>
-      <h3 class="etape-titre">Synthèse immédiate</h3>
-      <p class="etape-desc">Analyse selon 6 axes, points forts et points de vigilance.</p>
-    </div>
-
-    <div class="etape">
-      <div class="etape-num">3</div>
-      <div class="etape-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2v6"/>
-          <rect x="4" y="8" width="16" height="4" rx="0.5"/>
-          <path d="M12 12v3"/>
-          <rect x="2" y="15" width="20" height="4" rx="0.5"/>
-          <path d="M12 19v3"/>
-        </svg>
-      </div>
-      <h3 class="etape-titre">Orientation libre</h3>
-      <p class="etape-desc">Vers des praticiens adaptés. Ou rien.</p>
-    </div>
-  </div>
-
-  <div class="etapes-footer">
-    <div class="etapes-rappel">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <circle cx="12" cy="12" r="9"/>
-        <path d="M12 7v5l3 2"/>
-      </svg>
-      <span>15 minutes pour y voir plus clair.</span>
-    </div>
-    <a href="app.html" class="btn-primary">Commencer mon check-up</a>
+    <div class="etapes-photo" aria-hidden="true"></div>
   </div>
 </section>
 
