@@ -1970,6 +1970,205 @@ a { color: inherit; text-decoration: none; }
   .etape-desc { font-size: 14px; }
 }
 
+
+/* =============================================
+   TYPO UNIFIÉE — échelle à 7 rôles
+   Source unique de vérité, en fin de fichier pour
+   prévaloir sur les déclarations historiques.
+   ============================================= */
+
+/* Variables d'échelle (référence) */
+:root {
+  --type-h1-desktop: 72px;
+  --type-h2-desktop: 44px;
+  --type-h3-desktop: 24px;
+  --type-lead-desktop: 20px;
+  --type-body-desktop: 17px;
+  --type-caption-desktop: 14px;
+  --type-eyebrow: 13px;
+
+  --type-h1-mobile: 38px;
+  --type-h2-mobile: 28px;
+  --type-h3-mobile: 20px;
+  --type-lead-mobile: 17px;
+  --type-body-mobile: 16px;
+}
+
+/* H1 hero */
+.hero-title {
+  font-family: var(--font-display) !important;
+  font-weight: 700 !important;
+  font-style: normal !important;
+  font-size: var(--type-h1-desktop) !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.01em !important;
+  color: var(--psee-green-dark) !important;
+}
+.hero-title em {
+  font-style: italic;
+  font-weight: 500;
+}
+
+/* H2 — titre de section (toutes sections confondues) */
+.section-title,
+.cta-title,
+.etapes-title {
+  font-family: var(--font-display) !important;
+  font-weight: 700 !important;
+  font-style: normal !important;
+  font-size: var(--type-h2-desktop) !important;
+  line-height: 1.2 !important;
+  letter-spacing: -0.01em !important;
+  text-transform: none !important;
+  color: var(--psee-green-dark) !important;
+  margin: 0 0 28px !important;
+}
+.section-title em,
+.cta-title em,
+.etapes-title em {
+  font-style: italic;
+  font-weight: 500;
+}
+
+/* H3 — accent italique (citations narratives, étape) */
+.pourquoi-v2-bold,
+.etape-titre {
+  font-family: var(--font-display) !important;
+  font-weight: 700 !important;
+  font-style: italic !important;
+  font-size: var(--type-h3-desktop) !important;
+  line-height: 1.35 !important;
+  letter-spacing: -0.2px !important;
+  color: var(--psee-green-dark) !important;
+}
+
+/* Eyebrow — partout */
+.eyebrow,
+.hero-eyebrow,
+.etapes-eyebrow {
+  font-family: var(--font-body) !important;
+  font-weight: 500 !important;
+  font-size: var(--type-eyebrow) !important;
+  letter-spacing: 2.5px !important;
+  text-transform: uppercase !important;
+  color: var(--psee-green-dark) !important;
+  line-height: 1.4 !important;
+  margin: 0 0 14px !important;
+}
+
+/* Lead — intro de section, plus dense que body */
+.hero-sub,
+.section-text-lead {
+  font-family: var(--font-body) !important;
+  font-weight: 400 !important;
+  font-size: var(--type-lead-desktop) !important;
+  line-height: 1.55 !important;
+  color: var(--psee-black) !important;
+}
+
+/* Body — texte courant uniforme */
+.section-text,
+.etape-desc {
+  font-family: var(--font-body) !important;
+  font-weight: 400 !important;
+  font-size: var(--type-body-desktop) !important;
+  line-height: 1.65 !important;
+  color: var(--psee-black) !important;
+}
+
+/* Caption — légendes, mentions discrètes (réservé) */
+.caption {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: var(--type-caption-desktop);
+  line-height: 1.5;
+  color: var(--psee-grey-medium);
+}
+
+/* =============================================
+   POLITIQUE DE FOND — uniforme clair + CTA foncé
+   ============================================= */
+.section-axes,
+.section-orientation,
+.section-faq {
+  background-color: var(--psee-cream) !important;
+  background: var(--psee-cream) !important;
+}
+.section-cta {
+  background-color: var(--psee-cream-dark) !important;
+  background: var(--psee-cream-dark) !important;
+}
+
+/* =============================================
+   RÉÉQUILIBRAGE DES NOUVELLES SECTIONS
+   Pourquoi v2 : élargir la colonne texte
+   Étapes : ajuster position des chevrons
+   ============================================= */
+.pourquoi-v2-grid {
+  grid-template-columns: 380px 1fr !important;
+  gap: 80px !important;
+  max-width: 1100px !important;
+}
+.pourquoi-v2-text {
+  max-width: none !important;
+}
+.pourquoi-v2-sep {
+  max-width: 100% !important;
+  margin: 32px 0 !important;
+}
+.etapes-grid::before,
+.etapes-grid::after {
+  top: 60px !important;
+  font-size: 36px !important;
+}
+.etape-icon {
+  width: 64px !important;
+  height: 64px !important;
+}
+.etape-icon svg {
+  width: 26px !important;
+  height: 26px !important;
+}
+
+/* =============================================
+   MOBILE — descente d'échelle (~30 %)
+   ============================================= */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: var(--type-h1-mobile) !important;
+    line-height: 1.2 !important;
+  }
+  .section-title,
+  .cta-title,
+  .etapes-title {
+    font-size: var(--type-h2-mobile) !important;
+    line-height: 1.25 !important;
+    margin: 0 0 20px !important;
+  }
+  .pourquoi-v2-bold,
+  .etape-titre {
+    font-size: var(--type-h3-mobile) !important;
+    line-height: 1.4 !important;
+  }
+  .hero-sub,
+  .section-text-lead {
+    font-size: var(--type-lead-mobile) !important;
+    line-height: 1.5 !important;
+  }
+  .section-text,
+  .etape-desc {
+    font-size: var(--type-body-mobile) !important;
+    line-height: 1.6 !important;
+  }
+  .eyebrow,
+  .hero-eyebrow,
+  .etapes-eyebrow {
+    font-size: 12px !important;
+    letter-spacing: 2.2px !important;
+    margin: 0 0 10px !important;
+  }
+}
+
 </style>
 </head>
 <body>
