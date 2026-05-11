@@ -2793,6 +2793,192 @@ a { color: inherit; text-decoration: none; }
   }
 }
 
+
+/* =============================================
+   ÉTAPES — affinage : 3 colonnes par row + carte simplifiée
+   ============================================= */
+
+/* Row désormais en 3 colonnes : num + icône + corps */
+.etape-row {
+  grid-template-columns: 40px 44px 1fr !important;
+  gap: 18px !important;
+}
+
+/* Cercle icône beige pâle, vert foncé dedans */
+.etape-row .etape-icon {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 50% !important;
+  background: var(--psee-cream-dark) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: var(--psee-green-dark) !important;
+  flex-shrink: 0;
+  margin: 0 !important;
+}
+.etape-row .etape-icon svg {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+/* Titre étape : vert foncé, bold, taille calme */
+.etape-row .etape-titre {
+  font-family: var(--font-body) !important;
+  font-weight: 600 !important;
+  font-style: normal !important;
+  font-size: 16px !important;
+  line-height: 1.4 !important;
+  color: var(--psee-green-dark) !important;
+  margin: 0 0 6px !important;
+  letter-spacing: 0 !important;
+}
+
+/* Description : gris medium clair */
+.etape-row .etape-desc {
+  font-family: var(--font-body) !important;
+  font-size: 15px !important;
+  line-height: 1.55 !important;
+  color: var(--psee-grey-medium) !important;
+  margin: 0 !important;
+}
+
+/* Body : aligné en haut, petit décalage vertical */
+.etape-row .etape-body {
+  padding-top: 8px;
+}
+
+/* Mobile : 3 colonnes mais plus serrées */
+@media (max-width: 900px) {
+  .etape-row {
+    grid-template-columns: 36px 36px 1fr !important;
+    gap: 14px !important;
+  }
+  .etape-row .etape-icon {
+    width: 36px !important;
+    height: 36px !important;
+  }
+  .etape-row .etape-icon svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
+}
+
+
+/* =============================================
+   POURQUOI V2 — numéros éditoriaux 01/02/03
+   ============================================= */
+.pourquoi-v2-block {
+  display: grid !important;
+  grid-template-columns: 80px 1fr !important;
+  gap: 32px !important;
+  align-items: start !important;
+  flex-direction: row !important;
+}
+.block-num {
+  font-family: var(--font-display) !important;
+  font-weight: 400 !important;
+  font-style: italic !important;
+  font-size: 42px !important;
+  line-height: 1 !important;
+  color: var(--psee-green) !important;
+  opacity: 0.55;
+  letter-spacing: -1px;
+  padding-top: 4px;
+}
+.block-content {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.block-content .section-text {
+  margin: 0 !important;
+}
+
+@media (max-width: 768px) {
+  .pourquoi-v2-block {
+    grid-template-columns: 56px 1fr !important;
+    gap: 16px !important;
+  }
+  .block-num {
+    font-size: 30px !important;
+    padding-top: 2px;
+  }
+}
+
+/* =============================================
+   CTA — Structure A : empilage centré
+   Titre + bullets, puis photo, puis carte prix
+   ============================================= */
+.cta-container {
+  max-width: 1100px !important;
+  margin: 0 auto !important;
+  padding: 0 40px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 56px !important;
+  grid-template-columns: none !important;
+}
+
+.cta-top {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.cta-top .cta-title {
+  text-align: center !important;
+}
+
+/* Bullets : centrées, dans une grille 2 colonnes pour respirer */
+.cta-top .cta-bullets {
+  margin-top: 32px !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 48px;
+  max-width: 720px;
+}
+.cta-top .cta-bullets li {
+  text-align: left;
+}
+
+/* Photo deux smartphones — large et centrée */
+.cta-photo {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  justify-content: center;
+}
+.cta-photo img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Carte prix : centrée en bas */
+.cta-card {
+  margin: 0 auto !important;
+  max-width: 420px !important;
+  width: 100% !important;
+}
+
+@media (max-width: 768px) {
+  .cta-container {
+    gap: 40px !important;
+    padding: 0 24px !important;
+  }
+  .cta-top .cta-bullets {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    max-width: 100%;
+  }
+  .cta-photo {
+    max-width: 100%;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -2874,26 +3060,35 @@ a { color: inherit; text-decoration: none; }
       </h2>
 
       <div class="pourquoi-v2-block">
-        <p class="section-text">
-          Fatigue psychique, anxiété diffuse, perte d'élan, irritabilité, tensions, troubles du sommeil.
-        </p>
-        <p class="pourquoi-v2-bold">Des signaux souvent flous, difficiles à situer.</p>
+        <span class="block-num">01</span>
+        <div class="block-content">
+          <p class="section-text">
+            Fatigue psychique, anxiété diffuse, perte d'élan, irritabilité, tensions, troubles du sommeil.
+          </p>
+          <p class="pourquoi-v2-bold">Des signaux souvent flous, difficiles à situer.</p>
+        </div>
       </div>
 
       <hr class="pourquoi-v2-sep">
 
       <div class="pourquoi-v2-block">
-        <p class="section-text">
-          Comprendre votre équilibre psychique, repérer les zones de fragilité, et savoir quoi faire ensuite.
-        </p>
-        <p class="pourquoi-v2-bold">Psee propose un bilan structuré pour faire le point.</p>
+        <span class="block-num">02</span>
+        <div class="block-content">
+          <p class="section-text">
+            Comprendre votre équilibre psychique, repérer les zones de fragilité, et savoir quoi faire ensuite.
+          </p>
+          <p class="pourquoi-v2-bold">Psee propose un bilan structuré pour faire le point.</p>
+        </div>
       </div>
 
       <hr class="pourquoi-v2-sep">
 
       <div class="pourquoi-v2-block">
-        <p class="section-text">On fait des bilans pour le corps.</p>
-        <p class="pourquoi-v2-bold">Le psychique mérite aussi d'être évalué.</p>
+        <span class="block-num">03</span>
+        <div class="block-content">
+          <p class="section-text">On fait des bilans pour le corps.</p>
+          <p class="pourquoi-v2-bold">Le psychique mérite aussi d'être évalué.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -2909,23 +3104,46 @@ a { color: inherit; text-decoration: none; }
       <ul class="etapes-list">
         <li class="etape-row">
           <div class="etape-num">1</div>
+          <div class="etape-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20h9"/>
+              <path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>
+            </svg>
+          </div>
           <div class="etape-body">
-            <h3 class="etape-titre">Évaluation guidée</h3>
-            <p class="etape-desc">Questions claires et ciblées, en 15 minutes.</p>
+            <h3 class="etape-titre">Répondez à une évaluation guidée</h3>
+            <p class="etape-desc">Questions claires et ciblées, 15 minutes.</p>
           </div>
         </li>
         <li class="etape-row">
           <div class="etape-num">2</div>
+          <div class="etape-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="8" y1="13" x2="16" y2="13"/>
+              <line x1="8" y1="17" x2="16" y2="17"/>
+            </svg>
+          </div>
           <div class="etape-body">
-            <h3 class="etape-titre">Synthèse immédiate</h3>
-            <p class="etape-desc">Analyse selon 6 axes, points forts et points de vigilance.</p>
+            <h3 class="etape-titre">Recevez votre synthèse immédiate</h3>
+            <p class="etape-desc">Analyse selon 6 axes, points forts, points de vigilance et conseils.</p>
           </div>
         </li>
         <li class="etape-row">
           <div class="etape-num">3</div>
+          <div class="etape-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v6"/>
+              <rect x="4" y="8" width="16" height="4" rx="0.5"/>
+              <path d="M12 12v3"/>
+              <rect x="2" y="15" width="20" height="4" rx="0.5"/>
+              <path d="M12 19v3"/>
+            </svg>
+          </div>
           <div class="etape-body">
-            <h3 class="etape-titre">Orientation libre</h3>
-            <p class="etape-desc">Vers des praticiens adaptés. Ou rien.</p>
+            <h3 class="etape-titre">Choisissez si vous souhaitez aller plus loin</h3>
+            <p class="etape-desc">Orientation vers les praticiens adaptés, ou rien.</p>
           </div>
         </li>
       </ul>
@@ -2933,13 +3151,12 @@ a { color: inherit; text-decoration: none; }
       <div class="etapes-card">
         <div class="etapes-card-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="5" y="11" width="14" height="10" rx="1.5"/>
-            <path d="M8 11V7a4 4 0 0 1 8 0v4"/>
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M12 7v5l3 2"/>
           </svg>
         </div>
         <div class="etapes-card-body">
-          <strong>Confidentiel &amp; sécurisé</strong>
-          <span>Vos données sont anonymisées et hébergées en France.</span>
+          <strong>15 minutes pour y voir plus clair.</strong>
         </div>
       </div>
     </div>
@@ -3054,10 +3271,11 @@ a { color: inherit; text-decoration: none; }
   </div>
 </section>
 
-<!-- SECTION CTA FINAL — 2 colonnes : promesse gauche / carte prix droite -->
+<!-- SECTION CTA FINAL — Structure A : titre + bullets en haut, photo au milieu, carte prix en bas -->
 <section class="section-cta">
   <div class="cta-container">
-    <div class="cta-left">
+
+    <div class="cta-top">
       <h2 class="cta-title">
         Faites le point sur votre <em>équilibre psychique</em>
       </h2>
@@ -3084,6 +3302,11 @@ a { color: inherit; text-decoration: none; }
         </li>
       </ul>
     </div>
+
+    <div class="cta-photo">
+      <img src="assets/cta-smartphones.jpg" alt="Aperçu Psee : la synthèse personnalisée et la conversation guidée" />
+    </div>
+
     <aside class="cta-card">
       <div class="cta-price">9 €</div>
       <div class="cta-price-label">accès complet</div>
@@ -3094,6 +3317,7 @@ a { color: inherit; text-decoration: none; }
         <span>Paiement sécurisé • Sans abonnement</span>
       </div>
     </aside>
+
   </div>
 </section>
 
