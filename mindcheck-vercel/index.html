@@ -2979,6 +2979,176 @@ a { color: inherit; text-decoration: none; }
   }
 }
 
+
+/* =============================================
+   HAUTEURS HOMOGÈNES + SECTIONS PHOTO FULL-HEIGHT
+   ============================================= */
+
+/* Toutes les sections principales : même hauteur cible 720px */
+@media (min-width: 901px) {
+  .section-pourquoi-v2,
+  .section-etapes,
+  .section-axes,
+  .section-orientation,
+  .section-cta,
+  .section-faq {
+    min-height: 720px !important;
+  }
+
+  /* Sections avec image pleine-hauteur : aucun padding section
+     (le padding est porté par le contenu interne) */
+  .section-etapes,
+  .section-orientation,
+  .section-cta {
+    padding: 0 !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .section-pourquoi-v2,
+  .section-etapes,
+  .section-axes,
+  .section-orientation,
+  .section-cta,
+  .section-faq {
+    min-height: auto !important;
+  }
+}
+
+/* =============================================
+   ORIENTATION — corriger gradient (était cream-dark)
+   ============================================= */
+.orientation-image-wrap::after {
+  background: linear-gradient(to left, var(--psee-cream) 0%, rgba(245, 242, 236, 0.4) 60%, transparent 100%) !important;
+}
+
+/* =============================================
+   CTA — 2 colonnes texte gauche / photo droite pleine hauteur
+   ============================================= */
+.cta-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  align-items: stretch !important;
+  min-height: 720px !important;
+  max-width: 1400px !important;
+  margin: 0 auto !important;
+  width: 100% !important;
+  padding: 0 !important;
+  gap: 0 !important;
+}
+
+.cta-left {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+  padding: 80px 56px 80px 80px !important;
+  max-width: 100% !important;
+}
+.cta-left .cta-title {
+  text-align: left !important;
+  margin: 0 !important;
+}
+.cta-left .cta-bullets {
+  margin: 32px 0 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+  grid-template-columns: none !important;
+  max-width: 100% !important;
+}
+.cta-left .cta-bullets li {
+  grid-template-columns: 24px 1fr !important;
+  gap: 14px !important;
+  font-size: 16px !important;
+}
+.cta-left .cta-bullets .cta-check {
+  width: 24px !important;
+  height: 24px !important;
+}
+.cta-left .cta-bullets .cta-check svg {
+  width: 12px !important;
+  height: 12px !important;
+}
+
+/* Bloc prix en ligne (plus compact que la carte) */
+.cta-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-top: 36px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(31, 77, 51, 0.12);
+  width: 100%;
+}
+.cta-price-amount {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-style: italic;
+  font-size: 44px;
+  line-height: 1;
+  color: var(--psee-green-dark);
+}
+.cta-price-detail {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--psee-grey-medium);
+}
+
+/* Bouton CTA inscrit dans la colonne */
+.cta-left .cta-card-btn {
+  margin-top: 24px !important;
+  max-width: 380px !important;
+  width: 100% !important;
+  display: inline-block !important;
+}
+
+/* Trust ligne */
+.cta-left .cta-trust {
+  margin-top: 16px !important;
+}
+
+/* Colonne photo : pleine hauteur, image fit */
+.cta-right {
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--psee-cream);
+  position: relative;
+}
+.cta-right img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* Mobile : on stack, photo en bandeau du haut */
+@media (max-width: 900px) {
+  .cta-grid {
+    grid-template-columns: 1fr !important;
+    min-height: auto !important;
+  }
+  .cta-left {
+    order: 2;
+    padding: 48px 24px 64px !important;
+    align-items: stretch !important;
+  }
+  .cta-right {
+    order: 1;
+    height: 320px;
+  }
+  .cta-right img {
+    object-fit: contain;
+    height: 100%;
+  }
+  .cta-price-amount { font-size: 36px; }
+  .cta-left .cta-card-btn { max-width: 100% !important; }
+}
+
 </style>
 </head>
 <body>
@@ -3271,11 +3441,10 @@ a { color: inherit; text-decoration: none; }
   </div>
 </section>
 
-<!-- SECTION CTA FINAL — Structure A : titre + bullets en haut, photo au milieu, carte prix en bas -->
+<!-- SECTION CTA FINAL — 2 colonnes : texte gauche + photo droite pleine hauteur -->
 <section class="section-cta">
-  <div class="cta-container">
-
-    <div class="cta-top">
+  <div class="cta-grid">
+    <div class="cta-left">
       <h2 class="cta-title">
         Faites le point sur votre <em>équilibre psychique</em>
       </h2>
@@ -3301,23 +3470,23 @@ a { color: inherit; text-decoration: none; }
           <span>100 % anonyme et sécurisé</span>
         </li>
       </ul>
-    </div>
 
-    <div class="cta-photo">
-      <img src="assets/cta-smartphones.jpg" alt="Aperçu Psee : la synthèse personnalisée et la conversation guidée" />
-    </div>
+      <div class="cta-price-row">
+        <span class="cta-price-amount">9 €</span>
+        <span class="cta-price-detail">accès complet · suivi libre 30 jours</span>
+      </div>
 
-    <aside class="cta-card">
-      <div class="cta-price">9 €</div>
-      <div class="cta-price-label">accès complet</div>
-      <div class="cta-price-line"><span>•</span> suivi libre 30 jours <span>•</span></div>
       <a href="app.html" class="cta-card-btn">Commencer mon check-up</a>
+
       <div class="cta-trust">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="1.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
-        <span>Paiement sécurisé • Sans abonnement</span>
+        <span>Paiement sécurisé · Sans abonnement</span>
       </div>
-    </aside>
+    </div>
 
+    <div class="cta-right">
+      <img src="assets/cta-smartphones.jpg" alt="Aperçu Psee : la synthèse personnalisée et la conversation guidée" />
+    </div>
   </div>
 </section>
 
