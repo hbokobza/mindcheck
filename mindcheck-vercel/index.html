@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="description" content="Et si vous faisiez un bilan de votre état psychique ? Un véritable check-up en 15 minutes, sans engagement. Psee vous aide à comprendre où vous en êtes, et à savoir quoi faire ensuite, si nécessaire.">
+<meta name="description" content="Le check-up psychique pour y voir plus clair. Un check-up en 15 minutes, sans engagement. Psee vous aide à savoir où vous en êtes et à savoir quoi faire ensuite.">
 <meta name="theme-color" content="#1F4D33">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Psee — Et si vous faisiez un bilan de votre état psychique ?</title>
+<title>Psee — Le check-up psychique pour y voir plus clair</title>
 
 <!-- Canonical -->
 <link rel="canonical" href="https://psee.fr/">
@@ -16,13 +16,13 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="fr_FR">
 <meta property="og:site_name" content="Psee">
-<meta property="og:title" content="Psee — Et si vous faisiez un bilan de votre état psychique ?">
+<meta property="og:title" content="Psee — Le check-up psychique pour y voir plus clair">
 <meta property="og:description" content="Un véritable check-up en 15 minutes, sans engagement. Psee vous aide à comprendre où vous en êtes, et à savoir quoi faire ensuite, si nécessaire.">
 <meta property="og:url" content="https://psee.fr/">
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Psee — Et si vous faisiez un bilan de votre état psychique ?">
+<meta name="twitter:title" content="Psee — Le check-up psychique pour y voir plus clair">
 <meta name="twitter:description" content="Un véritable check-up en 15 minutes, sans engagement. Psee vous aide à comprendre où vous en êtes, et à savoir quoi faire ensuite, si nécessaire.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2520,6 +2520,173 @@ a { color: inherit; text-decoration: none; }
   }
 }
 
+
+/* =============================================
+   ÉTAPES — photo plein pot (full bleed)
+   Override final : la photo couvre toute la section,
+   le dégradé naturel laisse la place au texte à gauche.
+   ============================================= */
+.section-etapes {
+  background-size: cover !important;
+  background-position: center !important;
+  min-height: 680px !important;
+}
+.etapes-container {
+  grid-template-columns: 1fr !important;
+  gap: 0 !important;
+}
+.etapes-photo { display: none !important; }
+.etapes-text {
+  max-width: 480px !important;
+}
+@media (max-width: 900px) {
+  .section-etapes {
+    background-image: none !important;
+    min-height: auto !important;
+  }
+  .etapes-container {
+    grid-template-columns: 1fr !important;
+  }
+  .etapes-photo {
+    display: block !important;
+    order: -1;
+    height: 280px;
+    background-image: url('assets/etapes-phone.jpg');
+    background-size: cover;
+    background-position: 70% center;
+    background-repeat: no-repeat;
+  }
+}
+
+/* =============================================
+   CTA — 2 colonnes avec carte prix
+   ============================================= */
+.cta-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 80px;
+  align-items: center;
+}
+.cta-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.cta-bullets {
+  list-style: none;
+  padding: 0;
+  margin: 32px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.cta-bullets li {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 16px;
+  align-items: center;
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--psee-black);
+}
+.cta-bullets .cta-check {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--psee-green-dark);
+  color: var(--psee-cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cta-bullets .cta-check svg { width: 14px; height: 14px; }
+
+/* Carte prix */
+.cta-card {
+  background: var(--psee-cream);
+  border: 1px solid rgba(31, 77, 51, 0.12);
+  border-radius: 20px;
+  padding: 44px 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.cta-price {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-style: italic;
+  font-size: 64px;
+  line-height: 1;
+  color: var(--psee-green-dark);
+  margin: 0;
+}
+.cta-price-label {
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--psee-grey-medium);
+  margin-top: 12px;
+}
+.cta-price-line {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--psee-grey-medium);
+  margin-top: 8px;
+}
+.cta-price-line span {
+  color: var(--psee-green-dark);
+  margin: 0 4px;
+}
+.cta-card-btn {
+  display: inline-block;
+  background: var(--psee-green-dark);
+  color: var(--psee-cream);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 16px;
+  padding: 16px 28px;
+  border-radius: 100px;
+  text-decoration: none;
+  margin-top: 28px;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  transition: background 0.2s ease;
+}
+.cta-card-btn:hover {
+  background: var(--psee-green);
+}
+.cta-trust {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--psee-grey-medium);
+}
+.cta-trust svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+  .cta-container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding: 0 24px;
+  }
+  .cta-card {
+    padding: 36px 28px;
+  }
+  .cta-price { font-size: 52px; }
+}
+
 </style>
 </head>
 <body>
@@ -2543,7 +2710,7 @@ a { color: inherit; text-decoration: none; }
   <div class="hero-content-wrap">
     <div class="hero-text">
       <p class="hero-eyebrow">Check-up psychique &amp; orientation</p>
-      <h1 class="hero-title">Et si vous faisiez un <em>bilan</em> de votre état psychique ?</h1>
+      <h1 class="hero-title">Le check-up psychique pour <em>y voir plus clair</em>.</h1>
       <p class="hero-sub">
         Un véritable check-up en 15 minutes, sans engagement. Psee vous aide à comprendre où vous en êtes, et à savoir <strong class="hero-sub-emphasis">quoi faire ensuite, si nécessaire</strong>.
       </p>
@@ -2683,37 +2850,31 @@ a { color: inherit; text-decoration: none; }
   <div class="axes-grid">
     <div class="axe-card">
       <div class="axe-icon"><img src="assets/Icone_Cerveau_mecanique.svg" alt="" /></div>
-      <p class="axe-verb">Comprendre</p>
       <h3 class="axe-name">Processus psychiques</h3>
       <p class="axe-desc">La manière dont vos pensées s'organisent.</p>
     </div>
     <div class="axe-card">
       <div class="axe-icon"><img src="assets/Icone_Plante.svg" alt="" /></div>
-      <p class="axe-verb">Explorer</p>
       <h3 class="axe-name">Ressources psychiques</h3>
       <p class="axe-desc">Vos appuis intérieurs et votre énergie.</p>
     </div>
     <div class="axe-card">
       <div class="axe-icon"><img src="assets/Icone_Cerveau_fleches.svg" alt="" /></div>
-      <p class="axe-verb">Développer</p>
       <h3 class="axe-name">Comportements et conduites</h3>
       <p class="axe-desc">Vos habitudes et vos réactions.</p>
     </div>
     <div class="axe-card">
       <div class="axe-icon"><img src="assets/Icone_Coeur.svg" alt="" /></div>
-      <p class="axe-verb">Connecter</p>
       <h3 class="axe-name">Régulation émotionnelle</h3>
       <p class="axe-desc">Comment vous vivez vos émotions.</p>
     </div>
     <div class="axe-card">
       <div class="axe-icon"><img src="assets/Icone_Personnage.svg" alt="" /></div>
-      <p class="axe-verb">S'écouter</p>
       <h3 class="axe-name">Corps et risque somatique</h3>
       <p class="axe-desc">Sommeil, tensions, signaux physiques.</p>
     </div>
     <div class="axe-card">
       <div class="axe-icon"><img src="assets/Icone_Maison.svg" alt="" /></div>
-      <p class="axe-verb">S'harmoniser</p>
       <h3 class="axe-name">Environnement</h3>
       <p class="axe-desc">Vos liens et votre contexte de vie.</p>
     </div>
@@ -2780,28 +2941,46 @@ a { color: inherit; text-decoration: none; }
   </div>
 </section>
 
-<!-- SECTION CTA FINAL -->
+<!-- SECTION CTA FINAL — 2 colonnes : promesse gauche / carte prix droite -->
 <section class="section-cta">
-  <div class="cta-content">
-    <p class="cta-eyebrow">Offre découverte</p>
-    <h2 class="cta-title">
-      Faites le point sur votre <em>équilibre psychique</em>
-    </h2>
-
-    <ul class="cta-checklist">
-      <li><div class="cta-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>Évaluation guidée (15 min)</span></li>
-      <li><div class="cta-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>Synthèse immédiate et personnalisée</span></li>
-      <li><div class="cta-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>Accès aux 6 axes d'analyse</span></li>
-      <li><div class="cta-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>Suivis libres pendant 30 jours</span></li>
-      <li><div class="cta-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>Orientation si vous le souhaitez</span></li>
-      <li><div class="cta-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>100 % anonyme et sécurisé</span></li>
-    </ul>
-
-    <a href="app.html" class="btn-primary btn-primary-large">Commencer mon check-up</a>
-
-    <p class="cta-sub-mention">
-      9 € · Accès 30 jours · Bilan initial + suivis libres
-    </p>
+  <div class="cta-container">
+    <div class="cta-left">
+      <h2 class="cta-title">
+        Faites le point sur votre <em>équilibre psychique</em>
+      </h2>
+      <ul class="cta-bullets">
+        <li>
+          <span class="cta-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <span>Évaluation guidée (15 min)</span>
+        </li>
+        <li>
+          <span class="cta-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <span>Synthèse immédiate et personnalisée</span>
+        </li>
+        <li>
+          <span class="cta-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <span>Accès complet pendant 30 jours</span>
+        </li>
+        <li>
+          <span class="cta-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <span>Orientation si vous le souhaitez</span>
+        </li>
+        <li>
+          <span class="cta-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <span>100 % anonyme et sécurisé</span>
+        </li>
+      </ul>
+    </div>
+    <aside class="cta-card">
+      <div class="cta-price">9 €</div>
+      <div class="cta-price-label">accès complet</div>
+      <div class="cta-price-line"><span>•</span> suivi libre 30 jours <span>•</span></div>
+      <a href="app.html" class="cta-card-btn">Commencer mon check-up</a>
+      <div class="cta-trust">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="1.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        <span>Paiement sécurisé • Sans abonnement</span>
+      </div>
+    </aside>
   </div>
 </section>
 
