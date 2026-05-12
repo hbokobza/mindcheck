@@ -1,20 +1,29 @@
 // Psee — Middleware d'authentification pour le pré-lancement
-// Protège tout le site par HTTP Basic Auth, sauf les routes /api/* qui restent accessibles
-// (nécessaire pour que le chat Claude continue de fonctionner pendant les tests internes).
+// Protège tout le site par HTTP Basic Auth, SAUF :
+//   - /api/*                    : routes backend (chat Claude)
+//   - /assets/*                 : ressources statiques (icônes, manifest, images)
+//   - apple-touch-icon*         : icônes iOS à la racine
+//   - favicon*                  : favicons à la racine
+//   - robots.txt, sitemap.xml   : fichiers SEO (utiles dès maintenant pour test crawl)
+//
+// Pourquoi exclure les assets ? iOS Safari fait des requêtes en mode CORS pour
+// le manifest et les icônes (Add to Home Screen), et n'envoie pas les credentials
+// Basic Auth dans ce mode. Résultat : 401 silencieux et icône fallback générique.
+// Les assets statiques sont publics par nature, donc on les autorise sans auth.
 //
 // Pour modifier l'identifiant ou le mot de passe :
 //   Vercel Dashboard > Project Settings > Environment Variables
 //   PRELAUNCH_USER     : nom d'utilisateur (par défaut "psee")
 //   PRELAUNCH_PASSWORD : mot de passe (par défaut "lancement-2026")
 //
-// Pour DÉSACTIVER la protection après le lancement :
+// Pour DÉSACTIVER totalement la protection après le lancement :
 //   1. Supprimer ce fichier middleware.js du repo
 //   2. Pousser sur GitHub → Vercel redéploie automatiquement
 //   Ou plus simple : renommer en middleware.js.bak
 
 export const config = {
-  // On protège toutes les routes SAUF /api/* (les fonctions backend).
-  matcher: '/((?!api/).*)',
+  // On protège toutes les routes SAUF celles listées en lookahead négatif.
+  matcher: '/((?!api/|assets/|apple-touch-icon|favicon|robots|sitemap).*)',
 };
 
 export default function middleware(request) {
