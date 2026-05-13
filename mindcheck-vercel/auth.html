@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connexion - Psee</title>
+  <link rel="icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #F5F0E8;
+      color: #1A1A18;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container { max-width: 480px; width: 100%; text-align: center; }
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 48px;
+      color: #1A4A2E;
+      margin-bottom: 40px;
+    }
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 40px 32px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+    }
+    .loader {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #E5E0D8;
+      border-top-color: #3a7531;
+      border-radius: 50%;
+      margin: 0 auto 24px;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .message { font-size: 16px; line-height: 1.5; color: #1A1A18; }
+    .message.error { color: #B33; }
+    .message.success { color: #3a7531; }
+    .button {
+      display: inline-block;
+      margin-top: 24px;
+      padding: 12px 24px;
+      background: #1A4A2E;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      transition: background 0.2s;
+    }
+    .button:hover { background: #3a7531; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="logo">Psee</h1>
+    <div class="card">
+      <div id="status">
+        <div class="loader"></div>
+        <p class="message">Connexion en cours...</p>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+    // Configuration Supabase (anon key publique, sans risque sécurité)
+    const SUPABASE_URL = 'https://sbjxaqjgwgrhlannhziw.supabase.co';
+    const SUPABASE_ANON_KEY = sb_publishable_7Mw8B8a0tiPpOt7otl2Vrw_UPIHDrAE;
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const statusEl = document.getElementById('status');
+
+    function showError(message) {
+      statusEl.innerHTML = `
+        <p class="message error">${message}</p>
+        <a href="/paywall.html" class="button">Retour</a>
+      `;
+    }
+
+    function showSuccess(message) {
+      statusEl.innerHTML = `<p class="message success">${message}</p>`;
+    }
+
+    async function handleAuth() {
+      try {
+        const hash = window.location.hash.substring(1);
+        const params = new URLSearchParams(hash);
+
+        const error = params.get('error');
+        const errorDescription = params.get('error_description');
+
+        if (error) {
+          showError(errorDescription ? decodeURIComponent(errorDescription) : `Erreur : ${error}`);
+          return;
+        }
+
+        const accessToken = params.get('access_token');
+        const refreshToken = params.get('refresh_token');
+
+        if (!accessToken || !refreshToken) {
+          showError('Lien invalide ou expiré. Veuillez demander un nouveau lien.');
+          return;
+        }
+
+        const { error: sessionError } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken,
+        });
+
+        if (sessionError) {
+          showError('Erreur de connexion : ' + sessionError.message);
+          return;
+        }
+
+        showSuccess('Connexion réussie. Redirection vers votre check-up...');
+        setTimeout(() => {
+          window.location.href = '/app.html';
+        }, 1500);
+      } catch (err) {
+        console.error('[auth] Erreur:', err);
+        showError('Une erreur inattendue est survenue.');
+      }
+    }
+
+    handleAuth();
+  </script>
+</body>
+</html>
