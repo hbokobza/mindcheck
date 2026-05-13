@@ -144,6 +144,58 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px}
 }
 </style>
 </head>
+  <script type="module">
+  // ÉTAPE 5C — Vérification de session Supabase au chargement
+  // Redirige vers /paywall.html si pas de session valide ou pas d'abonnement actif
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+  const SUPABASE_URL = 'https://sbjxaqjgwgrhlannhziw.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_7Mw8B8a0tiPpOt7otl2Vrw_UPIHDrAE';
+
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // 1) Y a-t-il une session active ?
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) {
+    console.log('[psee] Pas de session, redirection vers paywall');
+    window.location.replace('/paywall.html');
+    throw new Error('No session');
+  }
+
+  // 2) L'utilisateur a-t-il un abonnement valide ?
+  const { data: userData, error } = await supabase
+    .from('users')
+    .select('subscription_status, subscription_end, subscription_type')
+    .eq('email', session.user.email)
+    .single();
+
+  if (error || !userData) {
+    console.error('[psee] Utilisateur introuvable dans la table users');
+    window.location.replace('/paywall.html');
+    throw new Error('User not found');
+  }
+
+  if (userData.subscription_status !== 'active') {
+    console.log('[psee] Abonnement non actif:', userData.subscription_status);
+    window.location.replace('/paywall.html');
+    throw new Error('Subscription not active');
+  }
+
+  if (userData.subscription_end && new Date(userData.subscription_end) < new Date()) {
+    console.log('[psee] Abonnement expiré');
+    window.location.replace('/paywall.html');
+    throw new Error('Subscription expired');
+  }
+
+  // 3) Tout est OK — on stocke les infos pour le reste du script si besoin
+  window.psee_user = {
+    email: session.user.email,
+    id: session.user.id,
+    subscriptionType: userData.subscription_type,
+    subscriptionEnd: userData.subscription_end,
+  };
+  console.log('[psee] Session valide, accès autorisé');
+</script>
 <body>
 
 <header>
