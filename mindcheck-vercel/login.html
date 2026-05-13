@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Psee — Accès</title>
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #F5F0E8;
+    font-family: 'DM Sans', sans-serif;
+    color: #1A1A18;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .container { width: 100%; max-width: 400px; text-align: center; }
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1A4A2E;
+    font-size: 56px;
+    margin-bottom: 32px;
+  }
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+  }
+  .title { font-size: 18px; font-weight: 500; color: #1A1A18; margin-bottom: 8px; }
+  .subtitle { font-size: 14px; color: #6B6B68; margin-bottom: 24px; line-height: 1.5; }
+  input[type="password"] {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #E5E0D8;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    color: #1A1A18;
+    background: #FAF7F2;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  input[type="password"]:focus { border-color: #3A7531; }
+  button {
+    width: 100%;
+    margin-top: 12px;
+    padding: 14px;
+    background: #3A7531;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  button:hover { background: #1A4A2E; }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .error { color: #C0392B; font-size: 14px; margin-top: 12px; min-height: 20px; }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">Psee</div>
+    <div class="card">
+      <div class="title">Site en pré-lancement</div>
+      <div class="subtitle">Cet espace n'est pas encore ouvert au public.<br>Saisissez le mot de passe d'accès.</div>
+      <form id="loginForm" autocomplete="off">
+        <input type="password" id="password" placeholder="Mot de passe" required autofocus>
+        <button type="submit" id="submitBtn">Accéder</button>
+        <div class="error" id="error"></div>
+      </form>
+    </div>
+  </div>
+  <script>
+    const form = document.getElementById('loginForm');
+    const errorEl = document.getElementById('error');
+    const btn = document.getElementById('submitBtn');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorEl.textContent = '';
+      btn.disabled = true;
+      btn.textContent = 'Vérification...';
+      try {
+        const password = document.getElementById('password').value;
+        const res = await fetch('/api/prelaunch-login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password })
+        });
+        if (res.ok) {
+          window.location.href = '/';
+        } else {
+          errorEl.textContent = 'Mot de passe incorrect.';
+          btn.disabled = false;
+          btn.textContent = 'Accéder';
+        }
+      } catch (err) {
+        errorEl.textContent = 'Erreur de connexion. Réessayez.';
+        btn.disabled = false;
+        btn.textContent = 'Accéder';
+      }
+    });
+  </script>
+</body>
+</html>
