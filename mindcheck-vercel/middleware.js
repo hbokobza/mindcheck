@@ -1,13 +1,13 @@
-// Psee — Middleware de pré-lancement v2 (token URL + cookie)
+// Psee — Middleware de pré-lancement v3 (page de login + cookie)
 //
-// Première visite avec ?access=TOKEN → cookie de 30 jours posé
-// Navigations suivantes : autorisées via cookie
-// Sans cookie ni token → 404
+// Sans cookie valide → redirection vers /login.html
+// Avec cookie valide → accès au site
 //
 // Configuration : Vercel > Environment Variables > PRELAUNCH_TOKEN
+// Désactivation : supprimer ce fichier, push, Vercel redéploie
 
 export const config = {
-  matcher: '/((?!api/|assets/|apple-touch-icon|favicon|robots|sitemap).*)',
+  matcher: '/((?!api/|assets/|login\\.html|apple-touch-icon|favicon|robots|sitemap).*)',
 };
 
 function parseCookies(cookieHeader) {
@@ -21,31 +21,17 @@ function parseCookies(cookieHeader) {
 }
 
 export default function middleware(request) {
-  const url = new URL(request.url);
-  const accessParam = url.searchParams.get('access');
-
-  const cookieHeader = request.headers.get('cookie');
-  const cookies = parseCookies(cookieHeader);
-
+  const cookies = parseCookies(request.headers.get('cookie'));
   const validToken = process.env.PRELAUNCH_TOKEN || 'change-me-in-vercel';
 
-  // Cookie déjà posé et valide → laisser passer
+  // Cookie valide → laisser passer
   if (cookies.psee_prelaunch === validToken) {
     return;
   }
 
-  // Token valide dans l'URL → poser le cookie et rediriger sans le param
-  if (accessParam === validToken) {
-    url.searchParams.delete('access');
-    return new Response(null, {
-      status: 302,
-      headers: {
-        'Location': url.toString(),
-        'Set-Cookie': `psee_prelaunch=${validToken}; Path=/; Max-Age=2592000; HttpOnly; Secure; SameSite=Lax`,
-      },
-    });
-  }
-
-  // Aucun accès valide → 404
-  return new Response('Page non trouvée', { status: 404 });
+  // Sinon → redirection vers la page de login
+  const url = new URL(request.url);
+  url.pathname = '/login.html';
+  url.search = '';
+  return Response.redirect(url.toString(), 302);
 }
