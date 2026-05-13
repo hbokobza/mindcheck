@@ -4,16 +4,20 @@ import { createClient } from '@supabase/supabase-js';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
-const supabase = createClient(
+// Client admin (service_role) — opérations privilégiées (créer user, upsert)
+const supabaseAdmin = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY,
-  {
-    auth: { autoRefreshToken: false, persistSession: false },
-  }
+  { auth: { autoRefreshToken: false, persistSession: false } }
 );
 
-// Désactive le bodyParser Vercel pour récupérer le body brut
-// (nécessaire pour vérifier la signature Stripe)
+// Client public (anon) — signInWithOtp envoie réellement l'email
+const supabasePublic = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_ANON_KEY,
+  { auth: { autoRefreshToken: false, persistSession: false } }
+);
+
 export const config = {
   api: { bodyParser: false },
 };
@@ -81,7 +85,7 @@ async function handleCheckoutCompleted(session) {
   console.log(`[stripe-webhook] Paiement confirmé : ${email} / ${offer}`);
 
   // 1. Récupérer ou créer l'utilisateur dans auth.users
-  const { data: listData, error: listError } = await supabase.auth.admin.listUsers();
+  const { data: listData, error: listError } = await supabaseAdmin.auth.admin.listUsers();
   if (listError) throw new Error(`listUsers : ${listError.message}`);
 
   let userId;
@@ -90,7 +94,7 @@ async function handleCheckoutCompleted(session) {
     userId = existing.id;
     console.log(`[stripe-webhook] Utilisateur existant : ${userId}`);
   } else {
-    const { data: created, error: createError } = await supabase.auth.admin.createUser({
+    const { data: created, error: createError } = await supabaseAdmin.auth.admin.createUser({
       email,
       email_confirm: true,
     });
@@ -99,12 +103,12 @@ async function handleCheckoutCompleted(session) {
     console.log(`[stripe-webhook] Nouvel utilisateur créé : ${userId}`);
   }
 
-  // 2. Upsert dans la table `users` (subscription + email + stripe_customer_id)
+  // 2. Upsert dans la table `users` (abonnement + email + stripe_customer_id)
   const now = new Date();
   const days = offer === 'decouverte' ? 30 : 365;
   const subEnd = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
 
-  const { error: upsertError } = await supabase
+  const { error: upsertError } = await supabaseAdmin
     .from('users')
     .upsert(
       {
@@ -123,14 +127,16 @@ async function handleCheckoutCompleted(session) {
   if (upsertError) throw new Error(`upsert users : ${upsertError.message}`);
   console.log(`[stripe-webhook] Abonnement enregistré pour ${email}`);
 
-  // 3. Envoyer le magic link (Supabase enverra l'email automatiquement)
-  const { error: linkError } = await supabase.auth.admin.generateLink({
-    type: 'magiclink',
+  // 3. Envoyer le magic link via signInWithOtp (envoi email automatique)
+  const { error: otpError } = await supabasePublic.auth.signInWithOtp({
     email,
-    options: { redirectTo: 'https://psee.fr/auth.html' },
+    options: {
+      emailRedirectTo: 'https://psee.fr/auth.html',
+      shouldCreateUser: false,
+    },
   });
 
-  if (linkError) throw new Error(`generateLink : ${linkError.message}`);
+  if (otpError) throw new Error(`signInWithOtp : ${otpError.message}`);
   console.log(`[stripe-webhook] Magic link envoyé à ${email}`);
 }
 
@@ -138,7 +144,7 @@ async function handleSubscriptionUpdated(subscription) {
   console.log(`[stripe-webhook] Abonnement mis à jour : ${subscription.id}, statut : ${subscription.status}`);
 
   if (['canceled', 'unpaid', 'incomplete_expired'].includes(subscription.status)) {
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('users')
       .update({ status: 'cancelled', updated_at: new Date().toISOString() })
       .eq('stripe_customer_id', subscription.customer);
@@ -149,7 +155,7 @@ async function handleSubscriptionUpdated(subscription) {
 async function handleSubscriptionDeleted(subscription) {
   console.log(`[stripe-webhook] Abonnement supprimé : ${subscription.id}`);
 
-  const { error } = await supabase
+  const { error } = await supabaseAdmin
     .from('users')
     .update({
       status: 'cancelled',
