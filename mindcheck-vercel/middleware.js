@@ -1,25 +1,36 @@
 // Psee — Middleware de pré-lancement v2 (token URL + cookie)
-// 
+//
 // Première visite avec ?access=TOKEN → cookie de 30 jours posé
 // Navigations suivantes : autorisées via cookie
 // Sans cookie ni token → 404
 //
 // Configuration : Vercel > Environment Variables > PRELAUNCH_TOKEN
-// Pour désactiver : supprimer ce fichier, push, Vercel redéploie
 
 export const config = {
   matcher: '/((?!api/|assets/|apple-touch-icon|favicon|robots|sitemap).*)',
 };
 
+function parseCookies(cookieHeader) {
+  if (!cookieHeader) return {};
+  const cookies = {};
+  cookieHeader.split(';').forEach((cookie) => {
+    const [name, ...rest] = cookie.trim().split('=');
+    if (name) cookies[name] = rest.join('=');
+  });
+  return cookies;
+}
+
 export default function middleware(request) {
   const url = new URL(request.url);
   const accessParam = url.searchParams.get('access');
-  const cookie = request.cookies.get('psee_prelaunch');
+
+  const cookieHeader = request.headers.get('cookie');
+  const cookies = parseCookies(cookieHeader);
 
   const validToken = process.env.PRELAUNCH_TOKEN || 'change-me-in-vercel';
 
   // Cookie déjà posé et valide → laisser passer
-  if (cookie && cookie.value === validToken) {
+  if (cookies.psee_prelaunch === validToken) {
     return;
   }
 
@@ -35,6 +46,6 @@ export default function middleware(request) {
     });
   }
 
-  // Aucun accès valide → 404 (on ne révèle même pas l'existence du site)
+  // Aucun accès valide → 404
   return new Response('Page non trouvée', { status: 404 });
 }
