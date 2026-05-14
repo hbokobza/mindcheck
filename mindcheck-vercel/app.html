@@ -168,6 +168,7 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px}
     console.log('[psee] Session récupérée:', session ? 'OUI (' + session.user.email + ')' : 'NON');
 
     if (!session) {
+      alert('[psee] PAS DE SESSION - on redirige');
       console.log('[psee] Pas de session, redirection vers paywall');
       window.location.replace('/paywall.html');
       return;
@@ -184,18 +185,21 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px}
     console.log('[psee] error:', error);
 
     if (error || !userData) {
+      alert('[psee] USER INTROUVABLE - error: ' + JSON.stringify(error));
       console.error('[psee] Utilisateur introuvable dans la table users');
       window.location.replace('/paywall.html');
       return;
     }
 
     if (userData.subscription_status !== 'active') {
+      alert('[psee] ABONNEMENT NON ACTIF: ' + userData.subscription_status);
       console.log('[psee] Abonnement non actif:', userData.subscription_status);
       window.location.replace('/paywall.html');
       return;
     }
 
     if (userData.subscription_end && new Date(userData.subscription_end) < new Date()) {
+      alert('[psee] ABONNEMENT EXPIRÉ: ' + userData.subscription_end);
       console.log('[psee] Abonnement expiré (fin:', userData.subscription_end, ')');
       window.location.replace('/paywall.html');
       return;
