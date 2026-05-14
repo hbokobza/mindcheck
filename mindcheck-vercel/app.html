@@ -177,7 +177,7 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px}
     // 2) L'utilisateur a-t-il un abonnement valide ?
     const { data: userData, error } = await supabase
       .from('users')
-      .select('subscription_status, subscription_end, subscription_type')
+      .select('status, subscription_end, subscription_type')
       .eq('email', session.user.email)
       .single();
 
@@ -191,9 +191,9 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px}
       return;
     }
 
-    if (userData.subscription_status !== 'active') {
-      alert('[psee] ABONNEMENT NON ACTIF: ' + userData.subscription_status);
-      console.log('[psee] Abonnement non actif:', userData.subscription_status);
+  if (userData.status !== 'active') {
+      alert('[psee] ABONNEMENT NON ACTIF: ' + userData.status);
+      console.log('[psee] Abonnement non actif:', userData.status);
       window.location.replace('/paywall.html');
       return;
     }
