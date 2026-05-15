@@ -83,6 +83,17 @@ function buildPassationFinalePrompt(ctx) {
   const totalItems = spec.items.length;
   const itemNumber = ctx.currentItemIndex + 1;
 
+  // Cas particulier : item 9 PHQ-9 (ideation suicidaire). Le libelle officiel
+  // ("pensees qu'il vaudrait mieux disparaitre ou se faire du mal") est brutal
+  // a poser a froid. On instruit Haiku de le reformuler avec delicatesse,
+  // tout en gardant la rigueur clinique de la question et de l'echelle.
+  const isPHQ9Item9 = ctx.moduleId === 'PHQ9' && ctx.currentItemIndex === 8;
+  const sensitiveInstruction = isPHQ9Item9 ? `
+
+INSTRUCTION SUPPLEMENTAIRE — ITEM SENSIBLE
+Cet item porte sur les pensees de mort ou d'auto-dommage. C'est une question importante a poser, mais elle merite une formulation chaleureuse plutot que clinique brute. Tu peux ouvrir avec une transition courte du type "Je vais vous poser une derniere question importante." puis formuler quelque chose comme : "Au cours des 14 derniers jours, vous est-il arrive — meme de maniere fugace — d'avoir des pensees sombres, du genre 'ce serait plus simple si je n'etais plus la' ou 'je voudrais disparaitre' ?" Reste fidele a l'echelle (jamais, quelques jours, plus de la moitie des jours, presque tous les jours). Ne dramatise pas. Ne minimise pas. La personne peut repondre "jamais" et c'est une reponse valide, attendue dans la majorite des cas.
+` : '';
+
   const contextBlock = `
 
 CONTEXTE DE L'ITEM EN COURS
@@ -94,7 +105,7 @@ Echelle de reponse : ${spec.scaleLabels}
 
 INSTRUCTION SPECIFIQUE A CE TOUR
 Pose UNIQUEMENT cet item courant, en le reformulant naturellement (voir les regles de formulation). Termine en proposant explicitement les options de l'echelle.
-N'enchaine pas plusieurs items. Attends la reponse de la personne.
+N'enchaine pas plusieurs items. Attends la reponse de la personne.${sensitiveInstruction}
 `;
 
   return PASSATION_FINALE_SYS + contextBlock;
@@ -244,6 +255,149 @@ export default async function handler(req, res) {
         moduleResults: updatedModuleResults
       }
     });
+  }
+
+  // 3bis. Audit pre-passation : determine quels items psychometriques restent
+  // a poser apres la collecte conversationnelle. Si la conversation a deja
+  // couvert tous les items via scoring LLM sur le transcript, on saute la
+  // passation. Sinon on ne pose que les items residuels (max ~5).
+  // Regle de securite non negociable : item 9 PHQ-9 (ideation suicidaire)
+  // toujours pose si non explicitement aborde dans le transcript.
+  if (action === 'pre_passation_audit') {
+    try {
+      const modulesToAudit = Array.isArray(body.modulesToAudit) && body.modulesToAudit.length > 0
+        ? body.modulesToAudit
+        : detectSuspicion(clinicalFlags);
+
+      // Aucun module suspect -> on saute la passation entierement
+      if (modulesToAudit.length === 0) {
+        return res.status(200).json({
+          type: 'pre_passation_audit',
+          residualItems: {},
+          rawScoring: {},
+          coverage: {},
+          skipPassation: true,
+          sessionState: { ...state, axes, clinicalFlags }
+        });
+      }
+
+      const transcript = buildTranscriptFromMessages(messages);
+      const auditId = Math.random().toString(36).slice(2, 10);
+
+      console.log('[psee-pre-passation] ' + JSON.stringify({
+        auditId,
+        event: 'start',
+        modules: modulesToAudit,
+        transcriptLength: transcript.length
+      }));
+
+      // Appel LLM pour scorer chaque item du transcript
+      const scoringPrompt = buildScoringPrompt(modulesToAudit);
+      const userMsg = [{
+        role: 'user',
+        content: `Voici le transcript de l entretien. Score les modules demandes.\n\n----- TRANSCRIPT -----\n${transcript}\n----- FIN TRANSCRIPT -----`
+      }];
+
+      const { parsed } = await callHaikuJson(scoringPrompt, userMsg);
+
+      const COVERAGE_SKIP_THRESHOLD = 0.8;
+      const residualItems = {};
+      const rawScoring = {};
+      const coverage = {};
+
+      for (const moduleId of modulesToAudit) {
+        const arr = parsed[moduleId];
+        const module = getPsychometricModule(moduleId);
+        const totalItems = module ? module.items.length : 0;
+
+        if (!Array.isArray(arr) || arr.length !== totalItems) {
+          // Le LLM n'a rien retourne d'exploitable -> fallback : poser tous les items
+          residualItems[moduleId] = module ? module.items.map((_, i) => i) : [];
+          rawScoring[moduleId] = [];
+          coverage[moduleId] = 0;
+          console.warn('[psee-pre-passation] LLM returned invalid array for ' + moduleId + ' | fallback to full passation');
+          continue;
+        }
+
+        rawScoring[moduleId] = arr;
+
+        // Items null = residuels (non couverts par le LLM)
+        const nullIndexes = arr
+          .map((v, i) => ({ v, i }))
+          .filter(({ v }) => v === null || v === undefined || !Number.isFinite(Number(v)))
+          .map(({ i }) => i);
+
+        const validCount = totalItems - nullIndexes.length;
+        coverage[moduleId] = totalItems > 0 ? validCount / totalItems : 0;
+
+        // Regle de securite non negociable : item 9 PHQ-9 (index 8, ideation
+        // suicidaire) doit toujours etre explicitement aborde. Si le LLM a
+        // mis un nombre mais que le transcript ne contient AUCUN marqueur
+        // explicite d'ideation, on force la question.
+        if (moduleId === 'PHQ9' && !nullIndexes.includes(8)) {
+          const ideationMarkers = /suicid|idee.{0,5}noir|pens(e|é)e.{0,15}(noir|sombre|mort|disparait)|en finir|me tuer|mort serait|m auto|me faire du mal|plus etre la|disparaitre/i;
+          const explicitlyAddressed = ideationMarkers.test(transcript);
+          if (!explicitlyAddressed) {
+            nullIndexes.push(8);
+            console.log('[psee-pre-passation] PHQ9 item 9 forced (safety rule, not explicitly addressed) | auditId=' + auditId);
+          }
+        }
+
+        residualItems[moduleId] = nullIndexes.sort((a, b) => a - b);
+      }
+
+      // Decision : skip la passation entierement si tous les modules ont une
+      // couverture >= seuil ET aucun item residuel (incluant la regle de
+      // securite item 9 PHQ-9)
+      const totalResidualItems = Object.values(residualItems).reduce((sum, arr) => sum + arr.length, 0);
+      const allModulesWellCovered = Object.values(coverage).every(c => c >= COVERAGE_SKIP_THRESHOLD);
+      const skipPassation = totalResidualItems === 0 && allModulesWellCovered;
+
+      console.log('[psee-pre-passation] ' + JSON.stringify({
+        auditId,
+        event: 'result',
+        coverage,
+        residualItemsCount: Object.fromEntries(
+          Object.entries(residualItems).map(([k, v]) => [k, v.length])
+        ),
+        skipPassation
+      }));
+
+      return res.status(200).json({
+        type: 'pre_passation_audit',
+        residualItems,
+        rawScoring,
+        coverage,
+        skipPassation,
+        auditId,
+        sessionState: {
+          ...state,
+          axes,
+          clinicalFlags,
+          // On stocke le rawScoring en session pour que buildBilanPayload
+          // puisse fusionner avec les eventuelles reponses residuelles plus tard
+          prePassationScoring: rawScoring
+        }
+      });
+    } catch (err) {
+      console.error('[psee-pre-passation] failed:', err.message, '| stack:', err.stack);
+      // Fallback : on retourne tous les items, comportement legacy
+      const triggered = detectSuspicion(clinicalFlags);
+      const allItems = {};
+      triggered.forEach(m => {
+        const module = getPsychometricModule(m);
+        if (module) allItems[m] = module.items.map((_, i) => i);
+      });
+      return res.status(200).json({
+        type: 'pre_passation_audit',
+        residualItems: allItems,
+        rawScoring: {},
+        coverage: {},
+        skipPassation: false,
+        error: 'audit_failed_fallback_full_passation',
+        sessionState: { ...state, axes, clinicalFlags }
+      });
+    }
   }
 
   // 4. Rapport final
