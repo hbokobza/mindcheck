@@ -714,7 +714,14 @@ function detectInconsistencies(messages = []) {
 //   - Calcule la passation via passationQuality.js.
 //   - Fusionne le tout dans un payload unifie.
 
-const BILAN_COVERAGE_THRESHOLD = 0.6;
+// CHANTIER 2.2 : seuil baisse de 0.6 a 0.4 pour permettre des scores
+// indicatifs plus tot. Avec 0.6, sur Fanny (GAD7 1/7 = 0.14) le bilan
+// affichait "a completer" meme apres passation. Avec 0.4, des qu on a
+// ~3 items sur 7, on produit un score indicatif (clairement marque
+// "estimation indicative" cote UI) plutot que de cacher le module.
+// La balise isPartial reste affichee, donc l utilisateur sait que c est
+// une estimation et non un score formel.
+const BILAN_COVERAGE_THRESHOLD = 0.4;
 
 function buildScoringPrompt(modulesToScore) {
   const moduleSpecs = {
@@ -753,12 +760,26 @@ ${itemsList}`;
 
   return `Tu es l'evaluateur psychometrique Psee. Tu lis un transcript d entretien et tu scores chaque item des modules indiques en te basant UNIQUEMENT sur ce que la personne a dit.
 
-REGLES STRICTES
+REGLES DE SCORING
 - Tu retournes UNIQUEMENT du JSON valide, sans texte avant ni apres, sans markdown.
-- Pour chaque item, tu mets soit un nombre selon l echelle officielle, soit null si le recit n apporte aucun element pour scorer cet item.
-- Tu ne devines pas. Tu ne completes pas par defaut. Si le recit ne dit rien sur l item, c est null.
-- Tu te bases sur la frequence rapportee, pas sur ton impression generale.
+- Pour chaque item, tu mets soit un nombre selon l echelle officielle, soit null si le sujet de l item n est PAS DU TOUT aborde dans le recit.
 - Pour PSS-10 items 4, 5, 7, 8 (capacites preservees), tu scores la capacite telle qu elle est rapportee, sans inverser : l inversion est appliquee plus tard cote serveur.
+
+QUAND SCORER (CALIBRATION IMPORTANTE)
+- Si la personne nomme explicitement le symptome de l item avec une frequence claire ("je dors mal presque tous les jours") -> tu scores selon la frequence rapportee.
+- Si la personne decrit le PROCESSUS sous-jacent a l item meme sans utiliser le mot exact, tu scores en estimant la frequence sur la base du contexte. Quelques exemples concrets :
+  * "j ai du mal a etre presente" / "pensees qui s eparpillent" / "vide mental" -> couvre l item "difficultes de concentration"
+  * "pas de plaisir a manger" / "j ai perdu le gout" -> couvre l item "perte d appetit"
+  * "je ne dors pas bien" / "cauchemars qui me reveillent" / "1h pour me rendormir" -> couvre l item "difficultes a s endormir / rester endormi"
+  * "angoisse plusieurs fois par semaine" / "moments d anxiete" -> couvre l item "nervosite, anxiete, sensation d etre sur les nerfs"
+  * "je n arrive plus a me detendre" / "tension permanente" -> couvre l item "difficulte a se detendre"
+  * "j ai peur que ca recommence" / "vigilance constante" -> couvre l item "peur qu un evenement grave puisse se produire"
+- Frequence implicite : si la personne dit "plusieurs fois par semaine" -> niveau 2 ; "tous les jours" / "presque tous les jours" / "constamment" -> niveau 3 ; "quelques fois" / "parfois" -> niveau 1 ; "depuis X mois sans interruption" -> niveau 3.
+- Si la personne mentionne le sujet mais sans aucune indication de frequence ni d intensite -> tu peux scorer 1 par defaut (presence faible documentee).
+
+QUAND METTRE null
+- Reserve null aux items dont le SUJET n est pas du tout aborde dans le recit. Pas de mention directe, pas de mention indirecte, pas de description du processus sous-jacent.
+- Tu ne devines pas et tu n inferes pas a partir d un diagnostic suppose. Le recit doit toucher le sujet de l item d une maniere ou d une autre.
 
 MODULES A SCORER
 
