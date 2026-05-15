@@ -963,21 +963,81 @@ async function processInput(text,src){
 // Lance la mini-passation explicite : construit la queue d'items a partir
 // des modules detectes, affiche la banniere de progression + le message
 // d'annonce dans le chat, puis demande a Haiku de poser le premier item.
+//
+// CHANTIER 2 (passation chirurgicale) : avant de construire la queue, on
+// demande au serveur quels items psychometriques sont DEJA couverts par le
+// transcript de collecte. La queue ne contient ensuite que les items
+// "residuels" (non couverts par le LLM) + item 9 PHQ-9 si non explicitement
+// aborde (regle de securite cote serveur). Sur un cas type Fanny, on tombe
+// typiquement de 16 questions a 3-7 questions, voire 0 si la collecte est
+// tres riche -> bilan direct sans passation.
 async function startPassationFinale(){
-  // 1. Construire la queue plate : un item par entree
+  // 1. AUDIT PRE-PASSATION : interroge le serveur pour savoir quels items
+  //    sont deja couverts par le transcript.
+  console.log('[PSEE-DEBUG] PRE_PASSATION_AUDIT start | triggeredModules=', lastTriggeredModules);
+  let auditResult = null;
+  try {
+    const auditRes = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'pre_passation_audit',
+        messages: hist,
+        modulesToAudit: lastTriggeredModules
+      })
+    });
+    auditResult = await auditRes.json();
+    console.log('[PSEE-DEBUG] PRE_PASSATION_AUDIT result |',
+      'skipPassation=', auditResult.skipPassation,
+      '| coverage=', auditResult.coverage,
+      '| residualItems=', auditResult.residualItems,
+      '| auditId=', auditResult.auditId);
+  } catch (err) {
+    console.warn('[PSEE-DEBUG] PRE_PASSATION_AUDIT failed, falling back to full passation:', err.message);
+    auditResult = null;
+  }
+
+  // 1b. Cas "skip passation" : tous les items sont couverts -> bilan direct
+  if (auditResult && auditResult.skipPassation === true) {
+    console.log('[PSEE-DEBUG] PASSATION skipped entirely (full coverage)');
+    addMsg('ai', "Merci pour ce que vous avez partagé. J'ai tous les éléments dont j'ai besoin pour préparer votre synthèse.");
+    hist.push({ role: 'assistant', content: "Merci pour ce que vous avez partagé. J'ai tous les éléments dont j'ai besoin pour préparer votre synthèse." });
+    setTimeout(() => promptEnrichissement(() => generateBilan(false)), 1500);
+    return;
+  }
+
+  // 2. Construire la queue : items residuels uniquement si l'audit a reussi,
+  //    sinon fallback sur la queue complete (comportement legacy)
   passationQueue = [];
-  lastTriggeredModules.forEach(moduleId => {
-    const total = PASSATION_MODULE_LENGTHS[moduleId];
-    if(!total) return;
-    for(let i = 0; i < total; i++){
-      passationQueue.push({ moduleId, itemIdx: i, totalItems: total });
-    }
-  });
+  if (auditResult && auditResult.residualItems && typeof auditResult.residualItems === 'object') {
+    // Mode chirurgical : on ne prend que les items residuels
+    lastTriggeredModules.forEach(moduleId => {
+      const total = PASSATION_MODULE_LENGTHS[moduleId];
+      if (!total) return;
+      const residualForModule = auditResult.residualItems[moduleId];
+      if (!Array.isArray(residualForModule) || residualForModule.length === 0) return;
+      residualForModule.forEach(itemIdx => {
+        passationQueue.push({ moduleId, itemIdx, totalItems: total });
+      });
+    });
+    console.log('[PSEE-DEBUG] PASSATION surgical mode | residual queue length=', passationQueue.length);
+  } else {
+    // Fallback : queue complete (comportement legacy si l'audit a echoue)
+    lastTriggeredModules.forEach(moduleId => {
+      const total = PASSATION_MODULE_LENGTHS[moduleId];
+      if(!total) return;
+      for(let i = 0; i < total; i++){
+        passationQueue.push({ moduleId, itemIdx: i, totalItems: total });
+      }
+    });
+    console.log('[PSEE-DEBUG] PASSATION fallback full mode | queue length=', passationQueue.length);
+  }
 
   if(passationQueue.length === 0){
-    // Aucun item a passer : bilan direct
-    addMsg('ai', "Merci pour ce partage. Je prépare votre synthèse…");
-    setTimeout(()=>promptEnrichissement(()=>generateBilan(false)), 1200);
+    // Aucun item residuel : bilan direct
+    addMsg('ai', "Merci pour ce que vous avez partagé. J'ai tous les éléments dont j'ai besoin pour préparer votre synthèse.");
+    hist.push({ role: 'assistant', content: "Merci pour ce que vous avez partagé. J'ai tous les éléments dont j'ai besoin pour préparer votre synthèse." });
+    setTimeout(()=>promptEnrichissement(()=>generateBilan(false)), 1500);
     return;
   }
 
@@ -985,19 +1045,23 @@ async function startPassationFinale(){
   passationCursor = 0;
   console.log('[PSEE-DEBUG] PASSATION started | queue.length=', passationQueue.length, '| modules=', lastTriggeredModules);
 
-  // 2. Afficher la banniere de progression
+  // 3. Afficher la banniere de progression
   updatePassationBanner();
 
-  // 3. Message d'annonce dans le chat
-  const moduleNames = lastTriggeredModules
-    .map(id => PASSATION_MODULE_LABELS[id] || id)
-    .join(', ');
+  // 4. Message d'annonce dans le chat — adapte au nombre de questions
   const totalQuestions = passationQueue.length;
-  const annonce = `Vous avez partagé beaucoup d'éléments précieux sur les 6 dimensions. Avant de produire votre synthèse, j'aimerais vous poser ${totalQuestions} questions très précises pour fiabiliser les indicateurs cliniques (équivalents aux questionnaires utilisés par les professionnels de santé sur ${moduleNames}).\n\nCela prendra 3 à 5 minutes. Pour chaque question, vous pourrez répondre simplement par exemple : « jamais », « quelques jours », « plus de la moitié des jours », ou « presque tous les jours ».\n\nJe commence par la première question.`;
+  let annonce;
+  if (totalQuestions === 1) {
+    annonce = `Avant de produire votre synthèse, j'aimerais préciser un dernier point avec vous. Cela ne prendra qu'une minute.`;
+  } else if (totalQuestions <= 4) {
+    annonce = `Vous avez partagé beaucoup d'éléments précieux. Avant de produire votre synthèse, j'aimerais préciser ${totalQuestions} points avec vous. Cela ne prendra que 1 à 2 minutes. Vous pourrez répondre simplement par « jamais », « quelques jours », « plus de la moitié des jours », ou « presque tous les jours ».`;
+  } else {
+    annonce = `Vous avez partagé beaucoup d'éléments précieux. Avant de produire votre synthèse, j'aimerais préciser ${totalQuestions} points avec vous pour fiabiliser les indicateurs cliniques. Cela prendra 2 à 4 minutes. Pour chaque question, vous pourrez répondre simplement par « jamais », « quelques jours », « plus de la moitié des jours », ou « presque tous les jours ».`;
+  }
   addMsg('ai', annonce);
   hist.push({role:'assistant', content: annonce});
 
-  // 4. Demander a Haiku de poser le premier item
+  // 5. Demander a Haiku de poser le premier item
   showDots();
   try{
     const firstItem = passationQueue[0];
@@ -1020,6 +1084,10 @@ async function startPassationFinale(){
 // Affiche / met a jour la banniere de progression de la passation.
 // La banniere est inseree juste sous le bandeau axes (ou retiree si
 // passationActive=false).
+//
+// CHANTIER 2 : wording adouci ("Précisions" au lieu de "Phase finale") et
+// compteur intra-module ("humeur 2/3" au lieu de "5/16") pour eviter l'effet
+// "questionnaire interminable" du flow legacy.
 function updatePassationBanner(){
   let banner = document.getElementById('passation-banner');
 
@@ -1028,17 +1096,39 @@ function updatePassationBanner(){
     return;
   }
 
-  const current = Math.min(passationCursor + 1, passationQueue.length);
   const total = passationQueue.length;
-  const ratio = Math.min(1, current / total);
-  const moduleId = passationQueue[passationCursor]?.moduleId || passationQueue[0]?.moduleId;
+  const currentItem = passationQueue[passationCursor] || passationQueue[0];
+  const moduleId = currentItem?.moduleId;
   const moduleLabel = PASSATION_MODULE_LABELS[moduleId] || '';
+
+  // Compteur intra-module : combien d'items de CE module on a deja pose
+  // et combien il y en a dans la queue residuelle pour ce module.
+  let moduleSeen = 0;
+  let moduleTotal = 0;
+  passationQueue.forEach((item, idx) => {
+    if (item.moduleId === moduleId) {
+      moduleTotal++;
+      if (idx <= passationCursor) moduleSeen++;
+    }
+  });
+  // Compteur global pour la barre de progression (sur la queue totale)
+  const globalSeen = Math.min(passationCursor + 1, total);
+  const ratio = total > 0 ? Math.min(1, globalSeen / total) : 1;
+
+  // Wording adapte : si une seule famille on n'affiche que le module,
+  // si plusieurs on montre la position globale + le module en cours
+  const labelText = total === 1
+    ? 'Dernière précision'
+    : (moduleLabel ? `Quelques précisions · ${moduleLabel}` : 'Quelques précisions');
+  const counterText = total === 1
+    ? ''
+    : (moduleTotal > 1 ? `${moduleSeen} / ${moduleTotal}` : `${globalSeen} / ${total}`);
 
   const html = `
     <div style="background:#EEF7F2;border:1px solid #C8E6C9;border-radius:12px;padding:12px 16px;margin:0 0 12px;display:flex;flex-direction:column;gap:8px">
       <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#2f6b32;font-weight:600;font-family:Arial,sans-serif">
-        <span>Phase finale : questions précises${moduleLabel ? ' · '+moduleLabel : ''}</span>
-        <span style="font-variant-numeric:tabular-nums">${current} / ${total}</span>
+        <span>${labelText}</span>
+        <span style="font-variant-numeric:tabular-nums">${counterText}</span>
       </div>
       <div style="height:5px;background:#dfe9df;border-radius:3px;overflow:hidden">
         <div style="height:100%;background:#1F4D33;border-radius:3px;width:${(ratio*100).toFixed(1)}%;transition:width .4s ease"></div>
