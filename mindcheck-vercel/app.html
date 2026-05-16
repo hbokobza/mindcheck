@@ -1292,6 +1292,18 @@ async function runClinicalExtraction() {
 
     if (!data.success) {
       console.error('[psee-extraction] failed:', data.errorMessage);
+
+      // Si le moteur a produit du texte mais qu'il était mal formé,
+      // on l'affiche quand même pour pouvoir diagnostiquer.
+      if (data.rawText) {
+        console.log('[psee-extraction] ====================================');
+        console.log('[psee-extraction] PARSE ÉCHOUÉ — TEXTE BRUT PRODUIT :');
+        console.log('[psee-extraction] ====================================');
+        console.log(data.rawText);
+        console.log('[psee-extraction] ====================================');
+        console.log('[psee-extraction] Longueur du texte brut :', data.rawText.length, 'caractères');
+        console.log('[psee-extraction] Copiez le texte brut ci-dessus pour analyse.');
+      }
       return;
     }
 
