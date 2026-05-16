@@ -1260,9 +1260,72 @@ function promptEnrichissement(nextAction){
   setTimeout(() => document.getElementById('enrich-txt')?.focus(), 200);
 }
 
+// =====================================================================
+// EXTRACTION CLINIQUE V1.3 — affichage console pour test
+// =====================================================================
+// Lance l'extraction clinique V1.3 et affiche le JSON dans la console.
+// Fire-and-forget : ne bloque pas la génération du bilan classique.
+// Aucun stockage. Juste de quoi tester le moteur sur de vrais cas.
+async function runClinicalExtraction() {
+  console.log('[psee-extraction] ====================================');
+  console.log('[psee-extraction] Lancement extraction V1.3 en cours...');
+  console.log('[psee-extraction] hist.length =', hist.length);
+
+  try {
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'clinical_extraction',
+        messages: hist,
+        sessionId: sessionCode || 'unknown_session',
+        sessionState: {}
+      })
+    });
+
+    if (!response.ok) {
+      console.error('[psee-extraction] HTTP error', response.status);
+      return;
+    }
+
+    const data = await response.json();
+
+    if (!data.success) {
+      console.error('[psee-extraction] failed:', data.errorMessage);
+      return;
+    }
+
+    console.log('[psee-extraction] ====================================');
+    console.log('[psee-extraction] SUCCESS — extraction terminée');
+    console.log('[psee-extraction] extractionId =', data.extractionId);
+
+    if (data.warnings?.missingFields?.length > 0) {
+      console.warn('[psee-extraction] champs manquants:', data.warnings.missingFields);
+    }
+
+    console.log('[psee-extraction] ====================================');
+    console.log('[psee-extraction] JSON CLINIQUE V1.3 PRODUIT :');
+    console.log('[psee-extraction] ====================================');
+    console.log(JSON.stringify(data.jsonClinical, null, 2));
+    console.log('[psee-extraction] ====================================');
+    console.log('[psee-extraction] FIN — copiez le JSON ci-dessus pour analyse');
+    console.log('[psee-extraction] ====================================');
+
+  } catch (err) {
+    console.error('[psee-extraction] exception:', err.message, err);
+  }
+}
+
 async function generateBilan(avecBTB, retryCount){
   retryCount = retryCount || 0;
   console.log('[PSEE-DEBUG] generateBilan ENTRY | avecBTB=', avecBTB, '| retryCount=', retryCount, '| hist.length=', hist.length);
+
+  // Lancer l'extraction clinique V1.3 en background (fire-and-forget)
+  // Ne bloque pas le bilan classique. Tourne en parallèle.
+  // Seulement au premier appel (pas sur les retry du bilan)
+  if (retryCount === 0) {
+    runClinicalExtraction(); // pas de await — exécution parallèle
+  }
 
   // Forcer l'allumage des 6 axes : si le bilan se genere, c'est que les 6 axes
   // ont ete suffisamment couverts (la decision est cote serveur). On evite
