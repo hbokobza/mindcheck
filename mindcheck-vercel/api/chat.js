@@ -527,6 +527,8 @@ Produis maintenant le JSON clinique V1.3 conforme au schema decrit dans le syste
         success: false,
         error: 'extraction_failed',
         errorMessage: err.message,
+        rawText: err.rawText || null,
+        rawJsonStr: err.rawJsonStr || null,
         sessionState: { ...state, axes, clinicalFlags }
       });
     }
@@ -989,7 +991,10 @@ async function callHaikuJson(systemPrompt, userMessages) {
       console.warn('[psee-haiku-json] JSON parse succeeded after repair (trailing comma fix)');
     } catch (e2) {
       console.error('[psee-haiku-json] JSON parse failed | error=', e.message, '| jsonStr length=', jsonStr.length, '| preview=', jsonStr.slice(0, 500), '| end=', jsonStr.slice(-200));
-      throw new Error('Haiku JSON parse failed: ' + e.message);
+      const err = new Error('Haiku JSON parse failed: ' + e.message);
+      err.rawText = text;
+      err.rawJsonStr = jsonStr;
+      throw err;
     }
   }
   return { parsed, raw: data };
