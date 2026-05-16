@@ -10,6 +10,7 @@ import {
   BILAN_BTC_SYS,
   BILAN_BTB_SYS,
   PASSATION_FINALE_SYS,
+  EXTRACTION_SYS,
   buildCollectePrompt
 } from './systemPrompts.js';
 import { classifyInput, isUnsafeOutput } from './safetyRules.js';
@@ -395,6 +396,137 @@ export default async function handler(req, res) {
         coverage: {},
         skipPassation: false,
         error: 'audit_failed_fallback_full_passation',
+        sessionState: { ...state, axes, clinicalFlags }
+      });
+    }
+  }
+
+  // 3ter. Extraction clinique : prend le transcript complet (collecte +
+  // passation), produit un JSON clinique V1.3 conforme au schema Psee
+  // (14 dimensions en 4 couches, contre-indicateurs actifs, regles d'arbitrage,
+  // perimetre de restitution patient strict). Ce JSON est destine au rule
+  // engine deterministe (a coder) puis a la generation du bilan narratif.
+  // Le front est responsable de l'insertion en base Supabase (table
+  // clinical_extractions) apres reception.
+  if (action === 'clinical_extraction') {
+    try {
+      const extractionId = 'ext_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
+
+      // Construire un transcript propre pour l'extraction. On inclut tous les
+      // messages user + assistant pour donner au LLM le contexte complet de
+      // la conversation. On ajoute aussi quelques meta utiles pour le scoring.
+      const transcriptLines = messages.map(m => {
+        const role = m.role === 'user' ? 'UTILISATEUR' : 'PSEE';
+        const content = String(m.content || '').trim();
+        return `${role}: ${content}`;
+      });
+
+      const turnCount = messages.length;
+      const userMessageCount = messages.filter(m => m.role === 'user').length;
+      const sessionId = body.sessionId || state.sessionId || 'unknown';
+
+      // Resultats psychometriques eventuellement deja calcules (PHQ-9, GAD-7
+      // depuis la passation finale, etc.). On les passe au LLM pour qu'il
+      // les integre comme psychometric_anchor dans le JSON.
+      const moduleResults = state.moduleResults || [];
+      const moduleResultsBlock = moduleResults.length > 0
+        ? '\n\nRESULTATS PSYCHOMETRIQUES DEJA CALCULES :\n' + JSON.stringify(moduleResults, null, 2)
+        : '';
+
+      const userMessage = `TRANSCRIPT COMPLET DE LA SESSION PSEE
+
+Session ID : ${sessionId}
+Date : ${new Date().toISOString()}
+Tours total : ${turnCount}
+Messages utilisateur : ${userMessageCount}${moduleResultsBlock}
+
+TRANSCRIPT :
+
+${transcriptLines.join('\n\n')}
+
+---
+
+Produis maintenant le JSON clinique V1.3 conforme au schema decrit dans le system prompt. Aucun texte avant ni apres le JSON.`;
+
+      console.log('[psee-clinical-extraction] ' + JSON.stringify({
+        extractionId,
+        sessionId,
+        turnCount,
+        userMessageCount,
+        moduleResultsCount: moduleResults.length
+      }));
+
+      // Appel Anthropic via la fonction existante callHaikuJson qui gere
+      // deja le parsing robuste (markdown fences, virgules trainantes,
+      // troncation max_tokens).
+      const { parsed: jsonClinical, raw } = await callHaikuJson(
+        EXTRACTION_SYS,
+        [{ role: 'user', content: userMessage }]
+      );
+
+      // Validation de structure minimale : on s'assure que les blocs
+      // critiques V1.3 sont presents. Si un bloc manque, on log mais on
+      // retourne quand meme (politique V1 tolerante).
+      const requiredFields = [
+        'schema_version',
+        'session_meta',
+        'passation_quality',
+        'axes_psee_visible_layer',
+        'couche_0_securite_deterministe',
+        'couche_1_differentiels_psychiatriques',
+        'couche_2_dimensions_structurelles',
+        'contextes_declencheurs',
+        'resources',
+        'rule_engine_arbitrations',
+        'orientation_engine_output',
+        'profile_typology'
+      ];
+
+      const missingFields = requiredFields.filter(f => !jsonClinical[f]);
+      if (missingFields.length > 0) {
+        console.warn('[psee-clinical-extraction] missing required fields:', missingFields);
+      }
+
+      // Enrichissement avec metadata cote serveur
+      const enrichedJson = {
+        ...jsonClinical,
+        _extraction_meta: {
+          extraction_id: extractionId,
+          session_id: sessionId,
+          model_used: 'claude-haiku-4-5-20251001',
+          extracted_at: new Date().toISOString(),
+          tokens_input: raw?.usage?.input_tokens || null,
+          tokens_output: raw?.usage?.output_tokens || null,
+          missing_required_fields: missingFields,
+          structural_conformity: missingFields.length === 0
+        }
+      };
+
+      console.log('[psee-clinical-extraction] success ' + JSON.stringify({
+        extractionId,
+        sessionId,
+        tokensInput: raw?.usage?.input_tokens,
+        tokensOutput: raw?.usage?.output_tokens,
+        structuralConformity: missingFields.length === 0,
+        missingFieldsCount: missingFields.length
+      }));
+
+      return res.status(200).json({
+        type: 'clinical_extraction',
+        success: true,
+        extractionId,
+        jsonClinical: enrichedJson,
+        warnings: missingFields.length > 0 ? { missingFields } : null,
+        sessionState: { ...state, axes, clinicalFlags, lastExtractionId: extractionId }
+      });
+
+    } catch (err) {
+      console.error('[psee-clinical-extraction] failed:', err.message, err.stack);
+      return res.status(200).json({
+        type: 'clinical_extraction',
+        success: false,
+        error: 'extraction_failed',
+        errorMessage: err.message,
         sessionState: { ...state, axes, clinicalFlags }
       });
     }
