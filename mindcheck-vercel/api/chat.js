@@ -11,8 +11,10 @@ import {
   BILAN_BTB_SYS,
   PASSATION_FINALE_SYS,
   EXTRACTION_SYS,
+  GENERATION_NARRATIVE_BTC_SYS,
   buildCollectePrompt
 } from './systemPrompts.js';
+import { applyClinicalRules } from './ruleEngine.js';
 import { classifyInput, isUnsafeOutput } from './safetyRules.js';
 import { POLICIES } from './responsePolicies.js';
 import { allowRequest } from './rateLimit.js';
@@ -34,6 +36,25 @@ import {
 import { buildClinicalSynthesis } from './clinicalSynthesis.js';
 
 const MAX_MODULES_PER_SESSION = 2;
+
+// ============================================================================
+// FEATURE FLAG — PIPELINE V1.3 SÉQUENTIEL (Chantier 3)
+// ============================================================================
+// Quand true : le bilan BtC est généré par le pipeline séquentiel V1.3
+//   transcript → EXTRACTION_SYS → ruleEngine → GENERATION_NARRATIVE_BTC_SYS
+// Quand false : le bilan BtC est généré par le pipeline classique
+//   (buildBilanPayload actuel, appel BILAN_BTC_SYS sur transcript brut)
+//
+// Le pipeline V1.3 est SÉQUENTIEL : un seul appel Anthropic à la fois,
+// ce qui évite la saturation du rate limit (50k tokens/min).
+//
+// Le mode bilan_btb n'est PAS affecté par ce flag — il continue d'utiliser
+// le pipeline classique tant que le Chantier BtB n'est pas fait.
+//
+// Pour activer en production : passer à true et redéployer.
+// Pour rollback instantané : repasser à false et redéployer.
+// ============================================================================
+const USE_V13_PIPELINE = false;
 
 // -----------------------------
 // SYSTEM PROMPT
@@ -1185,8 +1206,171 @@ function applyReferenceScores(narrative, referenceScores) {
   });
   return narrative;
   }
+// ============================================================================
+// PIPELINE V1.3 SÉQUENTIEL — buildBilanPayloadV13 (Chantier 3)
+// ============================================================================
+// Pipeline en 3 étapes SÉQUENTIELLES (un appel Anthropic à la fois) :
+//   1. EXTRACTION_SYS         : transcript → JSON clinique V1.3 brut
+//   2. applyClinicalRules     : JSON brut → jsonFull + jsonForNarrative (déterministe, pas d'appel API)
+//   3. GENERATION_NARRATIVE_BTC_SYS : jsonForNarrative → bilan patient
+//
+// Avantage vs pipeline classique : pas de double appel parallèle, donc pas
+// de saturation du rate limit Anthropic. Cohérence garantie entre le JSON
+// clinique (analyse différentielle) et le bilan (prose patient).
+//
+// Le format de sortie est IDENTIQUE à buildBilanPayload classique pour que
+// le front et le rendu PDF fonctionnent sans modification.
+// ============================================================================
+async function buildBilanPayloadV13({ messages, state, axes, clinicalFlags }) {
+  const auditId = Math.random().toString(36).slice(2, 10);
+  const sessionId = state.sessionId || 'unknown';
+
+  console.log('[psee-bilan-v13] ' + JSON.stringify({ auditId, event: 'start', sessionId, turnCount: messages.length }));
+
+  // --- ÉTAPE 1 : EXTRACTION CLINIQUE V1.3 ---
+  const transcriptLines = messages.map(m => {
+    const role = m.role === 'user' ? 'UTILISATEUR' : 'PSEE';
+    return `${role}: ${String(m.content || '').trim()}`;
+  });
+
+  const moduleResults = state.moduleResults || [];
+  const moduleResultsBlock = moduleResults.length > 0
+    ? '\n\nRESULTATS PSYCHOMETRIQUES DEJA CALCULES :\n' + JSON.stringify(moduleResults, null, 2)
+    : '';
+
+  const extractionUserMessage = `TRANSCRIPT COMPLET DE LA SESSION PSEE
+
+Session ID : ${sessionId}
+Date : ${new Date().toISOString()}
+Tours total : ${messages.length}
+Messages utilisateur : ${messages.filter(m => m.role === 'user').length}${moduleResultsBlock}
+
+TRANSCRIPT :
+
+${transcriptLines.join('\n\n')}
+
+---
+
+Produis maintenant le JSON clinique V1.3 conforme au schema decrit dans le system prompt. Aucun texte avant ni apres le JSON.`;
+
+  console.log('[psee-bilan-v13] ' + JSON.stringify({ auditId, event: 'extraction_start' }));
+
+  let jsonV13;
+  try {
+    const extractionResult = await callHaikuJson(
+      EXTRACTION_SYS,
+      [{ role: 'user', content: extractionUserMessage }]
+    );
+    jsonV13 = extractionResult.parsed;
+  } catch (err) {
+    console.error('[psee-bilan-v13] extraction failed:', err.message);
+    throw new Error('Pipeline V1.3 - extraction échouée : ' + err.message);
+  }
+
+  console.log('[psee-bilan-v13] ' + JSON.stringify({ auditId, event: 'extraction_done' }));
+
+  // --- ÉTAPE 2 : RULE ENGINE (déterministe, pas d'appel API) ---
+  let jsonFull, jsonForNarrative, validation;
+  try {
+    const ruleResult = applyClinicalRules(jsonV13);
+    jsonFull = ruleResult.jsonFull;
+    jsonForNarrative = ruleResult.jsonForNarrative;
+    validation = ruleResult.validation;
+  } catch (err) {
+    console.error('[psee-bilan-v13] rule engine failed:', err.message);
+    throw new Error('Pipeline V1.3 - rule engine échoué : ' + err.message);
+  }
+
+  console.log('[psee-bilan-v13] ' + JSON.stringify({
+    auditId, event: 'rules_done',
+    validationValid: validation.valid,
+    missingFields: validation.missing_fields
+  }));
+
+  // --- ÉTAPE 3 : GÉNÉRATION NARRATIVE À PARTIR DU JSON FILTRÉ ---
+  const narrativeUserMessage = `JSON CLINIQUE V1.3 (filtré pour génération narrative) :
+
+${JSON.stringify(jsonForNarrative, null, 2)}
+
+---
+
+Génère maintenant le bilan patient au format JSON décrit dans le system prompt. Aucun texte avant ni après le JSON.`;
+
+  console.log('[psee-bilan-v13] ' + JSON.stringify({ auditId, event: 'narrative_start' }));
+
+  let narrative, narrativeRaw;
+  try {
+    const narrativeResult = await callHaikuJson(
+      GENERATION_NARRATIVE_BTC_SYS,
+      [{ role: 'user', content: narrativeUserMessage }]
+    );
+    narrative = narrativeResult.parsed;
+    narrativeRaw = narrativeResult.raw;
+  } catch (err) {
+    console.error('[psee-bilan-v13] narrative failed:', err.message);
+    throw new Error('Pipeline V1.3 - génération narrative échouée : ' + err.message);
+  }
+
+  console.log('[psee-bilan-v13] ' + JSON.stringify({ auditId, event: 'narrative_done' }));
+
+  // --- CALCUL PASSATION (côté serveur, rigoureux, comme pipeline classique) ---
+  const answers = messages
+    .filter(m => m?.role === 'user')
+    .map(m => String(m.content || '').trim());
+
+  const inconsistencies = detectInconsistencies(messages);
+
+  const passationMetrics = buildPassationMetrics({
+    messages,
+    answers,
+    responseTimes: state.responseTimes || [],
+    inconsistencies,
+    attentionCheckFailed: Boolean(state.attentionCheckFailed)
+  });
+
+  const passationQuality = computePassationQuality(passationMetrics);
+
+  // --- INDICATEURS PSYCHOMETRIQUES ---
+  // En V1.3, les résultats psychométriques calculés en amont (passation finale)
+  // sont déjà dans state.moduleResults. On les transmet au format attendu.
+  const indicateurs = moduleResults.length > 0 ? moduleResults : [];
+
+  // --- FUSION : format de sortie IDENTIQUE au pipeline classique ---
+  const merged = {
+    ...narrative,
+    indicateurs
+  };
+
+  const extractedAxisScores = extractAxisScores(narrative);
+
+  console.log('[psee-bilan-v13] ' + JSON.stringify({ auditId, event: 'complete' }));
+
+  return {
+    payload: merged,
+    raw: narrativeRaw,
+    axisScores: extractedAxisScores,
+    // jsonFull est retourné pour stockage Supabase ultérieur (Chantier 4)
+    jsonClinicalFull: jsonFull,
+    debug: {
+      pipeline: 'v13_sequential',
+      auditId,
+      validationValid: validation.valid,
+      missingFields: validation.missing_fields,
+      passationQuality: passationQuality?.label
+    }
+  };
+}
+
 async function buildBilanPayload({ mode, messages, state, axes, clinicalFlags, ip }) {
   const isBtb = mode === 'bilan_btb';
+
+  // ROUTAGE PIPELINE V1.3 (Chantier 3) :
+  // Si le flag est actif ET qu'on génère un bilan BtC, on utilise le pipeline
+  // séquentiel V1.3. Le BtB et le cas flag=false gardent le pipeline classique.
+  if (USE_V13_PIPELINE && !isBtb) {
+    return buildBilanPayloadV13({ messages, state, axes, clinicalFlags });
+  }
+
   const baseSystemPrompt = isBtb ? BILAN_BTB_SYS : BILAN_BTC_SYS;
   
   // Coherence BtoC/BtoB : si on genere un BtoB et qu'on a deja les scores du BtoC en session,
