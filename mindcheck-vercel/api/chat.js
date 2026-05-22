@@ -1345,12 +1345,25 @@ Génère maintenant le bilan patient au format JSON décrit dans le system promp
 
   console.log('[psee-bilan-v13] ' + JSON.stringify({ auditId, event: 'complete' }));
 
+  // --- ÉTAPE 4 : STOCKAGE SUPABASE (Chantier 4) ---
+  // Best-effort : l'échec du stockage ne bloque jamais le bilan patient.
+  // On ne logue que l'auditId (pas de données patient dans les logs).
+  const sessionId_forStorage = state.sessionId || 'unknown';
+  insertClinicalExtraction({
+    extractionId: auditId,
+    sessionId: sessionId_forStorage,
+    jsonFull,
+    schemaVersion: jsonFull?.schema_version || '1.3'
+  }).catch(err => {
+    console.error('[psee-supabase] insertion failed (non-blocking):', err.message, '| auditId=' + auditId);
+  });
+
   return {
     payload: merged,
     raw: narrativeRaw,
     axisScores: extractedAxisScores,
-    // jsonFull est retourné pour stockage Supabase ultérieur (Chantier 4)
-    jsonClinicalFull: jsonFull,
+    // jsonClinicalFull retiré de la réponse HTTP (données INTERNAL_ONLY)
+    // Le stockage est désormais fait côté serveur ci-dessus.
     debug: {
       pipeline: 'v13_sequential',
       auditId,
@@ -1504,4 +1517,54 @@ function clamp(v, min, max) {
 
 function dedupe(arr = []) {
   return [...new Set(arr)];
+}
+
+// ============================================================================
+// STOCKAGE SUPABASE — insertClinicalExtraction (Chantier 4)
+// ============================================================================
+// Insère le JSON clinique complet (INTERNAL_ONLY) dans la table
+// clinical_extractions. Appel REST direct, pas de SDK Supabase.
+// Best-effort : appelé sans await dans le pipeline, un échec ne bloque rien.
+//
+// Colonnes utilisées :
+//   extraction_id  text    — auditId du pipeline V1.3
+//   session_id     text    — identifiant opaque de la session
+//   json_clinical  jsonb   — jsonFull complet (données cliniques brutes)
+//   schema_version text    — version du schéma JSON (ex: "1.3")
+//   user_id        uuid    — null pour l'instant (pseudonymité forte)
+// ============================================================================
+async function insertClinicalExtraction({ extractionId, sessionId, jsonFull, schemaVersion }) {
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !supabaseKey) {
+    console.warn('[psee-supabase] SUPABASE_URL ou SUPABASE_SERVICE_ROLE_KEY manquant — insertion ignorée');
+    return;
+  }
+
+  const payload = {
+    extraction_id: extractionId,
+    session_id: sessionId,
+    json_clinical: jsonFull,
+    schema_version: String(schemaVersion || '1.3'),
+    user_id: null
+  };
+
+  const response = await fetch(`${supabaseUrl}/rest/v1/clinical_extractions`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': supabaseKey,
+      'Authorization': `Bearer ${supabaseKey}`,
+      'Prefer': 'return=minimal'
+    },
+    body: JSON.stringify(payload)
+  });
+
+  if (!response.ok) {
+    const errText = await response.text().catch(() => '(no body)');
+    throw new Error(`Supabase HTTP ${response.status}: ${errText}`);
+  }
+
+  console.log('[psee-supabase] clinical_extraction inserted | auditId=' + extractionId);
 }
