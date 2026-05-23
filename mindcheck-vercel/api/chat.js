@@ -54,7 +54,7 @@ const MAX_MODULES_PER_SESSION = 2;
 // Pour activer en production : passer à true et redéployer.
 // Pour rollback instantané : repasser à false et redéployer.
 // ============================================================================
-const USE_V13_PIPELINE = false;
+const USE_V13_PIPELINE = true;
 
 // -----------------------------
 // SYSTEM PROMPT
