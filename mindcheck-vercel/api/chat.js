@@ -12,6 +12,7 @@ import {
   PASSATION_FINALE_SYS,
   EXTRACTION_SYS,
   GENERATION_NARRATIVE_BTC_SYS,
+  GENERATION_NARRATIVE_BTB_SYS,
   buildCollectePrompt
 } from './systemPrompts.js';
 import { applyClinicalRules } from './ruleEngine.js';
@@ -1446,14 +1447,135 @@ Génère maintenant le bilan patient au format JSON décrit dans le system promp
   };
 }
 
+// ============================================================================
+// PIPELINE V1.3 BtB — buildBilanPayloadV13Btb (CBtB)
+// ============================================================================
+// Même pipeline séquentiel que buildBilanPayloadV13, mais génère le bilan
+// thérapeute avec GENERATION_NARRATIVE_BTB_SYS.
+// Sortie : JSON structuré BtB (synthese_clinique, axes, analyse_linguistique,
+//          processus_transdiagnostiques, pistes_exploration, passation_note).
+// Le format de sortie est différent du BtC — le rendu PDF BtB est distinct.
+// ============================================================================
+async function buildBilanPayloadV13Btb({ messages, state, axes, clinicalFlags }) {
+  const auditId = 'btb_' + Math.random().toString(36).slice(2, 10);
+
+  // --- ÉTAPE 1 : EXTRACTION CLINIQUE (identique au pipeline BtC) ---
+  const transcriptLines = messages
+    .filter(m => m.role === 'user' || m.role === 'assistant')
+    .map(m => `[${m.role === 'user' ? 'Patient' : 'Psee'}] ${m.content}`);
+
+  const sessionId = state.sessionId || 'unknown';
+  const turnCount = messages.filter(m => m.role === 'assistant').length;
+  const userMessageCount = messages.filter(m => m.role === 'user').length;
+  const moduleResults = state.moduleResults || [];
+  const moduleResultsBlock = moduleResults.length > 0
+    ? '\n\nRESULTATS PSYCHOMETRIQUES DEJA CALCULES :\n' + JSON.stringify(moduleResults, null, 2)
+    : '';
+
+  const extractionUserMessage = `TRANSCRIPT COMPLET DE LA SESSION PSEE
+
+Session ID : ${sessionId}
+Date : ${new Date().toISOString()}
+Tours total : ${turnCount}
+Messages utilisateur : ${userMessageCount}${moduleResultsBlock}
+
+TRANSCRIPT :
+
+${transcriptLines.join('\n\n')}
+
+---
+
+Produis maintenant le JSON clinique V1.3 conforme au schema decrit dans le system prompt. Aucun texte avant ni apres le JSON.`;
+
+  console.log('[psee-bilan-v13-btb] ' + JSON.stringify({ auditId, event: 'extraction_start' }));
+
+  let jsonV13;
+  try {
+    const extractionResult = await callSonnetJson(
+      EXTRACTION_SYS,
+      [{ role: 'user', content: extractionUserMessage }]
+    );
+    jsonV13 = extractionResult.parsed;
+  } catch (err) {
+    console.error('[psee-bilan-v13-btb] extraction failed:', err.message);
+    throw new Error('Pipeline V1.3 BtB - extraction échouée : ' + err.message);
+  }
+
+  // --- ÉTAPE 2 : RULE ENGINE ---
+  let jsonFull, jsonForNarrative, validation;
+  try {
+    const ruleResult = applyClinicalRules(jsonV13);
+    jsonFull = ruleResult.jsonFull;
+    jsonForNarrative = ruleResult.jsonForNarrative;
+    validation = ruleResult.validation;
+  } catch (err) {
+    console.error('[psee-bilan-v13-btb] rule engine failed:', err.message);
+    throw new Error('Pipeline V1.3 BtB - rule engine échoué : ' + err.message);
+  }
+
+  // Injection des scores BtC si disponibles (cohérence inter-bilans)
+  const btcScoresBlock = state.btcAxisScores
+    ? '\n\nSCORES DU BILAN BTC (même session — assurer la cohérence) :\n' + JSON.stringify(state.btcAxisScores, null, 2)
+    : '';
+
+  // --- ÉTAPE 3 : GÉNÉRATION NARRATIVE BTB ---
+  const narrativeUserMessage = `JSON CLINIQUE V1.3 (filtré pour génération bilan thérapeute) :
+
+${JSON.stringify(jsonForNarrative, null, 2)}${btcScoresBlock}
+
+---
+
+Génère maintenant le bilan thérapeute au format JSON décrit dans le system prompt. Aucun texte avant ni après le JSON.`;
+
+  console.log('[psee-bilan-v13-btb] ' + JSON.stringify({ auditId, event: 'narrative_start' }));
+
+  let narrative, narrativeRaw;
+  try {
+    const narrativeResult = await callHaikuJson(
+      GENERATION_NARRATIVE_BTB_SYS,
+      [{ role: 'user', content: narrativeUserMessage }]
+    );
+    narrative = narrativeResult.parsed;
+    narrativeRaw = narrativeResult.raw;
+  } catch (err) {
+    console.error('[psee-bilan-v13-btb] narrative failed:', err.message);
+    throw new Error('Pipeline V1.3 BtB - génération narrative échouée : ' + err.message);
+  }
+
+  console.log('[psee-bilan-v13-btb] ' + JSON.stringify({ auditId, event: 'complete' }));
+
+  // Stockage Supabase best-effort
+  insertClinicalExtraction({
+    extractionId: auditId,
+    sessionId,
+    jsonFull,
+    schemaVersion: jsonFull?.schema_version || '1.3'
+  }).catch(err => {
+    console.error('[psee-supabase-btb] insertion failed (non-blocking):', err.message);
+  });
+
+  return {
+    payload: narrative,
+    raw: narrativeRaw,
+    debug: {
+      pipeline: 'v13_btb_sequential',
+      auditId,
+      validationValid: validation.valid,
+      missingFields: validation.missing_fields
+    }
+  };
+}
+
 async function buildBilanPayload({ mode, messages, state, axes, clinicalFlags, ip }) {
   const isBtb = mode === 'bilan_btb';
 
-  // ROUTAGE PIPELINE V1.3 (Chantier 3) :
-  // Si le flag est actif ET qu'on génère un bilan BtC, on utilise le pipeline
-  // séquentiel V1.3. Le BtB et le cas flag=false gardent le pipeline classique.
+  // ROUTAGE PIPELINE V1.3 (Chantier 3 + CBtB) :
+  // Si le flag est actif, on utilise le pipeline séquentiel V1.3 pour BtC ET BtB.
   if (USE_V13_PIPELINE && !isBtb) {
     return buildBilanPayloadV13({ messages, state, axes, clinicalFlags });
+  }
+  if (USE_V13_PIPELINE && isBtb) {
+    return buildBilanPayloadV13Btb({ messages, state, axes, clinicalFlags });
   }
 
   const baseSystemPrompt = isBtb ? BILAN_BTB_SYS : BILAN_BTC_SYS;
