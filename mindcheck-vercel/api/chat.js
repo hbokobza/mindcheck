@@ -1,3 +1,4 @@
+// CBtB - 23 mai 2026
 // api/chat.js
 // Proxy securise vers l'API Anthropic pour PSEE
 // + detection de suspicion clinique
