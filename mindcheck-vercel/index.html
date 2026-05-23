@@ -1,3631 +1,1410 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="description" content="Le check-up psychique pour y voir plus clair. Un check-up en 15 minutes, sans engagement. Psee vous aide à savoir où vous en êtes et à savoir quoi faire ensuite.">
-<meta name="theme-color" content="#1F4D33">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<title>Psee — Le check-up psychique pour y voir plus clair</title>
-
-<!-- Canonical -->
-<link rel="canonical" href="https://psee.fr/">
-
-<!-- Open Graph -->
-<meta property="og:type" content="website">
-<meta property="og:locale" content="fr_FR">
-<meta property="og:site_name" content="Psee">
-<meta property="og:title" content="Psee — Le check-up psychique pour y voir plus clair">
-<meta property="og:description" content="Un véritable check-up en 15 minutes, sans engagement. Psee vous aide à comprendre où vous en êtes, et à savoir quoi faire ensuite, si nécessaire.">
-<meta property="og:url" content="https://psee.fr/">
-
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Psee — Le check-up psychique pour y voir plus clair">
-<meta name="twitter:description" content="Un véritable check-up en 15 minutes, sans engagement. Psee vous aide à comprendre où vous en êtes, et à savoir quoi faire ensuite, si nécessaire.">
+<meta charset="utf-8">
+<title>SuperPsy — Site complet v5</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
-
-<!-- Favicons et touch icons Psee — v2 (force iOS à refetch) -->
-<link rel="icon" type="image/x-icon" href="/assets/favicon-v2.ico">
-<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32-v2.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16-v2.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon-v2.png">
-<link rel="icon" type="image/png" sizes="192x192" href="/assets/android-chrome-192x192-v2.png">
-<link rel="icon" type="image/png" sizes="512x512" href="/assets/android-chrome-512x512-v2.png">
-<link rel="manifest" href="/assets/site-v2.json">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700&family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 
 <style>
-:root {
-  --psee-green-dark: #1F4D33;
-  --psee-green: #2F703F;
-  --psee-green-light: #89BF89;
-  --psee-orange: #F4A261;
-  --psee-coral: #E76F51;
-  --psee-cream: #F5F2EC;
-  --psee-cream-dark: #EBE6DB;
-  --psee-cream-light: #FAF7F1;
-  --psee-white: #FFFFFF;
-  --psee-black: #1A1A1A;
-  --psee-grey-medium: #6B6B68;
-  --psee-grey-light: #E5E2DC;
-
-  --section-image-height: 580px;
-
-  --font-display: 'Playfair Display', Georgia, serif;
-  --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-}
-
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-
-body {
-  font-family: var(--font-body);
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 1.6;
-  color: var(--psee-black);
-  background-color: var(--psee-cream);
-  overflow-x: hidden;
-}
-
-img, svg { max-width: 100%; display: block; }
-a { color: inherit; text-decoration: none; }
-
-/* NAVIGATION */
-.nav {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: rgba(245, 242, 236, 0.95);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--psee-grey-light);
-  padding: 16px 48px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.nav-logo a { display: flex; align-items: center; }
-
-.nav-logo-text {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 40px;
-  color: var(--psee-green-dark);
-  line-height: 1;
-  letter-spacing: -0.02em;
-}
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 32px;
-}
-
-.nav-link {
-  font-family: var(--font-body);
-  font-weight: 500;
-  font-size: 14px;
-  color: var(--psee-black);
-  transition: color 0.2s;
-}
-.nav-link:hover { color: var(--psee-green-dark); }
-
-.nav-cta {
-  background: var(--psee-green-dark);
-  color: var(--psee-white);
-  padding: 12px 24px;
-  border-radius: 28px;
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 14px;
-  transition: background 0.2s, transform 0.1s;
-}
-.nav-cta:hover { background: #163823; }
-.nav-cta:active { transform: translateY(1px); }
-
-/* HERO V6 — mockups iPhone à droite, texte à gauche */
-.hero {
-  position: relative;
-  min-height: 92vh;
-  display: grid;
-  grid-template-columns: minmax(440px, 0.85fr) 1.6fr; /* image plus large pour smartphones plus grands */
-  align-items: center;
-  background-color: var(--psee-cream);
-  overflow: hidden;
-  gap: 24px;
-  padding-right: 24px;
-}
-
-.hero-content-wrap {
-  padding: 80px 32px 80px 80px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  z-index: 2;
-}
-
-.hero-image-wrap {
-  position: relative;
-  height: 100%;
-  margin: 0;
-  border-radius: 24px;
-  background-color: var(--psee-cream);
-  background-image: url('assets/hero-smartphones.jpg');
-  background-size: 120%;
-  background-position: center center;
-  background-repeat: no-repeat;
-  overflow: hidden;
-}
-
-.hero-text { max-width: 100%; }
-
-.hero-eyebrow {
-  font-family: var(--font-body);
-  font-weight: 500;
-  font-size: 13px;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  color: var(--psee-green-dark);
-  margin-bottom: 24px;
-}
-
-.hero-title {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 60px;
-  line-height: 1.05;
-  color: var(--psee-green-dark);
-  margin-bottom: 28px;
-  letter-spacing: -0.02em;
-  text-wrap: balance;
-}
-
-.hero-title em { font-style: italic; font-weight: 500; }
-
-.hero-sub-emphasis {
-  font-weight: 600;
-  color: var(--psee-black);
-}
-
-.hero-sub {
-  font-family: var(--font-body);
-  font-weight: 400;
-  font-size: 18px;
-  line-height: 1.55;
-  color: var(--psee-black);
-  margin-bottom: 36px;
-  max-width: 520px;
-}
-
-.hero-cta-block {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  align-items: flex-start;
-}
-
-.btn-primary {
-  display: inline-block;
-  background: var(--psee-green-dark);
-  color: var(--psee-white);
-  padding: 18px 40px;
-  border-radius: 32px;
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 16px;
-  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
-  box-shadow: 0 4px 20px rgba(31, 77, 51, 0.18);
-  cursor: pointer;
-  border: none;
-  text-align: center;
-}
-.btn-primary:hover {
-  background: #163823;
-  box-shadow: 0 6px 24px rgba(31, 77, 51, 0.28);
-  transform: translateY(-1px);
-}
-.btn-primary:active { transform: translateY(1px); }
-
-.btn-primary-large {
-  width: 100%;
-  max-width: 420px;
-  padding: 22px 40px;
-  font-size: 17px;
-}
-
-/* PASTILLES desktop (4 colonnes cartes) */
-.hero-badges {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  max-width: 540px;
-  width: 100%;
-  margin-top: 8px;
-}
-
-.badge {
-  background: var(--psee-white);
-  border: 1px solid rgba(31, 77, 51, 0.12);
-  border-radius: 14px;
-  padding: 14px 12px;
-  text-align: center;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-.badge:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(31, 77, 51, 0.12);
-}
-
-.badge-icon { display: flex; justify-content: center; margin-bottom: 6px; }
-.badge-icon svg {
-  width: 22px;
-  height: 22px;
-  stroke: var(--psee-green-dark);
-  fill: none;
-  stroke-width: 1.8;
-}
-
-.badge-label {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 17px;
-  color: var(--psee-green-dark);
-  line-height: 1.1;
-  margin-bottom: 4px;
-}
-
-.badge-sub {
-  font-family: var(--font-body);
-  font-weight: 400;
-  font-size: 11px;
-  color: var(--psee-grey-medium);
-  letter-spacing: 0.2px;
-  line-height: 1.3;
-}
-
-/* PASTILLES mobile (1 ligne pillules) — créé via media query plus bas */
-
-/* HERO MOCKUPS - 3 téléphones à droite */
-/* HERO — image en background, texte calé à gauche */
-
-/* SECTION POURQUOI - V6 : photo prend plus de place, pas tronquée à droite */
-.section-pourquoi {
-  padding: 80px 80px 80px 80px;
-  background-color: var(--psee-cream);
-  background-image: url('assets/femme-canape.png');
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  position: relative;
-  min-height: var(--section-image-height);
-  display: flex;
-  align-items: center;
-}
-
-.pourquoi-content {
-  max-width: 540px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  position: relative;
-  z-index: 3;
-}
-
-.eyebrow {
-  font-family: var(--font-body);
-  font-weight: 500;
-  font-size: 13px;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  color: var(--psee-green-dark);
-  margin-bottom: 20px;
-}
-
-.section-title {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 44px;
-  line-height: 1.15;
-  color: var(--psee-green-dark);
-  margin-bottom: 28px;
-  letter-spacing: -0.01em;
-}
-
-.section-title em { font-style: italic; font-weight: 500; }
-
-.section-text {
-  font-family: var(--font-body);
-  font-size: 17px;
-  line-height: 1.7;
-  color: var(--psee-black);
-  margin-bottom: 18px;
-  max-width: 560px;
-}
-
-/* POURQUOI v2 — refonte avec questions, encart freins et closing */
-.section-text-lead {
-  font-size: 19px !important;
-  line-height: 1.55 !important;
-  color: var(--psee-black) !important;
-  margin-bottom: 36px !important;
-  font-weight: 400 !important;
-}
-
-.pourquoi-questions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 40px;
-  max-width: 560px;
-}
-.question-pill {
-  display: inline-flex;
-  align-items: center;
-  background: white;
-  border: 1px solid rgba(26,74,46,0.18);
-  color: var(--psee-green-dark);
-  font-family: var(--font-body);
-  font-size: 14px;
-  font-weight: 500;
-  padding: 10px 18px;
-  border-radius: 999px;
-  letter-spacing: 0.1px;
-  transition: background 0.2s, border-color 0.2s;
-  cursor: default;
-}
-.question-pill:hover {
-  background: rgba(26,74,46,0.04);
-  border-color: rgba(26,74,46,0.35);
-}
-
-.pourquoi-freins-box {
-  background: #FAF7F1;
-  border: 1px solid rgba(26,74,46,0.10);
-  border-left: 3px solid var(--psee-green-dark);
-  border-radius: 12px;
-  padding: 22px 26px;
-  margin-bottom: 32px;
-  max-width: 560px;
-}
-.freins-box-title {
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 14px;
-  color: var(--psee-green-dark);
-  margin: 0 0 12px;
-  letter-spacing: 0.2px;
-}
-.freins-box-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.freins-box-list li {
-  font-family: var(--font-body);
-  font-size: 15px;
-  line-height: 1.6;
-  color: var(--psee-black);
-  padding-left: 22px;
-  position: relative;
-  margin-bottom: 6px;
-}
-.freins-box-list li:last-child {
-  margin-bottom: 0;
-}
-.freins-box-list li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 10px;
-  width: 12px;
-  height: 1px;
-  background: var(--psee-green-dark);
-}
-
-.pourquoi-closing {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-style: italic;
-  font-size: 24px;
-  color: var(--psee-green-dark);
-  margin: 0;
-  letter-spacing: -0.2px;
-}
-.pourquoi-closing em {
-  font-style: italic;
-  font-weight: 700;
-}
-
-/* SECTION 6 AXES */
-.section-axes {
-  padding: 100px 48px;
-  background: var(--psee-cream-dark);
-}
-
-.section-axes-header {
-  text-align: center;
-  max-width: 720px;
-  margin: 0 auto 64px;
-}
-
-.section-axes-header .section-text {
-  margin: 0 auto;
-  text-align: center;
-  max-width: 560px;
-  word-break: keep-all;
-  overflow-wrap: normal;
-}
-
-.axes-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 16px;
-  max-width: 1280px;
-  margin: 0 auto;
-}
-
-.axe-card {
-  background: var(--psee-white);
-  border-radius: 14px;
-  padding: 24px 16px;
-  text-align: center;
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-.axe-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(31, 77, 51, 0.08);
-}
-
-.axe-icon {
-  width: 64px;
-  height: 64px;
-  margin: 0 auto 16px;
-}
-
-.axe-icon img { width: 100%; height: 100%; }
-
-.axe-verb {
-  font-family: var(--font-body);
-  font-weight: 500;
-  font-size: 10px;
-  letter-spacing: 1.8px;
-  text-transform: uppercase;
-  color: var(--psee-green);
-  margin-bottom: 8px;
-}
-
-.axe-name {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 17px;
-  line-height: 1.25;
-  color: var(--psee-green-dark);
-  margin-bottom: 8px;
-}
-
-.axe-desc {
-  font-family: var(--font-body);
-  font-size: 12px;
-  line-height: 1.5;
-  color: var(--psee-grey-medium);
-}
-
-/* SECTION COMMENT — photo main+phone en background, texte sur le dégradé à gauche */
-.section-comment {
-  padding: 80px 80px 80px 80px;
-  background-color: var(--psee-cream);
-  background-image: url('assets/main-phone.png');
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  position: relative;
-  min-height: var(--section-image-height);
-  display: flex;
-  align-items: center;
-}
-
-.comment-content {
-  max-width: 580px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  position: relative;
-  z-index: 3;
-}
-
-.comment-steps { list-style: none; margin-top: 28px; }
-
-.comment-step {
-  display: flex;
-  gap: 20px;
-  align-items: flex-start;
-  padding: 22px 0;
-  border-bottom: 1px solid var(--psee-grey-light);
-}
-.comment-step:last-child { border-bottom: none; }
-
-.step-num {
-  flex-shrink: 0;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--psee-green-dark);
-  color: var(--psee-white);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 17px;
-}
-
-.step-text strong {
-  display: block;
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 17px;
-  color: var(--psee-green-dark);
-  margin-bottom: 6px;
-}
-
-.step-text span {
-  font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--psee-grey-medium);
-  line-height: 1.55;
-}
-
-.comment-footer {
-  margin-top: 28px;
-  padding: 18px 22px;
-  background: var(--psee-cream-dark);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.comment-footer-icon {
-  flex-shrink: 0;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: var(--psee-green-dark);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.comment-footer-icon svg {
-  width: 18px;
-  height: 18px;
-  stroke: white;
-  fill: none;
-  stroke-width: 2;
-}
-
-.comment-footer-text strong {
-  display: block;
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 14px;
-  color: var(--psee-green-dark);
-  margin-bottom: 2px;
-}
-
-.comment-footer-text span {
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: var(--psee-grey-medium);
-  line-height: 1.5;
-}
-
-/* SECTION ORIENTATION V6 — SIMPLIFIÉE : photo + texte uniquement (pas de features) */
-.section-orientation {
-  padding: 0;
-  background: var(--psee-cream-dark);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: stretch;
-  min-height: var(--section-image-height);
-  overflow: hidden;
-}
-
-.orientation-image-wrap {
-  position: relative;
-  height: 100%;
-  min-height: var(--section-image-height);
-  overflow: hidden;
-  order: 1;
-}
-
-.orientation-image-wrap::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 40%;
-  height: 100%;
-  background: linear-gradient(to left, var(--psee-cream-dark) 0%, rgba(235, 230, 219, 0.4) 60%, transparent 100%);
-  z-index: 2;
-  pointer-events: none;
-}
-
-.orientation-image-wrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-}
-
-.orientation-content {
-  padding: 80px 80px 80px 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  max-width: 620px;
-  position: relative;
-  z-index: 3;
-  order: 2;
-}
-
-.orientation-content .section-text {
-  font-size: 16px;
-  margin-bottom: 18px;
-}
-
-/* SECTION CTA FINAL */
-.section-cta {
-  padding: 120px 48px;
-  background: var(--psee-cream);
-}
-
-.cta-content {
-  max-width: 720px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.cta-eyebrow {
-  font-family: var(--font-body);
-  font-weight: 500;
-  font-size: 13px;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  color: var(--psee-green);
-  margin-bottom: 20px;
-}
-
-.cta-title {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 56px;
-  line-height: 1.1;
-  color: var(--psee-green-dark);
-  margin-bottom: 36px;
-  letter-spacing: -0.02em;
-}
-
-.cta-title em { font-style: italic; font-weight: 500; }
-
-.cta-checklist {
-  background: var(--psee-cream-light);
-  border: 1px solid var(--psee-grey-light);
-  border-radius: 16px;
-  padding: 32px 40px;
-  margin: 0 auto 36px;
-  max-width: 540px;
-  text-align: left;
-  list-style: none;
-}
-
-.cta-checklist li {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 10px 0;
-  font-family: var(--font-body);
-  font-size: 16px;
-  color: var(--psee-black);
-}
-
-.cta-check {
-  flex-shrink: 0;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: var(--psee-green-dark);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.cta-check svg {
-  width: 13px;
-  height: 13px;
-  stroke: white;
-  fill: none;
-  stroke-width: 3;
-}
-
-.cta-sub-mention {
-  margin-top: 20px;
-  font-size: 13px;
-  color: var(--psee-grey-medium);
-  font-family: var(--font-body);
-}
-
-/* SECTION FAQ */
-.section-faq {
-  padding: 120px 48px;
-  background: var(--psee-cream-dark);
-}
-
-.faq-container {
-  max-width: 880px;
-  margin: 0 auto;
-}
-
-.faq-header {
-  text-align: center;
-  margin-bottom: 56px;
-}
-
-.faq-list {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.faq-item {
-  background: var(--psee-white);
-  border-radius: 14px;
-  border: 1px solid var(--psee-grey-light);
-  overflow: hidden;
-  transition: box-shadow 0.2s;
-}
-
-.faq-item[open] {
-  box-shadow: 0 4px 16px rgba(31, 77, 51, 0.08);
-}
-
-.faq-item summary {
-  list-style: none;
-  cursor: pointer;
-  padding: 22px 28px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px;
-  font-family: var(--font-body);
-  font-weight: 500;
-  font-size: 16px;
-  color: var(--psee-black);
-  transition: color 0.2s;
-}
-
-.faq-item summary::-webkit-details-marker { display: none; }
-.faq-item summary:hover { color: var(--psee-green-dark); }
-
-.faq-toggle {
-  width: 28px;
-  height: 28px;
-  flex-shrink: 0;
-  position: relative;
-}
-
-.faq-toggle::before,
-.faq-toggle::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 14px;
-  height: 2px;
-  background: var(--psee-green);
-  transform: translate(-50%, -50%);
-  transition: transform 0.3s ease;
-}
-
-.faq-toggle::after {
-  transform: translate(-50%, -50%) rotate(90deg);
-}
-
-.faq-item[open] .faq-toggle::after {
-  transform: translate(-50%, -50%) rotate(0deg);
-}
-
-.faq-content {
-  padding: 0 28px 24px;
-  font-family: var(--font-body);
-  font-size: 15px;
-  line-height: 1.7;
-  color: var(--psee-grey-medium);
-}
-
-.faq-content p { margin-bottom: 12px; }
-.faq-content p:last-child { margin-bottom: 0; }
-
-/* FOOTER */
-.footer {
-  background: var(--psee-green-dark);
-  color: var(--psee-white);
-  padding: 64px 48px 32px;
-}
-
-.footer-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 48px;
-  margin-bottom: 48px;
-}
-
-.footer-logo {
-  display: inline-block;
-  color: var(--psee-white);
-  margin-bottom: 20px;
-  line-height: 0;
-}
-
-.footer-logo svg {
-  height: 48px;
-  width: auto;
-  display: block;
-}
-
-.footer-brand p {
-  font-family: var(--font-body);
-  font-size: 14px;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.6);
-  max-width: 280px;
-  margin-bottom: 24px;
-}
-
-.footer-social { display: flex; gap: 12px; margin-top: 8px; }
-
-.social-link {
-  width: 40px;
-  height: 40px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s, border-color 0.2s, transform 0.2s;
-}
-
-.social-link:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.4);
-  transform: translateY(-2px);
-}
-
-.social-link svg {
-  width: 18px;
-  height: 18px;
-  fill: rgba(255, 255, 255, 0.7);
-  transition: fill 0.2s;
-}
-
-.social-link:hover svg { fill: var(--psee-white); }
-
-.footer-col h4 {
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 13px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  margin-bottom: 16px;
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.footer-col ul { list-style: none; }
-.footer-col li { margin-bottom: 10px; }
-
-.footer-col a {
-  font-family: var(--font-body);
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.6);
-  transition: color 0.2s;
-}
-.footer-col a:hover { color: var(--psee-white); }
-
-.footer-disclaimer {
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.4);
-  margin-top: 16px;
-  line-height: 1.5;
-}
-
-.footer-bottom {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding-top: 32px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.4);
-}
-
-/* RESPONSIVE TABLET */
-@media (max-width: 1280px) {
-  .axes-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
-  .axe-card { padding: 28px 20px; }
-  .axe-icon { width: 72px; height: 72px; }
-  .axe-name { font-size: 19px; }
-  .axe-desc { font-size: 13px; }
-}
-
-@media (max-width: 1024px) {
-  .hero { grid-template-columns: minmax(360px, 1fr) 1.2fr; gap: 24px; padding-right: 24px; }
-  .hero-title { font-size: 48px; }
-  .hero-content-wrap { padding: 60px 32px 60px 60px; }
-  .orientation-content { padding: 60px 40px; }
-  .section-pourquoi { padding: 60px 40px; }
-  .section-comment { padding: 60px 40px; }
-}
-
-/* ============================================================
-   RESPONSIVE MOBILE V6 — REFONTE APP-LIKE
-   ============================================================ */
-@media (max-width: 768px) {
-  .nav { padding: 14px 20px; }
-  .nav-logo-text { font-size: 30px; }
-  .nav-link { display: none; }
-  .nav-cta { padding: 10px 18px; font-size: 13px; }
-
-  /* HERO mobile — image en bandeau, texte juste après */
-  .hero {
-    grid-template-columns: 1fr;
-    min-height: auto;
-    gap: 0;
-    padding-right: 0;
+  :root {
+    --bone:    #F7F5EF;
+    --bone-2:  #EFEDE5;
+    --warm:    #FBF9F4;
+    --ink:     #0E0F12;
+    --ink-2:   #2A2A2E;
+    --muted:   #6B6B70;
+    --muted-2: #9A9A9F;
+    --orange:  #FF5C3C;
+    --line:    rgba(14,15,18,0.10);
+    --line-soft: rgba(14,15,18,0.06);
   }
-  .hero-image-wrap {
-    width: calc(100% - 16px);
-    height: 42vh;
-    margin: 8px 8px 0;
-    aspect-ratio: auto;
-    background-color: var(--psee-cream);
-    background-image: url('assets/hero-smartphones-mobile.jpg'); /* version 2-smartphones spécifique mobile */
-    background-position: center center;
-    background-size: 120%;
-    background-repeat: no-repeat;
-    order: 1;
-    border-radius: 20px;
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bone); }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
-  .hero-content-wrap {
-    padding: 16px 24px 24px;
-    background: var(--psee-cream);
-    order: 2;
-  }
-  .hero-text { max-width: 100%; }
-  .hero-eyebrow { font-size: 11px; letter-spacing: 2px; margin-bottom: 16px; }
-  .hero-title { font-size: 34px; line-height: 1.08; margin-bottom: 20px; }
-  .hero-sub { font-size: 14px; line-height: 1.25; margin-bottom: 24px; }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; cursor: pointer; }
+  img { display: block; }
 
-  /* CTA mobile pleine largeur app-like */
-  .hero-cta-block { width: 100%; gap: 16px; }
-  .hero-cta-block .btn-primary {
-    width: 100%;
-    padding: 17px 28px;
-    font-size: 16px;
-    border-radius: 28px;
+  /* ─── Wordmark ─── */
+  .wm {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 600; font-size: 34px; letter-spacing: -1.6px; line-height: 1;
+    font-variation-settings: "opsz" 32;
+    display: inline-flex; align-items: baseline;
   }
+  .wm.light { color: #FFFFFF; }
+  .wm.dark { color: var(--ink); }
+  .wm .dot { color: var(--orange); margin-left: 1px; }
 
-  /* PASTILLES MOBILE — 1 ligne pillules compactes (refonte V6) */
-  .hero-badges {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 6px;
-    max-width: 100%;
+  /* ════════════════════════════════════════════
+     01 HERO — photo full-bleed + stats intégrés
+     ════════════════════════════════════════════ */
+  .hero { position: relative; min-height: 100vh; overflow: hidden; isolation: isolate; color: #FFFFFF; display: flex; flex-direction: column; }
+  .hero-bg { position: absolute; inset: 0; z-index: -2; }
+  .hero-bg img { width: 100%; height: 100%; object-fit: cover; object-position: 28% center; }
+  .hero-bg::after {
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 75% 60% at 50% 50%, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.18) 55%, rgba(0,0,0,0.05) 100%),
+      linear-gradient(180deg, rgba(0,0,0,0.20) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0) 65%, rgba(0,0,0,0.45) 100%);
+    pointer-events: none; z-index: -1;
   }
-  .badge {
-    padding: 10px 4px 8px;
-    border-radius: 12px;
+  .nav {
+    max-width: 1440px; margin: 0 auto; padding: 28px 48px;
+    display: flex; align-items: center; justify-content: space-between; gap: 32px;
+    position: relative; z-index: 2; width: 100%;
   }
-  .badge-icon { margin-bottom: 4px; }
-  .badge-icon svg { width: 16px; height: 16px; stroke-width: 2; }
-  .badge-label { font-size: 13px; margin-bottom: 2px; }
-  .badge-sub { font-size: 9px; letter-spacing: 0; }
+  .nav .nav-left { display: flex; align-items: center; gap: 56px; }
+  .nav .links { display: flex; gap: 36px; font-size: 14px; color: rgba(255,255,255,0.9); font-weight: 500; }
+  .nav .links a { transition: color .15s; text-shadow: 0 1px 8px rgba(0,0,0,0.25); }
+  .nav .links a:hover { color: var(--orange); }
+  .nav .nav-right { display: flex; align-items: center; gap: 22px; }
+  .nav .connect { font-size: 14px; color: rgba(255,255,255,0.9); font-weight: 500; text-shadow: 0 1px 8px rgba(0,0,0,0.25); }
+  .nav .lang { font-size: 13px; color: rgba(255,255,255,0.75); letter-spacing: 0.3px; }
+  .cta-pill {
+    background: var(--orange); color: #FFFFFF; border: none;
+    padding: 12px 22px; border-radius: 999px;
+    font-weight: 600; font-size: 13.5px; letter-spacing: -0.1px;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: transform .15s, box-shadow .15s;
+    box-shadow: 0 8px 24px rgba(255,92,60,0.30);
+  }
+  .cta-pill:hover { transform: translateY(-1px); box-shadow: 0 12px 30px rgba(255,92,60,0.40); }
 
-  /* POURQUOI mobile — photo en haut, texte sur cream en-dessous */
-  .section-pourquoi {
-    background-image: none;
-    background-color: var(--psee-cream);
-    padding: 0;
-    flex-direction: column;
-    align-items: stretch;
-    min-height: auto;
-  }
-  .section-pourquoi::before {
-    content: '';
-    display: block;
-    height: 320px;
-    background-image: url('assets/femme-canape.png');
-    background-size: cover;
-    background-position: 70% center;
-    background-repeat: no-repeat;
-  }
-  .pourquoi-content {
-    padding: 32px 24px 56px;
-    max-width: 100%;
-  }
-
-  /* AXES mobile — scroll horizontal app-like */
-  .section-axes {
-    padding: 56px 0;
-  }
-  .section-axes-header {
-    padding: 0 24px;
-    margin-bottom: 32px;
-  }
-  .section-title { font-size: 28px; }
-  .axes-grid {
-    display: flex;
-    grid-template-columns: none;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    padding: 0 24px;
-    gap: 12px;
-    scroll-padding: 0 24px;
-  }
-  .axes-grid::-webkit-scrollbar { display: none; }
-  .axes-grid { scrollbar-width: none; }
-
-  .axe-card {
-    flex: 0 0 70%;
-    min-width: 220px;
-    padding: 24px 20px;
-    scroll-snap-align: start;
-  }
-  .axe-icon { width: 60px; height: 60px; margin-bottom: 14px; }
-  .axe-name { font-size: 16px; margin-bottom: 6px; }
-  .axe-verb { font-size: 9px; margin-bottom: 6px; }
-  .axe-desc { font-size: 12px; line-height: 1.2; }
-
-  /* COMMENT mobile — photo en haut, texte sur cream en-dessous */
-  .section-comment {
-    background-image: none;
-    background-color: var(--psee-cream);
-    padding: 0;
-    flex-direction: column;
-    align-items: stretch;
-    min-height: auto;
-  }
-  .section-comment::before {
-    content: '';
-    display: block;
-    height: 320px;
-    background-image: url('assets/main-phone.png');
-    background-size: cover;
-    background-position: 70% center;
-    background-repeat: no-repeat;
-  }
-  .comment-content {
-    padding: 32px 24px 56px;
-    max-width: 100%;
-  }
-
-  /* ORIENTATION mobile */
-  .section-orientation {
-    grid-template-columns: 1fr;
-    min-height: auto;
-  }
-  .orientation-image-wrap {
-    height: 320px;
-    min-height: 320px;
-    order: 1;
-  }
-  .orientation-image-wrap img {
-    object-position: center 30%;
-  }
-  .orientation-image-wrap::after {
-    width: 100%;
-    height: 30%;
-    top: auto;
-    bottom: 0;
-    right: 0;
-    background: linear-gradient(to top, var(--psee-cream-dark) 0%, rgba(235, 230, 219, 0.4) 70%, transparent 100%);
-  }
-  .orientation-content {
-    padding: 40px 24px 56px;
-    max-width: 100%;
-    order: 2;
-    margin-top: -28px;
-    background: var(--psee-cream-dark);
-    border-radius: 28px 28px 0 0;
-    position: relative;
-    z-index: 3;
-  }
-
-  /* CTA section mobile */
-  .section-cta { padding: 56px 24px; }
-  .cta-title { font-size: 32px; }
-  .cta-checklist { padding: 22px 22px; }
-  .cta-checklist li { font-size: 13px; line-height: 1.3; padding: 8px 0; gap: 14px; }
-  .cta-check { width: 22px; height: 22px; }
-  .cta-check svg { width: 11px; height: 11px; }
-  .btn-primary-large {
-    padding: 18px 28px;
-    font-size: 16px;
-    width: 100%;
-  }
-
-  /* TEXTES COURANTS — version mobile compactée (-1pt, interligne -20%) */
-  .section-text { font-size: 16px; line-height: 1.35; }
-  .cta-sub-mention { font-size: 12px; line-height: 1.3; }
-
-  /* FAQ mobile */
-  .section-faq { padding: 56px 24px; }
-  .faq-item summary { padding: 18px 22px; font-size: 15px; }
-  .faq-content { padding: 0 22px 20px; font-size: 13px; line-height: 1.2; }
-
-  /* FOOTER mobile */
-  .footer { padding: 48px 24px 24px; }
-  .footer-content {
-    grid-template-columns: 1fr;
-    gap: 32px;
-    margin-bottom: 32px;
-  }
-  .footer-bottom {
-    flex-direction: column;
-    gap: 12px;
+  .hero-content {
+    flex: 1; position: relative; z-index: 1;
+    max-width: 1440px; margin: 0 auto; width: 100%;
+    padding: 24px 280px 48px 48px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
     text-align: center;
-  }
-}
-
-@media (max-width: 480px) {
-  .hero-title { font-size: 30px; }
-  .section-title { font-size: 26px; }
-  .cta-title { font-size: 28px; }
-  .badge-label { font-size: 12px; }
-  .badge-sub { font-size: 8px; }
-}
-/* ========================================
-   PSEE — OVERRIDES (swap images + tailles)
-   ======================================== */
-
-/* HERO — femme en fond pleine largeur, texte par-dessus */
-.hero {
-  background-image: url('assets/femme-canape.png') !important;
-  background-size: cover !important;
-  background-position: right center !important;
-  background-repeat: no-repeat !important;
-}
-.hero-image-wrap {
-  background-image: none !important;
-  background-color: transparent !important;
-}
-
-/* SECTION POURQUOI desktop — smartphones centrés dans la moitié droite (scope desktop pour pas doubler sur mobile) */
-@media (min-width: 769px) {
-  .section-pourquoi {
-    background-image: url('assets/hero-smartphones.jpg') !important;
-    background-size: 62% !important;
-    background-position: right center !important;
-  }
-}
-
-/* LOGO — taille augmentée +2 pt */
-.nav-logo-text {
-  font-size: 42px !important;
-}
-
-/* DESKTOP — décale le texte vers la droite, colonne calibrée pour titre sur 3 lignes */
-@media (min-width: 1025px) {
-  .hero {
-    grid-template-columns: 1.4fr 1fr !important;
-  }
-  .hero-content-wrap {
-    padding-left: 200px !important;
-  }
-  /* Titre : grande typo (matchée au modèle) sur 3 lignes */
-  .hero-title {
-    font-size: 76px !important;
-  }
-  .btn-primary-large {
-    padding: 16px 36px !important;
-    font-size: 15px !important;
-    max-width: 320px !important;
-  }
-  .badge {
-    padding: 10px 8px !important;
-  }
-  .badge-label {
-    font-size: 15px !important;
-  }
-  .badge-sub {
-    font-size: 10px !important;
-  }
-}
-
-/* AÉRATION DES TITRES — interlignage augmenté sur tous les titres */
-.hero-title {
-  line-height: 1.2 !important;
-}
-.section-title {
-  line-height: 1.3 !important;
-}
-.cta-title {
-  line-height: 1.25 !important;
-}
-
-/* MOBILE — femme en banner haut (calée à gauche pour montrer la femme), 3 smartphones en banner haut de pourquoi */
-@media (max-width: 768px) {
-  /* Hero : on annule le fond pleine largeur, on remet l'image en banner */
-  .hero {
-    background-image: none !important;
-  }
-  .hero-image-wrap {
-    display: block !important;
-    width: 100% !important;
-    margin: 0 !important;
-    border-radius: 0 !important;
-    background-image: url('assets/femme-canape.png') !important;
-    background-size: cover !important;
-    background-position: 70% center !important;
-    background-color: transparent !important;
-  }
-  /* Section pourquoi : 3 smartphones (au lieu de la version 2 phones) en banner haut */
-  .section-pourquoi::before {
-    background-image: url('assets/hero-smartphones.jpg') !important;
-    background-size: cover !important;
-    background-position: center !important;
-  }
-  /* Logo mobile +2 pt */
-  .nav-logo-text {
-    font-size: 32px !important;
-  }
-  /* Titres mobile +2 pt et +0.1 d'interlignage */
-  .hero-title {
-    font-size: 36px !important;
-    line-height: 1.3 !important;
-  }
-  .section-title {
-    font-size: 30px !important;
-    line-height: 1.4 !important;
-  }
-  .cta-title {
-    line-height: 1.35 !important;
-  }
-}
-
-/* PETIT MOBILE — titres +2 pt aussi */
-@media (max-width: 480px) {
-  .hero-title {
-    font-size: 32px !important;
-  }
-  .section-title {
-    font-size: 28px !important;
-  }
-  .cta-title {
-    font-size: 30px !important;
-  }
-}
-
-/* IPHONE PAYSAGE — écrans larges mais courts (≤500px de haut)
-   Option C : layout compact, image plus petite, texte condensé */
-@media (min-width: 769px) and (max-height: 500px) and (orientation: landscape) {
-  /* HERO — grid compact, padding réduit, image en fond comme desktop */
-  .hero {
-    min-height: 100vh !important;
-    grid-template-columns: 1.2fr 1fr !important;
-    padding-right: 0 !important;
-    gap: 0 !important;
-    /* Image en fond du hero pour conserver le dégradé naturel à gauche
-       Décalée de 10% vers la gauche par rapport au desktop (right = 100%) */
-    background-image: url('assets/femme-canape.png') !important;
-    background-size: cover !important;
-    background-position: 95% center !important;
-    background-repeat: no-repeat !important;
-  }
-  .hero-content-wrap {
-    padding: 24px 24px 24px 40px !important;
-  }
-  /* hero-image-wrap : on désactive, l'image est sur .hero */
-  .hero-image-wrap {
-    display: none !important;
-  }
-  /* Tailles de typo compactes */
-  .hero-title {
-    font-size: 32px !important;
-    line-height: 1.15 !important;
-    margin-bottom: 12px !important;
-  }
-  .hero-subtitle, .hero-text p {
-    font-size: 14px !important;
-    line-height: 1.45 !important;
   }
   .eyebrow {
-    font-size: 11px !important;
-    margin-bottom: 8px !important;
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+    color: #FFFFFF; font-weight: 600;
+    padding: 9px 16px 9px 14px;
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.20);
+    border-radius: 999px; margin-bottom: 28px;
   }
-  .btn-primary-large {
-    padding: 12px 24px !important;
-    font-size: 14px !important;
-    margin-top: 16px !important;
-  }
-  /* Badges plus petits */
-  .badge {
-    padding: 6px 8px !important;
-  }
-  .badge-label {
-    font-size: 12px !important;
-  }
-  .badge-sub {
-    font-size: 9px !important;
-  }
-  /* SECTION POURQUOI — smartphones à droite plus petits, padding réduit */
-  .section-pourquoi {
-    padding: 40px 40px 40px 40px !important;
-    min-height: auto !important;
-    background-image: url('assets/hero-smartphones.jpg') !important;
-    background-size: 50% !important;
-    background-position: right center !important;
-  }
-  .section-pourquoi::before {
-    display: none !important;
-  }
-  .pourquoi-content {
-    max-width: 50% !important;
-  }
-  .section-title {
-    font-size: 28px !important;
-    line-height: 1.2 !important;
-  }
-  .cta-title {
-    font-size: 28px !important;
-  }
-}
+  .eyebrow::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--orange); box-shadow: 0 0 12px var(--orange); }
 
-/* PICTOS SOBRES — universel (desktop / paysage iPhone / mobile portrait)
-   Position : entre le titre et le sous-titre via order CSS
-   Style : icône fine + chiffre Playfair italique + légende, séparateurs verticaux */
-@media (min-width: 320px) {
-  /* Reordonne hero-text en flex column pour pouvoir placer les badges entre titre et sous-titre */
-  .hero-text {
-    display: flex !important;
-    flex-direction: column !important;
+  h1.headline {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: clamp(56px, 8.5vw, 124px);
+    line-height: 0.92; letter-spacing: -0.045em; font-weight: 500;
+    margin: 0; color: #FFFFFF; font-variation-settings: "opsz" 96;
+    max-width: 1200px; text-wrap: balance;
+    text-shadow: 0 2px 24px rgba(0,0,0,0.20);
   }
-  .hero-text .hero-eyebrow { order: 1 !important; }
-  .hero-text .hero-title { order: 2 !important; }
-  /* Badges remontent entre titre et sous-titre */
-  .hero-text .hero-cta-block .hero-badges { order: 3 !important; }
-  .hero-text .hero-sub { order: 4 !important; }
-  /* CTA en bas */
-  .hero-text .hero-cta-block .btn-primary { order: 5 !important; }
+  h1.headline em {
+    font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400;
+    color: var(--orange); letter-spacing: -0.035em; display: inline-block; margin-top: 6px;
+  }
+  .lede {
+    font-family: 'Inter', sans-serif;
+    font-size: 17px; line-height: 1.5;
+    color: rgba(255,255,255,0.88);
+    max-width: 600px; margin: 24px auto 0;
+    text-shadow: 0 1px 12px rgba(0,0,0,0.30);
+  }
+  .lede strong { color: #FFFFFF; font-weight: 600; }
+  .ctas { display: flex; align-items: center; gap: 22px; margin-top: 36px; flex-wrap: wrap; justify-content: center; }
+  .cta-primary {
+    background: var(--orange); color: #FFFFFF; border: none;
+    padding: 18px 32px; border-radius: 999px;
+    font-family: 'Inter', sans-serif; font-weight: 600; font-size: 15.5px;
+    letter-spacing: -0.1px; display: inline-flex; align-items: center; gap: 12px;
+    box-shadow: 0 14px 36px rgba(255,92,60,0.35);
+    transition: transform .15s, box-shadow .15s;
+  }
+  .cta-primary::after { content: '→'; font-size: 18px; transition: transform .15s; }
+  .cta-primary:hover { transform: translateY(-1px); box-shadow: 0 18px 44px rgba(255,92,60,0.42); }
+  .cta-primary:hover::after { transform: translateX(4px); }
+  .cta-ghost {
+    font-family: 'Inter', sans-serif; color: #FFFFFF; font-size: 14px; font-weight: 500;
+    display: inline-flex; align-items: center; gap: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.35);
+    padding-bottom: 3px; text-shadow: 0 1px 8px rgba(0,0,0,0.25);
+  }
+  .cta-ghost:hover { color: var(--orange); border-color: var(--orange); }
 
-  /* Le hero-cta-block contient CTA + badges, on le rend transparent pour que
-     ses enfants se positionnent dans l'ordre du parent .hero-text */
-  .hero-text .hero-cta-block {
-    display: contents !important;
+  /* Stats intégrées au hero — colonne verticale à droite */
+  .hero-stats {
+    position: absolute;
+    right: 32px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    display: flex; flex-direction: column; gap: 10px;
+    width: 230px;
+  }
+  .hero-stat {
+    background: rgba(247,245,239,0.92);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255,255,255,0.5);
+    border-radius: 14px;
+    padding: 13px 14px 13px 12px;
+    display: flex; align-items: center; gap: 12px;
+    box-shadow: 0 8px 24px rgba(14,15,18,0.18);
+    transition: transform .15s, background .15s;
+  }
+  .hero-stat:hover { transform: translateX(-3px); background: rgba(247,245,239,0.98); }
+  .hero-stat .ico {
+    width: 34px; height: 34px; border-radius: 9px;
+    background: rgba(255,92,60,0.14); color: var(--orange);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .hero-stat .text { display: flex; flex-direction: column; line-height: 1; }
+  .hero-stat .v {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 22px; font-weight: 500; line-height: 1;
+    color: var(--ink); letter-spacing: -0.5px;
+  }
+  .hero-stat .v em {
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    color: var(--orange); font-weight: 400; margin-right: 1px;
+  }
+  .hero-stat .v .u { font-size: 13px; color: var(--muted); margin-left: 2px; font-weight: 400; }
+  .hero-stat .k {
+    font-family: 'Inter', sans-serif;
+    font-size: 10.5px; color: var(--muted);
+    letter-spacing: 0.2px; line-height: 1.3;
+    margin-top: 4px;
   }
 
-  /* Restyle des badges : ligne horizontale, sans cadre, séparés par traits verticaux */
-  .hero-badges {
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    justify-content: flex-start !important;
-    align-items: stretch !important;
-    gap: 0 !important;
-    margin: 22px 0 26px !important;
-    padding: 0 !important;
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    max-width: 540px !important;
-    width: 100% !important;
-  }
-  .hero-badges .badge {
-    flex: 1 1 0 !important;
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 0 12px !important;
-    border-right: 1px solid rgba(26,74,46,0.18) !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-    gap: 6px !important;
-    text-align: center !important;
-  }
-  .hero-badges .badge:hover {
-    transform: none !important;
-    box-shadow: none !important;
-  }
-  .hero-badges .badge:last-child {
-    border-right: none !important;
-  }
-  .hero-badges .badge-icon {
-    width: 24px !important;
-    height: 24px !important;
-    background: transparent !important;
-    color: #1A4A2E !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    border: none !important;
-  }
-  .hero-badges .badge-icon svg {
-    width: 24px !important;
-    height: 24px !important;
-    stroke: #1A4A2E !important;
-    stroke-width: 1.6 !important;
-  }
-  .hero-badges .badge-label {
-    font-family: 'Playfair Display', Georgia, serif !important;
-    font-style: italic !important;
-    font-weight: 700 !important;
-    font-size: 19px !important;
-    color: #1A4A2E !important;
-    line-height: 1.1 !important;
-    margin: 0 !important;
-  }
-  .hero-badges .badge-sub {
-    font-size: 11px !important;
-    color: #6B6B68 !important;
-    font-weight: 400 !important;
-    line-height: 1.3 !important;
-    margin: 0 !important;
-  }
-}
+  /* ════════════════════════════════════════════
+     SECTION — generic
+     ════════════════════════════════════════════ */
+  .section { padding: 110px 48px; min-height: 100vh; display: flex; align-items: center; }
+  .section.compact { padding: 100px 48px; }
+  .section-inner { max-width: 1320px; margin: 0 auto; width: 100%; }
 
-/* MOBILE PORTRAIT (<=768px) — pictos un peu plus compacts */
-@media (max-width: 768px) {
-  .hero-badges {
-    margin: 18px 0 22px !important;
-  }
-  .hero-badges .badge {
-    padding: 0 8px !important;
-    gap: 6px !important;
-  }
-  .hero-badges .badge-icon,
-  .hero-badges .badge-icon svg {
-    width: 22px !important;
-    height: 22px !important;
-  }
-  .hero-badges .badge-label {
-    font-size: 17px !important;
-  }
-  .hero-badges .badge-sub {
-    font-size: 10px !important;
-  }
-  /* POURQUOI v2 — adaptations mobile */
-  .section-text-lead {
-    font-size: 16px !important;
-    margin-bottom: 28px !important;
-  }
-  .pourquoi-questions {
-    gap: 8px;
-    margin-bottom: 28px;
-  }
-  .question-pill {
-    font-size: 13px;
-    padding: 8px 14px;
-  }
-  .pourquoi-freins-box {
-    padding: 18px 20px;
+  .sec-eyebrow {
+    display: inline-flex; align-items: center; gap: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px; letter-spacing: 2.4px; text-transform: uppercase;
+    color: var(--orange); font-weight: 600;
     margin-bottom: 24px;
   }
-  .freins-box-title {
-    font-size: 13px;
-    margin-bottom: 10px;
-  }
-  .freins-box-list li {
-    font-size: 14px;
-  }
-  .pourquoi-closing {
-    font-size: 20px;
-  }
-}
+  .sec-eyebrow::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--orange); }
 
-/* PAYSAGE iPhone — pictos très compacts */
-@media (min-width: 769px) and (max-height: 500px) and (orientation: landscape) {
-  .hero-badges {
-    margin: 12px 0 14px !important;
-    max-width: 380px !important;
+  .sec-h2 {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: clamp(48px, 6vw, 88px);
+    line-height: 0.96; letter-spacing: -0.04em; font-weight: 500;
+    margin: 0; color: var(--ink); font-variation-settings: "opsz" 96;
+    text-wrap: balance;
   }
-  .hero-badges .badge {
-    padding: 0 8px !important;
-    gap: 4px !important;
+  .sec-h2 em {
+    font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400;
+    color: var(--orange); letter-spacing: -0.03em;
   }
-  .hero-badges .badge-icon,
-  .hero-badges .badge-icon svg {
-    width: 18px !important;
-    height: 18px !important;
+  .sec-lede {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px; line-height: 1.55; color: var(--muted);
+    margin: 22px 0 0; max-width: 680px;
   }
-  .hero-badges .badge-label {
-    font-size: 14px !important;
-  }
-  .hero-badges .badge-sub {
-    font-size: 9px !important;
-  }
-}
 
-/* SECTION NORMALISATION — entre Hero et Pourquoi Psee
-   Argument culturel : "on fait des bilans pour le corps, pour le psychique on n'y pense pas"
-   Layout 2 colonnes desktop : texte à gauche (avec padding), photo à droite calée bord à bord */
-.section-normalisation {
-  background-color: #FAF7F1;
-  padding: 0;
-  border-top: 1px solid rgba(26,74,46,0.06);
-  border-bottom: 1px solid rgba(26,74,46,0.06);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: stretch;
-  width: 100%;
-  max-width: none;
-  margin: 0;
-}
-.normalisation-content {
-  text-align: left;
-  padding: 100px 40px 100px 80px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  max-width: 720px;
-  margin-left: auto;
-}
-.normalisation-photo {
-  display: block;
-  position: relative;
-  overflow: hidden;
-  min-height: 100%;
-}
-.normalisation-photo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  display: block;
-  border-radius: 0;
-  box-shadow: none;
-}
-.normalisation-title {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-weight: 700;
-  font-size: 44px;
-  line-height: 1.25;
-  color: #1A4A2E;
-  letter-spacing: -0.5px;
-  margin-bottom: 24px;
-}
-.normalisation-title em {
-  font-style: italic;
-  font-weight: 700;
-  color: #1A4A2E;
-}
-.normalisation-sub {
-  font-family: 'DM Sans', sans-serif;
-  font-weight: 400;
-  font-size: 17px;
-  line-height: 1.65;
-  color: #1A1A18;
-  margin: 0 0 48px;
-}
-
-/* 3 freins concrets sous la sous-accroche */
-.normalisation-freins {
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 40px;
-  margin-top: 16px;
-}
-.frein {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 12px;
-  max-width: 220px;
-}
-.frein-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: rgba(26,74,46,0.08);
-  color: #1A4A2E;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.frein-icon svg {
-  width: 22px;
-  height: 22px;
-}
-.frein-text {
-  font-family: 'DM Sans', sans-serif;
-  font-weight: 500;
-  font-size: 14px;
-  color: #6B6B68;
-  line-height: 1.4;
-  margin: 0;
-}
-
-/* MOBILE PORTRAIT (<=768px) */
-@media (max-width: 768px) {
-  .section-normalisation {
-    grid-template-columns: 1fr;
+  /* ════════════════════════════════════════════
+     02 POURQUOI — 3 cartes avec photos
+     ════════════════════════════════════════════ */
+  .pourquoi { background: var(--bone); }
+  .pourquoi-head { max-width: 980px; margin-bottom: 56px; }
+  .pourquoi-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
   }
-  /* Photo en bandeau au-dessus, hauteur limitée */
-  .normalisation-photo {
-    order: 1;
-    min-height: auto;
-    height: 220px;
+  .point-card {
+    background: #FFFFFF; border: 1px solid var(--line);
+    border-radius: 24px; padding: 0;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    transition: transform .2s, border-color .15s;
   }
-  .normalisation-photo img {
-    height: 100%;
-    object-position: center;
+  .point-card:hover { transform: translateY(-4px); border-color: rgba(255,92,60,0.35); }
+  .point-card .photo {
+    position: relative;
+    height: 200px; overflow: hidden;
+    background: var(--bone-2);
   }
-  .normalisation-content {
-    order: 2;
-    padding: 50px 24px;
-    max-width: 100%;
+  .point-card .photo img { width: 100%; height: 100%; object-fit: cover; }
+  .point-card .photo .n {
+    position: absolute; bottom: -8px; right: 20px;
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    font-size: 110px; font-weight: 400;
+    color: #FFFFFF; line-height: 1; letter-spacing: -3px;
+    text-shadow: 0 4px 24px rgba(0,0,0,0.25);
+  }
+  .point-card .text-block {
+    padding: 32px 30px 32px;
+    display: flex; flex-direction: column; gap: 14px; flex: 1;
+  }
+  .point-card .lead {
+    font-family: 'Inter', sans-serif;
+    font-size: 14.5px; color: var(--muted); line-height: 1.55;
     margin: 0;
+  }
+  .point-card .body {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 24px; font-weight: 500; line-height: 1.25;
+    color: var(--ink); letter-spacing: -0.4px;
+    margin: auto 0 0;
+  }
+  .point-card .body em {
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    color: var(--orange); font-weight: 400;
+  }
+
+  /* ════════════════════════════════════════════
+     03 COMMENT ÇA MARCHE — 3 colonnes, 1 viewport
+     ════════════════════════════════════════════ */
+  .comment { background: var(--warm); }
+  .comment-head { max-width: 920px; margin-bottom: 48px; }
+  .steps-row {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px;
+    align-items: stretch;
+  }
+  .step-col {
+    display: flex; flex-direction: column; gap: 24px;
+    align-items: center;
     text-align: center;
-    align-items: center;
   }
-  .normalisation-title {
-    font-size: 28px;
-    line-height: 1.3;
-    margin-bottom: 18px;
+  .step-col .step-phone { display: flex; justify-content: center; }
+  .step-col .step-meta-block { max-width: 320px; }
+  .step-col .step-num {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    font-size: 32px; color: var(--orange); line-height: 1;
+    margin-bottom: 6px;
   }
-  .normalisation-sub {
-    font-size: 15px;
-    line-height: 1.6;
-    margin-bottom: 36px;
+  .step-col .step-num::before {
+    content: ''; width: 28px; height: 1px; background: var(--orange); opacity: 0.6;
   }
-  /* Freins : 1 colonne empilée verticalement sur mobile */
-  .normalisation-freins {
-    flex-direction: column;
-    gap: 24px;
-    align-items: center;
-    width: 100%;
+  .step-col .step-num::after {
+    content: ''; width: 28px; height: 1px; background: var(--orange); opacity: 0.6;
   }
-  .frein {
-    flex-direction: row;
-    gap: 14px;
-    max-width: 320px;
-    align-items: center;
-    text-align: left;
+  .step-col .step-h3 {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 24px; font-weight: 500; line-height: 1.1;
+    letter-spacing: -0.5px; color: var(--ink); margin: 0 0 10px;
   }
-  .frein-icon {
-    width: 36px;
-    height: 36px;
+  .step-col .step-h3 em {
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    color: var(--orange); font-weight: 400;
+  }
+  .step-col .step-desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 14.5px; line-height: 1.55; color: var(--muted);
+    margin: 0;
+  }
+
+  /* Phone mini frame */
+  .phone-mini {
+    width: 260px; height: 540px;
+    background: #0E0F12;
+    border-radius: 38px; padding: 10px;
+    box-shadow: 0 30px 60px rgba(14,15,18,0.18), 0 8px 16px rgba(14,15,18,0.08);
+    position: relative;
+  }
+  .phone-mini::after {
+    content: '';
+    position: absolute; top: 18px; left: 50%; transform: translateX(-50%);
+    width: 86px; height: 22px; background: #0E0F12;
+    border-radius: 12px; z-index: 2;
+  }
+  .phone-mini .screen {
+    width: 100%; height: 100%; background: var(--bone);
+    border-radius: 30px; overflow: hidden; position: relative;
+    display: flex; flex-direction: column;
+  }
+  .phone-mini .status {
+    height: 46px; padding: 16px 22px 0;
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: 'Inter', sans-serif; font-size: 10.5px; font-weight: 600; color: var(--ink);
+  }
+
+  /* Phone 1 — chat */
+  .scr-chat { padding: 6px 16px 16px; display: flex; flex-direction: column; flex: 1; gap: 0; }
+  .scr-chat .top {
+    padding: 8px 4px 12px; display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .scr-chat .top .lab {
+    font-family: 'Inter', sans-serif; font-size: 10px;
+    letter-spacing: 1.4px; text-transform: uppercase;
+    color: var(--orange); font-weight: 600;
+  }
+  .scr-chat .top .pr {
+    font-family: 'Inter', sans-serif; font-size: 10px;
+    color: var(--muted); font-weight: 500;
+  }
+  .scr-chat .stream {
+    flex: 1; display: flex; flex-direction: column; gap: 8px;
+    padding: 14px 0 0;
+  }
+  .chat-msg { display: flex; gap: 7px; align-items: flex-end; }
+  .chat-msg.u { flex-direction: row-reverse; }
+  .chat-msg .av {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: rgba(255,92,60,0.15); color: var(--orange);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    font-size: 11px; font-weight: 400;
     flex-shrink: 0;
   }
-  .frein-icon svg {
-    width: 18px;
-    height: 18px;
+  .chat-msg.u .av { background: var(--ink); color: #FFFFFF; font-family: 'Inter', sans-serif; font-style: normal; font-size: 9.5px; font-weight: 600; }
+  .chat-msg .bub {
+    font-family: 'Inter', sans-serif;
+    font-size: 11.5px; line-height: 1.4;
+    padding: 8px 11px; border-radius: 12px;
+    max-width: 165px;
+    text-align: left;
   }
-  .frein-text {
-    font-size: 14px;
-    flex: 1;
+  .chat-msg.ai .bub {
+    background: #FFFFFF; border: 1px solid var(--line-soft);
+    color: var(--ink); border-bottom-left-radius: 4px;
   }
-}
-
-/* PAYSAGE iPhone */
-@media (min-width: 769px) and (max-height: 500px) and (orientation: landscape) {
-  .section-normalisation {
-    grid-template-columns: 1fr 1fr;
+  .chat-msg.u .bub {
+    background: var(--orange); color: #FFFFFF;
+    border-bottom-right-radius: 4px;
   }
-  .normalisation-content {
-    padding: 50px 30px 50px 60px;
+  .chat-msg .bub em { font-family: 'Instrument Serif', serif; font-style: italic; }
+  .scr-chat .typing {
+    display: flex; gap: 4px; padding: 8px 11px;
+    background: #FFFFFF; border: 1px solid var(--line-soft);
+    border-radius: 12px; border-bottom-left-radius: 4px;
+    width: fit-content;
   }
-  .normalisation-title {
-    font-size: 26px;
-    margin-bottom: 14px;
+  .scr-chat .typing span {
+    width: 4px; height: 4px; border-radius: 50%; background: var(--muted-2);
+    animation: typing 1.4s infinite;
   }
-  .normalisation-sub {
-    font-size: 14px;
-    margin-bottom: 24px;
+  .scr-chat .typing span:nth-child(2) { animation-delay: .2s; }
+  .scr-chat .typing span:nth-child(3) { animation-delay: .4s; }
+  @keyframes typing {
+    0%, 60%, 100% { opacity: 0.3; }
+    30% { opacity: 1; }
   }
-  /* Freins : reste en ligne mais plus compact */
-  .normalisation-freins {
-    gap: 24px;
+  .scr-chat .input {
+    margin-top: 12px;
+    background: #FFFFFF; border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 9px 9px 9px 14px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: 'Inter', sans-serif; font-size: 11px; color: var(--muted-2);
   }
-  .frein {
-    max-width: 160px;
-  }
-  .frein-icon {
-    width: 34px;
-    height: 34px;
-  }
-  .frein-icon svg {
-    width: 17px;
-    height: 17px;
-  }
-  .frein-text {
+  .scr-chat .input .send {
+    width: 26px; height: 26px; border-radius: 50%; background: var(--orange);
+    color: #fff; display: flex; align-items: center; justify-content: center;
     font-size: 12px;
   }
-}
 
-/* =============================================
-   SECTION POURQUOI V2 — illustration tête + texte
-   ============================================= */
-.section-pourquoi-v2 {
-  padding: 80px 80px;
-  background-color: var(--psee-cream);
-}
-.pourquoi-v2-grid {
-  display: grid;
-  grid-template-columns: 380px 1fr;
-  gap: 64px;
-  align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-.pourquoi-v2-illus {
-  width: 100%;
-  aspect-ratio: 3 / 4;
-  background-image: url('assets/tete-brouillee.png');
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-.pourquoi-v2-text {
-  max-width: 580px;
-}
-.pourquoi-v2-text .section-title {
-  font-size: 36px;
-  margin-bottom: 24px;
-}
-.pourquoi-v2-text .section-text {
-  font-size: 17px;
-  line-height: 1.65;
-  margin-bottom: 0;
-}
-.pourquoi-v2-symptomes {
-  margin-bottom: 16px !important;
-}
-.pourquoi-v2-bold {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-style: italic;
-  font-size: 19px;
-  line-height: 1.5;
-  color: var(--psee-green-dark);
-  margin: 0;
-  letter-spacing: -0.1px;
-}
-.pourquoi-v2-sep {
-  border: 0;
-  border-top: 1px solid rgba(31, 77, 51, 0.18);
-  margin: 28px 0;
-  max-width: 460px;
-}
-
-/* =============================================
-   SECTION ETAPES — Comment ça marche
-   ============================================= */
-.section-etapes {
-  padding: 88px 40px 96px;
-  background-color: var(--psee-cream);
-  border-top: 1px solid rgba(31, 77, 51, 0.08);
-}
-.etapes-header {
-  text-align: center;
-  margin-bottom: 56px;
-}
-.etapes-eyebrow {
-  font-family: var(--font-body);
-  font-weight: 500;
-  font-size: 13px;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  color: var(--psee-green-dark);
-  margin: 0 0 10px;
-}
-.etapes-title {
-  font-family: var(--font-body);
-  font-weight: 500;
-  font-size: 14px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--psee-green-dark);
-  margin: 0;
-}
-.etapes-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 32px;
-  max-width: 1100px;
-  margin: 0 auto 56px;
-  align-items: start;
-  position: relative;
-}
-.etapes-grid::before,
-.etapes-grid::after {
-  content: "›";
-  position: absolute;
-  top: 56px;
-  font-family: var(--font-display);
-  font-size: 30px;
-  color: var(--psee-green-dark);
-  opacity: 0.35;
-  pointer-events: none;
-}
-.etapes-grid::before { left: 33.33%; transform: translateX(-50%); }
-.etapes-grid::after  { left: 66.66%; transform: translateX(-50%); }
-
-.etape {
-  text-align: center;
-  padding: 0 12px;
-}
-.etape-num {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: var(--psee-green-dark);
-  color: var(--psee-cream);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-body);
-  font-weight: 500;
-  font-size: 15px;
-  margin: 0 auto 16px;
-}
-.etape-icon {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: var(--psee-cream-light);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 20px;
-  color: var(--psee-green);
-}
-.etape-icon svg { width: 24px; height: 24px; }
-.etape-titre {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-style: italic;
-  font-size: 21px;
-  line-height: 1.3;
-  color: var(--psee-green-dark);
-  margin: 0 0 12px;
-  letter-spacing: -0.2px;
-}
-.etape-desc {
-  font-family: var(--font-body);
-  font-size: 15px;
-  line-height: 1.55;
-  color: var(--psee-grey-medium);
-  margin: 0;
-  padding: 0 8px;
-}
-.etapes-footer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
-}
-.etapes-rappel {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  background: var(--psee-cream-light);
-  padding: 12px 22px;
-  border-radius: 999px;
-  font-family: var(--font-body);
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--psee-green-dark);
-}
-.etapes-rappel svg {
-  width: 16px;
-  height: 16px;
-  color: var(--psee-green);
-}
-.section-etapes .btn-primary {
-  padding: 16px 36px;
-  font-size: 15px;
-}
-
-/* =============================================
-   RESPONSIVE — mobile et paysage iPhone
-   ============================================= */
-@media (max-width: 1024px) {
-  .pourquoi-v2-grid { grid-template-columns: 320px 1fr; gap: 48px; }
-  .pourquoi-v2-text .section-title { font-size: 32px; }
-}
-@media (max-width: 768px) {
-  .section-pourquoi-v2 { padding: 56px 24px; }
-  .pourquoi-v2-grid {
-    grid-template-columns: 1fr;
-    gap: 28px;
+  /* Phone 2 — bilan textuel */
+  .scr-bilan { padding: 6px 16px 16px; display: flex; flex-direction: column; flex: 1; gap: 12px; }
+  .scr-bilan .top {
+    padding: 8px 4px 0; display: flex; justify-content: space-between; align-items: center;
   }
-  .pourquoi-v2-illus {
-    max-width: 240px;
-    aspect-ratio: 3 / 4;
-    margin: 0 auto;
+  .scr-bilan .top .lab {
+    font-family: 'Inter', sans-serif; font-size: 10px;
+    letter-spacing: 1.4px; text-transform: uppercase;
+    color: var(--orange); font-weight: 600;
   }
-  .pourquoi-v2-text { max-width: 100%; }
-  .pourquoi-v2-text .section-title { font-size: 26px; }
-  .pourquoi-v2-bold { font-size: 17px; }
-  .pourquoi-v2-sep { margin: 22px 0; }
-
-  .section-etapes { padding: 56px 24px 64px; }
-  .etapes-header { margin-bottom: 36px; }
-  .etapes-title { font-size: 13px; letter-spacing: 2.5px; }
-  .etapes-grid {
-    grid-template-columns: 1fr;
-    gap: 32px;
-    margin-bottom: 36px;
+  .scr-bilan .top .badge {
+    background: var(--ink); color: #fff; font-family: 'Inter', sans-serif;
+    font-size: 9.5px; letter-spacing: 0.7px; padding: 4px 8px;
+    border-radius: 999px; font-weight: 600;
   }
-  .etapes-grid::before,
-  .etapes-grid::after { display: none; }
-  .etape { padding: 0; }
-  .etape-titre { font-size: 19px; }
-  .etape-desc { font-size: 14px; }
-}
-
-
-/* =============================================
-   TYPO UNIFIÉE — échelle à 7 rôles
-   Source unique de vérité, en fin de fichier pour
-   prévaloir sur les déclarations historiques.
-   ============================================= */
-
-/* Variables d'échelle (référence) */
-:root {
-  --type-h1-desktop: 72px;
-  --type-h2-desktop: 44px;
-  --type-h3-desktop: 24px;
-  --type-lead-desktop: 20px;
-  --type-body-desktop: 17px;
-  --type-caption-desktop: 14px;
-  --type-eyebrow: 13px;
-
-  --type-h1-mobile: 38px;
-  --type-h2-mobile: 28px;
-  --type-h3-mobile: 20px;
-  --type-lead-mobile: 17px;
-  --type-body-mobile: 16px;
-}
-
-/* H1 hero */
-.hero-title {
-  font-family: var(--font-display) !important;
-  font-weight: 700 !important;
-  font-style: normal !important;
-  font-size: var(--type-h1-desktop) !important;
-  line-height: 1.15 !important;
-  letter-spacing: -0.01em !important;
-  color: var(--psee-green-dark) !important;
-}
-.hero-title em {
-  font-style: italic;
-  font-weight: 500;
-}
-
-/* H2 — titre de section (toutes sections confondues) */
-.section-title,
-.cta-title,
-.etapes-title {
-  font-family: var(--font-display) !important;
-  font-weight: 700 !important;
-  font-style: normal !important;
-  font-size: var(--type-h2-desktop) !important;
-  line-height: 1.2 !important;
-  letter-spacing: -0.01em !important;
-  text-transform: none !important;
-  color: var(--psee-green-dark) !important;
-  margin: 0 0 28px !important;
-}
-.section-title em,
-.cta-title em,
-.etapes-title em {
-  font-style: italic;
-  font-weight: 500;
-}
-
-/* H3 — accent italique (citations narratives, étape) */
-.pourquoi-v2-bold,
-.etape-titre {
-  font-family: var(--font-display) !important;
-  font-weight: 700 !important;
-  font-style: italic !important;
-  font-size: var(--type-h3-desktop) !important;
-  line-height: 1.35 !important;
-  letter-spacing: -0.2px !important;
-  color: var(--psee-green-dark) !important;
-}
-
-/* Eyebrow — partout */
-.eyebrow,
-.hero-eyebrow,
-.etapes-eyebrow {
-  font-family: var(--font-body) !important;
-  font-weight: 500 !important;
-  font-size: var(--type-eyebrow) !important;
-  letter-spacing: 2.5px !important;
-  text-transform: uppercase !important;
-  color: var(--psee-green-dark) !important;
-  line-height: 1.4 !important;
-  margin: 0 0 14px !important;
-}
-
-/* Lead — intro de section, plus dense que body */
-.hero-sub,
-.section-text-lead {
-  font-family: var(--font-body) !important;
-  font-weight: 400 !important;
-  font-size: var(--type-lead-desktop) !important;
-  line-height: 1.55 !important;
-  color: var(--psee-black) !important;
-}
-
-/* Body — texte courant uniforme */
-.section-text,
-.etape-desc {
-  font-family: var(--font-body) !important;
-  font-weight: 400 !important;
-  font-size: var(--type-body-desktop) !important;
-  line-height: 1.65 !important;
-  color: var(--psee-black) !important;
-}
-
-/* Caption — légendes, mentions discrètes (réservé) */
-.caption {
-  font-family: var(--font-body);
-  font-weight: 400;
-  font-size: var(--type-caption-desktop);
-  line-height: 1.5;
-  color: var(--psee-grey-medium);
-}
-
-/* =============================================
-   POLITIQUE DE FOND — uniforme clair + CTA foncé
-   ============================================= */
-.section-axes,
-.section-orientation,
-.section-faq,
-.section-cta {
-  background-color: var(--psee-cream) !important;
-  background: var(--psee-cream) !important;
-}
-
-/* =============================================
-   RÉÉQUILIBRAGE DES NOUVELLES SECTIONS
-   Pourquoi v2 : élargir la colonne texte
-   Étapes : ajuster position des chevrons
-   ============================================= */
-.pourquoi-v2-grid {
-  grid-template-columns: 380px 1fr !important;
-  gap: 80px !important;
-  max-width: 1100px !important;
-}
-.pourquoi-v2-text {
-  max-width: none !important;
-}
-.pourquoi-v2-sep {
-  max-width: 100% !important;
-  margin: 32px 0 !important;
-}
-.etapes-grid::before,
-.etapes-grid::after {
-  top: 60px !important;
-  font-size: 36px !important;
-}
-.etape-icon {
-  width: 64px !important;
-  height: 64px !important;
-}
-.etape-icon svg {
-  width: 26px !important;
-  height: 26px !important;
-}
-
-/* =============================================
-   MOBILE — descente d'échelle (~30 %)
-   ============================================= */
-@media (max-width: 768px) {
-  .hero-title {
-    font-size: var(--type-h1-mobile) !important;
-    line-height: 1.2 !important;
+  .scr-bilan .hero-h {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 22px; font-weight: 500; line-height: 1.05;
+    letter-spacing: -0.6px; color: var(--ink); margin: 4px 0 0;
   }
-  .section-title,
-  .cta-title,
-  .etapes-title {
-    font-size: var(--type-h2-mobile) !important;
-    line-height: 1.25 !important;
-    margin: 0 0 20px !important;
+  .scr-bilan .hero-h em { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--orange); font-weight: 400; }
+  .scr-bilan .score {
+    background: var(--ink); color: #FFFFFF; border-radius: 16px;
+    padding: 16px 18px;
+    display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 14px;
   }
-  .pourquoi-v2-bold,
-  .etape-titre {
-    font-size: var(--type-h3-mobile) !important;
-    line-height: 1.4 !important;
+  .scr-bilan .score .l {
+    font-family: 'Inter', sans-serif; font-size: 9.5px; letter-spacing: 1.2px;
+    text-transform: uppercase; color: rgba(255,255,255,0.55); font-weight: 600; margin-bottom: 4px;
   }
-  .hero-sub,
-  .section-text-lead {
-    font-size: var(--type-lead-mobile) !important;
-    line-height: 1.5 !important;
+  .scr-bilan .score .sb {
+    font-family: 'Bricolage Grotesque', sans-serif; font-size: 14px; font-weight: 500; letter-spacing: -0.2px;
   }
-  .section-text,
-  .etape-desc {
-    font-size: var(--type-body-mobile) !important;
-    line-height: 1.6 !important;
+  .scr-bilan .score .num {
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    font-size: 38px; color: var(--orange); line-height: 1;
   }
-  .eyebrow,
-  .hero-eyebrow,
-  .etapes-eyebrow {
-    font-size: 12px !important;
-    letter-spacing: 2.2px !important;
-    margin: 0 0 10px !important;
+  .scr-bilan .score .num small { color: rgba(255,255,255,0.4); font-size: 14px; font-family: 'Inter', sans-serif; font-style: normal; }
+  .scr-bilan .finding {
+    background: #FFFFFF; border: 1px solid var(--line-soft);
+    border-radius: 14px; padding: 14px;
+    margin-top: auto;
   }
-}
-
-
-/* =============================================
-   AJUSTEMENTS POST-AUDIT
-   ============================================= */
-
-/* Pourquoi v2 — illustration plus grande et sans rectangle */
-.pourquoi-v2-illus {
-  background-size: contain !important;
-  background-position: center !important;
-  background-repeat: no-repeat !important;
-}
-@media (min-width: 769px) {
-  .pourquoi-v2-grid {
-    grid-template-columns: 440px 1fr !important;
-    gap: 72px !important;
-    max-width: 1200px !important;
-    padding: 0 40px !important;
+  .scr-bilan .finding .row {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 8px;
   }
-  .pourquoi-v2-illus {
-    aspect-ratio: 1 / 1 !important;
-    width: 100% !important;
-    max-width: 440px !important;
+  .scr-bilan .finding .axe { font-family: 'Bricolage Grotesque', sans-serif; font-size: 14px; font-weight: 500; color: var(--ink); letter-spacing: -0.2px; }
+  .scr-bilan .finding .pill {
+    font-family: 'Inter', sans-serif; font-size: 9px; letter-spacing: 1px;
+    text-transform: uppercase; padding: 4px 8px; border-radius: 999px;
+    background: rgba(255,92,60,0.10); color: var(--orange); font-weight: 700;
   }
-}
-
-/* Orientation — bullets style aligné sur captures */
-.orientation-bullets {
-  list-style: none;
-  padding: 0;
-  margin: 32px 0 0;
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-}
-.orientation-bullets li {
-  display: grid;
-  grid-template-columns: 48px 1fr;
-  gap: 20px;
-  align-items: start;
-}
-.orientation-bullet-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: var(--psee-cream-light);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--psee-green-dark);
-  flex-shrink: 0;
-}
-.orientation-bullet-icon svg { width: 22px; height: 22px; }
-.orientation-bullet-text {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding-top: 8px;
-}
-.orientation-bullet-text strong {
-  font-family: var(--font-body);
-  font-weight: 500;
-  font-size: 17px;
-  line-height: 1.5;
-  color: var(--psee-black);
-}
-.orientation-bullet-text span {
-  font-family: var(--font-body);
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 1.5;
-  color: var(--psee-grey-medium);
-}
-.orientation-disclaimer {
-  margin-top: 32px;
-  background: var(--psee-cream-dark);
-  border-radius: 12px;
-  padding: 18px 22px;
-  display: grid;
-  grid-template-columns: 32px 1fr;
-  gap: 14px;
-  align-items: center;
-}
-.orientation-disclaimer-icon {
-  color: var(--psee-green-dark);
-  display: flex;
-}
-.orientation-disclaimer-icon svg { width: 22px; height: 22px; }
-.orientation-disclaimer p {
-  margin: 0;
-  font-family: var(--font-body);
-  font-size: 15px;
-  line-height: 1.55;
-  color: var(--psee-grey-medium);
-}
-@media (max-width: 768px) {
-  .orientation-bullets { gap: 24px; }
-  .orientation-bullets li { grid-template-columns: 40px 1fr; gap: 16px; }
-  .orientation-bullet-icon { width: 40px; height: 40px; }
-  .orientation-bullet-icon svg { width: 18px; height: 18px; }
-  .orientation-bullet-text strong { font-size: 16px; }
-  .orientation-bullet-text span { font-size: 15px; }
-  .orientation-disclaimer p { font-size: 14px; }
-}
-
-
-/* =============================================
-   SÉPARATIONS ENTRE SECTIONS — fil discret + air
-   ============================================= */
-
-/* Filet horizontal très discret en bas de chaque section principale */
-.hero,
-.section-pourquoi-v2,
-.section-etapes,
-.section-axes,
-.section-orientation,
-.section-cta {
-  border-bottom: 1px solid rgba(31, 77, 51, 0.08) !important;
-}
-
-/* Respiration verticale uniforme entre sections (desktop) */
-@media (min-width: 769px) {
-  .section-pourquoi-v2,
-  .section-etapes,
-  .section-axes,
-  .section-orientation,
-  .section-cta,
-  .section-faq {
-    padding-top: 104px !important;
-    padding-bottom: 104px !important;
+  .scr-bilan .finding .desc {
+    font-family: 'Inter', sans-serif; font-size: 11.5px; line-height: 1.45; color: var(--muted); margin: 0;
   }
-}
-@media (max-width: 768px) {
-  .section-pourquoi-v2,
-  .section-etapes,
-  .section-axes,
-  .section-orientation,
-  .section-cta,
-  .section-faq {
-    padding-top: 64px !important;
-    padding-bottom: 64px !important;
-  }
-}
-
-/* =============================================
-   AJUSTEMENT NOUVELLE ILLUSTRATION
-   La nouvelle tête est légèrement plus haute
-   que large (~0.91:1). On enlève la contrainte
-   aspect-ratio pour la laisser s'afficher
-   naturellement.
-   ============================================= */
-.pourquoi-v2-illus {
-  aspect-ratio: auto !important;
-  height: 480px !important;
-}
-@media (max-width: 768px) {
-  .pourquoi-v2-illus {
-    height: 280px !important;
-    max-width: 240px !important;
-  }
-}
-
-
-/* =============================================
-   SECTION ÉTAPES — refonte 2 colonnes avec photo
-   ============================================= */
-.section-etapes {
-  padding: 0 !important;
-  background-image: url('assets/etapes-phone.jpg') !important;
-  background-size: 50% auto !important;
-  background-position: right center !important;
-  background-repeat: no-repeat !important;
-  background-color: var(--psee-cream) !important;
-  min-height: 620px !important;
-  display: flex !important;
-  align-items: center !important;
-}
-.etapes-container {
-  max-width: 1280px;
-  margin: 0 auto;
-  width: 100%;
-  padding: 104px 40px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 64px;
-  align-items: center;
-}
-.etapes-text {
-  max-width: 520px;
-  display: flex;
-  flex-direction: column;
-}
-.etapes-text .etapes-eyebrow {
-  margin-bottom: 18px !important;
-}
-.etapes-text .etapes-title {
-  margin-bottom: 48px !important;
-}
-.etapes-text .etapes-title em {
-  font-style: italic;
-  font-weight: 500;
-}
-
-.etapes-list {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 36px;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-.etape-row {
-  display: grid;
-  grid-template-columns: 40px 1fr;
-  gap: 22px;
-  padding: 22px 0;
-  border-top: 1px solid rgba(31, 77, 51, 0.1);
-  align-items: start;
-}
-.etape-row:first-child {
-  border-top: none;
-  padding-top: 0;
-}
-.etape-row:last-child {
-  padding-bottom: 0;
-}
-.etape-row .etape-num {
-  width: 40px !important;
-  height: 40px !important;
-  border-radius: 50% !important;
-  background: var(--psee-green-dark) !important;
-  color: var(--psee-cream) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  font-family: var(--font-display) !important;
-  font-weight: 700 !important;
-  font-size: 15px !important;
-  font-style: italic !important;
-  margin: 0 !important;
-  flex-shrink: 0;
-}
-.etape-body {
-  padding-top: 6px;
-}
-.etape-row .etape-titre {
-  font-family: var(--font-body) !important;
-  font-weight: 500 !important;
-  font-style: normal !important;
-  font-size: 17px !important;
-  line-height: 1.4 !important;
-  color: var(--psee-green-dark) !important;
-  margin: 0 0 6px !important;
-  letter-spacing: 0 !important;
-}
-.etape-row .etape-desc {
-  font-family: var(--font-body) !important;
-  font-size: 15px !important;
-  line-height: 1.55 !important;
-  color: var(--psee-grey-medium) !important;
-  margin: 0 !important;
-}
-
-/* Carte Confidentiel & sécurisé */
-.etapes-card {
-  display: grid;
-  grid-template-columns: 44px 1fr;
-  gap: 16px;
-  align-items: center;
-  background: var(--psee-cream-dark);
-  border-radius: 12px;
-  padding: 18px 22px;
-  max-width: 460px;
-}
-.etapes-card-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--psee-cream-light);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--psee-green-dark);
-}
-.etapes-card-icon svg { width: 20px; height: 20px; }
-.etapes-card-body {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.etapes-card-body strong {
-  font-family: var(--font-body);
-  font-weight: 500;
-  font-size: 15px;
-  color: var(--psee-green-dark);
-}
-.etapes-card-body span {
-  font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--psee-grey-medium);
-  line-height: 1.4;
-}
-
-/* La colonne photo : la section a déjà l'image en background sur 50% droit, 
-   donc le div .etapes-photo sert juste à occuper la grille. */
-.etapes-photo {
-  min-height: 1px;
-}
-
-/* =============================================
-   MOBILE — photo en bandeau haut, texte dessous
-   ============================================= */
-@media (max-width: 900px) {
-  .section-etapes {
-    background-image: none !important;
-    flex-direction: column !important;
-    align-items: stretch !important;
-    min-height: auto !important;
-    padding: 0 !important;
-  }
-  .etapes-container {
-    grid-template-columns: 1fr;
-    gap: 0;
-    padding: 0;
-  }
-  .etapes-photo {
-    order: -1;
-    height: 280px;
-    background-image: url('assets/etapes-phone.jpg');
-    background-size: cover;
-    background-position: 70% center;
-    background-repeat: no-repeat;
-  }
-  .etapes-text {
-    padding: 48px 24px 64px;
-    max-width: 100%;
-  }
-  .etapes-text .etapes-title {
-    margin-bottom: 36px !important;
-  }
-  .etape-row {
-    grid-template-columns: 36px 1fr;
-    gap: 16px;
-    padding: 18px 0;
-  }
-  .etape-row .etape-num {
-    width: 36px !important;
-    height: 36px !important;
-    font-size: 14px !important;
-  }
-  .etapes-card {
-    max-width: 100%;
-  }
-}
-
-
-/* =============================================
-   ÉTAPES — photo plein pot (full bleed)
-   Override final : la photo couvre toute la section,
-   le dégradé naturel laisse la place au texte à gauche.
-   ============================================= */
-.section-etapes {
-  background-size: cover !important;
-  background-position: center !important;
-  min-height: 680px !important;
-}
-.etapes-container {
-  grid-template-columns: 1fr !important;
-  gap: 0 !important;
-}
-.etapes-photo { display: none !important; }
-.etapes-text {
-  max-width: 480px !important;
-}
-@media (max-width: 900px) {
-  .section-etapes {
-    background-image: none !important;
-    min-height: auto !important;
-  }
-  .etapes-container {
-    grid-template-columns: 1fr !important;
-  }
-  .etapes-photo {
-    display: block !important;
-    order: -1;
-    height: 280px;
-    background-image: url('assets/etapes-phone.jpg');
-    background-size: cover;
-    background-position: 70% center;
-    background-repeat: no-repeat;
-  }
-}
-
-/* =============================================
-   CTA — 2 colonnes avec carte prix
-   ============================================= */
-.cta-container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 40px;
-  display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 80px;
-  align-items: center;
-}
-.cta-left {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-.cta-bullets {
-  list-style: none;
-  padding: 0;
-  margin: 32px 0 0;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-.cta-bullets li {
-  display: grid;
-  grid-template-columns: 28px 1fr;
-  gap: 16px;
-  align-items: center;
-  font-family: var(--font-body);
-  font-size: 17px;
-  line-height: 1.5;
-  color: var(--psee-black);
-}
-.cta-bullets .cta-check {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: var(--psee-green-dark);
-  color: var(--psee-cream);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.cta-bullets .cta-check svg { width: 14px; height: 14px; }
-
-/* Carte prix */
-.cta-card {
-  background: var(--psee-cream);
-  border: 1px solid rgba(31, 77, 51, 0.12);
-  border-radius: 20px;
-  padding: 44px 36px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-.cta-price {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-style: italic;
-  font-size: 64px;
-  line-height: 1;
-  color: var(--psee-green-dark);
-  margin: 0;
-}
-.cta-price-label {
-  font-family: var(--font-body);
-  font-size: 15px;
-  color: var(--psee-grey-medium);
-  margin-top: 12px;
-}
-.cta-price-line {
-  font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--psee-grey-medium);
-  margin-top: 8px;
-}
-.cta-price-line span {
-  color: var(--psee-green-dark);
-  margin: 0 4px;
-}
-.cta-card-btn {
-  display: inline-block;
-  background: var(--psee-green-dark);
-  color: var(--psee-cream);
-  font-family: var(--font-body);
-  font-weight: 500;
-  font-size: 16px;
-  padding: 16px 28px;
-  border-radius: 100px;
-  text-decoration: none;
-  margin-top: 28px;
-  width: 100%;
-  box-sizing: border-box;
-  text-align: center;
-  transition: background 0.2s ease;
-}
-.cta-card-btn:hover {
-  background: var(--psee-green);
-}
-.cta-trust {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 18px;
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: var(--psee-grey-medium);
-}
-.cta-trust svg {
-  width: 14px;
-  height: 14px;
-  flex-shrink: 0;
-}
-
-@media (max-width: 900px) {
-  .cta-container {
-    grid-template-columns: 1fr;
-    gap: 40px;
-    padding: 0 24px;
-  }
-  .cta-card {
-    padding: 36px 28px;
-  }
-  .cta-price { font-size: 52px; }
-}
-
-
-/* =============================================
-   POURQUOI V2 — refonte propre (override final)
-   Harmonisation pattern noir→vert italique large
-   + correction affichage mobile illustration
-   ============================================= */
-
-/* Section background + structure */
-.section-pourquoi-v2 {
-  background-color: var(--psee-cream) !important;
-}
-
-/* Grid desktop */
-@media (min-width: 901px) {
-  .pourquoi-v2-grid {
-    display: grid !important;
-    grid-template-columns: 440px 1fr !important;
-    gap: 80px !important;
-    align-items: center !important;
-    max-width: 1200px !important;
-    margin: 0 auto !important;
-    padding: 0 40px !important;
-  }
-  .pourquoi-v2-illus {
-    width: 100% !important;
-    max-width: 440px !important;
-    aspect-ratio: auto !important;
-    height: 480px !important;
-    background-image: url('assets/tete-brouillee.png') !important;
-    background-size: contain !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
-    display: block !important;
-  }
-}
-
-/* Mobile : illustration AFFICHÉE en bandeau au-dessus du texte */
-@media (max-width: 900px) {
-  .pourquoi-v2-grid {
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-    gap: 32px !important;
-    max-width: 100% !important;
-    margin: 0 auto !important;
-    padding: 0 !important;
-  }
-  .pourquoi-v2-illus {
-    display: block !important;
-    width: 100% !important;
-    max-width: 280px !important;
-    height: 320px !important;
-    aspect-ratio: auto !important;
-    margin: 0 auto !important;
-    background-image: url('assets/tete-brouillee.png') !important;
-    background-size: contain !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
-  }
-  .pourquoi-v2-text {
-    max-width: 100% !important;
-    padding: 0 24px !important;
-  }
-}
-
-/* Bloc noir → vert : structure uniforme */
-.pourquoi-v2-block {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-.pourquoi-v2-block .section-text {
-  margin: 0 !important;
-}
-
-/* Vert italique : taille augmentée comme demandé */
-.pourquoi-v2-bold {
-  font-family: var(--font-display) !important;
-  font-weight: 700 !important;
-  font-style: italic !important;
-  font-size: 28px !important;
-  line-height: 1.3 !important;
-  letter-spacing: -0.3px !important;
-  color: var(--psee-green-dark) !important;
-  margin: 0 !important;
-}
-@media (max-width: 768px) {
-  .pourquoi-v2-bold {
-    font-size: 22px !important;
-    line-height: 1.35 !important;
-  }
-}
-
-/* Séparateur entre blocs */
-.pourquoi-v2-sep {
-  border: 0 !important;
-  border-top: 1px solid rgba(31, 77, 51, 0.12) !important;
-  margin: 36px 0 !important;
-  width: 100% !important;
-  max-width: 100% !important;
-}
-@media (max-width: 768px) {
-  .pourquoi-v2-sep {
-    margin: 28px 0 !important;
-  }
-}
-
-
-/* =============================================
-   ÉTAPES — affinage : 3 colonnes par row + carte simplifiée
-   ============================================= */
-
-/* Row désormais en 3 colonnes : num + icône + corps */
-.etape-row {
-  grid-template-columns: 40px 44px 1fr !important;
-  gap: 18px !important;
-}
-
-/* Cercle icône beige pâle, vert foncé dedans */
-.etape-row .etape-icon {
-  width: 44px !important;
-  height: 44px !important;
-  border-radius: 50% !important;
-  background: var(--psee-cream-dark) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  color: var(--psee-green-dark) !important;
-  flex-shrink: 0;
-  margin: 0 !important;
-}
-.etape-row .etape-icon svg {
-  width: 20px !important;
-  height: 20px !important;
-}
-
-/* Titre étape : vert foncé, bold, taille calme */
-.etape-row .etape-titre {
-  font-family: var(--font-body) !important;
-  font-weight: 600 !important;
-  font-style: normal !important;
-  font-size: 16px !important;
-  line-height: 1.4 !important;
-  color: var(--psee-green-dark) !important;
-  margin: 0 0 6px !important;
-  letter-spacing: 0 !important;
-}
-
-/* Description : gris medium clair */
-.etape-row .etape-desc {
-  font-family: var(--font-body) !important;
-  font-size: 15px !important;
-  line-height: 1.55 !important;
-  color: var(--psee-grey-medium) !important;
-  margin: 0 !important;
-}
-
-/* Body : aligné en haut, petit décalage vertical */
-.etape-row .etape-body {
-  padding-top: 8px;
-}
-
-/* Mobile : 3 colonnes mais plus serrées */
-@media (max-width: 900px) {
-  .etape-row {
-    grid-template-columns: 36px 36px 1fr !important;
-    gap: 14px !important;
-  }
-  .etape-row .etape-icon {
-    width: 36px !important;
-    height: 36px !important;
-  }
-  .etape-row .etape-icon svg {
-    width: 16px !important;
-    height: 16px !important;
-  }
-}
-
-
-/* =============================================
-   POURQUOI V2 — numéros éditoriaux 01/02/03
-   ============================================= */
-.pourquoi-v2-block {
-  display: grid !important;
-  grid-template-columns: 80px 1fr !important;
-  gap: 32px !important;
-  align-items: start !important;
-  flex-direction: row !important;
-}
-.block-num {
-  font-family: var(--font-display) !important;
-  font-weight: 400 !important;
-  font-style: italic !important;
-  font-size: 42px !important;
-  line-height: 1 !important;
-  color: var(--psee-green) !important;
-  opacity: 0.55;
-  letter-spacing: -1px;
-  padding-top: 4px;
-}
-.block-content {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-.block-content .section-text {
-  margin: 0 !important;
-}
-
-@media (max-width: 768px) {
-  .pourquoi-v2-block {
-    grid-template-columns: 56px 1fr !important;
-    gap: 16px !important;
-  }
-  .block-num {
-    font-size: 30px !important;
-    padding-top: 2px;
-  }
-}
-
-/* =============================================
-   CTA — Structure A : empilage centré
-   Titre + bullets, puis photo, puis carte prix
-   ============================================= */
-.cta-container {
-  max-width: 1100px !important;
-  margin: 0 auto !important;
-  padding: 0 40px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  gap: 56px !important;
-  grid-template-columns: none !important;
-}
-
-.cta-top {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-.cta-top .cta-title {
-  text-align: center !important;
-}
-
-/* Bullets : centrées, dans une grille 2 colonnes pour respirer */
-.cta-top .cta-bullets {
-  margin-top: 32px !important;
-  display: grid !important;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px 48px;
-  max-width: 720px;
-}
-.cta-top .cta-bullets li {
-  text-align: left;
-}
-
-/* Photo deux smartphones — large et centrée */
-.cta-photo {
-  width: 100%;
-  max-width: 900px;
-  display: flex;
-  justify-content: center;
-}
-.cta-photo img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-/* Carte prix : centrée en bas */
-.cta-card {
-  margin: 0 auto !important;
-  max-width: 420px !important;
-  width: 100% !important;
-}
-
-@media (max-width: 768px) {
-  .cta-container {
-    gap: 40px !important;
-    padding: 0 24px !important;
-  }
-  .cta-top .cta-bullets {
-    grid-template-columns: 1fr;
-    gap: 14px;
-    max-width: 100%;
-  }
-  .cta-photo {
-    max-width: 100%;
-  }
-}
-
-
-/* =============================================
-   HAUTEURS HOMOGÈNES + SECTIONS PHOTO FULL-HEIGHT
-   ============================================= */
-
-/* Toutes les sections principales : même hauteur cible 720px */
-@media (min-width: 901px) {
-  .section-pourquoi-v2,
-  .section-etapes,
-  .section-axes,
-  .section-orientation,
-  .section-cta,
-  .section-faq {
-    min-height: 720px !important;
+  .scr-bilan .full {
+    background: var(--orange); color: #FFFFFF; border: none;
+    border-radius: 12px; padding: 11px 0; width: 100%;
+    font-family: 'Inter', sans-serif; font-size: 12.5px; font-weight: 600; text-align: center;
   }
 
-  /* Sections avec image pleine-hauteur : aucun padding section
-     (le padding est porté par le contenu interne) */
-  .section-etapes,
-  .section-orientation,
-  .section-cta {
-    padding: 0 !important;
+  /* Phone 3 — orientation */
+  .scr-orient { padding: 6px 16px 16px; display: flex; flex-direction: column; flex: 1; gap: 12px; }
+  .scr-orient .top { padding: 8px 4px 0; display: flex; justify-content: space-between; align-items: center; }
+  .scr-orient .top .back { color: var(--ink-2); font-size: 14px; }
+  .scr-orient .top .lab2 { font-family: 'Inter', sans-serif; font-size: 10.5px; color: var(--muted); }
+  .scr-orient .lab {
+    font-family: 'Inter', sans-serif; font-size: 10px;
+    letter-spacing: 1.4px; text-transform: uppercase;
+    color: var(--orange); font-weight: 600; margin-top: 4px;
   }
-}
-
-@media (max-width: 900px) {
-  .section-pourquoi-v2,
-  .section-etapes,
-  .section-axes,
-  .section-orientation,
-  .section-cta,
-  .section-faq {
-    min-height: auto !important;
+  .scr-orient .hero-h {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 22px; font-weight: 500; line-height: 1.05;
+    letter-spacing: -0.6px; color: var(--ink); margin: 0;
   }
-}
-
-/* =============================================
-   ORIENTATION — corriger gradient (était cream-dark)
-   ============================================= */
-.orientation-image-wrap::after {
-  background: linear-gradient(to left, var(--psee-cream) 0%, rgba(245, 242, 236, 0.4) 60%, transparent 100%) !important;
-}
-
-/* =============================================
-   CTA — 2 colonnes texte gauche / photo droite pleine hauteur
-   ============================================= */
-.cta-grid {
-  display: grid !important;
-  grid-template-columns: 1fr 1fr !important;
-  align-items: stretch !important;
-  min-height: 720px !important;
-  max-width: 1400px !important;
-  margin: 0 auto !important;
-  width: 100% !important;
-  padding: 0 !important;
-  gap: 0 !important;
-}
-
-.cta-left {
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: center !important;
-  align-items: flex-start !important;
-  padding: 80px 56px 80px 80px !important;
-  max-width: 100% !important;
-}
-.cta-left .cta-title {
-  text-align: left !important;
-  margin: 0 !important;
-}
-.cta-left .cta-bullets {
-  margin: 32px 0 0 !important;
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 14px !important;
-  grid-template-columns: none !important;
-  max-width: 100% !important;
-}
-.cta-left .cta-bullets li {
-  grid-template-columns: 24px 1fr !important;
-  gap: 14px !important;
-  font-size: 16px !important;
-}
-.cta-left .cta-bullets .cta-check {
-  width: 24px !important;
-  height: 24px !important;
-}
-.cta-left .cta-bullets .cta-check svg {
-  width: 12px !important;
-  height: 12px !important;
-}
-
-/* Bloc prix en ligne (plus compact que la carte) */
-.cta-price-row {
-  display: flex;
-  align-items: baseline;
-  gap: 14px;
-  margin-top: 36px;
-  padding-top: 28px;
-  border-top: 1px solid rgba(31, 77, 51, 0.12);
-  width: 100%;
-}
-.cta-price-amount {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-style: italic;
-  font-size: 44px;
-  line-height: 1;
-  color: var(--psee-green-dark);
-}
-.cta-price-detail {
-  font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--psee-grey-medium);
-}
-
-/* Bouton CTA inscrit dans la colonne */
-.cta-left .cta-card-btn {
-  margin-top: 24px !important;
-  max-width: 380px !important;
-  width: 100% !important;
-  display: inline-block !important;
-}
-
-/* Trust ligne */
-.cta-left .cta-trust {
-  margin-top: 16px !important;
-}
-
-/* Colonne photo : pleine hauteur, image fit */
-.cta-right {
-  height: 100%;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--psee-cream);
-  position: relative;
-}
-.cta-right img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  display: block;
-}
-
-/* Mobile : on stack, photo en bandeau du haut */
-@media (max-width: 900px) {
-  .cta-grid {
-    grid-template-columns: 1fr !important;
-    min-height: auto !important;
+  .scr-orient .hero-h em { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--orange); font-weight: 400; }
+  .scr-orient .pcard {
+    background: #FFFFFF; border: 1px solid var(--line);
+    border-radius: 16px; padding: 16px;
+    display: flex; flex-direction: column; gap: 12px;
   }
-  .cta-left {
-    order: 2;
-    padding: 48px 24px 64px !important;
-    align-items: stretch !important;
+  .scr-orient .pcard .row { display: flex; align-items: center; gap: 12px; }
+  .scr-orient .pcard .avatar {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: linear-gradient(135deg, #F4C8B5 0%, #FF9266 100%);
+    flex-shrink: 0; box-shadow: inset -3px -5px 10px rgba(14,15,18,0.10);
   }
-  .cta-right {
-    order: 1;
-    height: 320px;
+  .scr-orient .pcard .nm { font-family: 'Bricolage Grotesque', sans-serif; font-size: 15px; font-weight: 500; color: var(--ink); letter-spacing: -0.2px; }
+  .scr-orient .pcard .role { font-family: 'Inter', sans-serif; font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .scr-orient .tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .scr-orient .tag {
+    font-family: 'Inter', sans-serif; font-size: 9.5px; font-weight: 500;
+    color: var(--ink-2); background: rgba(255,92,60,0.10);
+    padding: 4px 9px; border-radius: 999px;
   }
-  .cta-right img {
-    object-fit: contain;
-    height: 100%;
+  .scr-orient .scoreline {
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'Inter', sans-serif; font-size: 10.5px; color: var(--muted);
+    padding-top: 4px; border-top: 1px solid var(--line-soft);
   }
-  .cta-price-amount { font-size: 36px; }
-  .cta-left .cta-card-btn { max-width: 100% !important; }
-}
+  .scr-orient .scoreline strong { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--ink); font-size: 14px; font-weight: 400; }
+  .scr-orient .book {
+    margin-top: auto; background: var(--orange); color: #FFFFFF;
+    border-radius: 12px; padding: 11px 0; text-align: center;
+    font-family: 'Inter', sans-serif; font-size: 12.5px; font-weight: 600;
+  }
 
-
-/* =============================================
-   ÉTAPES — retirer les pastilles numérotées
-   Le row ne contient plus que [icône + body]
-   ============================================= */
-.etape-row {
-  grid-template-columns: 44px 1fr !important;
-  gap: 20px !important;
-}
-@media (max-width: 900px) {
-  .etape-row {
-    grid-template-columns: 36px 1fr !important;
-    gap: 16px !important;
+  /* ════════════════════════════════════════════
+     04 DIMENSIONS — light bg, compact, photos
+     ════════════════════════════════════════════ */
+  .dimensions { background: var(--bone); padding: 80px 48px; }
+  .dim-head { max-width: 880px; margin-bottom: 40px; }
+  .dim-head .sec-h2 { font-size: clamp(40px, 4.8vw, 64px); }
+  .dim-head .sec-lede { font-size: 16px; margin-top: 16px; }
+  .dim-content {
+    display: grid; grid-template-columns: 380px 1fr;
+    gap: 48px; align-items: center;
   }
-}
+  .dim-radar-big { display: flex; align-items: center; justify-content: center; }
+  .dim-radar-big svg { display: block; overflow: visible; width: 100%; height: auto; max-width: 380px; }
+  .dim-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .dim-card {
+    background: #FFFFFF; border: 1px solid var(--line);
+    border-radius: 16px; padding: 0;
+    display: flex; flex-direction: column;
+    transition: border-color .15s, transform .15s;
+    overflow: hidden;
+  }
+  .dim-card:hover { border-color: rgba(255,92,60,0.40); transform: translateY(-3px); }
+  .dim-card .photo-thumb {
+    height: 90px; overflow: hidden; position: relative;
+    background: var(--bone-2);
+  }
+  .dim-card .photo-thumb img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
+  .dim-card .photo-thumb .ic-over {
+    position: absolute; bottom: -14px; left: 14px;
+    width: 36px; height: 36px; border-radius: 10px;
+    background: var(--orange); color: #FFFFFF;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 6px 14px rgba(255,92,60,0.30);
+  }
+  .dim-card .photo-thumb .ic-over svg { width: 18px; height: 18px; }
+  .dim-card .card-text {
+    padding: 22px 18px 18px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .dim-card .nbr {
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    font-size: 13px; color: var(--orange); letter-spacing: 0.4px;
+  }
+  .dim-card .lbl {
+    font-family: 'Bricolage Grotesque', sans-serif; font-size: 17px; font-weight: 500;
+    color: var(--ink); letter-spacing: -0.3px;
+  }
+  .dim-card .hnt {
+    font-family: 'Inter', sans-serif; font-size: 13px; color: var(--muted);
+    line-height: 1.5; margin: 4px 0 0;
+  }
 
+  /* ════════════════════════════════════════════
+     05 ORIENTATION — split éditorial
+     ════════════════════════════════════════════ */
+  .orientation { background: var(--warm); padding: 0; min-height: 100vh; }
+  .orientation-inner {
+    display: grid; grid-template-columns: 1.1fr 1fr;
+    min-height: 100vh; align-items: stretch;
+  }
+  .orientation-photo {
+    position: relative; overflow: hidden; background: var(--bone-2);
+  }
+  .orientation-photo img {
+    width: 100%; height: 100%; object-fit: cover; object-position: 35% 22%;
+  }
+  .orientation-photo .pill-on-photo {
+    position: absolute; top: 32px; left: 32px;
+    background: rgba(247,245,239,0.94); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    padding: 10px 16px; border-radius: 999px;
+    font-family: 'Inter', sans-serif; font-size: 12px;
+    color: var(--ink); font-weight: 600; letter-spacing: 0.2px;
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+  .orientation-photo .pill-on-photo::before {
+    content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--orange);
+  }
+  .orientation-photo .quote-on-photo {
+    position: absolute; bottom: 32px; left: 32px; right: 32px;
+    padding: 22px 26px; border-radius: 18px;
+    background: rgba(14,15,18,0.65); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    color: #FFFFFF;
+  }
+  .orientation-photo .quote-on-photo .q {
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    font-size: 20px; line-height: 1.35; color: #FFFFFF;
+    margin: 0;
+  }
+  .orientation-photo .quote-on-photo .who {
+    font-family: 'Inter', sans-serif; font-size: 11.5px;
+    color: rgba(255,255,255,0.7); margin-top: 10px;
+    letter-spacing: 0.3px;
+  }
+
+  .orientation-text {
+    padding: 100px 80px; display: flex; flex-direction: column; justify-content: center;
+  }
+  .orientation-text h2 {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: clamp(48px, 5.5vw, 80px);
+    line-height: 0.98; letter-spacing: -0.04em; font-weight: 500;
+    margin: 0; color: var(--ink); font-variation-settings: "opsz" 96;
+    max-width: 540px;
+  }
+  .orientation-text h2 em {
+    font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400;
+    color: var(--orange); letter-spacing: -0.03em;
+  }
+  .or-points {
+    margin-top: 40px;
+    display: flex; flex-direction: column; gap: 0;
+  }
+  .or-point {
+    display: grid; grid-template-columns: 44px 1fr;
+    gap: 20px; padding: 22px 0; align-items: flex-start;
+    border-top: 1px solid var(--line);
+  }
+  .or-point:last-child { border-bottom: 1px solid var(--line); }
+  .or-point .ic {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: rgba(255,92,60,0.10); color: var(--orange);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .or-point .lead {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 19px; font-weight: 500; color: var(--ink);
+    line-height: 1.3; letter-spacing: -0.3px; margin: 0 0 6px;
+  }
+  .or-point .sub {
+    font-family: 'Inter', sans-serif; font-size: 14.5px;
+    color: var(--muted); line-height: 1.5; margin: 0;
+  }
+  .or-disclaim {
+    margin-top: 32px;
+    padding: 16px 20px;
+    background: rgba(14,15,18,0.04);
+    border-radius: 14px;
+    display: flex; gap: 14px; align-items: flex-start;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px; color: var(--muted); line-height: 1.55;
+  }
+  .or-disclaim strong { color: var(--ink); font-weight: 600; }
+
+  /* ════════════════════════════════════════════
+     06 CTA FINAL — 1 viewport
+     ════════════════════════════════════════════ */
+  .cta-final { background: var(--bone); }
+  .cta-final-grid {
+    display: grid; grid-template-columns: 1.1fr 1fr;
+    gap: 80px; align-items: center;
+  }
+  .cta-final-grid .left .features-list {
+    margin-top: 32px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px 24px;
+  }
+  .feature-big {
+    display: flex; align-items: center; gap: 12px;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 16px; font-weight: 500; color: var(--ink); letter-spacing: -0.2px;
+  }
+  .feature-big .check {
+    width: 28px; height: 28px; border-radius: 14px;
+    background: var(--orange); color: #FFFFFF;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .price-card-big {
+    margin-top: 36px;
+    background: #0E0F12; color: #FFFFFF; border-radius: 24px;
+    padding: 28px 32px; display: flex; align-items: center; gap: 26px;
+    flex-wrap: wrap; box-shadow: 0 24px 60px rgba(14,15,18,0.18);
+  }
+  .price-card-big .price { display: flex; align-items: baseline; gap: 4px; line-height: 1; }
+  .price-card-big .price .val {
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    font-size: 96px; font-weight: 400; color: var(--orange);
+    letter-spacing: -3px; line-height: 0.9;
+  }
+  .price-card-big .price .cur {
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    font-size: 44px; color: var(--orange);
+  }
+  .price-card-big .price-meta { flex: 1; min-width: 180px; padding-left: 24px; border-left: 1px solid rgba(255,255,255,0.15); }
+  .price-card-big .price-meta .t {
+    font-family: 'Bricolage Grotesque', sans-serif; font-size: 17px; font-weight: 500;
+    color: #FFFFFF; letter-spacing: -0.3px; margin-bottom: 4px;
+  }
+  .price-card-big .price-meta .s {
+    font-family: 'Inter', sans-serif; font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.5;
+  }
+  .price-card-big .cta-big {
+    background: var(--orange); color: #FFFFFF; border: none;
+    padding: 16px 26px; border-radius: 999px;
+    font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px;
+    box-shadow: 0 14px 36px rgba(255,92,60,0.40);
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .price-card-big .cta-big::after { content: '→'; font-size: 16px; }
+  .secure-line-big {
+    display: inline-flex; align-items: center; gap: 10px; margin-top: 18px;
+    font-family: 'Inter', sans-serif; font-size: 12.5px; color: var(--muted-2); letter-spacing: 0.2px;
+  }
+  .cta-phones-big {
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .cta-phones-big img {
+    width: 100%; height: auto; display: block;
+    border-radius: 20px;
+    box-shadow: 0 30px 60px rgba(14,15,18,0.12);
+  }
+
+  /* ════════════════════════════════════════════
+     07 FAQ
+     ════════════════════════════════════════════ */
+  .faq { background: var(--warm); padding: 110px 48px; min-height: auto; }
+  .faq-inner { max-width: 980px; margin: 0 auto; }
+  .faq-head { text-align: center; margin-bottom: 56px; }
+  .faq-head .sec-eyebrow { justify-content: center; }
+  .faq-head .sec-h2 { margin-left: auto; margin-right: auto; }
+  .faq-item { border-top: 1px solid var(--line); }
+  .faq-item:last-child { border-bottom: 1px solid var(--line); }
+  .faq-q {
+    width: 100%; background: transparent; border: none;
+    padding: 30px 8px;
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+    cursor: pointer; font-family: 'Bricolage Grotesque', sans-serif; text-align: left;
+  }
+  .faq-q .q-text { font-size: 22px; font-weight: 500; color: var(--ink); letter-spacing: -0.4px; }
+  .faq-q .q-icon { color: var(--orange); flex-shrink: 0; transition: transform .2s ease-out; }
+  .faq-item.open .faq-q .q-icon { transform: rotate(45deg); }
+  .faq-a {
+    max-height: 0; overflow: hidden;
+    transition: max-height .25s ease-out, padding .25s ease-out;
+    font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.65; color: var(--muted);
+    padding: 0 8px; max-width: 820px;
+  }
+  .faq-item.open .faq-a { max-height: 560px; padding: 0 8px 30px; }
+
+  /* ════════════════════════════════════════════
+     08 FOOTER
+     ════════════════════════════════════════════ */
+  .footer { background: #0E0F12; color: #FFFFFF; padding: 90px 48px 36px; }
+  .footer-inner { max-width: 1320px; margin: 0 auto; display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 56px; }
+  .footer-brand .tagline {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 26px; font-weight: 500; line-height: 1.3;
+    color: #FFFFFF; margin: 26px 0 0; letter-spacing: -0.4px; max-width: 380px;
+  }
+  .footer-brand .tagline em { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--orange); font-weight: 400; }
+  .footer-brand .sub { font-family: 'Inter', sans-serif; font-size: 13.5px; color: rgba(255,255,255,0.55); margin-top: 20px; line-height: 1.55; max-width: 340px; }
+  .footer-col h4 {
+    font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: 2.4px;
+    text-transform: uppercase; color: var(--orange); font-weight: 700; margin: 0 0 20px;
+  }
+  .footer-col ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+  .footer-col li { font-family: 'Inter', sans-serif; font-size: 14px; color: rgba(255,255,255,0.78); }
+  .footer-bottom {
+    max-width: 1320px; margin: 64px auto 0; padding-top: 28px;
+    border-top: 1px solid rgba(255,255,255,0.10);
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+    font-family: 'Inter', sans-serif; font-size: 12px; color: rgba(255,255,255,0.55);
+  }
+  .footer-bottom .legal { max-width: 560px; line-height: 1.55; }
+  .footer-bottom .right { display: flex; align-items: center; gap: 20px; }
+  .footer-bottom em { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--orange); }
+
+  /* fixed back link */
+  .back-link { position: fixed; bottom: 16px; right: 16px; z-index: 200; font-family: 'Inter', sans-serif; font-size: 12px; }
+  .back-link a { background: #fff; padding: 9px 14px; border-radius: 999px; box-shadow: 0 4px 14px rgba(15,17,22,0.10); color: var(--ink); text-decoration: none; font-weight: 500; border: 1px solid var(--line); }
 </style>
 </head>
 <body>
 
-<!-- NAVIGATION -->
-<nav class="nav">
-  <div class="nav-logo">
-    <a href="/"><span class="nav-logo-text">Psee</span></a>
+<!-- ════════════════════════════════════════════
+     01 — HERO (with integrated stats)
+     ════════════════════════════════════════════ -->
+<section class="hero" data-screen-label="01 Hero">
+
+  <div class="hero-bg">
+    <img src="photos/jeune-femme-casque.jpg" alt="Une jeune femme avec un casque audio, allongée sur un canapé, qui consulte son téléphone">
   </div>
-  <div class="nav-links">
-    <a href="#pourquoi" class="nav-link">Pourquoi Psee</a>
-    <a href="#axes" class="nav-link">Les 6 dimensions</a>
-    <a href="#comment" class="nav-link">Comment ça marche</a>
-    <a href="#faq" class="nav-link">FAQ</a>
-    <a href="paywall.html" class="nav-cta">Commencer mon check-up</a>
-  </div>
-</nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-content-wrap">
-    <div class="hero-text">
-      <p class="hero-eyebrow">Check-up psychique &amp; orientation</p>
-      <h1 class="hero-title">Le check-up psychique pour <em>y voir plus clair</em>.</h1>
-      <p class="hero-sub">
-        Un véritable check-up en 15 minutes, sans engagement. Psee vous aide à comprendre où vous en êtes, et à savoir <strong class="hero-sub-emphasis">quoi faire ensuite, si nécessaire</strong>.
-      </p>
-
-      <div class="hero-cta-block">
-        <a href="paywall.html" class="btn-primary">Commencer mon check-up</a>
-
-        <div class="hero-badges">
-          <div class="badge">
-            <div class="badge-icon">
-              <svg viewBox="0 0 24 24" fill="none">
-                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" stroke="currentColor" stroke-linejoin="round"/>
-                <line x1="7" y1="7" x2="7.01" y2="7" stroke="currentColor" stroke-linecap="round"/>
-              </svg>
-            </div>
-            <div class="badge-label">9 €</div>
-            <div class="badge-sub">accès complet</div>
-          </div>
-          <div class="badge">
-            <div class="badge-icon">
-              <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor"/><path d="M12 6v6l4 2" stroke="currentColor" stroke-linecap="round"/></svg>
-            </div>
-            <div class="badge-label">15 min</div>
-            <div class="badge-sub">tout au long</div>
-          </div>
-          <div class="badge">
-            <div class="badge-icon">
-              <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4z" stroke="currentColor" stroke-linejoin="round"/></svg>
-            </div>
-            <div class="badge-label">100 %</div>
-            <div class="badge-sub">anonyme</div>
-          </div>
-          <div class="badge">
-            <div class="badge-icon">
-              <svg viewBox="0 0 24 24" fill="none"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" stroke="currentColor" stroke-linejoin="round"/></svg>
-            </div>
-            <div class="badge-label">30 jours</div>
-            <div class="badge-sub">de suivi libre</div>
-          </div>
-        </div>
+  <nav class="nav">
+    <div class="nav-left">
+      <span class="wm light">superpsy<span class="dot">.</span></span>
+      <div class="links">
+        <a href="#pourquoi">Pourquoi</a>
+        <a href="#comment">Méthode</a>
+        <a href="#axes">6 dimensions</a>
+        <a href="#faq">FAQ</a>
       </div>
     </div>
-  </div>
-  <div class="hero-image-wrap" role="img" aria-label="Psee sur smartphone : entretien guidé, cartographie psychique, conversation thérapeutique et bilan personnalisé"></div>
-</section>
-
-<!-- SECTION POURQUOI V2 — illustration tête + texte structuré -->
-<section class="section-pourquoi-v2" id="pourquoi">
-  <div class="pourquoi-v2-grid">
-    <div class="pourquoi-v2-illus" role="img" aria-label="Illustration : tête de profil avec des pensées emmêlées"></div>
-    <div class="pourquoi-v2-text">
-      <p class="eyebrow">Pourquoi Psee</p>
-      <h2 class="section-title">
-        On peut se sentir moins bien sans savoir <em>ce qui se passe</em>.
-      </h2>
-
-      <div class="pourquoi-v2-block">
-        <span class="block-num">01</span>
-        <div class="block-content">
-          <p class="section-text">
-            Fatigue psychique, anxiété diffuse, perte d'élan, irritabilité, tensions, troubles du sommeil.
-          </p>
-          <p class="pourquoi-v2-bold">Des signaux souvent flous, difficiles à situer.</p>
-        </div>
-      </div>
-
-      <hr class="pourquoi-v2-sep">
-
-      <div class="pourquoi-v2-block">
-        <span class="block-num">02</span>
-        <div class="block-content">
-          <p class="section-text">
-            Comprendre votre équilibre psychique, repérer les zones de fragilité, et savoir quoi faire ensuite.
-          </p>
-          <p class="pourquoi-v2-bold">Psee propose un bilan structuré pour faire le point.</p>
-        </div>
-      </div>
-
-      <hr class="pourquoi-v2-sep">
-
-      <div class="pourquoi-v2-block">
-        <span class="block-num">03</span>
-        <div class="block-content">
-          <p class="section-text">On fait des bilans pour le corps.</p>
-          <p class="pourquoi-v2-bold">Le psychique mérite aussi d'être évalué.</p>
-        </div>
-      </div>
+    <div class="nav-right">
+      <span class="lang">FR · EN</span>
+      <span class="connect">Se connecter</span>
+      <button class="cta-pill">Faire le check-up</button>
     </div>
-  </div>
-</section>
+  </nav>
 
-<!-- SECTION COMMENT CA MARCHE — 2 colonnes : texte gauche + photo droite -->
-<section class="section-etapes" id="comment">
-  <div class="etapes-container">
-    <div class="etapes-text">
-      <p class="etapes-eyebrow">Comment ça marche</p>
-      <h2 class="etapes-title">3 <em>étapes</em> simples</h2>
-
-      <ul class="etapes-list">
-        <li class="etape-row">
-          <div class="etape-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 20h9"/>
-              <path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>
-            </svg>
-          </div>
-          <div class="etape-body">
-            <h3 class="etape-titre">Répondez à une évaluation guidée</h3>
-            <p class="etape-desc">Questions claires et ciblées, 15 minutes.</p>
-          </div>
-        </li>
-        <li class="etape-row">
-          <div class="etape-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-              <polyline points="14 2 14 8 20 8"/>
-              <line x1="8" y1="13" x2="16" y2="13"/>
-              <line x1="8" y1="17" x2="16" y2="17"/>
-            </svg>
-          </div>
-          <div class="etape-body">
-            <h3 class="etape-titre">Recevez votre synthèse immédiate</h3>
-            <p class="etape-desc">Analyse selon 6 axes, points forts, points de vigilance et conseils.</p>
-          </div>
-        </li>
-        <li class="etape-row">
-          <div class="etape-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 2v6"/>
-              <rect x="4" y="8" width="16" height="4" rx="0.5"/>
-              <path d="M12 12v3"/>
-              <rect x="2" y="15" width="20" height="4" rx="0.5"/>
-              <path d="M12 19v3"/>
-            </svg>
-          </div>
-          <div class="etape-body">
-            <h3 class="etape-titre">Choisissez si vous souhaitez aller plus loin</h3>
-            <p class="etape-desc">Orientation vers les praticiens adaptés, ou rien.</p>
-          </div>
-        </li>
-      </ul>
-
-      <div class="etapes-card">
-        <div class="etapes-card-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="9"/>
-            <path d="M12 7v5l3 2"/>
-          </svg>
-        </div>
-        <div class="etapes-card-body">
-          <strong>15 minutes pour y voir plus clair.</strong>
-        </div>
-      </div>
-    </div>
-    <div class="etapes-photo" aria-hidden="true"></div>
-  </div>
-</section>
-
-<!-- SECTION 6 AXES -->
-<section class="section-axes" id="axes">
-  <div class="section-axes-header">
-    <p class="eyebrow">Les 6 dimensions</p>
-    <h2 class="section-title">
-      Six axes pour explorer votre <em>équilibre psychique</em>
-    </h2>
-    <p class="section-text">
-      Une cartographie complète qui prend en compte ce qui se passe en vous,
-      autour de vous, et dans votre corps.
+  <div class="hero-content">
+    <span class="eyebrow">Check-up psychique &amp; orientation</span>
+    <h1 class="headline">Le check‑up psychique<br>pour <em>y voir plus clair.</em></h1>
+    <p class="lede">
+      Un véritable check-up en 15 minutes, sans engagement.
+      SuperPsy vous aide à comprendre où vous en êtes, et à savoir
+      <strong>quoi faire ensuite, si nécessaire</strong>.
     </p>
+    <div class="ctas">
+      <button class="cta-primary">Commencer mon check-up · 9 €</button>
+      <a class="cta-ghost" href="#comment">Voir comment ça marche</a>
+    </div>
   </div>
 
-  <div class="axes-grid">
-    <div class="axe-card">
-      <div class="axe-icon"><img src="assets/Icone_Cerveau_mecanique.svg" alt="" /></div>
-      <h3 class="axe-name">Processus psychiques</h3>
-      <p class="axe-desc">La manière dont vos pensées s'organisent.</p>
+  <!-- 4 stats intégrées au hero -->
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="ico"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5.5A6 6 0 0 0 5.5 11a6 6 0 0 0 9 5.5"/><path d="M3.5 9h7M3.5 12.5h7"/></svg></div>
+      <div class="text">
+        <span class="v"><em>9</em><span class="u">€</span></span>
+        <span class="k">Accès complet · paiement unique</span>
+      </div>
     </div>
-    <div class="axe-card">
-      <div class="axe-icon"><img src="assets/Icone_Plante.svg" alt="" /></div>
-      <h3 class="axe-name">Ressources psychiques</h3>
-      <p class="axe-desc">Vos appuis intérieurs et extérieurs.</p>
+    <div class="hero-stat">
+      <div class="ico"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M11 6.5V11l3 2"/></svg></div>
+      <div class="text">
+        <span class="v">15<span class="u">min</span></span>
+        <span class="k">À votre rythme</span>
+      </div>
     </div>
-    <div class="axe-card">
-      <div class="axe-icon"><img src="assets/Icone_Coeur.svg" alt="" /></div>
-      <h3 class="axe-name">Émotions</h3>
-      <p class="axe-desc">Ce que vous ressentez et comment vous le vivez.</p>
+    <div class="hero-stat">
+      <div class="ico"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 2 3.5 4.4v6c0 4.3 3.2 8 7.5 9.1 4.3-1.1 7.5-4.8 7.5-9.1v-6L11 2Z"/><path d="M8 11l2.2 2.2L14 9.5"/></svg></div>
+      <div class="text">
+        <span class="v">100<span class="u">%</span></span>
+        <span class="k">Anonyme · données privées</span>
+      </div>
     </div>
-    <div class="axe-card">
-      <div class="axe-icon"><img src="assets/Icone_Personnage.svg" alt="" /></div>
-      <h3 class="axe-name">Corps</h3>
-      <p class="axe-desc">Énergie, sommeil, tensions et vitalité.</p>
-    </div>
-    <div class="axe-card">
-      <div class="axe-icon"><img src="assets/Icone_Maison.svg" alt="" /></div>
-      <h3 class="axe-name">Environnement</h3>
-      <p class="axe-desc">Votre contexte de vie et vos relations.</p>
-    </div>
-    <div class="axe-card">
-      <div class="axe-icon"><img src="assets/Icone_Cerveau_fleches.svg" alt="" /></div>
-      <h3 class="axe-name">Comportements</h3>
-      <p class="axe-desc">Vos habitudes, réactions et stratégies.</p>
+    <div class="hero-stat">
+      <div class="ico"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="16" height="14.5" rx="2"/><path d="M3 9h16M7.5 2.5v4M14.5 2.5v4"/></svg></div>
+      <div class="text">
+        <span class="v">30<span class="u">jours</span></span>
+        <span class="k">Suivi libre inclus</span>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- SECTION ORIENTATION V6 — SIMPLIFIÉE : juste texte + photo -->
-<section class="section-orientation">
-  <div class="orientation-image-wrap">
-    <img src="assets/therapeute.jpg" alt="Un accompagnement humain par un professionnel adapté" />
+<!-- ════════════════════════════════════════════
+     02 — POURQUOI SUPERPSY
+     ════════════════════════════════════════════ -->
+<section class="section pourquoi" data-screen-label="02 Pourquoi" id="pourquoi">
+  <div class="section-inner">
+    <div class="pourquoi-head">
+      <div class="sec-eyebrow">Pourquoi SuperPsy</div>
+      <h2 class="sec-h2">On peut se sentir moins bien sans savoir <em>ce qui se passe.</em></h2>
+    </div>
+
+    <div class="pourquoi-grid">
+      <div class="point-card">
+        <div class="photo">
+          <img src="photos/jeune-homme-canape.jpg" alt="Jeune homme songeur sur un canapé">
+          <span class="n">01</span>
+        </div>
+        <div class="text-block">
+          <p class="lead">Fatigue psychique, anxiété diffuse, perte d'élan, irritabilité, troubles du sommeil.</p>
+          <p class="body">Des signaux souvent <em>flous</em>, difficiles à situer.</p>
+        </div>
+      </div>
+
+      <div class="point-card">
+        <div class="photo">
+          <img src="photos/main-phone.png" alt="L'app SuperPsy sur un téléphone">
+          <span class="n">02</span>
+        </div>
+        <div class="text-block">
+          <p class="lead">Comprendre votre équilibre psychique, repérer les zones de fragilité, savoir quoi faire ensuite.</p>
+          <p class="body">Un <em>bilan structuré</em> pour faire le point.</p>
+        </div>
+      </div>
+
+      <div class="point-card">
+        <div class="photo">
+          <img src="photos/therapie.jpg" alt="Séance avec un professionnel">
+          <span class="n">03</span>
+        </div>
+        <div class="text-block">
+          <p class="lead">On fait des bilans réguliers pour le corps. Pas pour le psychique.</p>
+          <p class="body">Le psychique mérite aussi <em>d'être évalué.</em></p>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="orientation-content">
-    <p class="eyebrow">Orientation personnalisée</p>
-    <h2 class="section-title">
-      Un accompagnement <em>adapté</em>, si vous le souhaitez
-    </h2>
-    <ul class="orientation-bullets">
-      <li>
-        <div class="orientation-bullet-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="8" r="3.5"/>
-            <path d="M5 21c0-3.866 3.134-7 7-7s7 3.134 7 7"/>
-          </svg>
+</section>
+
+<!-- ════════════════════════════════════════════
+     03 — COMMENT ÇA MARCHE (1 viewport, 3 cols)
+     ════════════════════════════════════════════ -->
+<section class="section comment" data-screen-label="03 Comment" id="comment">
+  <div class="section-inner">
+    <div class="comment-head">
+      <div class="sec-eyebrow">Comment ça marche</div>
+      <h2 class="sec-h2">Trois étapes, <em>quinze minutes.</em></h2>
+      <p class="sec-lede">Une conversation guidée avec notre IA spécialisée, votre synthèse instantanée, puis l'orientation si vous le souhaitez. Pas de formulaire, pas de jugement.</p>
+    </div>
+
+    <div class="steps-row">
+
+      <!-- Step 1 — Chat -->
+      <div class="step-col">
+        <div class="step-phone">
+          <div class="phone-mini">
+            <div class="screen">
+              <div class="status">
+                <span>9:41</span>
+                <span><svg width="14" height="9" viewBox="0 0 14 9" fill="currentColor"><rect x="0" y="5" width="2" height="4" rx="0.5"/><rect x="3" y="3" width="2" height="6" rx="0.5"/><rect x="6" y="1.5" width="2" height="7.5" rx="0.5"/><rect x="9" y="0" width="2" height="9" rx="0.5"/></svg></span>
+              </div>
+              <div class="scr-chat">
+                <div class="top">
+                  <span class="lab">Bilan SuperPsy</span>
+                  <span class="pr">Q. 3 / 12</span>
+                </div>
+                <div class="stream">
+                  <div class="chat-msg ai">
+                    <div class="av">S</div>
+                    <div class="bub">Bonjour. On va prendre 15 minutes pour faire le point. Qu'est-ce qui vous amène aujourd'hui ?</div>
+                  </div>
+                  <div class="chat-msg u">
+                    <div class="av">V</div>
+                    <div class="bub">Je dors mal et je m'énerve facilement depuis trois mois.</div>
+                  </div>
+                  <div class="chat-msg ai">
+                    <div class="av">S</div>
+                    <div class="bub">Merci. Quand vous dites <em>mal dormir</em>, c'est plutôt à l'endormissement ou des réveils nocturnes ?</div>
+                  </div>
+                  <div class="typing"><span></span><span></span><span></span></div>
+                </div>
+                <div class="input">
+                  <span>Votre réponse…</span>
+                  <span class="send">↑</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="orientation-bullet-text">
-          <strong>Psee identifie votre profil psychique et vos besoins.</strong>
-          <span>Pas seulement votre localisation.</span>
+        <div class="step-meta-block">
+          <div class="step-num">01</div>
+          <h3 class="step-h3">Une conversation guidée, <em>à votre rythme.</em></h3>
+          <p class="step-desc">15 min d'échange avec une IA spécialisée, conçue avec des psychologues. Vous racontez librement — elle écoute et reformule.</p>
         </div>
-      </li>
-      <li>
-        <div class="orientation-bullet-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="4 12 10 18 20 6"/>
-          </svg>
+      </div>
+
+      <!-- Step 2 — Synthèse (texte, sans radar) -->
+      <div class="step-col">
+        <div class="step-phone">
+          <div class="phone-mini">
+            <div class="screen">
+              <div class="status">
+                <span>9:54</span>
+                <span><svg width="14" height="9" viewBox="0 0 14 9" fill="currentColor"><rect x="0" y="5" width="2" height="4" rx="0.5"/><rect x="3" y="3" width="2" height="6" rx="0.5"/><rect x="6" y="1.5" width="2" height="7.5" rx="0.5"/><rect x="9" y="0" width="2" height="9" rx="0.5"/></svg></span>
+              </div>
+              <div class="scr-bilan">
+                <div class="top">
+                  <span class="lab">Votre synthèse</span>
+                  <span class="badge">PRÊTE</span>
+                </div>
+                <h4 class="hero-h">Plutôt stable,<br>une <em>vigilance</em> à noter.</h4>
+                <div class="score">
+                  <div>
+                    <div class="l">Équilibre global</div>
+                    <div class="sb">Plutôt stable</div>
+                  </div>
+                  <div class="num">7,4<small>/10</small></div>
+                </div>
+                <div class="finding">
+                  <div class="row">
+                    <span class="axe">Émotions</span>
+                    <span class="pill">Vigilance</span>
+                  </div>
+                  <p class="desc">Régulation émotionnelle réduite en période de stress, marquée par une irritabilité et un sommeil fragmenté.</p>
+                </div>
+                <button class="full">Voir le bilan complet →</button>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="orientation-bullet-text">
-          <strong>Nous vous orientons vers des praticiens dont la pratique correspond à ce que vous traversez.</strong>
+        <div class="step-meta-block">
+          <div class="step-num">02</div>
+          <h3 class="step-h3">Une synthèse immédiate, <em>personnalisée.</em></h3>
+          <p class="step-desc">Dès la fin du bilan : score d'équilibre, points forts, points de vigilance et lecture claire de votre situation.</p>
         </div>
-      </li>
-      <li>
-        <div class="orientation-bullet-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="5" y="11" width="14" height="10" rx="1.5"/>
-            <path d="M8 11V7a4 4 0 0 1 8 0v4"/>
-          </svg>
+      </div>
+
+      <!-- Step 3 — Orientation -->
+      <div class="step-col">
+        <div class="step-phone">
+          <div class="phone-mini">
+            <div class="screen">
+              <div class="status">
+                <span>10:02</span>
+                <span><svg width="14" height="9" viewBox="0 0 14 9" fill="currentColor"><rect x="0" y="5" width="2" height="4" rx="0.5"/><rect x="3" y="3" width="2" height="6" rx="0.5"/><rect x="6" y="1.5" width="2" height="7.5" rx="0.5"/><rect x="9" y="0" width="2" height="9" rx="0.5"/></svg></span>
+              </div>
+              <div class="scr-orient">
+                <div class="top">
+                  <span class="back">←</span>
+                  <span class="lab2">1 / 8 recommandés</span>
+                </div>
+                <span class="lab">Pour vous · Émotions, stress</span>
+                <h4 class="hero-h">Trois praticiens<br><em>recommandés.</em></h4>
+                <div class="pcard">
+                  <div class="row">
+                    <div class="avatar"></div>
+                    <div>
+                      <div class="nm">Dr. Léa Martin</div>
+                      <div class="role">Psychologue · Paris 11</div>
+                    </div>
+                  </div>
+                  <div class="tags">
+                    <span class="tag">TCC</span>
+                    <span class="tag">Stress</span>
+                    <span class="tag">Sommeil</span>
+                  </div>
+                  <div class="scoreline">
+                    <span>Adéquation profil</span>
+                    <strong>92 %</strong>
+                  </div>
+                </div>
+                <button class="book">Voir ses disponibilités →</button>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="orientation-bullet-text">
-          <strong>Vous choisissez librement.</strong>
-          <span>En toute transparence et sans pression.</span>
+        <div class="step-meta-block">
+          <div class="step-num">03</div>
+          <h3 class="step-h3">Une orientation, <em>si vous le souhaitez.</em></h3>
+          <p class="step-desc">Vous décidez. Si pertinent, SuperPsy vous propose des praticiens dont la pratique correspond à ce que vous traversez.</p>
         </div>
-      </li>
-    </ul>
-    <div class="orientation-disclaimer">
-      <div class="orientation-disclaimer-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 22s-8-4-8-12V5l8-3 8 3v5c0 8-8 12-8 12z"/>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════
+     04 — LES 6 DIMENSIONS (light, 1 viewport)
+     ════════════════════════════════════════════ -->
+<section class="section dimensions" data-screen-label="04 Dimensions" id="axes">
+  <div class="section-inner">
+    <div class="dim-head">
+      <div class="sec-eyebrow">Les 6 dimensions</div>
+      <h2 class="sec-h2">Six axes pour explorer votre <em>équilibre psychique.</em></h2>
+      <p class="sec-lede">Une cartographie complète qui prend en compte ce qui se passe en vous, autour de vous, et dans votre corps.</p>
+    </div>
+
+    <div class="dim-content">
+      <div class="dim-radar-big">
+        <svg width="440" height="440" viewBox="0 0 440 440">
+          <g stroke="rgba(14,15,18,0.12)" stroke-width="0.8" fill="none">
+            <polygon points="220,165 261,190 261,235 220,260 179,235 179,190"/>
+            <polygon points="220,110 302,158 302,267 220,315 138,267 138,158"/>
+            <polygon points="220,55 343,128 343,298 220,370 97,298 97,128"/>
+            <polygon points="220,0 384,95 384,330 220,425 56,330 56,95"/>
+          </g>
+          <g stroke="rgba(14,15,18,0.10)" stroke-width="0.8">
+            <line x1="220" y1="220" x2="220" y2="0"/>
+            <line x1="220" y1="220" x2="384" y2="95"/>
+            <line x1="220" y1="220" x2="384" y2="330"/>
+            <line x1="220" y1="220" x2="220" y2="425"/>
+            <line x1="220" y1="220" x2="56" y2="330"/>
+            <line x1="220" y1="220" x2="56" y2="95"/>
+          </g>
+          <polygon points="220,48 350,118 335,286 220,372 75,290 80,130" fill="rgba(255,92,60,0.20)" stroke="#FF5C3C" stroke-width="2.4" stroke-linejoin="round"/>
+          <g fill="#FF5C3C">
+            <circle cx="220" cy="48" r="5"/>
+            <circle cx="350" cy="118" r="5"/>
+            <circle cx="335" cy="286" r="5"/>
+            <circle cx="220" cy="372" r="5"/>
+            <circle cx="75" cy="290" r="5"/>
+            <circle cx="80" cy="130" r="5"/>
+          </g>
+          <g font-family="Inter, sans-serif" font-size="12" fill="var(--ink-2)" fill-opacity="0.85" text-anchor="middle" letter-spacing="0.3">
+            <text x="220" y="-8" fill="#2A2A2E">Processus</text>
+            <text x="412" y="92" fill="#2A2A2E">Ressources</text>
+            <text x="412" y="338" fill="#2A2A2E">Émotions</text>
+            <text x="220" y="442" fill="#2A2A2E">Corps</text>
+            <text x="28" y="338" fill="#2A2A2E">Environnement</text>
+            <text x="28" y="92" fill="#2A2A2E">Comportements</text>
+          </g>
         </svg>
       </div>
-      <p>
-        Vous restez libre de consulter ou non. Cette orientation ne remplace pas
-        l'avis d'un professionnel de santé.
-      </p>
+
+      <div class="dim-cards">
+
+        <div class="dim-card">
+          <div class="photo-thumb">
+            <img src="photos/pexel-pensive-blonde.jpg" alt="">
+            <div class="ic-over"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4a4 4 0 0 0-4 4 3 3 0 0 0 0 6 3 3 0 0 0 4 3 4 4 0 0 0 4-4V8a4 4 0 0 0-4-4Z"/><path d="M14 4a4 4 0 0 1 4 4 3 3 0 0 1 0 6 3 3 0 0 1-4 3 4 4 0 0 1-4-4V8a4 4 0 0 1 4-4Z"/></svg></div>
+          </div>
+          <div class="card-text">
+            <div class="nbr">/ 01</div>
+            <div class="lbl">Processus psychiques</div>
+            <p class="hnt">La manière dont vos pensées s'organisent et s'enchaînent.</p>
+          </div>
+        </div>
+
+        <div class="dim-card">
+          <div class="photo-thumb">
+            <img src="photos/therapie.jpg" alt="" style="object-position: 30% 30%;">
+            <div class="ic-over"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4c-3 0-5 2-5 5 0 4 5 8 5 8s5-4 5-8c0-3-2-5-5-5Z"/><path d="M11 9v3"/></svg></div>
+          </div>
+          <div class="card-text">
+            <div class="nbr">/ 02</div>
+            <div class="lbl">Ressources</div>
+            <p class="hnt">Vos appuis intérieurs et extérieurs, ce qui vous porte.</p>
+          </div>
+        </div>
+
+        <div class="dim-card">
+          <div class="photo-thumb">
+            <img src="photos/jeune-femme-casque.jpg" alt="" style="object-position: 35% 30%;">
+            <div class="ic-over"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M11 18s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 18 8c0 5.5-7 10-7 10Z"/></svg></div>
+          </div>
+          <div class="card-text">
+            <div class="nbr">/ 03</div>
+            <div class="lbl">Émotions</div>
+            <p class="hnt">Ce que vous ressentez et la façon dont vous le régulez.</p>
+          </div>
+        </div>
+
+        <div class="dim-card">
+          <div class="photo-thumb">
+            <img src="photos/pexel-lotus-redhead.jpg" alt="" style="object-position: 50% 40%;">
+            <div class="ic-over"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="6" r="3"/><path d="M5 19c1-4 3-6 6-6s5 2 6 6"/></svg></div>
+          </div>
+          <div class="card-text">
+            <div class="nbr">/ 04</div>
+            <div class="lbl">Corps</div>
+            <p class="hnt">Énergie, sommeil, tensions — vos signaux corporels.</p>
+          </div>
+        </div>
+
+        <div class="dim-card">
+          <div class="photo-thumb">
+            <img src="photos/jeune-homme-canape.jpg" alt="" style="object-position: 60% 30%;">
+            <div class="ic-over"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10 11 4l7 6v8a1 1 0 0 1-1 1h-3v-6H8v6H5a1 1 0 0 1-1-1v-8Z"/></svg></div>
+          </div>
+          <div class="card-text">
+            <div class="nbr">/ 05</div>
+            <div class="lbl">Environnement</div>
+            <p class="hnt">Votre contexte de vie, vos relations, votre quotidien.</p>
+          </div>
+        </div>
+
+        <div class="dim-card">
+          <div class="photo-thumb">
+            <img src="photos/pexel-notebook-blonde.jpg" alt="" style="object-position: 50% 25%;">
+            <div class="ic-over"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="3"/><path d="M11 2v3M11 17v3M2 11h3M17 11h3M4.6 4.6l2.1 2.1M15.3 15.3l2.1 2.1M4.6 17.4l2.1-2.1M15.3 6.7l2.1-2.1"/></svg></div>
+          </div>
+          <div class="card-text">
+            <div class="nbr">/ 06</div>
+            <div class="lbl">Comportements</div>
+            <p class="hnt">Vos habitudes, vos réactions et stratégies.</p>
+          </div>
+        </div>
+
+      </div>
     </div>
   </div>
 </section>
 
-<!-- SECTION CTA FINAL — 2 colonnes : texte gauche + photo droite pleine hauteur -->
-<section class="section-cta">
-  <div class="cta-grid">
-    <div class="cta-left">
-      <h2 class="cta-title">
-        Faites le point sur votre <em>équilibre psychique</em>
-      </h2>
-      <ul class="cta-bullets">
-        <li>
-          <span class="cta-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-          <span>Évaluation guidée (15 min)</span>
-        </li>
-        <li>
-          <span class="cta-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-          <span>Synthèse immédiate et personnalisée</span>
-        </li>
-        <li>
-          <span class="cta-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-          <span>Accès complet pendant 30 jours</span>
-        </li>
-        <li>
-          <span class="cta-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-          <span>Orientation si vous le souhaitez</span>
-        </li>
-        <li>
-          <span class="cta-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-          <span>100 % anonyme et sécurisé</span>
-        </li>
-      </ul>
-
-      <div class="cta-price-row">
-        <span class="cta-price-amount">9 €</span>
-        <span class="cta-price-detail">accès complet · suivi libre 30 jours</span>
-      </div>
-
-      <a href="paywall.html" class="cta-card-btn">Commencer mon check-up</a>
-
-      <div class="cta-trust">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="1.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
-        <span>Paiement sécurisé · Sans abonnement</span>
+<!-- ════════════════════════════════════════════
+     05 — ORIENTATION (split éditorial)
+     ════════════════════════════════════════════ -->
+<section class="orientation" data-screen-label="05 Orientation" id="orientation">
+  <div class="orientation-inner">
+    <div class="orientation-photo">
+      <img src="photos/therapie.jpg" alt="Une orientation avec un professionnel adapté">
+      <div class="pill-on-photo">Orientation personnalisée</div>
+      <div class="quote-on-photo">
+        <p class="q">« Pas un annuaire de psys. Un appariement basé sur votre profil. »</p>
+        <p class="who">Conçu avec des psychologues cliniciens</p>
       </div>
     </div>
 
-    <div class="cta-right">
-      <img src="assets/cta-smartphones.jpg" alt="Aperçu Psee : la synthèse personnalisée et la conversation guidée" />
+    <div class="orientation-text">
+      <div class="sec-eyebrow">Si vous le souhaitez</div>
+      <h2>Un accompagnement <em>adapté</em> à ce que vous traversez.</h2>
+
+      <div class="or-points">
+        <div class="or-point">
+          <div class="ic">
+            <svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="8" r="4"/><path d="M3 19c1.5-3.5 5-5 8-5s6.5 1.5 8 5"/></svg>
+          </div>
+          <div>
+            <p class="lead">L'appariement se fait sur votre profil, pas votre code postal.</p>
+            <p class="sub">SuperPsy identifie votre profil psychique et vos besoins, puis cherche les praticiens qui correspondent.</p>
+          </div>
+        </div>
+        <div class="or-point">
+          <div class="ic">
+            <svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l4.5 4.5L18 6"/></svg>
+          </div>
+          <div>
+            <p class="lead">Des praticiens dont la pratique colle à ce que vous vivez.</p>
+            <p class="sub">Psychologues, psychothérapeutes, psychiatres — vérifiés et expérimentés sur votre type de situation.</p>
+          </div>
+        </div>
+        <div class="or-point">
+          <div class="ic">
+            <svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10" width="12" height="9" rx="1.5"/><path d="M8 10V7a3 3 0 0 1 6 0v3"/></svg>
+          </div>
+          <div>
+            <p class="lead">Vous gardez la main à chaque étape, sans pression.</p>
+            <p class="sub">L'orientation est une proposition, jamais une obligation. Vous choisissez librement.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="or-disclaim">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--orange); flex-shrink: 0; margin-top: 1px;"><path d="M9 1.5 2 4v5c0 3.5 2.5 6.5 7 7.5 4.5-1 7-4 7-7.5V4L9 1.5Z"/></svg>
+        <span><strong>Vous restez libre</strong> de consulter ou non. Cette orientation ne remplace pas l'avis d'un professionnel de santé.</span>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- SECTION FAQ -->
-<section class="section-faq" id="faq">
-  <div class="faq-container">
-    <div class="faq-header">
-      <p class="eyebrow">FAQ</p>
-      <h2 class="section-title">
-        Vos questions les plus <em>fréquentes</em>
-      </h2>
+<!-- ════════════════════════════════════════════
+     06 — CTA FINAL (1 viewport)
+     ════════════════════════════════════════════ -->
+<section class="section cta-final" data-screen-label="06 CTA Final" id="cta">
+  <div class="section-inner">
+    <div class="cta-final-grid">
+      <div class="left">
+        <div class="sec-eyebrow">Faites le point</div>
+        <h2 class="sec-h2">Sur votre<br><em>équilibre psychique.</em></h2>
+
+        <div class="features-list">
+          <div class="feature-big"><span class="check"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l3 3L11 4"/></svg></span>Évaluation guidée — 15 min</div>
+          <div class="feature-big"><span class="check"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l3 3L11 4"/></svg></span>Synthèse immédiate</div>
+          <div class="feature-big"><span class="check"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l3 3L11 4"/></svg></span>Accès 30 jours</div>
+          <div class="feature-big"><span class="check"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l3 3L11 4"/></svg></span>Orientation si pertinent</div>
+          <div class="feature-big"><span class="check"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l3 3L11 4"/></svg></span>100 % anonyme</div>
+          <div class="feature-big"><span class="check"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l3 3L11 4"/></svg></span>Sans abonnement</div>
+        </div>
+
+        <div class="price-card-big">
+          <div class="price">
+            <span class="val">9</span>
+            <span class="cur">€</span>
+          </div>
+          <div class="price-meta">
+            <div class="t">Accès complet</div>
+            <div class="s">Suivi libre 30 jours · Paiement unique</div>
+          </div>
+          <button class="cta-big">Commencer maintenant</button>
+        </div>
+
+        <div class="secure-line-big">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><rect x="3" y="6" width="7" height="5" rx="1"/><path d="M4.5 6V4a2 2 0 0 1 4 0v2"/></svg>
+          Paiement sécurisé · Sans abonnement · Annulation libre
+        </div>
+      </div>
+
+      <div class="cta-phones-big">
+        <img src="photos/femme-mug.png" alt="Équilibre psychique — prendre un temps pour soi">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════
+     07 — FAQ
+     ════════════════════════════════════════════ -->
+<section class="faq" data-screen-label="07 FAQ" id="faq">
+  <div class="faq-inner">
+    <div class="faq-head">
+      <div class="sec-eyebrow">FAQ</div>
+      <h2 class="sec-h2">Vos questions<br><em>les plus fréquentes.</em></h2>
     </div>
 
     <div class="faq-list">
-
-      <details class="faq-item">
-        <summary><span>Psee remplace-t-il une consultation ?</span><span class="faq-toggle"></span></summary>
-        <div class="faq-content">
-          <p>Non. Psee n'est ni un diagnostic, ni une thérapie, ni un substitut à un professionnel de santé. C'est un outil de pré-orientation qui vous aide à mettre des mots sur ce que vous vivez et à mieux comprendre votre situation.</p>
-          <p>Si votre check-up révèle des éléments qui méritent attention, Psee peut vous mettre en relation avec des psychologues, psychothérapeutes ou psychiatres prêts à vous accompagner.</p>
+      <div class="faq-item open">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          <span class="q-text">SuperPsy remplace-t-il une consultation ?</span>
+          <svg class="q-icon" width="24" height="24" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M11 4v14M4 11h14"/></svg>
+        </button>
+        <div class="faq-a">
+          Non. SuperPsy n'est ni un diagnostic, ni une thérapie, ni un substitut à un professionnel de santé. C'est un outil de pré-orientation qui vous aide à mettre des mots sur ce que vous vivez. Si votre check-up révèle des éléments qui méritent attention, SuperPsy peut vous mettre en relation avec des psychologues, psychothérapeutes ou psychiatres prêts à vous accompagner.
         </div>
-      </details>
-
-      <details class="faq-item">
-        <summary><span>Combien de temps dure le check-up ?</span><span class="faq-toggle"></span></summary>
-        <div class="faq-content">
-          <p>Comptez environ 15 minutes pour le check-up complet, en répondant à votre rythme. Vous pouvez prendre des pauses si besoin et reprendre où vous en étiez.</p>
-          <p>L'évaluation s'adapte à ce que vous partagez : plus vous prenez le temps de répondre en détail, plus la synthèse sera précise.</p>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          <span class="q-text">Combien de temps dure le check-up ?</span>
+          <svg class="q-icon" width="24" height="24" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M11 4v14M4 11h14"/></svg>
+        </button>
+        <div class="faq-a">
+          Comptez environ 15 minutes pour le check-up complet, en répondant à votre rythme. Vous pouvez prendre des pauses si besoin et reprendre où vous en étiez. L'évaluation s'adapte à ce que vous partagez : plus vous prenez le temps de répondre en détail, plus la synthèse sera précise.
         </div>
-      </details>
-
-      <details class="faq-item">
-        <summary><span>Mes données sont-elles sécurisées ?</span><span class="faq-toggle"></span></summary>
-        <div class="faq-content">
-          <p>Oui, votre confidentialité est notre priorité. Le check-up est 100 % anonyme : aucune donnée personnelle identifiante n'est collectée pour réaliser votre bilan.</p>
-          <p>Vos données sont hébergées en France, chiffrées, et vous gardez le contrôle complet de votre profil. Vous pouvez le supprimer à tout moment.</p>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          <span class="q-text">Mes données sont-elles sécurisées ?</span>
+          <svg class="q-icon" width="24" height="24" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M11 4v14M4 11h14"/></svg>
+        </button>
+        <div class="faq-a">
+          Oui, votre confidentialité est notre priorité. Le check-up est 100 % anonyme. Vos données sont hébergées en France, chiffrées, et vous gardez le contrôle complet de votre profil. Vous pouvez le supprimer à tout moment.
         </div>
-      </details>
-
-      <details class="faq-item">
-        <summary><span>Que contient ma synthèse ?</span><span class="faq-toggle"></span></summary>
-        <div class="faq-content">
-          <p>Votre synthèse comprend une cartographie de votre équilibre psychique sur 6 axes : processus psychiques, ressources, comportements, régulation émotionnelle, corps, et environnement.</p>
-          <p>Vous y trouverez les points forts qui sont vos appuis, les zones qui méritent attention, et des pistes concrètes pour la suite. Si pertinent, des suggestions d'orientation vous sont proposées.</p>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          <span class="q-text">Que contient ma synthèse ?</span>
+          <svg class="q-icon" width="24" height="24" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M11 4v14M4 11h14"/></svg>
+        </button>
+        <div class="faq-a">
+          Votre synthèse comprend une cartographie de votre équilibre psychique sur 6 axes : processus psychiques, ressources, comportements, régulation émotionnelle, corps, et environnement. Vous y trouverez les points forts qui sont vos appuis, les zones qui méritent attention, et des pistes concrètes pour la suite.
         </div>
-      </details>
-
-      <details class="faq-item">
-        <summary><span>Puis-je faire plusieurs suivis ?</span><span class="faq-toggle"></span></summary>
-        <div class="faq-content">
-          <p>Oui. Pendant les 30 jours qui suivent votre bilan initial, vous pouvez réaliser autant de suivis libres que vous souhaitez, sans coût supplémentaire.</p>
-          <p>C'est utile pour observer vos évolutions, ajuster votre lecture de la situation, ou simplement vous écouter régulièrement. Tout est inclus dans l'offre découverte à 9 €.</p>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          <span class="q-text">Puis-je faire plusieurs suivis ?</span>
+          <svg class="q-icon" width="24" height="24" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M11 4v14M4 11h14"/></svg>
+        </button>
+        <div class="faq-a">
+          Oui. Pendant les 30 jours qui suivent votre bilan initial, vous pouvez réaliser autant de suivis libres que vous souhaitez, sans coût supplémentaire. Tout est inclus dans l'offre découverte à 9 €.
         </div>
-      </details>
-
+      </div>
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
-<footer class="footer">
-  <div class="footer-content">
+<!-- ════════════════════════════════════════════
+     08 — FOOTER
+     ════════════════════════════════════════════ -->
+<footer class="footer" data-screen-label="08 Footer">
+  <div class="footer-inner">
     <div class="footer-brand">
-      <a href="/" class="footer-logo" aria-label="Psee">
-        <svg viewBox="80 185 422 182" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
-          <path fill="currentColor" d="M167.08,192.68c-4.14,0-7.42.04-9.82.13-2.4.08-4.81.17-7.21.25-2.41.09-5.14.17-8.2.25-3.07.09-7.33.13-12.8.13h-41.51v7.7c15.74,0,19.58,4.97,19.58,14.91v116.82c0,11.93-3.5,17.9-18.58,17.9v7.46h71.83v-7.46c-16.41,0-24.61-6.3-24.61-18.89v-48.47c4.8,1,9.73,1.7,14.79,2.11,5.05.41,10.23.62,15.54.62,9.77,0,18.23-1.16,25.35-3.48,7.12-2.32,13.01-5.55,17.65-9.7,4.64-4.14,8.08-8.95,10.31-14.42,2.24-5.47,3.36-11.35,3.36-17.65,0-32.15-18.56-48.22-55.68-48.22ZM190.63,253.83c-1.16,4.47-3.02,8.41-5.59,11.81-2.57,3.4-5.8,6.13-9.7,8.2-3.89,2.08-8.57,3.11-14.04,3.11-6.13,0-6.89-.25-11.86-.74-4.97-.5-9.53-1.16-13.67-1.99v-59.9c0-8.78,3.48-13.17,10.44-13.17h6.46c29.66,0,39.7,12.93,39.7,38.78,0,4.81-.58,9.45-1.74,13.92Z"/>
-          <path fill="currentColor" d="M390.95,268.87c-3.15-5.88-6.88-10.4-11.18-13.55-4.31-3.15-8.91-5.26-13.8-6.34-4.89-1.08-9.57-1.62-14.04-1.62-7.29,0-13.92,1.58-19.88,4.72-5.97,3.15-11.06,7.38-15.29,12.68-4.23,5.31-7.5,11.35-9.82,18.14-2.32,6.8-3.48,13.92-3.48,21.38s1.08,14.5,3.23,21.13c2.15,6.63,5.34,12.35,9.57,17.15,4.23,4.81,9.48,8.62,15.78,11.43,6.3,2.82,13.59,4.23,21.87,4.23,9.94,0,17.91-2.45,25.2-7.59,6.72-4.73,12.8-11.37,16.99-19.62l.1-.2c.08-.22.14-.45.14-.69,0-.6-.19-1.16-.62-1.55-.78-.52-1.19-.57-1.75-.44-.53.12-1.21.82-1.21.82,0,0-7.95,9.4-12.78,13.2-5.06,3.98-11.87,5.91-18.83,5.91-5.31,0-8.82-1.06-13.13-3.29-4.31-2.24-7.95-5.34-10.94-9.32-2.98-3.98-5.3-8.62-6.96-13.92-1.62-5.19-2.44-14.03-2.47-19.86l22.24-4.09,39.72-6.68h0s6.73-1.14,6.73-1.14h0c.34-.06.53-.09.53-.09-.99-9.61-2.79-14.91-5.93-20.79ZM364.14,290.25l-18.58,3.48-12.96,2.17c-3.65,0-5.49-1.54-5.49-3.53,0-3.98,1.12-13.06,2.28-16.79,1.16-3.73,2.86-7.04,5.1-9.94,2.24-2.9,4.93-5.22,8.08-6.96,3.15-1.74,4.13-2.12,8.37-2.61,7.08-.81,12.55,2.36,16.28,7.08,3.73,4.72,5.84,10.24,6.34,16.53,0,6.82-2.46,9.29-9.41,10.57Z"/>
-          <path fill="currentColor" d="M493.42,289.75c.34-.06.53-.09.53-.09-.99-9.61-2.79-14.91-5.93-20.79-3.15-5.88-6.88-10.4-11.18-13.55-4.31-3.15-8.91-5.26-13.8-6.34-4.89-1.08-9.57-1.62-14.04-1.62-7.29,0-13.92,1.58-19.88,4.72-5.97,3.15-11.06,7.38-15.29,12.68-4.23,5.31-7.5,11.35-9.82,18.14-2.32,6.8-3.48,13.92-3.48,21.38s1.08,14.5,3.23,21.13c2.15,6.63,5.34,12.35,9.57,17.15,4.23,4.81,9.48,8.62,15.78,11.43,6.3,2.82,13.59,4.23,21.87,4.23,9.94,0,17.91-2.45,25.2-7.59,6.72-4.73,12.8-11.37,16.99-19.62l.1-.2c.08-.22.14-.45.14-.69,0-.6-.19-1.16-.62-1.55-.78-.52-1.19-.57-1.75-.44-.53.12-1.21.82-1.21.82,0,0-7.95,9.4-12.78,13.2-5.06,3.98-11.87,5.91-18.83,5.91-5.31,0-8.82-1.06-13.13-3.29-4.31-2.24-7.95-5.34-10.94-9.32-2.98-3.98-5.3-8.62-6.96-13.92-1.62-5.19-2.44-14.03-2.47-19.86l22.24-4.09,39.72-6.68h0s6.73-1.14,6.73-1.14h0ZM461.2,290.25l-18.58,3.48-12.96,2.17c-3.65,0-5.49-1.54-5.49-3.53,0-3.98,1.12-13.06,2.28-16.79,1.16-3.73,2.86-7.04,5.1-9.94,2.24-2.9,4.93-5.22,8.08-6.96,3.15-1.74,4.13-2.12,8.37-2.61,7.08-.81,12.55,2.36,16.28,7.08,3.73,4.72,5.84,10.24,6.34,16.53,0,6.82-2.46,9.29-9.41,10.57Z"/>
-          <path fill="currentColor" d="M282.72,298.34c-4.62-3.06-9.65-5.76-15.09-8.1-5.44-2.33-10.49-4.65-15.15-6.94-4.66-2.29-8.53-4.72-11.61-7.27-3.09-2.56-4.82-5.19-4.83-9.1-.01-5.97,2.32-9.12,6.9-11.78,3.89-2.27,9.36-2.6,14.36-1.91,13.06,1.79,25.97,10.14,33.03,28.08l2.17.11v-20.9c-4.14-3.48-5.46-4.57-10.8-7.77-6.9-4.45-15.78-6.75-23.22-7.13-6.24-.32-11.66.21-16.24,1.59-4.59,1.38-8.39,3.45-11.4,6.19-3.01,2.75-5.31,6.04-6.9,9.88-1.59,3.85-2.5,8.06-2.74,12.66-.24,4.6.61,10.77,2.77,14.38,2.16,3.61,4.95,6.78,8.37,9.52,3.42,2.74,7.16,5.11,11.23,7.11,4.07,2,7.89,3.7,11.47,5.07,4.6,1.78,8.59,3.48,11.99,5.1,3.39,1.63,6.22,3.31,8.47,5.04,2.25,1.74,3.88,3.79,4.89,6.14,1.01,2.36,1.8,5.19,1.26,8.38-1.72,10.18-9.18,13.21-22.33,13.41l-.71-.03c-14.63-.76-28.6-12.2-36.45-32.13l-2.45-.13v23.18c4.66,3.92,6.08,5.09,12.04,8.67,7.66,4.95,17.51,8.1,25.78,8.53l2.21.03c4.89-.43,9.76-.84,14.27-2.39,4.51-1.56,8.53-3.7,12.06-6.43,3.53-2.72,6.35-6.09,8.47-10.08,2.12-3.99,3.31-8.55,3.58-13.67.3-5.8-.96-12.5-3.96-16.59-3.01-4.09-6.81-7.66-11.43-10.73Z"/>
-        </svg>
-      </a>
-      <p>Le check-up psychique qui aide à y voir plus clair. Un temps pour vous, des repères pour la suite.</p>
-
-      <div class="footer-social">
-        <a href="https://instagram.com/psee" class="social-link" aria-label="Instagram" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-        </a>
-        <a href="https://linkedin.com/company/psee" class="social-link" aria-label="LinkedIn" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-        </a>
-        <a href="https://facebook.com/psee" class="social-link" aria-label="Facebook" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-        </a>
-      </div>
+      <span class="wm light" style="font-size: 38px;">superpsy<span class="dot">.</span></span>
+      <p class="tagline">Le check-up psychique qui aide à <em>y voir plus clair.</em></p>
+      <p class="sub">Un temps pour vous, des repères pour la suite.</p>
     </div>
-
     <div class="footer-col">
       <h4>Produit</h4>
       <ul>
-        <li><a href="#pourquoi">Pourquoi Psee</a></li>
-        <li><a href="#axes">Les 6 dimensions</a></li>
-        <li><a href="#comment">Comment ça marche</a></li>
-        <li><a href="#faq">FAQ</a></li>
-        <li><a href="pro.html">Psee Pro</a></li>
+        <li>Pourquoi SuperPsy</li>
+        <li>Les 6 dimensions</li>
+        <li>Comment ça marche</li>
+        <li>FAQ</li>
+        <li>SuperPsy Pro</li>
       </ul>
     </div>
     <div class="footer-col">
       <h4>Légal</h4>
       <ul>
-        <li><a href="/cgu">CGU</a></li>
-        <li><a href="/mentions">Mentions légales</a></li>
-        <li><a href="/privacy">Politique de confidentialité</a></li>
-        <li><a href="/cookies">Cookies</a></li>
+        <li>CGU</li>
+        <li>Mentions légales</li>
+        <li>Politique de confidentialité</li>
+        <li>Cookies</li>
       </ul>
     </div>
     <div class="footer-col">
       <h4>Contact</h4>
       <ul>
-        <li><a href="mailto:contact@psee.fr">contact@psee.fr</a></li>
+        <li><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="bbd8d4d5cfdad8cffbc8cecbdec9cbc8c295ddc9">[email&#160;protected]</a></li>
       </ul>
-      <p class="footer-disclaimer">
-        Psee n'est pas un dispositif médical. Ce service ne remplace pas l'avis d'un professionnel de santé.
-      </p>
     </div>
   </div>
   <div class="footer-bottom">
-    <span>© 2026 Psee. Tous droits réservés.</span>
-    <span>Un temps pour vous · Y voir plus clair</span>
+    <div class="legal">SuperPsy n'est pas un dispositif médical. Ce service ne remplace pas l'avis d'un professionnel de santé.</div>
+    <div class="right">
+      <span>© 2026 SuperPsy. Tous droits réservés.</span>
+      <em>Un temps pour vous · Y voir plus clair</em>
+    </div>
   </div>
 </footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  function toggleFaq(btn) {
+    var item = btn.parentElement;
+    var wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(function(el) { el.classList.remove('open'); });
+    if (!wasOpen) item.classList.add('open');
+  }
+</script>
+
+<div class="back-link"><a href="psee-legacy.html">↩ Ancien site Psee</a></div>
 
 </body>
 </html>
