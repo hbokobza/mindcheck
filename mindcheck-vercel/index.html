@@ -63,7 +63,7 @@
     display: flex; align-items: center; justify-content: space-between; gap: 32px;
     position: relative; z-index: 2; width: 100%;
   }
-  .nav .nav-left { display: flex; align-items: center; gap: 56px; }
+  .nav .nav-left { display: flex; align-items: center; gap: 0; }
   .nav .links { display: flex; gap: 36px; font-size: 14px; color: rgba(255,255,255,0.9); font-weight: 500; }
   .nav .links a { transition: color .15s; text-shadow: 0 1px 8px rgba(0,0,0,0.25); }
   .nav .links a:hover { color: var(--orange); }
@@ -83,7 +83,7 @@
   .hero-content {
     flex: 1; position: relative; z-index: 1;
     max-width: 1440px; margin: 0 auto; width: 100%;
-    padding: 24px 280px 48px 48px;
+    padding: 24px 48px 120px 48px;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     text-align: center;
   }
@@ -140,28 +140,30 @@
   }
   .cta-ghost:hover { color: var(--orange); border-color: var(--orange); }
 
-  /* Stats intégrées au hero — colonne verticale à droite */
+  /* Stats intégrées au hero — bande horizontale en bas */
   .hero-stats {
     position: absolute;
-    right: 32px;
-    top: 50%;
-    transform: translateY(-50%);
+    bottom: 32px;
+    left: 48px;
+    right: 48px;
     z-index: 2;
-    display: flex; flex-direction: column; gap: 10px;
-    width: 230px;
+    display: flex; flex-direction: row; gap: 12px;
+    width: auto;
+    justify-content: flex-start;
   }
   .hero-stat {
-    background: rgba(247,245,239,0.92);
+    background: rgba(247,245,239,0.90);
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
     border: 1px solid rgba(255,255,255,0.5);
     border-radius: 14px;
-    padding: 13px 14px 13px 12px;
-    display: flex; align-items: center; gap: 12px;
+    padding: 10px 16px 10px 12px;
+    display: flex; align-items: center; gap: 10px;
     box-shadow: 0 8px 24px rgba(14,15,18,0.18);
     transition: transform .15s, background .15s;
+    flex-shrink: 0;
   }
-  .hero-stat:hover { transform: translateX(-3px); background: rgba(247,245,239,0.98); }
+  .hero-stat:hover { transform: translateY(-2px); background: rgba(247,245,239,0.98); }
   .hero-stat .ico {
     width: 34px; height: 34px; border-radius: 9px;
     background: rgba(255,92,60,0.14); color: var(--orange);
@@ -260,7 +262,7 @@
     font-family: 'Bricolage Grotesque', sans-serif;
     font-size: 24px; font-weight: 500; line-height: 1.25;
     color: var(--ink); letter-spacing: -0.4px;
-    margin: auto 0 0;
+    margin: auto 0 0; text-align: left;
   }
   .point-card .body em {
     font-family: 'Instrument Serif', serif; font-style: italic;
@@ -525,7 +527,7 @@
      ════════════════════════════════════════════ */
   .dimensions { background: var(--bone); padding: 80px 48px; }
   .dim-head { max-width: 880px; margin-bottom: 40px; }
-  .dim-head .sec-h2 { font-size: clamp(40px, 4.8vw, 64px); }
+  /* dim-head sec-h2 : même taille que les autres sections */
   .dim-head .sec-lede { font-size: 16px; margin-top: 16px; }
   .dim-content {
     display: grid; grid-template-columns: 380px 1fr;
@@ -543,7 +545,7 @@
   }
   .dim-card:hover { border-color: rgba(255,92,60,0.40); transform: translateY(-3px); }
   .dim-card .photo-thumb {
-    height: 90px; overflow: hidden; position: relative;
+    height: 140px; overflow: hidden; position: relative;
     background: var(--bone-2);
   }
   .dim-card .photo-thumb img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
@@ -807,14 +809,14 @@
   <nav class="nav">
     <div class="nav-left">
       <span class="wm light">superpsy<span class="dot">.</span></span>
+    </div>
+    <div class="nav-right">
       <div class="links">
         <a href="#pourquoi">Pourquoi</a>
         <a href="#comment">Méthode</a>
         <a href="#axes">6 dimensions</a>
         <a href="#faq">FAQ</a>
       </div>
-    </div>
-    <div class="nav-right">
       <span class="lang">FR · EN</span>
       <span class="connect">Se connecter</span>
       <button class="cta-pill">Faire le check-up</button>
@@ -1100,13 +1102,13 @@
             <circle cx="75" cy="290" r="5"/>
             <circle cx="80" cy="130" r="5"/>
           </g>
-          <g font-family="Inter, sans-serif" font-size="12" fill="var(--ink-2)" fill-opacity="0.85" text-anchor="middle" letter-spacing="0.3">
-            <text x="220" y="-8" fill="#2A2A2E">Processus</text>
-            <text x="412" y="92" fill="#2A2A2E">Ressources</text>
-            <text x="412" y="338" fill="#2A2A2E">Émotions</text>
-            <text x="220" y="442" fill="#2A2A2E">Corps</text>
-            <text x="28" y="338" fill="#2A2A2E">Environnement</text>
-            <text x="28" y="92" fill="#2A2A2E">Comportements</text>
+          <g font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="var(--ink)" fill-opacity="1" text-anchor="middle" letter-spacing="0.2">
+            <text x="220" y="-12" fill="#2A2A2E">Processus</text>
+            <text x="420" y="92" fill="#2A2A2E">Ressources</text>
+            <text x="420" y="338" fill="#2A2A2E">Émotions</text>
+            <text x="220" y="452" fill="#2A2A2E">Corps</text>
+            <text x="20" y="338" fill="#2A2A2E">Environnement</text>
+            <text x="20" y="92" fill="#2A2A2E">Comportements</text>
           </g>
         </svg>
       </div>
@@ -1193,18 +1195,9 @@
 <!-- ════════════════════════════════════════════
      05 — ORIENTATION (split éditorial)
      ════════════════════════════════════════════ -->
-<section class="orientation" data-screen-label="05 Orientation" id="orientation">
-  <div class="orientation-inner">
-    <div class="orientation-photo">
-      <img src="therapie.jpg" alt="Une orientation avec un professionnel adapté">
-      <div class="pill-on-photo">Orientation personnalisée</div>
-      <div class="quote-on-photo">
-        <p class="q">« Pas un annuaire de psys. Un appariement basé sur votre profil. »</p>
-        <p class="who">Conçu avec des psychologues cliniciens</p>
-      </div>
-    </div>
-
-    <div class="orientation-text">
+<section class="orientation" data-screen-label="05 Orientation" id="orientation" style="min-height:auto; padding: 110px 48px;">
+  <div class="section-inner">
+    <div class="orientation-text" style="padding: 0; max-width: 860px; margin: 0 auto;">
       <div class="sec-eyebrow">Si vous le souhaitez</div>
       <h2>Un accompagnement <em>adapté</em> à ce que vous traversez.</h2>
 
