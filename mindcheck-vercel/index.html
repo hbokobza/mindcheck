@@ -672,9 +672,10 @@
      ════════════════════════════════════════════ */
   .cta-final { background: var(--bone); }
   .cta-final-grid {
-    display: grid; grid-template-columns: 1.1fr 1fr;
-    gap: 80px; align-items: center;
+    display: flex; flex-direction: column;
+    align-items: center; max-width: 720px; margin: 0 auto;
   }
+  .cta-final-grid .left { width: 100%; }
   .cta-final-grid .left .features-list {
     margin-top: 32px;
     display: grid; grid-template-columns: 1fr 1fr; gap: 14px 24px;
@@ -1276,9 +1277,6 @@
         </div>
       </div>
 
-      <div class="cta-phones-big">
-        <img src="femme-mug.png" alt="Équilibre psychique — prendre un temps pour soi">
-      </div>
     </div>
   </div>
 </section>
