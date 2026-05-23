@@ -1,4 +1,3 @@
-// CBtB - 23 mai 2026
 // api/chat.js
 // Proxy securise vers l'API Anthropic pour PSEE
 // + detection de suspicion clinique
@@ -1763,4 +1762,3 @@ async function insertClinicalExtraction({ extractionId, sessionId, jsonFull, sch
 
   console.log('[psee-supabase] clinical_extraction inserted | auditId=' + extractionId);
 }
-
