@@ -1762,3 +1762,4 @@ async function insertClinicalExtraction({ extractionId, sessionId, jsonFull, sch
 
   console.log('[psee-supabase] clinical_extraction inserted | auditId=' + extractionId);
 }
+
