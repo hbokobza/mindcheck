@@ -54,7 +54,7 @@ const MAX_MODULES_PER_SESSION = 2;
 // Pour activer en production : passer à true et redéployer.
 // Pour rollback instantané : repasser à false et redéployer.
 // ============================================================================
-const USE_V13_PIPELINE = true;
+const USE_V13_PIPELINE = false;
 
 // -----------------------------
 // SYSTEM PROMPT
@@ -1021,6 +1021,75 @@ async function callHaikuJson(systemPrompt, userMessages) {
   return { parsed, raw: data };
 }
 
+// Variante Sonnet pour les tâches nécessitant des outputs JSON longs et stables.
+// Utilisée uniquement pour l'extraction clinique V1.3 (JSON ~25k chars).
+async function callSonnetJson(systemPrompt, userMessages) {
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': process.env.ANTHROPIC_API_KEY,
+      'anthropic-version': '2023-06-01'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-5-20251022',
+      max_tokens: 16000,
+      system: systemPrompt,
+      messages: userMessages
+    })
+  });
+
+  const data = await response.json();
+  if (!response.ok) {
+    console.error('[psee-sonnet-json] HTTP error', response.status, data?.error?.message || data);
+    const err = new Error(data?.error?.message || 'Sonnet call failed (HTTP ' + response.status + ')');
+    err.status = response.status;
+    err.data = data;
+    throw err;
+  }
+
+  const text = data.content?.[0]?.text || '';
+  if (!text) {
+    console.error('[psee-sonnet-json] empty response | stop_reason=', data.stop_reason);
+    throw new Error('Sonnet response is empty (stop_reason: ' + (data.stop_reason || 'unknown') + ')');
+  }
+
+  if (data.stop_reason === 'max_tokens') {
+    console.warn('[psee-sonnet-json] response was truncated by max_tokens');
+  }
+
+  let cleaned = text.trim();
+  cleaned = cleaned.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '');
+
+  const firstBrace = cleaned.indexOf('{');
+  const lastBrace = cleaned.lastIndexOf('}');
+  if (firstBrace === -1 || lastBrace === -1 || lastBrace <= firstBrace) {
+    console.error('[psee-sonnet-json] no JSON braces found | text_preview=', text.slice(0, 300));
+    throw new Error('Sonnet response contains no JSON: ' + text.slice(0, 200));
+  }
+
+  const jsonStr = cleaned.slice(firstBrace, lastBrace + 1);
+
+  let parsed;
+  try {
+    parsed = JSON.parse(jsonStr);
+  } catch (e) {
+    const repaired = jsonStr.replace(/,(\s*[}\]])/g, '$1');
+    try {
+      parsed = JSON.parse(repaired);
+      console.warn('[psee-sonnet-json] JSON parse succeeded after repair');
+    } catch (e2) {
+      console.error('[psee-sonnet-json] JSON parse failed | error=', e.message, '| length=', jsonStr.length);
+      const err = new Error('Sonnet JSON parse failed: ' + e.message);
+      err.rawText = text;
+      throw err;
+    }
+  }
+
+  console.log('[psee-sonnet-json] success | tokens_in=', data.usage?.input_tokens, '| tokens_out=', data.usage?.output_tokens);
+  return { parsed, raw: data };
+}
+
 function buildIndicateurFromScoring(moduleId, scoredArray, auditId = null) {
   const module = getPsychometricModule(moduleId);
   if (!module) return null;
@@ -1257,7 +1326,10 @@ Produis maintenant le JSON clinique V1.3 conforme au schema decrit dans le syste
 
   let jsonV13;
   try {
-    const extractionResult = await callHaikuJson(
+    // Extraction sur Sonnet (pas Haiku) : le JSON V1.3 dépasse ~25k chars,
+    // Haiku le tronque systématiquement avant la fermeture. Sonnet est plus
+    // stable sur les outputs longs structurés.
+    const extractionResult = await callSonnetJson(
       EXTRACTION_SYS,
       [{ role: 'user', content: extractionUserMessage }]
     );
