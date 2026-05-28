@@ -59,6 +59,12 @@
     transition: opacity 1.2s ease-in-out;
   }
   .hero-bg img.hero-slide.active { opacity: 1; }
+  /* Slide 2 (homme) — dézoomé pour aligner taille visage avec slide 1 */
+  .hero-bg img.hero-slide:nth-child(2) {
+    object-position: 20% 15%;
+  }
+  /* Slide 3 (femme canapé jaune) — recadrage mobile sur le visage */
+
 
   .hero-bg::after {
     content: ''; position: absolute; inset: 0;
@@ -814,6 +820,12 @@
      RESPONSIVE MOBILE — max-width 768px
      ════════════════════════════════════════════ */
   @media (max-width: 768px) {
+
+    /* ── SLIDES MOBILE ── */
+    /* Photo 3 mobile — visage */
+  .hero-bg img.hero-slide:nth-child(3) {
+    object-position: 70% 20%;
+  }
 
     /* ── NAV ── */
     .nav {
