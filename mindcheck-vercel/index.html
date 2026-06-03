@@ -70,7 +70,7 @@
   .nav .nav-right { display: flex; align-items: center; gap: 22px; }
   .nav .connect { font-size: 14px; color: rgba(255,255,255,0.9); font-weight: 500; text-shadow: 0 1px 8px rgba(0,0,0,0.25); }
   .nav .lang { font-size: 13px; color: rgba(255,255,255,0.75); letter-spacing: 0.3px; }
-  .cta-pill {
+  .cta-pill { text-decoration:none;
     background: var(--orange); color: #FFFFFF; border: none;
     padding: 12px 22px; border-radius: 999px;
     font-weight: 600; font-size: 13.5px; letter-spacing: -0.1px;
@@ -121,7 +121,7 @@
   }
   .lede strong { color: #FFFFFF; font-weight: 600; }
   .ctas { display: flex; align-items: center; gap: 22px; margin-top: 36px; flex-wrap: wrap; justify-content: center; }
-  .cta-primary {
+  .cta-primary { text-decoration:none;
     background: var(--orange); color: #FFFFFF; border: none;
     padding: 18px 32px; border-radius: 999px;
     font-family: 'Inter', sans-serif; font-weight: 600; font-size: 15.5px;
@@ -711,7 +711,7 @@
   .price-card-big .price-meta .s {
     font-family: 'Inter', sans-serif; font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.5;
   }
-  .price-card-big .cta-big {
+  .price-card-big .cta-big { text-decoration:none;
     background: var(--orange); color: #FFFFFF; border: none;
     padding: 16px 26px; border-radius: 999px;
     font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px;
@@ -817,7 +817,7 @@
     <div class="nav-right">
       <span class="lang">FR · EN</span>
       <span class="connect">Se connecter</span>
-      <button class="cta-pill">Faire le check-up</button>
+      <a href="/app.html" class="cta-pill">Faire le check-up</a>
     </div>
   </nav>
 
@@ -830,7 +830,7 @@
       <strong>quoi faire ensuite, si nécessaire</strong>.
     </p>
     <div class="ctas">
-      <button class="cta-primary">Commencer mon check-up · 9 €</button>
+      <a href="/app.html" class="cta-primary">Commencer mon check-up · 9 €</a>
       <a class="cta-ghost" href="#comment">Voir comment ça marche</a>
     </div>
   </div>
@@ -1001,7 +1001,7 @@
                   </div>
                   <p class="desc">Régulation émotionnelle réduite en période de stress, marquée par une irritabilité et un sommeil fragmenté.</p>
                 </div>
-                <button class="full">Voir le bilan complet →</button>
+                <button class="full" disabled>Voir le bilan complet →</button>
               </div>
             </div>
           </div>
@@ -1047,7 +1047,7 @@
                     <strong>92 %</strong>
                   </div>
                 </div>
-                <button class="book">Voir ses disponibilités →</button>
+                <button class="book" disabled>Voir ses disponibilités →</button>
               </div>
             </div>
           </div>
@@ -1274,7 +1274,7 @@
             <div class="t">Accès complet</div>
             <div class="s">Suivi libre 30 jours · Paiement unique</div>
           </div>
-          <button class="cta-big">Commencer maintenant</button>
+          <a href="/app.html" class="cta-big">Commencer maintenant</a>
         </div>
 
         <div class="secure-line-big">
