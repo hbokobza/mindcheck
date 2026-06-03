@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Psee Pro — Une boussole pré-clinique pour préparer la première rencontre</title>
-<meta name="description" content="Psee Pro — la boussole pré-clinique pour préparer la première rencontre. Vos patients renseignent leur profil en 15 minutes, vous recevez une synthèse structurée sur 6 axes avant la séance.">
+<title>BilanPsy Pro — Une boussole pré-clinique pour préparer la première rencontre</title>
+<meta name="description" content="BilanPsy Pro — la boussole pré-clinique pour préparer la première rencontre. Vos patients renseignent leur profil en 15 minutes, vous recevez une synthèse structurée sur 6 axes avant la séance.">
 
 <!-- Canonical -->
 <link rel="canonical" href="https://psee.fr/pro">
@@ -12,30 +12,30 @@
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:locale" content="fr_FR">
-<meta property="og:site_name" content="Psee">
-<meta property="og:title" content="Psee Pro — Une boussole pré-clinique pour préparer la première rencontre">
-<meta property="og:description" content="Vos patients renseignent leur profil Psee en 15 minutes. Vous recevez une synthèse structurée sur 6 axes avant la séance — pour orienter vos premiers échanges avec précision.">
+<meta property="og:site_name" content="BilanPsy">
+<meta property="og:title" content="BilanPsy Pro — Une boussole pré-clinique pour préparer la première rencontre">
+<meta property="og:description" content="Vos patients renseignent leur profil BilanPsy en 15 minutes. Vous recevez une synthèse structurée sur 6 axes avant la séance — pour orienter vos premiers échanges avec précision.">
 <meta property="og:url" content="https://psee.fr/pro">
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Psee Pro — Une boussole pré-clinique pour préparer la première rencontre">
-<meta name="twitter:description" content="Vos patients renseignent leur profil Psee en 15 minutes. Vous recevez une synthèse structurée sur 6 axes avant la séance.">
+<meta name="twitter:title" content="BilanPsy Pro — Une boussole pré-clinique pour préparer la première rencontre">
+<meta name="twitter:description" content="Vos patients renseignent leur profil BilanPsy en 15 minutes. Vous recevez une synthèse structurée sur 6 axes avant la séance.">
 <!-- ===== PWA / Mobile install ===== -->
 <link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#1F4D33">
+<meta name="theme-color" content="#FF4B28">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Psee">
+<meta name="apple-mobile-web-app-title" content="BilanPsy">
 <meta name="mobile-web-app-capable" content="yes">
 <!-- ===== fin PWA ===== -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --green: #1F4D33;
-  --green-light: #e8f2e8;
+  --orange: #FF4B28;
+  --orange-tint: #FBE4DC;
   --beige: #F5F0E8;
   --beige-dark: #EDE6D8;
   --black: #1A1A18;
@@ -58,56 +58,68 @@ nav {
 .nav-logo { display:flex; align-items:center; gap:10px; font-weight:600; letter-spacing:-0.02em; }
 .nav-logo .pro-tag {
   font-size: 11px; text-transform: uppercase; letter-spacing: 1.4px;
-  color: var(--green); border: 1px solid rgba(31,77,51,0.2); padding: 5px 10px; border-radius: 999px;
+  color: var(--orange); border: 1px solid rgba(255,75,40,0.2); padding: 5px 10px; border-radius: 999px;
 }
 .nav-links { display: flex; align-items: center; gap: 36px; }
 .nav-links a { text-decoration: none; color: var(--black); font-size: 14px; opacity: 0.6; transition: opacity 0.2s; }
 .nav-links a:hover { opacity: 1; }
-.nav-cta { background: var(--green) !important; color: white !important; opacity: 1 !important; padding: 10px 24px; border-radius: 24px; font-size: 13px; font-weight: 600; transition: transform 0.15s, box-shadow 0.15s; }
-.nav-cta:hover { background: var(--green) !important; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(31,77,51,0.3); }
+.nav-cta { background: var(--orange) !important; color: white !important; opacity: 1 !important; padding: 10px 24px; border-radius: 24px; font-size: 13px; font-weight: 600; transition: transform 0.15s, box-shadow 0.15s; }
+.nav-cta:hover { background: var(--orange) !important; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(255,75,40,0.3); }
 .hero { background: var(--beige); padding: 74px 40px 0; overflow: hidden; }
 .hero-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1.05fr .95fr; gap: 52px; align-items: center; }
 .hero-copy { padding-bottom: 48px; }
 .hero-kicker {
-  display:inline-flex; align-items:center; gap:10px; background: var(--green-light); color: var(--green);
+  display:inline-flex; align-items:center; gap:10px; background: var(--orange-tint); color: var(--orange);
   padding: 9px 16px; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: 1.4px;
   text-transform: uppercase; margin-bottom: 22px;
 }
 .hero-title {
-  font-family: 'Playfair Display', serif; font-size: 62px; line-height: 1.02; font-weight: 700;
+  font-family: 'Bricolage Grotesque', sans-serif; font-size: 62px; line-height: 1.02; font-weight: 700;
   color: var(--black); margin-bottom: 18px; letter-spacing: -1.2px;
   text-wrap: balance;
 }
-.hero-title em { font-style: italic; color: var(--green); font-weight: 400; }
+.hero-title em { font-style: italic; font-family:'Instrument Serif',serif; color: var(--orange); font-weight: 400; }
 .hero-sub { font-size: 18px; color: var(--gray); line-height: 1.8; max-width: 620px; margin-bottom: 28px; }
 .hero-actions { display:flex; gap:14px; flex-wrap:wrap; margin-bottom: 26px; }
 .btn-hero {
-  display: inline-block; background: var(--green); color: white; padding: 16px 34px; border-radius: 32px;
-  font-size: 16px; font-weight: 600; text-decoration: none; box-shadow: 0 4px 20px rgba(31,77,51,0.3);
+  display: inline-block; background: var(--orange); color: white; padding: 16px 34px; border-radius: 32px;
+  font-size: 16px; font-weight: 600; text-decoration: none; box-shadow: 0 4px 20px rgba(255,75,40,0.3);
   transition: transform 0.2s, box-shadow 0.2s;
 }
-.btn-hero:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(31,77,51,0.4); }
-.btn-hero.secondary { background: transparent; color: var(--green); border: 2px solid var(--green); box-shadow: none; }
-.btn-hero.secondary:hover { background: var(--green-light); }
+.btn-hero:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(255,75,40,0.4); }
+.btn-hero.secondary { background: transparent; color: var(--orange); border: 2px solid var(--orange); box-shadow: none; }
+.btn-hero.secondary:hover { background: var(--orange-tint); }
 .hero-tags { display:flex; gap:10px; flex-wrap:wrap; }
 .hero-tag { background: rgba(255,255,255,0.75); color: var(--gray); padding: 7px 16px; border-radius: 20px; font-size: 13px; border:1px solid rgba(0,0,0,0.04); }
 .hero-panel-wrap { position: relative; padding-bottom: 64px; }
-.hero-panel-blur { position:absolute; inset: 24px -10px -10px 24px; background: linear-gradient(135deg, #dcead9, #ece3d6); border-radius: 28px; filter: blur(24px); opacity: .8; }
+.hero-panel-blur { position:absolute; inset: 24px -10px -10px 24px; background: linear-gradient(135deg, #F3DDD3, #ece3d6); border-radius: 28px; filter: blur(24px); opacity: .8; }
 .hero-panel { position:relative; background: white; border-radius: 28px; overflow:hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.14); border: 1px solid rgba(0,0,0,0.06); }
 .hero-panel-fade { position: relative; }
+.hero-panel-fallback { background:#6E6456; padding:30px 32px 40px; }
+.hpf-head { display:flex; align-items:center; justify-content:space-between; color:#F6F2EA; }
+.hpf-eyebrow { font-size:10px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#EDE6DB; margin-top:22px; }
+.hpf-title { font-family:'Bricolage Grotesque',sans-serif; font-weight:700; font-size:21px; line-height:1.2; color:#F8F4EC; margin-top:6px; max-width:22ch; }
+.hpf-scores { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:24px; }
+.hpf-card { background:#FCFAF6; border-radius:12px; padding:14px; display:flex; flex-direction:column; gap:8px; }
+.hpf-card b { font-family:'Bricolage Grotesque',sans-serif; font-size:13px; color:#211C16; }
+.hpf-card span { font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:24px; color:#211C16; line-height:1; }
+.hpf-card span small { font-size:13px; font-weight:600; color:#938A7C; }
+.hpf-card i { display:block; height:6px; border-radius:999px; background:#C4892E; }
+.hpf-lines { display:flex; flex-direction:column; gap:9px; margin-top:24px; }
+.hpf-lines span { display:block; height:8px; border-radius:999px; background:rgba(246,242,234,.14); width:100%; }
 .hero-panel-screenshot { display: block; width: 100%; height: auto; border-radius: 28px; }
 .hero-panel-fade::after {
   content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 110px;
   background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.95) 80%, #fff 100%);
   pointer-events: none; border-bottom-left-radius: 28px; border-bottom-right-radius: 28px;
 }
-.eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--green); margin-bottom: 14px; }
-.section-title { font-family: 'Playfair Display', serif; font-size: 40px; line-height: 1.15; font-weight: 700; margin-bottom: 20px; }
+.eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--orange); margin-bottom: 14px; }
+.section-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 40px; line-height: 1.15; font-weight: 700; margin-bottom: 20px; }
 .section-text { font-size: 16px; color: var(--gray); line-height: 1.85; margin-bottom: 16px; }
 .section-pourquoi { display: grid; grid-template-columns: 1fr 1fr; background: var(--white); }
 .pourquoi-art { min-height: 560px; background: linear-gradient(160deg, #dfeadd 0%, #f5f0e8 55%, #e8dfcf 100%); display:flex; align-items:flex-end; padding: 48px; }
 .pourquoi-note { background: rgba(255,255,255,0.75); backdrop-filter: blur(8px); border:1px solid rgba(255,255,255,0.7); border-radius: 24px; padding: 28px; max-width: 430px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
-.pourquoi-note h3 { font-family:'Playfair Display', serif; font-size: 34px; line-height: 1.15; margin-bottom: 12px; }
+.pourquoi-note h3 { font-family:'Bricolage Grotesque', sans-serif; font-size: 34px; line-height: 1.15; margin-bottom: 12px; }
 .pourquoi-note p { font-size: 15px; line-height: 1.8; color: #5d5b55; }
 .pourquoi-content { padding: 80px 72px 80px 64px; display: flex; flex-direction: column; justify-content: center; }
 .value-list { display:flex; flex-direction:column; gap:14px; margin-top: 18px; }
@@ -119,7 +131,7 @@ nav {
 .outputs-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; max-width: 1100px; }
 .output-card { background: white; border-radius: 20px; padding: 24px; min-height: 220px; border:1px solid rgba(0,0,0,0.05); box-shadow: 0 8px 20px rgba(0,0,0,0.03); }
 .output-num { font-size: 10px; color: rgba(0,0,0,0.35); letter-spacing: 1px; margin-bottom: 12px; text-transform:uppercase; }
-.output-title { font-family: 'Playfair Display', serif; font-size: 28px; line-height: 1.15; margin-bottom: 12px; }
+.output-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; line-height: 1.15; margin-bottom: 12px; }
 .output-text { font-size: 14px; color: var(--gray); line-height: 1.75; }
 .section-comment { display: grid; grid-template-columns: .88fr 1.12fr; background: var(--black); }
 .comment-content { padding: 84px 64px; }
@@ -133,7 +145,7 @@ nav {
 .step-text p { font-size: 14px; color: rgba(255,255,255,0.45); line-height: 1.75; }
 .comment-side { padding: 84px 64px 84px 24px; display:flex; align-items:center; }
 .comment-card { background: rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 30px; color:white; width:100%; }
-.comment-card h3 { font-family:'Playfair Display', serif; font-size: 34px; line-height:1.15; margin-bottom: 12px; }
+.comment-card h3 { font-family:'Bricolage Grotesque', sans-serif; font-size: 34px; line-height:1.15; margin-bottom: 12px; }
 .comment-card p { font-size: 15px; line-height: 1.85; color: rgba(255,255,255,0.6); margin-bottom: 20px; }
 .comment-points { display:flex; flex-direction:column; gap:12px; }
 .comment-points div { padding: 14px 16px; border-radius: 16px; background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.78); font-size: 14px; line-height:1.7; }
@@ -141,13 +153,13 @@ nav {
 .practice-header { max-width: 680px; margin-bottom: 48px; }
 .practice-grid { display:grid; grid-template-columns: repeat(3,1fr); gap:20px; }
 .practice-card { background:white; border-radius:20px; padding:26px; border:1px solid rgba(0,0,0,0.05); }
-.practice-card h4 { font-family:'Playfair Display', serif; font-size: 29px; line-height:1.15; margin-bottom: 10px; }
+.practice-card h4 { font-family:'Bricolage Grotesque', sans-serif; font-size: 29px; line-height:1.15; margin-bottom: 10px; }
 .practice-card p { font-size: 14px; color: var(--gray); line-height:1.8; }
 .section-pricing { padding: 96px 64px; background: var(--white); text-align:center; }
 .pricing-header { max-width: 760px; margin: 0 auto 46px; }
-.pricing-card { max-width: 620px; margin: 0 auto; background: var(--green); border-radius: 28px; padding: 42px; color: white; box-shadow: 0 20px 50px rgba(31,77,51,0.22); }
+.pricing-card { max-width: 620px; margin: 0 auto; background: var(--orange); border-radius: 28px; padding: 42px; color: white; box-shadow: 0 20px 50px rgba(255,75,40,0.22); }
 .pricing-mini { font-size: 11px; letter-spacing: 1.8px; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 12px; }
-.pricing-price { font-family:'Playfair Display', serif; font-size: 72px; line-height: .95; margin-bottom: 6px; }
+.pricing-price { font-family:'Bricolage Grotesque', sans-serif; font-size: 72px; line-height: .95; margin-bottom: 6px; }
 .pricing-price span { font-size: 30px; color: rgba(255,255,255,0.72); }
 .pricing-sub { font-size: 16px; color: rgba(255,255,255,0.72); margin-bottom: 26px; }
 .pricing-list { max-width: 430px; margin: 0 auto 28px; text-align:left; display:flex; flex-direction:column; gap:12px; }
@@ -156,8 +168,8 @@ nav {
 .pricing-btn:hover { background: #F7F4EF; }
 .pricing-note { margin-top: 16px; font-size: 13px; color: rgba(255,255,255,0.65); }
 .section-cta { padding: 100px 64px; text-align: center; background: var(--beige); }
-.cta-title { font-family: 'Playfair Display', serif; font-size: 50px; line-height: 1.12; margin-bottom: 18px; }
-.cta-title em { font-style: italic; color: var(--green); font-weight:400; }
+.cta-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 50px; line-height: 1.12; margin-bottom: 18px; }
+.cta-title em { font-style: italic; font-family:'Instrument Serif',serif; color: var(--orange); font-weight:400; }
 .cta-sub { font-size: 17px; color: var(--gray); max-width: 700px; margin: 0 auto 32px; line-height: 1.8; }
 .cta-tags { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 36px; }
 .cta-tag { background: white; color: var(--gray); padding: 8px 18px; border-radius: 20px; font-size: 13px; border:1px solid rgba(0,0,0,0.04); }
@@ -166,20 +178,20 @@ footer .brand { color: rgba(255,255,255,0.45); font-weight:600; }
 footer p, footer a { font-size: 12px; color: rgba(255,255,255,0.3); text-decoration: none; }
   .section-flux { padding: 96px 64px; background: var(--white); }
 .flux-header { max-width: 760px; margin: 0 auto 56px; text-align: center; }
-.flux-header .eyebrow { color: var(--green); }
+.flux-header .eyebrow { color: var(--orange); }
 .flux-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; max-width: 1100px; margin: 0 auto 36px; }
 .flux-card { background: var(--beige); border-radius: 24px; padding: 38px 34px; border: 1px solid rgba(0,0,0,0.04); display: flex; flex-direction: column; gap: 16px; }
 .flux-card-header { display: flex; align-items: center; gap: 14px; margin-bottom: 6px; }
-.flux-card-num { width: 42px; height: 42px; border-radius: 50%; background: var(--green); color: white; display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; flex-shrink: 0; }
-.flux-card-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 1.6px; text-transform: uppercase; color: var(--green); }
-.flux-card h3 { font-family: 'Playfair Display', serif; font-size: 28px; line-height: 1.2; font-weight: 700; color: var(--black); }
+.flux-card-num { width: 42px; height: 42px; border-radius: 50%; background: var(--orange); color: white; display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px; font-weight: 700; flex-shrink: 0; }
+.flux-card-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 1.6px; text-transform: uppercase; color: var(--orange); }
+.flux-card h3 { font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; line-height: 1.2; font-weight: 700; color: var(--black); }
 .flux-card p { font-size: 15px; color: var(--gray); line-height: 1.8; }
 .flux-card ul { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
 .flux-card ul li { font-size: 14px; color: #4d4c47; line-height: 1.65; padding-left: 24px; position: relative; }
-.flux-card ul li::before { content: "✓"; position: absolute; left: 0; top: 0; color: var(--green); font-weight: 700; font-size: 14px; }
-.flux-note { max-width: 760px; margin: 0 auto; background: var(--green-light); border-left: 3px solid var(--green); border-radius: 12px; padding: 20px 26px; }
-.flux-note p { font-size: 15px; color: #1F4D33; line-height: 1.75; }
-.flux-note strong { color: var(--green); font-weight: 600; }
+.flux-card ul li::before { content: "✓"; position: absolute; left: 0; top: 0; color: var(--orange); font-weight: 700; font-size: 14px; }
+.flux-note { max-width: 760px; margin: 0 auto; background: var(--orange-tint); border-left: 3px solid var(--orange); border-radius: 12px; padding: 20px 26px; }
+.flux-note p { font-size: 15px; color: #211C16; line-height: 1.75; }
+.flux-note strong { color: var(--orange); font-weight: 600; }
 @media (max-width: 980px) {
   nav { padding: 0 20px; }
   .nav-links { display: none; }
@@ -201,28 +213,28 @@ footer p, footer a { font-size: 12px; color: rgba(255,255,255,0.3); text-decorat
 </head>
 <body>
 <nav>
-  <div class="nav-logo" style="display:flex;align-items:flex-end;gap:8px;">
-    <span style="font-family:'Playfair Display', serif;font-weight:700;font-size:44px;line-height:1;letter-spacing:-0.05em;color:#1F4D33;">Psee</span>
-    <span style="font-family:'DM Sans', Arial, sans-serif;font-size:24px;line-height:1;color:#1F4D33;font-weight:400;transform:translateY(-4px);">Pro</span>
+  <div class="nav-logo" style="display:flex;align-items:flex-end;gap:9px;">
+    <img src="logoBilanpsy_noir.png" alt="bilanpsy" style="height:21px;width:auto;display:block;">
+    <span style="font-family:'DM Sans',Arial,sans-serif;font-size:11px;line-height:1;color:#FF4B28;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;transform:translateY(-2px);">Pro</span>
   </div>
   <div class="nav-links">
-    <a href="#pourquoi">Pourquoi Psee Pro ?</a>
+    <a href="#pourquoi">Pourquoi BilanPsy Pro ?</a>
     <a href="#sorties">Ce que vous recevez</a>
     <a href="#comment">Comment ça marche</a>
-    <a href="#tarif" class="nav-cta">Essayer Psee Pro</a>
+    <a href="#tarif" class="nav-cta">Essayer BilanPsy Pro</a>
   </div>
 </nav>
 
 <section class="hero">
   <div class="hero-grid">
     <div class="hero-copy">
-      <div class="eyebrow">Psee Pro — pour les thérapeutes</div>
+      <div class="eyebrow">BilanPsy Pro — pour les thérapeutes</div>
       <h1 class="hero-title">Une boussole pré‑clinique pour préparer la première rencontre.</h1>
       <p class="hero-sub">
-        Avant la séance, vos patients renseignent leur profil Psee. Vous recevez une synthèse structurée sur 6 axes — pour orienter vos premiers échanges avec précision, sans court-circuiter la clinique.
+        Avant la séance, vos patients renseignent leur profil BilanPsy. Vous recevez une synthèse structurée sur 6 axes — pour orienter vos premiers échanges avec précision, sans court-circuiter la clinique.
       </p>
       <div class="hero-actions">
-        <a href="#tarif" class="btn-hero">Essayer Psee Pro</a>
+        <a href="#tarif" class="btn-hero">Essayer BilanPsy Pro</a>
         <a href="#flux" class="btn-hero secondary">Découvrir les deux flux</a>
       </div>
      <div class="hero-tags">
@@ -236,7 +248,21 @@ footer p, footer a { font-size: 12px; color: rgba(255,255,255,0.3); text-decorat
       <div class="hero-panel-blur"></div>
       <div class="hero-panel">
         <div class="hero-panel-fade">
-          <img src="bilan-btb-vitrine.png" alt="Aperçu d'un bilan clinique Psee Pro" class="hero-panel-screenshot">
+          <img src="bilan-btb-vitrine.png?v=2" alt="Aperçu d'un bilan clinique BilanPsy Pro" class="hero-panel-screenshot" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <div class="hero-panel-fallback" style="display:none">
+            <div class="hpf-head">
+              <span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:18px;letter-spacing:-.03em">bilanpsy<span style="color:#FF4B28">.</span></span>
+              <span style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#A9A192;border:1px solid #FF4B28;color:#FF7E62;border-radius:999px;padding:4px 10px">Confidentiel praticien</span>
+            </div>
+            <div class="hpf-eyebrow">Document confidentiel — usage professionnel</div>
+            <div class="hpf-title">Bilan clinique — aide à la lecture pré‑consultation</div>
+            <div class="hpf-scores">
+              <div class="hpf-card"><b>PHQ‑9</b><span>14<small>/27</small></span><i style="width:52%;background:#C4892E"></i></div>
+              <div class="hpf-card"><b>GAD‑7</b><span>12<small>/21</small></span><i style="width:57%;background:#C4892E"></i></div>
+              <div class="hpf-card"><b>PSS‑10</b><span>—</span><i style="width:0"></i></div>
+            </div>
+            <div class="hpf-lines"><span></span><span></span><span style="width:72%"></span></div>
+          </div>
         </div>
       </div>
     </div>
@@ -258,13 +284,13 @@ footer p, footer a { font-size: 12px; color: rgba(255,255,255,0.3); text-decorat
     </div>
   </div>
   <div class="pourquoi-content">
-    <div class="eyebrow">Pourquoi Psee Pro ?</div>
-    <h2 class="section-title">Introduire l’IA dans la pratique,<br><em style="font-style:italic;color:var(--green);font-weight:400;">sans court-circuiter la clinique</em></h2>
-    <p class="section-text">Psee Pro ne remplace ni l’entretien, ni l’écoute, ni le transfert. Il prépare le terrain : la parole du patient est recueillie, structurée, hiérarchisée, puis rendue exploitable par le thérapeute.</p>
+    <div class="eyebrow">Pourquoi BilanPsy Pro ?</div>
+    <h2 class="section-title">Introduire l’IA dans la pratique,<br><em style="font-style:italic;font-family:'Instrument Serif',serif;color:var(--orange);font-weight:400;">sans court-circuiter la clinique</em></h2>
+    <p class="section-text">BilanPsy Pro ne remplace ni l’entretien, ni l’écoute, ni le transfert. Il prépare le terrain : la parole du patient est recueillie, structurée, hiérarchisée, puis rendue exploitable par le thérapeute.</p>
     <div class="value-list">
       <div class="value-item"><h4>Préparer la première rencontre</h4><p>Le patient réalise le check-up en amont. Vous recevez une lecture structurée avant ou pendant la consultation.</p></div>
       <div class="value-item"><h4>Gagner du temps clinique</h4><p>Moins de recueil dispersé, plus de temps pour l’écoute, l’élaboration et le travail thérapeutique.</p></div>
-      <div class="value-item"><h4>Affiner plus vite le profil psychique</h4><p>Les 6 axes Psee font émerger plus vite ressources, fragilités, retentissements somatiques et pression contextuelle.</p></div>
+      <div class="value-item"><h4>Affiner plus vite le profil psychique</h4><p>Les 6 axes BilanPsy font émerger plus vite ressources, fragilités, retentissements somatiques et pression contextuelle.</p></div>
     </div>
   </div>
 </section>
@@ -272,8 +298,8 @@ footer p, footer a { font-size: 12px; color: rgba(255,255,255,0.3); text-decorat
 <section id="flux" class="section-flux">
   <div class="flux-header">
     <div class="eyebrow">Deux flux, un seul abonnement</div>
-    <h2 class="section-title">49€/mois.<br><em style="font-style:italic;color:var(--green);font-weight:400;">Deux usages distincts.</em></h2>
-    <p class="section-text">Psee Pro vous ouvre deux usages complémentaires sans surcoût : préparer les rencontres avec vos patients existants, et recevoir des demandes de nouveaux patients en recherche d'un thérapeute.</p>
+    <h2 class="section-title">49€/mois.<br><em style="font-style:italic;font-family:'Instrument Serif',serif;color:var(--orange);font-weight:400;">Deux usages distincts.</em></h2>
+    <p class="section-text">BilanPsy Pro vous ouvre deux usages complémentaires sans surcoût : préparer les rencontres avec vos patients existants, et recevoir des demandes de nouveaux patients en recherche d'un thérapeute.</p>
   </div>
   <div class="flux-grid">
     <div class="flux-card">
@@ -282,7 +308,7 @@ footer p, footer a { font-size: 12px; color: rgba(255,255,255,0.3); text-decorat
         <div class="flux-card-eyebrow">Pour vos patients existants</div>
       </div>
       <h3>Préparer la rencontre, gagner du temps clinique</h3>
-      <p>Vous transmettez le lien Psee à vos patients avant ou entre les séances. Ils réalisent le check-up à leur rythme. Vous recevez un bilan structuré, exploitable en quelques minutes.</p>
+      <p>Vous transmettez le lien BilanPsy à vos patients avant ou entre les séances. Ils réalisent le check-up à leur rythme. Vous recevez un bilan structuré, exploitable en quelques minutes.</p>
       <ul>
         <li>Prescription en un clic, lien personnalisable</li>
         <li>Bilan reçu sur votre espace praticien avant la séance</li>
@@ -296,10 +322,10 @@ footer p, footer a { font-size: 12px; color: rgba(255,255,255,0.3); text-decorat
         <div class="flux-card-eyebrow">Pour de nouveaux patients en demande</div>
       </div>
       <h3>Recevoir des demandes qualifiées, sans démarche commerciale</h3>
-      <p>Les patients ayant réalisé un check-up Psee et coché « intéressé thérapeute » apparaissent dans votre espace. Vous parcourez les profils, vous choisissez à qui proposer vos services. Le patient compare et décide librement.</p>
+      <p>Les patients ayant réalisé un check-up BilanPsy et coché « intéressé thérapeute » apparaissent dans votre espace. Vous parcourez les profils, vous choisissez à qui proposer vos services. Le patient compare et décide librement.</p>
       <ul>
         <li>Profils anonymisés jusqu'à acceptation mutuelle</li>
-        <li>Lecture rapide grâce aux 6 axes Psee</li>
+        <li>Lecture rapide grâce aux 6 axes BilanPsy</li>
         <li>Vous choisissez à qui vous proposer, jamais l'inverse</li>
         <li>Aucune commission, aucune contrepartie sur les patients acquis</li>
       </ul>
@@ -329,18 +355,18 @@ footer p, footer a { font-size: 12px; color: rgba(255,255,255,0.3); text-decorat
 <section id="comment" class="section-comment">
   <div class="comment-content">
     <div class="eyebrow">Comment ça marche</div>
-    <h2 class="section-title">Trois étapes, un même objectif :<br><em style="font-style:italic;color:#93B88F;font-weight:400;">mieux entrer dans la clinique</em></h2>
+    <h2 class="section-title">Trois étapes, un même objectif :<br><em style="font-style:italic;font-family:'Instrument Serif',serif;color:#FF8A6E;font-weight:400;">mieux entrer dans la clinique</em></h2>
     <p class="section-text">L’outil reste léger côté praticien. L’essentiel se joue avant la séance, pour que la séance serve davantage au travail clinique lui-même.</p>
     <div class="steps">
       <div class="step"><div class="step-num">01</div><div class="step-text"><h4>Vous prescrivez le check-up</h4><p>Avant une première consultation, entre deux séances, ou à un moment charnière du suivi.</p></div></div>
-      <div class="step"><div class="step-num">02</div><div class="step-text"><h4>Le patient réalise l’entretien Psee</h4><p>À l’écrit ou à l’oral, à son rythme, dans un cadre structuré, confidentiel et sans pression de performance.</p></div></div>
+      <div class="step"><div class="step-num">02</div><div class="step-text"><h4>Le patient réalise l’entretien BilanPsy</h4><p>À l’écrit ou à l’oral, à son rythme, dans un cadre structuré, confidentiel et sans pression de performance.</p></div></div>
       <div class="step"><div class="step-num">03</div><div class="step-text"><h4>Vous recevez un bilan exploitable</h4><p>Synthèse clinique, matrice 6 axes, points de vigilance et axes thérapeutiques à explorer avant ou pendant la séance.</p></div></div>
     </div>
   </div>
   <div class="comment-side">
     <div class="comment-card">
       <h3>L’IA prépare le terrain.<br>Le thérapeute fait le reste.</h3>
-      <p>Psee Pro n’automatise pas la clinique. Il organise la première matière du patient pour que le praticien puisse consacrer davantage de temps à l’écoute, à l’interprétation et à la relation.</p>
+      <p>BilanPsy Pro n’automatise pas la clinique. Il organise la première matière du patient pour que le praticien puisse consacrer davantage de temps à l’écoute, à l’interprétation et à la relation.</p>
       <div class="comment-points">
         <div>Moins de dispersion initiale</div>
         <div>Plus de temps pour la rencontre et l’élaboration</div>
@@ -369,7 +395,7 @@ footer p, footer a { font-size: 12px; color: rgba(255,255,255,0.3); text-decorat
     <p class="section-text">Pas de grille compliquée. Une offre conçue pour être essayée facilement dans la pratique quotidienne.</p>
   </div>
   <div class="pricing-card">
-    <div class="pricing-mini">Psee Pro</div>
+    <div class="pricing-mini">BilanPsy Pro</div>
     <div class="pricing-price">49€<span>/mois</span></div>
     <div class="pricing-sub">Sans engagement</div>
    <div class="pricing-list">
@@ -379,25 +405,25 @@ footer p, footer a { font-size: 12px; color: rgba(255,255,255,0.3); text-decorat
       <div>• Sans commission, sans frais supplémentaires</div>
       <div>• Une IA au service de votre pratique, pas à sa place</div>
     </div>
-  <a href="mailto:contact@psee.fr?subject=Inscription%20Psee%20Pro" class="pricing-btn">Essayer Psee Pro</a>
+  <a href="mailto:contact@psee.fr?subject=Inscription%20BilanPsy%20Pro" class="pricing-btn">Essayer BilanPsy Pro</a>
     <div class="pricing-note">Activation simple · Usage clinique · Résiliation libre</div>
   </div>
 </section>
 
 <section class="section-cta">
   <h2 class="cta-title">Intégrez l’IA dans votre pratique,<br><em>sans perdre la clinique humaine</em></h2>
-  <p class="cta-sub">Psee Pro aide le thérapeute à mieux préparer la rencontre, à gagner du temps sur le recueil initial et à renforcer la qualité de son travail clinique.</p>
+  <p class="cta-sub">BilanPsy Pro aide le thérapeute à mieux préparer la rencontre, à gagner du temps sur le recueil initial et à renforcer la qualité de son travail clinique.</p>
   <div class="cta-tags">
     <span class="cta-tag">Réception des bilans structurés</span>
     <span class="cta-tag">6 axes cliniques</span>
     <span class="cta-tag">49€/mois</span>
     <span class="cta-tag">Sans engagement</span>
   </div>
-  <a href="#tarif" class="btn-hero">Essayer Psee Pro</a>
+  <a href="#tarif" class="btn-hero">Essayer BilanPsy Pro</a>
 </section>
 
 <footer>
-  <div class="brand">Psee Pro</div>
+  <div class="brand">BilanPsy Pro</div>
   <p>L’IA au service de la pratique clinique</p>
   <a href="#">Contact</a>
 </footer>
