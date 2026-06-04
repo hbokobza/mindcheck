@@ -151,25 +151,27 @@
   /* Stats intégrées au hero — colonne verticale à droite */
   .hero-stats {
     position: absolute;
-    right: 32px;
-    top: 50%;
-    transform: translateY(-50%);
+    bottom: 32px;
+    left: 48px;
+    right: 48px;
     z-index: 2;
-    display: flex; flex-direction: column; gap: 10px;
-    width: 230px;
+    display: flex; flex-direction: row; gap: 12px;
+    width: auto;
+    justify-content: flex-start;
   }
   .hero-stat {
-    background: rgba(247,245,239,0.92);
+    background: rgba(247,245,239,0.90);
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
     border: 1px solid rgba(255,255,255,0.5);
     border-radius: 14px;
-    padding: 13px 14px 13px 12px;
-    display: flex; align-items: center; gap: 12px;
+    padding: 10px 16px 10px 12px;
+    display: flex; align-items: center; gap: 10px;
     box-shadow: 0 8px 24px rgba(14,15,18,0.18);
     transition: transform .15s, background .15s;
+    flex-shrink: 0;
   }
-  .hero-stat:hover { transform: translateX(-3px); background: rgba(247,245,239,0.98); }
+  .hero-stat:hover { transform: translateY(-2px); background: rgba(247,245,239,0.98); }
   .hero-stat .ico {
     width: 34px; height: 34px; border-radius: 9px;
     background: rgba(255,75,40,0.14); color: var(--orange);
@@ -896,7 +898,7 @@
 
   <div class="hero-bg">
     <img class="hero-slide active" src="jeune-femme-casque.jpg" alt="Une jeune femme avec un casque audio, allongée sur un canapé">
-    <img class="hero-slide" src="jeune-homme-canape.jpg" alt="Jeune homme songeur sur un canapé">
+    <img class="hero-slide" src="Canape_3.png" alt="Jeune homme en chemise bleue sur un canapé avec son téléphone">
   </div>
 
   <nav class="nav">
