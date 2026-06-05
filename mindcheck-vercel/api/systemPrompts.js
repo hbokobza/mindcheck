@@ -1487,7 +1487,7 @@ Le bilan BtB est produit en JSON avec les champs suivants, dans cet ordre exact 
   ],
   "analyse_linguistique": "...",
   "processus_transdiagnostiques": "...",
-  "pistes_exploration": "...",
+  "pistes_exploration": ["phrase piste 1", "phrase piste 2", "phrase piste 3"],
   "passation_note": "..."
 }
 
