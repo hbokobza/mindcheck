@@ -2166,8 +2166,10 @@ function showBilanBTB(data){
   // === PISTES D'EXPLORATION (REPÈRES D'ORIENTATION POUR LE THÉRAPEUTE) ===
 const pistesHTML = (() => {
   const pistes = data.pistes_exploration;
-  if (!pistes || !pistes.length) return '';
-  const pistesItems = pistes.map(p => `
+ if (!pistes) return '';
+const pistesArray = Array.isArray(pistes) ? pistes : (typeof pistes === 'string' ? [pistes] : []);
+if (!pistesArray.length) return '';
+const pistesItems = pistesArray.map(p => `
     <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid #e5e6e0;">
       <div style="flex-shrink:0;width:6px;height:6px;border-radius:50%;background:#BE401D;margin-top:6px;"></div>
       <p style="margin:0;font-size:13px;color:#333;line-height:1.6;">${escapeHTML(p)}</p>
