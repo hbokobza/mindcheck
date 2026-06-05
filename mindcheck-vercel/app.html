@@ -2165,7 +2165,7 @@ function showBilanBTB(data){
 
   // === PISTES D'EXPLORATION (REPÈRES D'ORIENTATION POUR LE THÉRAPEUTE) ===
 const pistesHTML = (() => {
-  const pistes = data.pistes_exploration;
+  const pistes = data.pistes_exploration; console.log('PSEE-DEBUG pistes_exploration:', JSON.stringify(data.pistes_exploration));
  if (!pistes) return '';
 const pistesArray = Array.isArray(pistes) ? pistes : (typeof pistes === 'string' ? [pistes] : []);
 if (!pistesArray.length) return '';
