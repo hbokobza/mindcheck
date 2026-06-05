@@ -1422,7 +1422,7 @@ async function generateBilan(avecBTB, retryCount){
       const btnBTB=document.createElement('button');
       btnBTB.className='btn-outline';btnBTB.style.margin='8px 4px 0 8px';
       btnBTB.textContent='Bilan thérapeute (BTB) →';
-      btnBTB.onclick=()=>showBilanBTB(dataBTB);
+     btnBTB.onclick=()=>{ console.log('PSEE-DEBUG BTB au click:', JSON.stringify(dataBTB?.pistes_exploration)); showBilanBTB(dataBTB); };
       c.appendChild(btnBTB);
     }
 
