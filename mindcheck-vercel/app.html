@@ -2164,24 +2164,9 @@ function showBilanBTB(data){
     </section>` : '';
 
   // === PISTES D'EXPLORATION (REPÈRES D'ORIENTATION POUR LE THÉRAPEUTE) ===
-const pistesHTML = (() => {
-  const pistes = data.pistes_exploration || data.reperes_orientation || data.pistes_d_exploration;
-  if (!pistes) return '';
-const pistesArray = Array.isArray(pistes) ? pistes : (typeof pistes === 'string' ? [pistes] : []);
-if (!pistesArray.length) return '';
-const pistesItems = pistesArray.map(p => `
-    <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid #e5e6e0;">
-      <div style="flex-shrink:0;width:6px;height:6px;border-radius:50%;background:#BE401D;margin-top:6px;"></div>
-      <p style="margin:0;font-size:13px;color:#333;line-height:1.6;">${escapeHTML(p)}</p>
-    </div>
-  `).join('');
-  return `
-    <section style="margin:18px 24px 0;background:white;border:1px solid #e5e6e0;border-radius:18px;padding:24px">
-      <div style="font-size:12px;letter-spacing:0.32em;color:#BE401D;font-weight:800;text-transform:uppercase;margin-bottom:16px">Repères d'orientation</div>
-      <div>${pistesItems}</div>
-    </section>
-  `;
-})();
+  const _pistesRaw = data.pistes_exploration || data.reperes_orientation || data.pistes_d_exploration;
+  const _pistesArr = Array.isArray(_pistesRaw) ? _pistesRaw : (typeof _pistesRaw === 'string' && _pistesRaw ? [_pistesRaw] : []);
+  const pistesHTML = _pistesArr.length ? '<section style="margin:18px 24px 0;background:white;border:1px solid #e5e6e0;border-radius:18px;padding:24px"><div style="font-size:12px;letter-spacing:0.32em;color:#BE401D;font-weight:800;text-transform:uppercase;margin-bottom:16px">Repères d\'orientation</div><div>' + _pistesArr.map(function(p){ return '<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid #e5e6e0;"><div style="flex-shrink:0;width:6px;height:6px;border-radius:50%;background:#BE401D;margin-top:6px;"></div><p style="margin:0;font-size:13px;color:#333;line-height:1.6;">' + escapeHTML(p) + '</p></div>'; }).join('') + '</div></section>' : '';
   // === POINTS D'ATTENTION (FUSION : 4 thèmes en grid 2x2 + card item 9 en pleine largeur si présent) ===
   // V3 : data.themes_attention remplace data.axes_therapeutiques V2.
   // Compatibilité : si themes_attention absent, on tente axes_therapeutiques (ancien format)
