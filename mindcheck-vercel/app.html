@@ -1401,6 +1401,7 @@ async function generateBilan(avecBTB, retryCount){
       try{
         const m2=results[1].match(/\{[\s\S]*\}/);
         dataBTB=JSON.parse(m2?m2[0]:results[1].replace(/```json|```/g,'').trim());
+    console.log('PSEE-DEBUG dataBTB complet:', JSON.stringify(dataBTB));
       }catch(e){ console.warn('BTB parse error',e); }
     }
 
