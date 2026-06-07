@@ -261,7 +261,7 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px}
 
 <div id="s3" class="hidden">
   <div class="axes">
-    <span class="ax" id="a1">Processus psychiques</span>
+    <span class="ax" id="a1">Structure psychique & relationnelle</span>
     <span class="ax" id="a2">Ressources psychiques</span>
     <span class="ax" id="a5">Comportements & conduites</span>
     <span class="ax" id="a3">Régulation émotionnelle</span>
@@ -331,7 +331,7 @@ const PSEE_PRO_LOGO_WHITE = `<span style="display:inline-flex;align-items:flex-e
 // ============================================================
 const AXES_SPEC = {
   processus: {
-    label: "Processus psychiques",
+    label: "Structure psychique et relationnelle",
     needed: ["phenomene","frequence_intensite","temporalite","retentissement","exemple"],
     relances: [
       "Avez-vous du mal a arreter certaines pensees ?",
@@ -341,7 +341,7 @@ const AXES_SPEC = {
       "Avez-vous tendance a imaginer des scenarios negatifs ?"
     ],
     autorise: ["encombrement mental","pensees repetitives","capacite de recul fragilisee","ralentissement","agitation psychique"],
-    interdit: ["TOC","psychose","paranoia","structure psychique","diagnostic"]
+    interdit: ["TOC","psychose","paranoia","diagnostic"]
   },
   ressources: {
     label: "Ressources psychiques",
@@ -446,7 +446,7 @@ Objectif par axe : obtenir nature / intensite / frequence / anciennete / retenti
 Une seule question a la fois. Jamais deux dans le meme message.
 Commence par un premier message qui pose simplement le cadre en deux temps, sans theatraliser : (1) une phrase d'accueil chaleureuse mais sobre qui rappelle ce qu'on va faire ensemble (un echange d'environ quinze minutes pour faire le point sur six dimensions de votre equilibre, sans bonne ou mauvaise reponse), (2) une invitation ouverte a commencer la ou la personne le souhaite — ce qui la traverse en ce moment, ce qui l'a poussee a venir, ou simplement comment elle va aujourd'hui. Pas d'effusions, pas de formules d'accueil therapeutiques. Pas de "qu'est-ce qui vous amene ?" sec. La premiere prise de parole doit donner envie de parler, pas mettre face a une consigne.
 
-AXE 1 — PROCESSUS PSYCHIQUES
+AXE 1 — STRUCTURE PSYCHIQUE ET RELATIONNELLE
 Q1 : Comment fonctionne votre esprit en ce moment : plutot clair, encombre, ralenti, agite, envahi ?
 Q2 : Avez-vous l'impression de tourner autour des memes pensees, d'anticiper le pire, de douter beaucoup, ou d'avoir du mal a prendre du recul sur ce qui vous traverse ?
 Relances si reponse insuffisante :
@@ -504,7 +504,7 @@ REGLES DE CONDUITE
 - Si la personne pose une question sur elle-meme : reponds "Ce check-up va justement permettre d'y voir plus clair." puis continue.
 - Si demande de diagnostic ou avis medical : "Je ne suis pas en mesure de repondre a ca — c'est le role d'un professionnel de sante." puis continue.
 - Si hors cadre : recentre bienveillamment vers le check-up sans commenter.
-- Note mentalement les chevauchements entre axes (ex : rumination = processus psychiques ET comportements).
+- Note mentalement les chevauchements entre axes (ex : rumination = structure psychique et relationnelle ET comportements).
 - Si la personne s'etend longuement : reformule en une phrase et passe a la question suivante.
 
 DETECTION DE CRISE — PRIORITE ABSOLUE
@@ -553,7 +553,7 @@ STRUCTURE JSON EXACTE (réponds UNIQUEMENT avec ce JSON, sans texte avant/après
 {
   "synthese": "2-3 phrases claires, sobres et accessibles qui décrivent ce que la personne traverse. Ton neutre et bienveillant. Aucun mot pathologisant. Décrire un état actuel, pas une condition permanente.",
   "axes": [
-    {"num":1,"label":"Processus psychiques","score":2,"obs":"observation simple et compréhensible, formulée pour un non-clinicien, 1-2 phrases max","conseil":"piste concrète, légère, réaliste, sans injonction médicale","documentation":"suffisante|partielle|insuffisante","confiance":"haute|moderee|faible","manques":[]},
+    {"num":1,"label":"Structure psychique et relationnelle","score":2,"obs":"observation simple et compréhensible, formulée pour un non-clinicien, 1-2 phrases max","conseil":"piste concrète, légère, réaliste, sans injonction médicale","documentation":"suffisante|partielle|insuffisante","confiance":"haute|moderee|faible","manques":[]},
     {"num":2,"label":"Ressources psychiques","score":3,"obs":"...","conseil":"...","documentation":"suffisante|partielle|insuffisante","confiance":"haute|moderee|faible","manques":[]},
     {"num":3,"label":"Comportements & conduites","score":2,"obs":"...","conseil":"...","documentation":"suffisante|partielle|insuffisante","confiance":"haute|moderee|faible","manques":[]},
     {"num":4,"label":"Régulation émotionnelle","score":1,"obs":"...","conseil":"...","documentation":"suffisante|partielle|insuffisante","confiance":"haute|moderee|faible","manques":[]},
@@ -666,9 +666,9 @@ let hist=[],count=0,mode='text',sessionCode='',adminMode=false;
 
 const BILAN_SYS_BTB = `Tu es l'IA d'analyse clinique BilanPsy. Genere un bilan JSON pour le therapeute. Reponds UNIQUEMENT avec du JSON valide, sans texte avant ou apres, sans markdown. Textes courts max 120 caracteres par champ. Pas d'apostrophes dans les valeurs JSON, utilise des guillemets ou reformule.
 
-Structure: {"synthese":"synthese clinique 2 phrases","axes":[{"num":1,"label":"Processus psychiques","score":2,"manifestations":"description courte","systemes":"Psychique","lecture":"lecture clinique courte"},{"num":2,"label":"Ressources psychiques","score":3,"manifestations":"...","systemes":"SNC","lecture":"..."},{"num":3,"label":"Comportements et conduites","score":2,"manifestations":"...","systemes":"SNC, SNA","lecture":"..."},{"num":4,"label":"Regulation emotionnelle","score":1,"manifestations":"...","systemes":"Psychique, SNA","lecture":"..."},{"num":5,"label":"Corps et risque somatique","score":2,"manifestations":"...","systemes":"SNA","lecture":"..."},{"num":6,"label":"Environnement","score":3,"manifestations":"...","systemes":"Modulateur","lecture":"..."}],"systemes":[{"nom":"Systeme Psychique","niveau":"Moderement atteint","couleur":"orange","description":"analyse courte"},{"nom":"SNC","niveau":"Sollicite","couleur":"orange","description":"analyse courte"},{"nom":"SNA","niveau":"Hyperactive","couleur":"rouge","description":"analyse courte"},{"nom":"Systeme Immunitaire","niveau":"Implique","couleur":"orange","description":"analyse courte"},{"nom":"Terrain genetique","niveau":"Possible","couleur":"gris","description":"analyse courte"}],"redflags":[{"priorite":"haute","titre":"titre signal","detail":"description courte"},{"priorite":"moyenne","titre":"titre signal 2","detail":"description courte"}],"axes_therapeutiques":[{"titre":"axe 1","cible":"cible principale","indications":"indications courtes"},{"titre":"axe 2","cible":"cible 2","indications":"indications courtes"}],"conclusion":"conclusion et pronostic 2 phrases","forces":["ressource 1","ressource 2","ressource 3"],"vigilance":["point 1","point 2","point 3"]}
+Structure: {"synthese":"synthese clinique 2 phrases","axes":[{"num":1,"label":"Structure psychique et relationnelle","score":2,"manifestations":"description courte","systemes":"Psychique","lecture":"lecture clinique courte"},{"num":2,"label":"Ressources psychiques","score":3,"manifestations":"...","systemes":"SNC","lecture":"..."},{"num":3,"label":"Comportements et conduites","score":2,"manifestations":"...","systemes":"SNC, SNA","lecture":"..."},{"num":4,"label":"Regulation emotionnelle","score":1,"manifestations":"...","systemes":"Psychique, SNA","lecture":"..."},{"num":5,"label":"Corps et risque somatique","score":2,"manifestations":"...","systemes":"SNA","lecture":"..."},{"num":6,"label":"Environnement","score":3,"manifestations":"...","systemes":"Modulateur","lecture":"..."}],"systemes":[{"nom":"Systeme Psychique","niveau":"Moderement atteint","couleur":"orange","description":"analyse courte"},{"nom":"SNC","niveau":"Sollicite","couleur":"orange","description":"analyse courte"},{"nom":"SNA","niveau":"Hyperactive","couleur":"rouge","description":"analyse courte"},{"nom":"Systeme Immunitaire","niveau":"Implique","couleur":"orange","description":"analyse courte"},{"nom":"Terrain genetique","niveau":"Possible","couleur":"gris","description":"analyse courte"}],"redflags":[{"priorite":"haute","titre":"titre signal","detail":"description courte"},{"priorite":"moyenne","titre":"titre signal 2","detail":"description courte"}],"axes_therapeutiques":[{"titre":"axe 1","cible":"cible principale","indications":"indications courtes"},{"titre":"axe 2","cible":"cible 2","indications":"indications courtes"}],"profil_clinique":{"structure":"3 tags courts","evenements":"3 tags courts","conflit_central":"besoin central ↔ peur centrale","ressources":"3 tags courts"},"conclusion":"conclusion et pronostic 2 phrases","forces":["ressource 1","ressource 2","ressource 3"],"vigilance":["point 1","point 2","point 3"]}
 
-Scores 0-4 entiers uniquement.`;
+Scores 0-4 entiers uniquement. Dans mecanismes_transdiagnostiques, ajouter si pertinent un item "Conflit relationnel central" en formulation non diagnostique.`;
 
 let baselineData=null;
 
@@ -1997,6 +1997,11 @@ function showBilanBTB(data){
   // === CARTOGRAPHIE + BARRES SEGMENTÉES PAR AXE ===
   // Radar SVG simple à 6 axes
   const axesArr = (data.axes || []).slice(0, 6);
+  axesArr.forEach(ax => {
+    if (ax && /processus psychiques/i.test(String(ax.label || ''))) {
+      ax.label = 'Structure psychique et relationnelle';
+    }
+  });
   while (axesArr.length < 6) axesArr.push({ score: 2, label: '—', manifestations: '', systemes: '' });
 
   // Calcul des points du polygone (radar)
@@ -2028,7 +2033,7 @@ function showBilanBTB(data){
       <polygon points="${radarPolygon}" fill="rgba(31,58,77,0.18)" stroke="#211C16" stroke-width="2" stroke-linejoin="round"/>
       ${radarPoints.map((p, i) => `<circle cx="${p[0]}" cy="${p[1]}" r="6" fill="${radarColors[i]}"/>`).join('')}
       <g fill="#211C16" font-weight="800" font-size="10" font-family="Arial">
-        <text x="0" y="-115" text-anchor="middle">Processus</text>
+        <text x="0" y="-121" text-anchor="middle">Structure</text><text x="0" y="-109" text-anchor="middle">relationnelle</text>
         <text x="105" y="-55" text-anchor="start">Ressources</text>
         <text x="105" y="63" text-anchor="start">Comportements</text>
         <text x="0" y="125" text-anchor="middle">Régulation</text>
@@ -2066,6 +2071,49 @@ function showBilanBTB(data){
       <div style="background:white;border:1px solid #e5e6e0;border-radius:18px;padding:22px">
         <div style="font-size:12px;letter-spacing:0.32em;color:#BE401D;font-weight:800;text-transform:uppercase;margin-bottom:14px">Synthèse par axe</div>
         ${axesSegHTML}
+      </div>
+    </section>`;
+
+
+  // === PROFIL CLINIQUE OBSERVÉ — 4 CARTES COMPACTES ===
+  const pc = data.profil_clinique || {};
+  function splitTags(v) {
+    if (Array.isArray(v)) return v.filter(Boolean).slice(0, 4);
+    if (typeof v === 'string' && v.trim()) return v.split(/[,;•\n]+/).map(s => s.trim()).filter(Boolean).slice(0, 4);
+    return [];
+  }
+  const pcStructure = splitTags(pc.structure || pc.structure_psychique || pc.structure_relationnelle);
+  const pcEvents = splitTags(pc.evenements || pc.evenements_structurants);
+  const pcResources = splitTags(pc.ressources || pc.ressources_structurantes);
+  const pcConflict = pc.conflit_central || pc.conflit || '';
+
+  function profileList(items, fallback) {
+    const arr = items.length ? items : fallback;
+    return '<ul style="margin:0;padding-left:16px;font-size:12.5px;line-height:1.55;color:#333">' +
+      arr.map(x => '<li>' + escapeHTML(x) + '</li>').join('') +
+      '</ul>';
+  }
+
+  const profilCliniqueHTML = `
+    <section style="margin:18px 24px 0;background:white;border:1px solid #e5e6e0;border-radius:18px;padding:24px">
+      <div style="font-size:12px;letter-spacing:0.32em;color:#BE401D;font-weight:800;text-transform:uppercase;margin-bottom:16px">Profil clinique observé</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">
+        <div style="border:1px solid #f0c8c2;border-radius:14px;background:#fff;padding:16px">
+          <div style="font-size:12px;line-height:1.25;text-transform:uppercase;font-weight:900;color:#BE401D;margin-bottom:10px">Structure psychique et relationnelle</div>
+          ${profileList(pcStructure, ['Estime de soi vulnérable','Sensibilité au rejet','Vigilance relationnelle'])}
+        </div>
+        <div style="border:1px solid #d8cfee;border-radius:14px;background:#fff;padding:16px">
+          <div style="font-size:12px;line-height:1.25;text-transform:uppercase;font-weight:900;color:#5B4A8B;margin-bottom:10px">Événements structurants</div>
+          ${profileList(pcEvents, ['Événements marquants à préciser','Ruptures ou pertes significatives','Transitions de vie'])}
+        </div>
+        <div style="border:1px solid #efc88f;border-radius:14px;background:#fff;padding:16px;text-align:center">
+          <div style="font-size:12px;line-height:1.25;text-transform:uppercase;font-weight:900;color:#C66A1D;margin-bottom:12px">Conflit central</div>
+          <div style="font-size:13px;line-height:1.55;color:#333;font-weight:700">${escapeHTML(pcConflict || 'Besoin de sécurité ↔ peur du rejet')}</div>
+        </div>
+        <div style="border:1px solid #c9dfbf;border-radius:14px;background:#fff;padding:16px">
+          <div style="font-size:12px;line-height:1.25;text-transform:uppercase;font-weight:900;color:#4f8146;margin-bottom:10px">Ressources structurantes</div>
+          ${profileList(pcResources, ['Réflexivité','Verbalisation','Soutien relationnel'])}
+        </div>
       </div>
     </section>`;
 
@@ -2128,14 +2176,14 @@ function showBilanBTB(data){
     </section>` : '';
 
   // === MÉCANISMES TRANSDIAGNOSTIQUES (CARDS COMPACTES AVEC BOUCLE COURTE) ===
-  // Limité à 4 mécanismes maximum pour préserver le grid (sinon le 5e tombe seul sur la 2e ligne)
+  // Limité à 5 mécanismes maximum pour préserver le grid (sinon le 5e tombe seul sur la 2e ligne)
   // V3.6 BtC : remplacement des dots numériques (saillance 0-3) par une qualification textuelle
   // wellness-safe ("saillance élevée / modérée / discrète"). La donnée 0-3 reste en backend
   // pour le tri par saillance, mais ne s'affiche jamais.
   const mecanismes = (data.mecanismes_transdiagnostiques || [])
     .slice()
     .sort((a, b) => (b.salience || 0) - (a.salience || 0))
-    .slice(0, 4);
+    .slice(0, 5);
 
   // Mapping saillance numérique → qualification textuelle wellness-safe
   function qualSaillance(s) {
@@ -2227,6 +2275,65 @@ function showBilanBTB(data){
       </section>`;
   }
 
+  // === RED FLAGS — SIGNAUX D'ALERTE CLINIQUE ===
+  const redflagsArr = (data.redflags || []).slice(0, 6);
+  const redflagsHTML = redflagsArr.length ? `
+    <section style="margin:18px 24px 0;background:#fff5f5;border:1px solid #f0c8c2;border-radius:18px;padding:24px">
+      <div style="font-size:12px;letter-spacing:0.32em;color:#c94750;font-weight:800;text-transform:uppercase;margin-bottom:16px">Signaux d'alerte</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        ${redflagsArr.map(f => {
+          const isHaute = (f.priorite || '').toLowerCase().includes('haute');
+          const bg    = isHaute ? '#fff0f0' : '#fff8ec';
+          const bord  = isHaute ? '#f0b8b8' : '#ecd29b';
+          const col   = isHaute ? '#c94750' : '#7c5a0f';
+          const pillBg= isHaute ? '#fde7e8' : '#fef3d7';
+          return `
+            <div style="display:flex;align-items:flex-start;gap:12px;background:${bg};border:1px solid ${bord};border-radius:12px;padding:14px 16px">
+              <span style="flex-shrink:0;display:inline-block;padding:3px 10px;border-radius:999px;background:${pillBg};color:${col};font-size:11px;font-weight:700;margin-top:2px">${escapeHTML(f.priorite || '')}</span>
+              <div>
+                <div style="font-size:13px;font-weight:800;color:${col};margin-bottom:3px">${escapeHTML(f.titre || '')}</div>
+                <div style="font-size:12.5px;color:#555;line-height:1.5">${escapeHTML(f.detail || '')}</div>
+              </div>
+            </div>`;
+        }).join('')}
+      </div>
+    </section>` : '';
+
+  // === SYSTÈMES BIOLOGIQUES IMPLIQUÉS ===
+  const systemesArr = (data.systemes || []).slice(0, 5);
+  function niveauColorSys(couleur, niveau) {
+    const s = ((couleur || '') + ' ' + (niveau || '')).toLowerCase();
+    if (s.includes('rouge') || s.includes('hyperactiv') || s.includes('fragile') || s.includes('sévèr'))
+      return { bg: '#fde7e8', col: '#c94750', border: '#f0b8b8' };
+    if (s.includes('orange') || s.includes('sollicit') || s.includes('modérément') || s.includes('impliq'))
+      return { bg: '#fff0cf', col: '#be7a17', border: '#e8c97a' };
+    if (s.includes('vert') || s.includes('stable') || s.includes('équilibr'))
+      return { bg: '#e9f3df', col: '#4f8146', border: '#b4d4a0' };
+    return { bg: '#f0eee9', col: '#6b6b63', border: '#d8d4ce' };
+  }
+  const systemesHTML = systemesArr.length ? `
+    <section style="margin:18px 24px 0;background:white;border:1px solid #e5e6e0;border-radius:18px;padding:24px">
+      <div style="font-size:12px;letter-spacing:0.32em;color:#BE401D;font-weight:800;text-transform:uppercase;margin-bottom:16px">Analyse des systèmes biologiques impliqués</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:12px">
+        ${systemesArr.map(s => {
+          const c = niveauColorSys(s.couleur, s.niveau);
+          return `
+            <div style="border:1px solid ${c.border};border-radius:14px;background:white;padding:14px">
+              <div style="font-size:12.5px;font-weight:900;color:#1f1f1c;margin-bottom:7px;line-height:1.3">${escapeHTML(s.nom || '')}</div>
+              <div style="margin-bottom:8px"><span style="display:inline-block;padding:3px 9px;border-radius:999px;background:${c.bg};color:${c.col};font-size:11px;font-weight:700">${escapeHTML(s.niveau || '')}</span></div>
+              <div style="font-size:11.5px;color:#555;line-height:1.45">${escapeHTML(s.description || '')}</div>
+            </div>`;
+        }).join('')}
+      </div>
+    </section>` : '';
+
+  // === CONCLUSION ET PRONOSTIC ===
+  const conclusionHTML = data.conclusion ? `
+    <section style="margin:18px 24px 0;background:#f5f0ea;border:1px solid #e0d5c5;border-radius:18px;padding:24px">
+      <div style="font-size:12px;letter-spacing:0.32em;color:#BE401D;font-weight:800;text-transform:uppercase;margin-bottom:12px">Conclusion et pronostic</div>
+      <div style="font-size:13.5px;color:#2A2A28;line-height:1.85;font-style:italic;font-family:Georgia,serif">${escapeHTML(data.conclusion)}</div>
+    </section>` : '';
+
   // === CITATIONS DES OUTILS PSYCHOMÉTRIQUES ===
   const citationsHTML = `
     <div style="margin:14px 24px 0;font-size:11px;color:#777;font-style:italic;text-align:center">
@@ -2281,11 +2388,16 @@ function showBilanBTB(data){
 
     ${syntheseHTML}
     ${cartographieHTML}
+    ${profilCliniqueHTML}
     ${matriceHTML}
-    ${analyseLinguistiqueHTML}
-    ${mecanismesHTML}${pistesHTML}
+    ${systemesHTML}
+    ${mecanismesHTML}
+    ${redflagsHTML}
+    ${pistesHTML}
     ${pointsAttentionHTML}
     ${ressourcesHTML}
+    ${conclusionHTML}
+    ${analyseLinguistiqueHTML}
     ${methodologieHTML}
     ${footerHTML}
 
