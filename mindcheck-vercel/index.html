@@ -157,7 +157,7 @@
     z-index: 2;
     display: flex; flex-direction: row; gap: 12px;
     width: auto;
-    justify-content: flex-start;
+    justify-content: center;
   }
   .hero-stat {
     background: rgba(247,245,239,0.90);
@@ -558,7 +558,7 @@
   }
   .dim-card .photo-thumb img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
   .dim-card .photo-thumb .ic-over {
-    position: absolute; bottom: -14px; left: 14px;
+    position: absolute; bottom: 12px; left: 14px;
     width: 36px; height: 36px; border-radius: 10px;
     background: var(--orange); color: #FFFFFF;
     display: flex; align-items: center; justify-content: center;
@@ -566,7 +566,7 @@
   }
   .dim-card .photo-thumb .ic-over svg { width: 18px; height: 18px; }
   .dim-card .card-text {
-    padding: 22px 18px 18px;
+    padding: 18px 18px 18px;
     display: flex; flex-direction: column; gap: 6px;
   }
   .dim-card .nbr {
@@ -1005,6 +1005,32 @@
     .hero.hero-no-image .hero-stat { flex: 1 1 calc(50% - 4px); min-width: calc(50% - 4px); }
   }
 
+  /* ════════════════════════════════════════════
+     OVERRIDE AUTORITAIRE — stats hero en grille 2×2 (mobile)
+     Placé en dernier + grid + !important pour battre toutes
+     les règles flex précédentes, quel que soit le contenu.
+     ════════════════════════════════════════════ */
+  @media (max-width: 760px) {
+    .hero .hero-stats,
+    .hero.hero-no-image .hero-stats {
+      position: static !important;
+      transform: none !important;
+      top: auto !important; bottom: auto !important; right: auto !important;
+      width: 100% !important;
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 10px !important;
+      background: transparent !important;
+      padding: 18px 16px 4px !important;
+    }
+    .hero .hero-stat,
+    .hero.hero-no-image .hero-stat {
+      flex: none !important;
+      min-width: 0 !important;
+      width: auto !important;
+      padding: 13px 14px !important;
+    }
+  }
 
 </style>
 </head>
@@ -1594,7 +1620,7 @@
     <div class="footer-col">
       <h4>Contact</h4>
       <ul>
-        <li><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a6c5c9c8d2c7c5d2e6c4cfcac7c8d6d5df88c0d4">[email&#160;protected]</a></li>
+        <li><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="01626e6f756062754163686d606f7172782f6773">[email&#160;protected]</a></li>
       </ul>
     </div>
   </div>
