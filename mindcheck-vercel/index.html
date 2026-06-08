@@ -565,8 +565,18 @@
     box-shadow: 0 6px 14px rgba(255,75,40,0.30);
   }
   .dim-card .photo-thumb .ic-over svg { width: 18px; height: 18px; }
+  .dim-card .photo-thumb .num-over {
+    position: absolute; top: 11px; left: 12px; z-index: 2;
+    background: rgba(255,255,255,0.93);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    color: var(--orange);
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    font-size: 18px; line-height: 1; letter-spacing: 0.3px;
+    padding: 4px 13px; border-radius: 999px;
+    box-shadow: 0 2px 8px rgba(14,15,18,0.18);
+  }
   .dim-card .card-text {
-    padding: 18px 18px 18px;
+    padding: 14px 18px 18px;
     display: flex; flex-direction: column; gap: 6px;
   }
   .dim-card .nbr {
@@ -823,7 +833,7 @@
       justify-content: flex-end;
       max-width: 100%;
     }
-    h1.headline, .hero-h { font-size: clamp(36px, 10.5vw, 56px); line-height: 1.0; max-width: 100%; }
+    h1.headline, .hero-h { font-size: clamp(44px, 13vw, 72px); line-height: 0.98; max-width: 100%; }
     .lede { font-size: 15px; max-width: 100%; margin: 18px 0 0; }
     .ctas { justify-content: flex-start; gap: 14px; margin-top: 24px; flex-direction: column; align-items: stretch; }
     .cta-primary { padding: 15px 24px; font-size: 14.5px; justify-content: center; }
@@ -889,7 +899,7 @@
   }
 
   @media (max-width: 520px) {
-    h1.headline, .hero-h { font-size: clamp(32px, 11vw, 46px); }
+    h1.headline, .hero-h { font-size: clamp(42px, 14.5vw, 62px); line-height: 0.98; }
     .hero-content { padding: 200px 16px 26px; }
     /* Stats : grille 2×2 compacte (jamais pleine largeur empilée) */
     .hero-stats { flex-direction: row; flex-wrap: wrap; padding: 18px 16px 4px; gap: 8px; }
@@ -1028,8 +1038,15 @@
       flex: none !important;
       min-width: 0 !important;
       width: auto !important;
-      padding: 13px 14px !important;
+      padding: 9px 11px !important;
+      gap: 8px !important;
+      box-shadow: 0 4px 14px rgba(14,15,18,0.08) !important;
     }
+    .hero .hero-stat .ico { width: 28px !important; height: 28px !important; border-radius: 8px !important; }
+    .hero .hero-stat .ico svg { width: 15px !important; height: 15px !important; }
+    .hero .hero-stat .v { font-size: 17px !important; }
+    .hero .hero-stat .v .u { font-size: 11px !important; }
+    .hero .hero-stat .k { font-size: 9.5px !important; }
   }
 
 </style>
@@ -1357,11 +1374,10 @@
 
         <div class="dim-card">
           <div class="photo-thumb">
-            <img src="pexel-pensive-blonde.jpg" alt="">
+            <img src="axe-structure.jpg" alt="" style="object-position:50% 32%;"><div class="num-over">/ 01</div>
             <div class="ic-over"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4a4 4 0 0 0-4 4 3 3 0 0 0 0 6 3 3 0 0 0 4 3 4 4 0 0 0 4-4V8a4 4 0 0 0-4-4Z"/><path d="M14 4a4 4 0 0 1 4 4 3 3 0 0 1 0 6 3 3 0 0 1-4 3 4 4 0 0 1-4-4V8a4 4 0 0 1 4-4Z"/></svg></div>
           </div>
           <div class="card-text">
-            <div class="nbr">/ 01</div>
             <div class="lbl">Structure psychique et relationnelle</div>
             <p class="hnt">Votre rapport à vous-même, aux autres et aux situations de tension.</p>
           </div>
@@ -1369,11 +1385,10 @@
 
         <div class="dim-card">
           <div class="photo-thumb">
-            <img src="therapie.jpg" alt="" style="object-position: 30% 30%;">
+            <img src="therapie.jpg" alt="" style="object-position: 30% 30%;"><div class="num-over">/ 02</div>
             <div class="ic-over"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4c-3 0-5 2-5 5 0 4 5 8 5 8s5-4 5-8c0-3-2-5-5-5Z"/><path d="M11 9v3"/></svg></div>
           </div>
           <div class="card-text">
-            <div class="nbr">/ 02</div>
             <div class="lbl">Ressources</div>
             <p class="hnt">Vos appuis intérieurs et extérieurs, ce qui vous porte.</p>
           </div>
@@ -1381,11 +1396,10 @@
 
         <div class="dim-card">
           <div class="photo-thumb">
-            <img src="jeune-femme-casque.jpg" alt="" style="object-position: 35% 30%;">
+            <img src="axe-emotions.jpg" alt="" style="object-position:50% 30%;"><div class="num-over">/ 03</div>
             <div class="ic-over"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M11 18s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 18 8c0 5.5-7 10-7 10Z"/></svg></div>
           </div>
           <div class="card-text">
-            <div class="nbr">/ 03</div>
             <div class="lbl">Émotions</div>
             <p class="hnt">Ce que vous ressentez et la façon dont vous le régulez.</p>
           </div>
@@ -1393,11 +1407,10 @@
 
         <div class="dim-card">
           <div class="photo-thumb">
-            <img src="pexel-lotus-redhead.jpg" alt="" style="object-position: 50% 40%;">
+            <img src="axe-corps.jpg" alt="" style="object-position:50% 42%;"><div class="num-over">/ 04</div>
             <div class="ic-over"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="6" r="3"/><path d="M5 19c1-4 3-6 6-6s5 2 6 6"/></svg></div>
           </div>
           <div class="card-text">
-            <div class="nbr">/ 04</div>
             <div class="lbl">Corps</div>
             <p class="hnt">Énergie, sommeil, tensions — vos signaux corporels.</p>
           </div>
@@ -1405,11 +1418,10 @@
 
         <div class="dim-card">
           <div class="photo-thumb">
-            <img src="jeune-homme-canape.jpg" alt="" style="object-position: 60% 30%;">
+            <img src="axe-environnement.jpg" alt="" style="object-position:50% 50%;"><div class="num-over">/ 05</div>
             <div class="ic-over"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10 11 4l7 6v8a1 1 0 0 1-1 1h-3v-6H8v6H5a1 1 0 0 1-1-1v-8Z"/></svg></div>
           </div>
           <div class="card-text">
-            <div class="nbr">/ 05</div>
             <div class="lbl">Environnement</div>
             <p class="hnt">Votre contexte de vie, vos relations, votre quotidien.</p>
           </div>
@@ -1417,11 +1429,10 @@
 
         <div class="dim-card">
           <div class="photo-thumb">
-            <img src="pexel-notebook-blonde.jpg" alt="" style="object-position: 50% 25%;">
+            <img src="axe-comportement.jpg" alt="" style="object-position:50% 28%;"><div class="num-over">/ 06</div>
             <div class="ic-over"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="3"/><path d="M11 2v3M11 17v3M2 11h3M17 11h3M4.6 4.6l2.1 2.1M15.3 15.3l2.1 2.1M4.6 17.4l2.1-2.1M15.3 6.7l2.1-2.1"/></svg></div>
           </div>
           <div class="card-text">
-            <div class="nbr">/ 06</div>
             <div class="lbl">Comportements</div>
             <p class="hnt">Vos habitudes, vos réactions et stratégies.</p>
           </div>
@@ -1620,7 +1631,7 @@
     <div class="footer-col">
       <h4>Contact</h4>
       <ul>
-        <li><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="01626e6f756062754163686d606f7172782f6773">[email&#160;protected]</a></li>
+        <li>contact@bilanpsy.fr</li>
       </ul>
     </div>
   </div>
@@ -1633,7 +1644,7 @@
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
   function toggleFaq(btn) {
     var item = btn.parentElement;
     var wasOpen = item.classList.contains('open');
