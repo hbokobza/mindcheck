@@ -110,10 +110,10 @@
 
   h1.headline {
     font-family: 'Bricolage Grotesque', sans-serif;
-    font-size: clamp(56px, 8.5vw, 124px);
-    line-height: 0.92; letter-spacing: -0.045em; font-weight: 500;
-    margin: 0; color: #FFFFFF; font-variation-settings: "opsz" 96;
-    max-width: 1200px; text-wrap: balance;
+    font-size: clamp(46px, 6.4vw, 92px);
+    line-height: 0.98; letter-spacing: -0.04em; font-weight: 500;
+    margin: 0 auto; color: #FFFFFF; font-variation-settings: "opsz" 96;
+    max-width: 16ch; text-wrap: balance;
     text-shadow: 0 2px 24px rgba(0,0,0,0.20);
   }
   h1.headline em {
@@ -128,6 +128,29 @@
     text-shadow: 0 1px 12px rgba(0,0,0,0.30);
   }
   .lede strong { color: #FFFFFF; font-weight: 600; }
+  .proof-line {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'Inter', sans-serif; font-size: 13px; line-height: 1.4;
+    color: var(--muted); margin: 16px auto 0; max-width: 560px;
+  }
+  .proof-line svg { width: 15px; height: 15px; color: var(--orange); flex-shrink: 0; }
+  .hero-benefits {
+    display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+    margin: 22px auto 0;
+  }
+  .hero-benefits .benefit {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-family: 'Inter', sans-serif; font-size: 13.5px; font-weight: 500; color: var(--ink-2);
+    background: rgba(247,245,239,0.82);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    border: 1px solid var(--line); border-radius: 999px; padding: 8px 16px 8px 10px;
+  }
+  .hero-benefits .bi {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: rgba(255,75,40,0.12); color: var(--orange);
+    display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .hero-benefits .bi svg { width: 15px; height: 15px; }
   .ctas { display: flex; align-items: center; gap: 22px; margin-top: 36px; flex-wrap: wrap; justify-content: center; }
   .cta-primary { text-decoration:none;
     background: var(--orange); color: #FFFFFF; border: none;
@@ -213,7 +236,7 @@
 
   .sec-h2 {
     font-family: 'Bricolage Grotesque', sans-serif;
-    font-size: clamp(48px, 6vw, 88px);
+    font-size: clamp(32px, 4.2vw, 52px);
     line-height: 0.96; letter-spacing: -0.04em; font-weight: 500;
     margin: 0; color: var(--ink); font-variation-settings: "opsz" 96;
     text-wrap: balance;
@@ -275,6 +298,22 @@
   .point-card .body em {
     font-family: 'Instrument Serif', serif; font-style: italic;
     color: var(--orange); font-weight: 400;
+  }
+  .point-card .card-method {
+    list-style: none; padding: 0; margin: 16px 0 0;
+    display: flex; flex-direction: column; gap: 9px;
+  }
+  .point-card .card-method li {
+    font-family: 'Inter', sans-serif; font-size: 13.5px; line-height: 1.4; color: var(--ink-2);
+    padding-left: 22px; position: relative;
+  }
+  .point-card .card-method li::before {
+    content: ''; position: absolute; left: 0; top: 6px;
+    width: 7px; height: 7px; border-radius: 2px; background: var(--orange);
+  }
+  .point-card .card-disc {
+    font-family: 'Inter', sans-serif; font-size: 12px; line-height: 1.5; color: var(--muted);
+    margin: 16px 0 0; padding-top: 14px; border-top: 1px solid var(--line);
   }
 
   /* ════════════════════════════════════════════
@@ -535,7 +574,7 @@
      ════════════════════════════════════════════ */
   .dimensions { background: var(--bone); padding: 80px 48px; }
   .dim-head { max-width: 880px; margin-bottom: 40px; }
-  .dim-head .sec-h2 { font-size: clamp(40px, 4.8vw, 64px); }
+  .dim-head .sec-h2 { font-size: clamp(32px, 4.2vw, 52px); }
   .dim-head .sec-lede { font-size: 16px; margin-top: 16px; }
   .dim-content {
     display: grid; grid-template-columns: 380px 1fr;
@@ -595,16 +634,16 @@
   /* ════════════════════════════════════════════
      05 ORIENTATION — split éditorial
      ════════════════════════════════════════════ */
-  .orientation { background: var(--warm); padding: 0; min-height: 100vh; }
+  .orientation { background: var(--warm); padding: 0; min-height: auto; }
   .orientation-inner {
     display: grid; grid-template-columns: 1.1fr 1fr;
-    min-height: 100vh; align-items: stretch;
+    min-height: auto; align-items: stretch;
   }
   .orientation-photo {
-    position: relative; overflow: hidden; background: var(--bone-2);
+    position: relative; overflow: hidden; background: var(--bone-2); min-height: 520px;
   }
   .orientation-photo img {
-    width: 100%; height: 100%; object-fit: cover; object-position: 58% 24%;
+    width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; background: var(--bone-2);
   }
   .orientation-photo .pill-on-photo {
     position: absolute; top: 32px; left: 32px;
@@ -872,7 +911,7 @@
     /* 05 ORIENTATION — split → 1 colonne ; citation SOUS la photo (plus dessus), titre maîtrisé */
     .orientation-inner { grid-template-columns: 1fr; min-height: auto; }
     .orientation-photo { height: auto; order: -1; overflow: visible; }
-    .orientation-photo img { height: 230px; display: block; object-position: 58% 26%; }
+    .orientation-photo img { height: 230px; display: block; object-fit: contain; object-position: center; }
     .orientation-photo .pill-on-photo { top: 16px; left: 16px; }
     .orientation-photo .quote-on-photo {
       position: static; left: auto; right: auto; bottom: auto;
@@ -1049,6 +1088,139 @@
     .hero .hero-stat .k { font-size: 9.5px !important; }
   }
 
+  /* ════════════════════════════════════════════
+     SECTIONS VALEUR (dossier · longitudinal · vs IA)
+     ════════════════════════════════════════════ */
+  .vsec { padding: 96px 64px; }
+  .vsec-inner { max-width: 1180px; margin: 0 auto; }
+  .vhead { max-width: 720px; margin: 0 auto 52px; text-align: center; }
+  .v-eyebrow {
+    font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--orange);
+    display: inline-flex; align-items: center; gap: 8px; margin-bottom: 16px;
+  }
+  .v-eyebrow::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--orange); }
+  .vhead h2 {
+    font-family: 'Bricolage Grotesque', sans-serif; font-weight: 500;
+    font-size: clamp(32px, 4.2vw, 52px); line-height: 1.08; letter-spacing: -1.2px;
+    color: var(--ink); margin: 0;
+  }
+  .vhead h2 em { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--orange); font-weight: 400; }
+  .vhead p { font-family: 'Inter', sans-serif; font-size: 16.5px; line-height: 1.6; color: var(--muted); margin: 18px auto 0; max-width: 620px; }
+
+  /* --- Dossier structuré : split mockup | texte --- */
+  .dossier { background: var(--warm); }
+  .dossier-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 56px; align-items: center; }
+  .dossier-text h2 {
+    font-family: 'Bricolage Grotesque', sans-serif; font-weight: 500;
+    font-size: clamp(32px, 4.2vw, 52px); line-height: 1.1; letter-spacing: -1px; color: var(--ink); margin: 16px 0 0;
+  }
+  .dossier-text h2 em { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--orange); font-weight: 400; }
+  .dossier-text > p { font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.65; color: var(--muted); margin: 20px 0 0; }
+  .dossier-feats { list-style: none; padding: 0; margin: 26px 0 0; display: flex; flex-direction: column; gap: 14px; }
+  .dossier-feats li { display: flex; gap: 13px; align-items: flex-start; font-size: 14.5px; line-height: 1.5; color: var(--ink-2); }
+  .dossier-feats .fi { width: 30px; height: 30px; border-radius: 9px; background: rgba(255,75,40,0.1); color: var(--orange); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .dossier-feats .fi svg { width: 16px; height: 16px; }
+  .dossier-feats b { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; color: var(--ink); display: block; font-size: 15px; margin-bottom: 1px; }
+
+  /* --- Mockup card du bilan --- */
+  .bilan-mock {
+    background: #FCFAF6; border: 1px solid var(--line); border-radius: 22px;
+    box-shadow: 0 30px 70px rgba(14,15,18,0.10); overflow: hidden;
+  }
+  .bm-top { background: #EFE9DD; padding: 18px 22px; border-bottom: 3px solid var(--orange); display: flex; align-items: center; justify-content: space-between; }
+  .bm-wm { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: -0.5px; color: var(--ink); }
+  .bm-wm .dot { color: var(--orange); }
+  .bm-code { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--muted); background: #FCFAF6; border: 1px solid var(--line); padding: 4px 10px; border-radius: 999px; }
+  .bm-body { padding: 22px; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .bm-block { border: 1px solid var(--line); border-radius: 14px; padding: 15px 16px; background: #FCFAF6; }
+  .bm-label { font-family: 'Inter', sans-serif; font-size: 9.5px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--orange); margin-bottom: 11px; }
+  .bm-radar { display: flex; align-items: center; justify-content: center; padding: 4px 0; }
+  .bm-radar svg { width: 100%; max-width: 180px; height: auto; }
+  .bm-axes { display: flex; flex-direction: column; gap: 9px; }
+  .bm-axe { display: flex; flex-direction: column; gap: 5px; }
+  .bm-axe .an { display: flex; justify-content: space-between; font-size: 11px; color: var(--ink-2); }
+  .bm-axe .an b { font-weight: 600; }
+  .bm-bars { display: grid; grid-template-columns: repeat(4,1fr); gap: 3px; }
+  .bm-bars span { height: 6px; border-radius: 999px; background: #E9E3D7; }
+  .bm-wide { grid-column: 1 / -1; }
+  .bm-trend { display: flex; align-items: flex-end; gap: 7px; height: 70px; padding-top: 6px; }
+  .bm-evo { display: flex; align-items: center; gap: 8px; padding-top: 4px; }
+  .bm-evo-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .bm-evo-rows { display: flex; flex-direction: column; gap: 3px; width: 100%; }
+  .bm-evo-rows span { height: 5px; border-radius: 999px; width: 100%; }
+  .bm-evo .el { font-size: 9.5px; font-weight: 600; color: var(--muted); }
+  .bm-evo-arrow { color: var(--orange); flex-shrink: 0; display: flex; }
+  .bm-trend .pt { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+  .bm-trend .bar { width: 100%; border-radius: 5px 5px 0 0; background: linear-gradient(180deg, var(--orange), #ff7c64); }
+  .bm-trend .dt { font-size: 9px; color: var(--muted); }
+  .bm-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .bm-tag { font-size: 10.5px; font-weight: 600; padding: 4px 10px; border-radius: 999px; }
+  .bm-tag.r { color: #A23B2B; background: #F1DED9; }
+  .bm-tag.o { color: #8C620F; background: #F4E8CC; }
+  .bm-tag.g { color: #225031; background: #D6E4D3; }
+
+  /* --- Longitudinal --- */
+  .longi { background: var(--bone); }
+  .longi-track { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; position: relative; margin-top: 12px; }
+  .longi-card { background: #FCFAF6; border: 1px solid var(--line); border-radius: 20px; padding: 22px 22px 24px; position: relative; }
+  .longi-card.now { border-color: var(--orange); box-shadow: 0 16px 40px rgba(255,75,40,0.10); }
+  .longi-when { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .longi-when .m { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 17px; color: var(--ink); }
+  .longi-when .badge { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--orange); background: rgba(255,75,40,0.12); padding: 3px 9px; border-radius: 999px; }
+  .longi-rows { display: flex; flex-direction: column; gap: 11px; }
+  .longi-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; }
+  .longi-row .ln { font-size: 11.5px; color: var(--ink-2); }
+  .longi-bars { display: grid; grid-template-columns: repeat(4,1fr); gap: 3px; width: 88px; }
+  .longi-bars span { height: 6px; border-radius: 999px; background: #E9E3D7; }
+  .longi-arrow { position: absolute; top: 50%; right: -17px; transform: translateY(-50%); z-index: 2; color: var(--orange); }
+  .longi-note { text-align: center; font-family: 'Inter', sans-serif; font-size: 13.5px; color: var(--muted); margin-top: 28px; }
+
+  /* --- Comparatif IA --- */
+  .vsia { background: var(--warm); }
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; max-width: 920px; margin: 0 auto; }
+  .compare-col { border-radius: 22px; padding: 32px 30px; }
+  .compare-col.ia { background: #FCFAF6; border: 1px solid var(--line); }
+  .compare-col.bp { background: var(--ink); border: 1px solid var(--ink); }
+  .compare-col h3 { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 19px; letter-spacing: -0.4px; margin: 0 0 4px; display: flex; align-items: center; gap: 10px; }
+  .compare-col.ia h3 { color: var(--muted); }
+  .compare-col.bp h3 { color: #FCFAF6; }
+  .compare-col .sub { font-family: 'Inter', sans-serif; font-size: 12.5px; margin: 0 0 20px; }
+  .compare-col.ia .sub { color: var(--muted-2); }
+  .compare-col.bp .sub { color: rgba(252,250,246,0.6); }
+  .compare-listb { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 13px; }
+  .compare-listb li { display: flex; gap: 11px; align-items: flex-start; font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.4; }
+  .compare-col.ia li { color: var(--muted); }
+  .compare-col.bp li { color: rgba(252,250,246,0.92); }
+  .compare-listb .ic { width: 19px; height: 19px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+  .compare-col.ia .ic { background: rgba(14,15,18,0.06); color: var(--muted-2); }
+  .compare-col.bp .ic { background: rgba(255,75,40,0.9); color: #fff; }
+  .compare-listb .ic svg { width: 12px; height: 12px; }
+  .compare-concl { text-align: center; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 500; font-size: clamp(20px, 2.6vw, 27px); letter-spacing: -0.6px; color: var(--ink); margin: 40px auto 0; max-width: 680px; }
+  .compare-concl em { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--orange); }
+
+  @media (max-width: 860px) {
+    .vsec { padding: 64px 20px; }
+    .dossier-grid { grid-template-columns: 1fr; gap: 36px; }
+    .longi-track { grid-template-columns: 1fr; gap: 16px; }
+    .longi-arrow { display: none; }
+    .compare { grid-template-columns: 1fr; gap: 16px; }
+    .methodo-grid { grid-template-columns: 1fr !important; gap: 22px !important; }
+  }
+
+  /* --- Méthodologie --- */
+  .methodo { background: var(--bone); }
+  .methodo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; max-width: 1080px; margin: 0 auto; }
+  .methodo-list { list-style: none; padding: 0; margin: 22px 0 0; display: flex; flex-direction: column; gap: 0; }
+  .methodo-list li { display: flex; gap: 16px; align-items: flex-start; padding: 16px 0; border-top: 1px solid var(--line); font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.5; color: var(--ink-2); }
+  .methodo-list li:last-child { border-bottom: 1px solid var(--line); }
+  .methodo-list .mn { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 18px; color: var(--orange); flex-shrink: 0; width: 22px; }
+  .methodo-disc { background: #FCFAF6; border: 1px solid var(--line); border-left: 3px solid var(--orange); border-radius: 18px; padding: 28px 30px; }
+  .methodo-disc .di { width: 38px; height: 38px; border-radius: 11px; background: rgba(255,75,40,0.1); color: var(--orange); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+  .methodo-disc .di svg { width: 20px; height: 20px; }
+  .methodo-disc h4 { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 18px; color: var(--ink); margin: 0 0 10px; letter-spacing: -0.3px; }
+  .methodo-disc p { font-family: 'Inter', sans-serif; font-size: 14.5px; line-height: 1.6; color: var(--muted); margin: 0; }
+
 </style>
 </head>
 <body>
@@ -1082,15 +1254,23 @@
 
   <div class="hero-content">
     <span class="eyebrow">Check-up psychique &amp; orientation</span>
-    <h1 class="headline">Le check‑up psychique<br>pour <em>y voir plus clair.</em></h1>
+    <h1 class="headline">Le check‑up psychique qui vous aide à <em>y voir plus clair.</em></h1>
     <p class="lede">
-      Un véritable check-up en 15 minutes, sans engagement.
-      BilanPsy vous aide à comprendre où vous en êtes, et à savoir
-      <strong>quoi faire ensuite, si nécessaire</strong>.
+      Une cartographie psychique personnelle qui <strong>suit votre évolution dans le temps</strong>,
+      facilite votre orientation et peut être partagée avec les professionnels qui vous accompagnent.
     </p>
+    <p class="proof-line">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5 6.5 12 13 4.5"/></svg>
+      Fondé sur des échelles psychométriques validées et une méthode d'analyse structurée.
+    </p>
+    <div class="hero-benefits">
+      <div class="benefit"><span class="bi"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7.5"/><path d="M11 7.5v4M11 14.5h.01"/></svg></span>Comprendre où vous en êtes</div>
+      <div class="benefit"><span class="bi"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15l4-5 4 3 6-8"/><path d="M3 19h16"/></svg></span>Suivre votre évolution</div>
+      <div class="benefit"><span class="bi"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="7.5" r="3"/><path d="M5 18c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/></svg></span>Trouver le bon accompagnement</div>
+    </div>
     <div class="ctas">
-      <a href="/app.html" class="cta-primary">Commencer mon check-up · 9 €</a>
-      <a class="cta-ghost" href="#comment">Voir comment ça marche</a>
+      <a href="/app.html" class="cta-primary">Faire mon check-up · 9 €</a>
+      <a class="cta-ghost" href="#dossier">Voir un exemple de bilan</a>
     </div>
   </div>
 
@@ -1128,6 +1308,98 @@
 </section>
 
 <!-- ════════════════════════════════════════════
+     1bis — DOSSIER STRUCTURÉ (NEW)
+     ════════════════════════════════════════════ -->
+<section class="vsec dossier" data-screen-label="Dossier structuré" id="dossier">
+  <div class="vsec-inner">
+    <div class="dossier-grid">
+      <div class="bilan-mock">
+        <div class="bm-top">
+          <span class="bm-wm">bilanpsy<span class="dot">.</span></span>
+          <span class="bm-code">Exemple · PS-XXXX</span>
+        </div>
+        <div class="bm-body">
+          <div class="bm-block">
+            <div class="bm-label">Cartographie 6 axes</div>
+            <div class="bm-radar">
+              <svg viewBox="0 0 200 190" xmlns="http://www.w3.org/2000/svg">
+                <g stroke="rgba(14,15,18,0.12)" stroke-width="0.7" fill="none">
+                  <polygon points="100,72 124,86 124,114 100,128 76,114 76,86"/>
+                  <polygon points="100,44 148,72 148,128 100,156 52,128 52,72"/>
+                  <polygon points="100,16 172,58 172,142 100,184 28,142 28,58"/>
+                </g>
+                <g stroke="rgba(14,15,18,0.1)" stroke-width="0.7">
+                  <line x1="100" y1="100" x2="100" y2="16"/>
+                  <line x1="100" y1="100" x2="172" y2="58"/>
+                  <line x1="100" y1="100" x2="172" y2="142"/>
+                  <line x1="100" y1="100" x2="100" y2="184"/>
+                  <line x1="100" y1="100" x2="28" y2="142"/>
+                  <line x1="100" y1="100" x2="28" y2="58"/>
+                </g>
+                <polygon points="100,40 158,66 150,140 100,150 44,134 50,72" fill="rgba(255,75,40,0.18)" stroke="#FF4B28" stroke-width="2" stroke-linejoin="round"/>
+                <g fill="#FF4B28">
+                  <circle cx="100" cy="40" r="3.5"/><circle cx="158" cy="66" r="3.5"/><circle cx="150" cy="140" r="3.5"/>
+                  <circle cx="100" cy="150" r="3.5"/><circle cx="44" cy="134" r="3.5"/><circle cx="50" cy="72" r="3.5"/>
+                </g>
+              </svg>
+            </div>
+          </div>
+          <div class="bm-block">
+            <div class="bm-label">Lecture par axe</div>
+            <div class="bm-axes">
+              <div class="bm-axe"><div class="an"><span>Processus</span><b style="color:#8C620F">Tension</b></div><div class="bm-bars"><span style="background:#C4892E"></span><span style="background:#C4892E"></span><span></span><span></span></div></div>
+              <div class="bm-axe"><div class="an"><span>Ressources</span><b style="color:#4C7A3D">Stable</b></div><div class="bm-bars"><span style="background:#6E9A5C"></span><span style="background:#6E9A5C"></span><span style="background:#6E9A5C"></span><span></span></div></div>
+              <div class="bm-axe"><div class="an"><span>Comportements</span><b style="color:#8C620F">Tension</b></div><div class="bm-bars"><span style="background:#C4892E"></span><span style="background:#C4892E"></span><span></span><span></span></div></div>
+              <div class="bm-axe"><div class="an"><span>Régulation</span><b style="color:#A23B2B">Fragile</b></div><div class="bm-bars"><span style="background:#C0564A"></span><span></span><span></span><span></span></div></div>
+              <div class="bm-axe"><div class="an"><span>Corps</span><b style="color:#8C620F">Tension</b></div><div class="bm-bars"><span style="background:#C4892E"></span><span style="background:#C4892E"></span><span></span><span></span></div></div>
+              <div class="bm-axe"><div class="an"><span>Environnement</span><b style="color:#4C7A3D">Stable</b></div><div class="bm-bars"><span style="background:#6E9A5C"></span><span style="background:#6E9A5C"></span><span style="background:#6E9A5C"></span><span></span></div></div>
+            </div>
+          </div>
+          <div class="bm-block bm-wide">
+            <div class="bm-label">Évolution dans le temps</div>
+            <div class="bm-evo">
+              <div class="bm-evo-col">
+                <div class="bm-evo-rows"><span style="background:#C0564A"></span><span style="background:#C4892E"></span><span style="background:#C4892E"></span><span style="background:#C0564A"></span><span style="background:#C0564A"></span><span style="background:#C4892E"></span></div>
+                <span class="el">Temps 1</span>
+              </div>
+              <span class="bm-evo-arrow"><svg width="14" height="14" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11h13M12 6l5 5-5 5"/></svg></span>
+              <div class="bm-evo-col">
+                <div class="bm-evo-rows"><span style="background:#C4892E"></span><span style="background:#6E9A5C"></span><span style="background:#C4892E"></span><span style="background:#C4892E"></span><span style="background:#C0564A"></span><span style="background:#6E9A5C"></span></div>
+                <span class="el">Temps 2</span>
+              </div>
+              <span class="bm-evo-arrow"><svg width="14" height="14" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11h13M12 6l5 5-5 5"/></svg></span>
+              <div class="bm-evo-col">
+                <div class="bm-evo-rows"><span style="background:#6E9A5C"></span><span style="background:#2F6B43"></span><span style="background:#6E9A5C"></span><span style="background:#6E9A5C"></span><span style="background:#C4892E"></span><span style="background:#6E9A5C"></span></div>
+                <span class="el">Temps 3</span>
+              </div>
+            </div>
+          </div>
+          <div class="bm-block bm-wide">
+            <div class="bm-label">Mécanismes identifiés</div>
+            <div class="bm-tags">
+              <span class="bm-tag r">Rumination</span>
+              <span class="bm-tag o">Hypervigilance</span>
+              <span class="bm-tag g">Mentalisation préservée</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dossier-text">
+        <div class="v-eyebrow">Ce que BilanPsy produit</div>
+        <h2>Bien plus qu'une réponse&nbsp;IA&nbsp;: un <em>dossier psychique structuré.</em></h2>
+        <p>BilanPsy ne se limite pas à générer une réponse. Il transforme vos réponses en un dossier psychique organisé, lisible dans le temps et utile pour préparer un accompagnement avec un professionnel.</p>
+        <ul class="dossier-feats">
+          <li><span class="fi"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M11 11 11 5M11 11l4.5 2.5"/></svg></span><span><b>Une cartographie 6 axes</b>Une lecture claire de votre équilibre, axe par axe.</span></li>
+          <li><span class="fi"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15l4-5 4 3 6-8"/></svg></span><span><b>Une évolution dans le temps</b>Vos repères comparés d'un bilan à l'autre.</span></li>
+          <li><span class="fi"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="8" r="3"/><path d="M2 18c0-2.8 2.2-4.5 5-4.5M14 7l2.5 2.5L21 5"/></svg></span><span><b>Des mécanismes identifiés</b>Les dynamiques récurrentes mises en évidence.</span></li>
+          <li><span class="fi"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h9l4 4v12H5z"/><path d="M8 11h7M8 15h5"/></svg></span><span><b>Une synthèse exploitable</b>Un document que vous pouvez partager avec un professionnel.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════
      02 — POURQUOI SUPERPSY
      ════════════════════════════════════════════ -->
 <section class="section pourquoi" data-screen-label="02 Pourquoi" id="pourquoi">
@@ -1151,23 +1423,23 @@
 
       <div class="point-card">
         <div class="photo">
-          <img src="pourquoi-bilan.png" alt="L'app BilanPsy sur un téléphone">
+          <img src="therapie.jpg" alt="Séance avec un professionnel">
           <span class="n">02</span>
         </div>
         <div class="text-block">
-          <p class="lead">Comprendre votre équilibre psychique, repérer les zones de fragilité, savoir quoi faire ensuite.</p>
-          <p class="body">Un <em>bilan structuré</em> pour faire le point.</p>
+          <p class="lead">On fait des bilans réguliers pour le corps. Rarement pour le psychique.</p>
+          <p class="body">Le psychique mérite aussi <em>d'être évalué.</em></p>
         </div>
       </div>
 
       <div class="point-card">
         <div class="photo">
-          <img src="therapie.jpg" alt="Séance avec un professionnel">
+          <img src="pourquoi-bilan.png" alt="L'app BilanPsy sur un téléphone">
           <span class="n">03</span>
         </div>
         <div class="text-block">
-          <p class="lead">On fait des bilans réguliers pour le corps. Pas pour le psychique.</p>
-          <p class="body">Le psychique mérite aussi <em>d'être évalué.</em></p>
+          <p class="lead">Une méthode structurée — échelles reconnues, analyse du récit, cartographie en 6 axes — pas une conversation au hasard.</p>
+          <p class="body">Un <em>bilan structuré</em> pour faire le point.</p>
         </div>
       </div>
     </div>
@@ -1440,6 +1712,94 @@
 
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════
+     4bis — LONGITUDINAL (NEW)
+     ════════════════════════════════════════════ -->
+<section class="vsec longi" data-screen-label="Évolution" id="evolution">
+  <div class="vsec-inner">
+    <div class="vhead">
+      <div class="v-eyebrow" style="justify-content:center">Suivre votre évolution</div>
+      <h2>Votre équilibre psychique évolue. <em>Votre bilan aussi.</em></h2>
+      <p>Chaque bilan permet de comparer vos repères psychiques dans le temps&nbsp;: ce qui s'apaise, ce qui persiste, ce qui demande attention.</p>
+    </div>
+    <div class="longi-track">
+      <div class="longi-card">
+        <div class="longi-when"><span class="m">Temps 1</span><span class="badge" style="color:var(--muted);background:rgba(14,15,18,0.06)">1ᵉʳ bilan</span></div>
+        <div class="longi-rows">
+          <div class="longi-row"><span class="ln">Processus psychiques</span><div class="longi-bars"><span style="background:#C0564A"></span><span></span><span></span><span></span></div></div>
+          <div class="longi-row"><span class="ln">Ressources psychiques</span><div class="longi-bars"><span style="background:#C4892E"></span><span style="background:#C4892E"></span><span></span><span></span></div></div>
+          <div class="longi-row"><span class="ln">Comportements</span><div class="longi-bars"><span style="background:#C4892E"></span><span style="background:#C4892E"></span><span></span><span></span></div></div>
+          <div class="longi-row"><span class="ln">Régulation émotionnelle</span><div class="longi-bars"><span style="background:#C0564A"></span><span></span><span></span><span></span></div></div>
+          <div class="longi-row"><span class="ln">Corps &amp; somatique</span><div class="longi-bars"><span style="background:#C0564A"></span><span></span><span></span><span></span></div></div>
+          <div class="longi-row"><span class="ln">Environnement</span><div class="longi-bars"><span style="background:#C4892E"></span><span style="background:#C4892E"></span><span></span><span></span></div></div>
+        </div>
+        <span class="longi-arrow"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11h13M12 6l5 5-5 5"/></svg></span>
+      </div>
+      <div class="longi-card">
+        <div class="longi-when"><span class="m">Temps 2</span><span class="badge" style="color:var(--muted);background:rgba(14,15,18,0.06)">Suivi</span></div>
+        <div class="longi-rows">
+          <div class="longi-row"><span class="ln">Processus psychiques</span><div class="longi-bars"><span style="background:#C4892E"></span><span style="background:#C4892E"></span><span></span><span></span></div></div>
+          <div class="longi-row"><span class="ln">Ressources psychiques</span><div class="longi-bars"><span style="background:#6E9A5C"></span><span style="background:#6E9A5C"></span><span style="background:#6E9A5C"></span><span></span></div></div>
+          <div class="longi-row"><span class="ln">Comportements</span><div class="longi-bars"><span style="background:#C4892E"></span><span style="background:#C4892E"></span><span></span><span></span></div></div>
+          <div class="longi-row"><span class="ln">Régulation émotionnelle</span><div class="longi-bars"><span style="background:#C4892E"></span><span style="background:#C4892E"></span><span></span><span></span></div></div>
+          <div class="longi-row"><span class="ln">Corps &amp; somatique</span><div class="longi-bars"><span style="background:#C0564A"></span><span></span><span></span><span></span></div></div>
+          <div class="longi-row"><span class="ln">Environnement</span><div class="longi-bars"><span style="background:#6E9A5C"></span><span style="background:#6E9A5C"></span><span style="background:#6E9A5C"></span><span></span></div></div>
+        </div>
+        <span class="longi-arrow"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11h13M12 6l5 5-5 5"/></svg></span>
+      </div>
+      <div class="longi-card now">
+        <div class="longi-when"><span class="m">Temps 3</span><span class="badge">Actuel</span></div>
+        <div class="longi-rows">
+          <div class="longi-row"><span class="ln">Processus psychiques</span><div class="longi-bars"><span style="background:#6E9A5C"></span><span style="background:#6E9A5C"></span><span style="background:#6E9A5C"></span><span></span></div></div>
+          <div class="longi-row"><span class="ln">Ressources psychiques</span><div class="longi-bars"><span style="background:#2F6B43"></span><span style="background:#2F6B43"></span><span style="background:#2F6B43"></span><span style="background:#2F6B43"></span></div></div>
+          <div class="longi-row"><span class="ln">Comportements</span><div class="longi-bars"><span style="background:#6E9A5C"></span><span style="background:#6E9A5C"></span><span style="background:#6E9A5C"></span><span></span></div></div>
+          <div class="longi-row"><span class="ln">Régulation émotionnelle</span><div class="longi-bars"><span style="background:#6E9A5C"></span><span style="background:#6E9A5C"></span><span style="background:#6E9A5C"></span><span></span></div></div>
+          <div class="longi-row"><span class="ln">Corps &amp; somatique</span><div class="longi-bars"><span style="background:#C4892E"></span><span style="background:#C4892E"></span><span></span><span></span></div></div>
+          <div class="longi-row"><span class="ln">Environnement</span><div class="longi-bars"><span style="background:#6E9A5C"></span><span style="background:#6E9A5C"></span><span style="background:#6E9A5C"></span><span></span></div></div>
+        </div>
+      </div>
+    </div>
+    <p class="longi-note">Exemple d'évolution sur plusieurs bilans — chaque temps reprend les mêmes 6 axes pour une lecture comparable.</p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════
+     4ter — POURQUOI PAS UNE IA ? (NEW)
+     ════════════════════════════════════════════ -->
+<section class="vsec vsia" data-screen-label="Pourquoi pas une IA" id="vs-ia">
+  <div class="vsec-inner">
+    <div class="vhead">
+      <div class="v-eyebrow" style="justify-content:center">La différence</div>
+      <h2>Pourquoi ne pas simplement <em>interroger une IA&nbsp;?</em></h2>
+    </div>
+    <div class="compare">
+      <div class="compare-col ia">
+        <h3>IA généraliste</h3>
+        <p class="sub">Une conversation, rien de plus.</p>
+        <ul class="compare-listb">
+          <li><span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg></span>Conversation libre</li>
+          <li><span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg></span>Réponse instantanée, sans cadre</li>
+          <li><span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg></span>Pas de méthode stable</li>
+          <li><span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg></span>Pas de suivi structuré</li>
+          <li><span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg></span>Difficilement exploitable par un professionnel</li>
+        </ul>
+      </div>
+      <div class="compare-col bp">
+        <h3><span style="font-family:'Bricolage Grotesque';font-weight:700">bilanpsy<span style="color:var(--orange)">.</span></span></h3>
+        <p class="sub">Une méthode, un dossier, un suivi.</p>
+        <ul class="compare-listb">
+          <li><span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5 6.5 12 13 4.5"/></svg></span>Exploration guidée</li>
+          <li><span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5 6.5 12 13 4.5"/></svg></span>Cartographie psychique en 6 axes</li>
+          <li><span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5 6.5 12 13 4.5"/></svg></span>Méthode structurée et reproductible</li>
+          <li><span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5 6.5 12 13 4.5"/></svg></span>Suivi longitudinal dans le temps</li>
+          <li><span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5 6.5 12 13 4.5"/></svg></span>Dossier partageable avec les professionnels</li>
+        </ul>
+      </div>
+    </div>
+    <p class="compare-concl">Une IA peut répondre. <em>BilanPsy structure, compare et oriente.</em></p>
   </div>
 </section>
 
