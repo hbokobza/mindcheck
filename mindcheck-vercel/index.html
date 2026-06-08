@@ -680,8 +680,8 @@
      ════════════════════════════════════════════ */
   .cta-final { background: var(--bone); }
   .cta-final-grid {
-    display: grid; grid-template-columns: 1.1fr 1fr;
-    gap: 80px; align-items: center;
+    display: grid; grid-template-columns: 1fr;
+    gap: 80px; align-items: center; max-width: 760px; margin: 0 auto;
   }
   .cta-final-grid .left .features-list {
     margin-top: 32px;
@@ -859,10 +859,23 @@
     .dim-radar-big svg { max-width: 320px; margin: 0 auto; }
     .dim-cards { grid-template-columns: repeat(2, 1fr); gap: 12px; }
 
-    /* 05 ORIENTATION — split → 1 colonne, photo en haut, insert PAS sur la photo */
+    /* 05 ORIENTATION — split → 1 colonne ; citation SOUS la photo (plus dessus), titre maîtrisé */
     .orientation-inner { grid-template-columns: 1fr; min-height: auto; }
-    .orientation-photo { height: 260px; order: -1; }
-    .orientation-photo img { object-position: 50% 25%; }
+    .orientation-photo { height: auto; order: -1; overflow: visible; }
+    .orientation-photo img { height: 230px; display: block; object-position: 50% 25%; }
+    .orientation-photo .pill-on-photo { top: 16px; left: 16px; }
+    .orientation-photo .quote-on-photo {
+      position: static; left: auto; right: auto; bottom: auto;
+      margin: 0; border-radius: 0; padding: 18px 20px;
+      background: rgba(14,15,18,0.86);
+    }
+    .orientation-photo .quote-on-photo .q { font-size: 16px; line-height: 1.4; }
+    .orientation-text { padding: 36px 20px 8px; }
+    .orientation-text h2 {
+      font-size: clamp(30px, 8.5vw, 44px); max-width: 100%;
+      overflow-wrap: break-word; hyphens: auto;
+    }
+    .or-point .lead { font-size: 17px; }
 
     /* 06 CTA FINAL — texte au-dessus, image en dessous (visible) */
     .cta-final-grid { grid-template-columns: 1fr; gap: 28px; }
@@ -878,10 +891,12 @@
   @media (max-width: 520px) {
     h1.headline, .hero-h { font-size: clamp(32px, 11vw, 46px); }
     .hero-content { padding: 200px 16px 26px; }
-    .hero-stats { flex-direction: column; padding: 20px 16px 6px; }
-    .hero-stat { flex: 1 1 100%; min-width: 100%; }
+    /* Stats : grille 2×2 compacte (jamais pleine largeur empilée) */
+    .hero-stats { flex-direction: row; flex-wrap: wrap; padding: 18px 16px 4px; gap: 8px; }
+    .hero-stat { flex: 1 1 calc(50% - 4px); min-width: calc(50% - 4px); padding: 13px; }
     .section { padding: 40px 16px; }
     .dim-cards { grid-template-columns: 1fr; }
+    .dim-card .photo-thumb { height: 150px; }
     .footer-inner { grid-template-columns: 1fr; gap: 24px; }
     .footer-brand { grid-column: auto; }
     .sec-eyebrow { font-size: 11px; letter-spacing: 1.8px; }
@@ -971,18 +986,23 @@
     .hero.hero-no-image::before { width: 92vw; height: 92vw; top: 42%; }
     .hero.hero-no-image::after { width: 120vw; height: 120vw; top: 42%; }
     .hero.hero-no-image .hero-content {
-      padding: 120px 20px 42px;
-      align-items: flex-start;
-      text-align: left;
+      padding: 110px 20px 42px;
+      align-items: center;
+      text-align: center;
     }
+    .hero.hero-no-image .hero-content .eyebrow { align-self: center; }
+    .hero.hero-no-image .ctas { align-items: stretch; width: 100%; max-width: 380px; }
     .hero.hero-no-image .hero-stats {
       background: transparent;
       padding-top: 0;
+      flex-direction: row; flex-wrap: wrap; gap: 10px;
     }
+    .hero.hero-no-image .hero-stat { flex: 1 1 calc(50% - 5px); min-width: calc(50% - 5px); }
   }
 
   @media (max-width: 520px) {
-    .hero.hero-no-image .hero-content { padding: 88px 16px 34px; }
+    .hero.hero-no-image .hero-content { padding: 84px 16px 34px; }
+    .hero.hero-no-image .hero-stat { flex: 1 1 calc(50% - 4px); min-width: calc(50% - 4px); }
   }
 
 
@@ -1478,10 +1498,6 @@
           Paiement sécurisé · Sans abonnement · Annulation libre
         </div>
       </div>
-
-      <div class="cta-phones-big">
-        <img src="femme-mug.png" alt="Équilibre psychique — prendre un temps pour soi">
-      </div>
     </div>
   </div>
 </section>
@@ -1578,7 +1594,7 @@
     <div class="footer-col">
       <h4>Contact</h4>
       <ul>
-        <li>contact@bilanpsy.fr</li>
+        <li><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a6c5c9c8d2c7c5d2e6c4cfcac7c8d6d5df88c0d4">[email&#160;protected]</a></li>
       </ul>
     </div>
   </div>
@@ -1591,7 +1607,7 @@
   </div>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
   function toggleFaq(btn) {
     var item = btn.parentElement;
     var wasOpen = item.classList.contains('open');
