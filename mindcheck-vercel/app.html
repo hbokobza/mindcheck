@@ -142,6 +142,51 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px}
   /* Footer disclaimer plus petit */
   .disc{font-size:10px;margin-top:8px}
 }
+
+/* ===================================================================
+   MISE EN PAGE MOBILE DU BILAN GÉNÉRÉ (#bov / #bdoc + sections BtB)
+   Les contenus sont générés en JS avec des styles inline ; on force
+   ici leur repli en une colonne sur téléphone, sans toucher au JS.
+   =================================================================== */
+.matrix-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:12px}
+
+@media (max-width:768px){
+  /* Overlay : marges réduites pour gagner de la largeur */
+  #bov{padding:8px !important}
+  #bdoc{border-radius:14px !important}
+
+  /* En-tête + corps du bilan BtC : paddings horizontaux resserrés */
+  #bdoc > div[style*="padding:22px 28px"]{padding:18px 16px !important}
+  #bdoc > div[style*="padding:20px 28px"]{padding:16px 13px !important}
+
+  /* Marges latérales des sections (BtB) : 24px → 12px */
+  [style*="margin:18px 24px 0"]{margin-left:12px !important;margin-right:12px !important}
+  [style*="margin:24px 24px 0"]{margin-left:12px !important;margin-right:12px !important}
+  /* Paddings internes des grandes cartes de section */
+  [style*="border-radius:18px;padding:24px"]{padding:16px !important}
+
+  /* --- Repli des grilles de contenu en UNE colonne --- */
+  [style*="grid-template-columns:1fr 1.1fr"],
+  [style*="grid-template-columns:1fr 1fr;gap:16px"],
+  [style*="grid-template-columns:1fr 1fr 1fr"],
+  [style*="grid-template-columns:repeat(3,1fr)"],
+  [style*="grid-template-columns:repeat(2,1fr);gap:14px"],
+  [style*="grid-template-columns:repeat(4,1fr);gap:14px"]{
+    grid-template-columns:1fr !important;
+  }
+
+  /* Les petites barres de niveau (repeat(4,1fr);gap:3px|5px) restent en 4 colonnes */
+
+  /* Cartes à hauteur minimale imposée : libérées sur mobile */
+  [style*="min-height:160px"]{min-height:0 !important}
+  [style*="min-height:130px"]{min-height:0 !important}
+
+  /* Bouton CTA orientation : pleine largeur */
+  [style*="min-width:280px"]{min-width:0 !important;width:100% !important}
+
+  /* Matrice psychosomatique : scroll horizontal, colonnes resserrées */
+  .matrix-grid{grid-template-columns:128px 50px 1fr 1fr !important;min-width:560px}
+}
 </style>
 </head>
   <!-- SDK Supabase via CDN -->
@@ -2134,13 +2179,13 @@ function showBilanBTB(data){
   const matriceHTML = `
     <section style="margin:18px 24px 0;background:white;border:1px solid #e5e6e0;border-radius:18px;padding:24px">
       <div style="font-size:12px;letter-spacing:0.32em;color:#BE401D;font-weight:800;text-transform:uppercase;margin-bottom:16px">Matrice psychosomatique — 6 axes BilanPsy</div>
-      <div style="display:grid;grid-template-columns:170px 70px 1fr 1fr;border-top:1px solid #e5e6e0;border-left:1px solid #e5e6e0;overflow:hidden;border-radius:12px">
+      <div class="matrix-scroll"><div class="matrix-grid" style="display:grid;grid-template-columns:170px 70px 1fr 1fr;border-top:1px solid #e5e6e0;border-left:1px solid #e5e6e0;overflow:hidden;border-radius:12px">
         <div style="padding:12px 16px;background:#6E6456;color:white;font-weight:900;text-transform:uppercase;font-size:11px;letter-spacing:0.04em;border-right:1px solid rgba(255,255,255,0.15)">Axe</div>
         <div style="padding:12px 16px;background:#6E6456;color:white;font-weight:900;text-transform:uppercase;font-size:11px;letter-spacing:0.04em;border-right:1px solid rgba(255,255,255,0.15)">Score</div>
         <div style="padding:12px 16px;background:#6E6456;color:white;font-weight:900;text-transform:uppercase;font-size:11px;letter-spacing:0.04em;border-right:1px solid rgba(255,255,255,0.15)">Manifestations cliniques</div>
         <div style="padding:12px 16px;background:#6E6456;color:white;font-weight:900;text-transform:uppercase;font-size:11px;letter-spacing:0.04em">Lecture fonctionnelle / systèmes</div>
         ${matriceLignes}
-      </div>
+      </div></div>
     </section>`;
 
   // === ANALYSE LINGUISTIQUE IMPLICITE — V3.3 ULTRA COMPACTE ===
