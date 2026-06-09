@@ -785,7 +785,7 @@ function startSession(m){
     const c = document.getElementById('chat');
     const d = document.createElement('div');
     d.className = 'msg';
-    d.innerHTML = `<div class="av ai">M</div><div class="bub" style="background:#FFF8E7;border:1px solid #F0D060;font-size:13px;line-height:1.7;color:#5A4500">
+    d.innerHTML = `<div class="av ai">BP</div><div class="bub" style="background:#FFF8E7;border:1px solid #F0D060;font-size:13px;line-height:1.7;color:#5A4500">
       <strong>Une session est sauvegardée</strong><br>
       Code : ${data.code} · ${dateStr}<br>
       <div style="display:flex;gap:8px;margin-top:10px">
@@ -812,7 +812,7 @@ function addMsg(role,text,cls){
   const d=document.createElement('div');
   d.className='msg'+(role==='u'?' u':'');
   const bCls=role==='u'?'u':(cls||'ai');
-  d.innerHTML=`<div class="av ${role==='u'?'u':'ai'}">${role==='u'?'Vous':'M'}</div><div class="bub ${bCls}">${text.replace(/\n/g,'<br>')}</div>`;
+  d.innerHTML=`<div class="av ${role==='u'?'u':'ai'}">${role==='u'?'Vous':'BP'}</div><div class="bub ${bCls}">${text.replace(/\n/g,'<br>')}</div>`;
   c.appendChild(d);c.scrollTop=c.scrollHeight;
 }
 
@@ -820,7 +820,7 @@ function showDots(){
   const c=document.getElementById('chat');
   if(!c) return;
   const d=document.createElement('div');d.className='msg';d.id='typ';
-  d.innerHTML='<div class="av ai">M</div><div class="dots"><div class="d"></div><div class="d"></div><div class="d"></div></div>';
+  d.innerHTML='<div class="av ai">BP</div><div class="dots"><div class="d"></div><div class="d"></div><div class="d"></div></div>';
   c.appendChild(d);c.scrollTop=c.scrollHeight;
 }
 function rmDots(){const e=document.getElementById('typ');if(e)e.remove();}
@@ -1271,7 +1271,7 @@ function promptEnrichissement(nextAction){
   wrap.className = 'msg';
   wrap.id = 'enrich-panel';
   wrap.innerHTML = `
-    <div class="av ai">M</div>
+    <div class="av ai">BP</div>
     <div class="bub ai" style="max-width:94%;width:100%;background:#F0EBE1;border:1px solid #E4DED2;padding:16px">
       <textarea id="enrich-txt" placeholder="Votre texte ici… (facultatif)" style="width:100%;min-height:120px;max-height:320px;border:1px solid #D8D4CE;border-radius:8px;padding:12px;font-family:inherit;font-size:14px;line-height:1.6;color:#1A1A18;background:white;resize:vertical;outline:none;box-sizing:border-box"></textarea>
       <div style="display:flex;gap:10px;margin-top:12px;justify-content:flex-end;flex-wrap:wrap">
@@ -1425,7 +1425,7 @@ async function generateBilan(avecBTB, retryCount){
       // Après 3 échecs, on s'arrête et on propose une action manuelle
       const c=document.getElementById('chat');
       const d=document.createElement('div');d.className='msg';
-      d.innerHTML='<div class="av ai">M</div><div class="bub ai" style="background:#FFF8E1;border:1px solid #F0D060">'
+      d.innerHTML='<div class="av ai">BP</div><div class="bub ai" style="background:#FFF8E1;border:1px solid #F0D060">'
         +'<strong>Le bilan n\'a pas pu être généré.</strong><br><br>'
         +'Les éléments recueillis sont bien sauvegardés. Vous pouvez réessayer dans un instant. '
         +'Si le problème persiste, vous pouvez aussi continuer la conversation pour préciser certains aspects, puis relancer.'
@@ -1453,7 +1453,7 @@ async function generateBilan(avecBTB, retryCount){
 
     const c=document.getElementById('chat');
     const d=document.createElement('div');d.className='msg';
-    d.innerHTML='<div class="av ai">M</div><div class="bub ok"><strong style="color:#BE401D">Votre bilan est prêt.</strong><br><span style="font-size:13px;color:#555">Profil généré sur les 6 axes psychosomatiques.</span></div>';
+    d.innerHTML='<div class="av ai">BP</div><div class="bub ok"><strong style="color:#BE401D">Votre bilan est prêt.</strong><br><span style="font-size:13px;color:#555">Profil généré sur les 6 axes psychosomatiques.</span></div>';
     c.appendChild(d);
 
     const btn=document.createElement('button');
@@ -1753,6 +1753,46 @@ function showBilan(data){
       </div>
     </div>` : '';
 
+  // === CE QUI STRUCTURE VOTRE FONCTIONNEMENT (profil — version grand public) ===
+  const pc = data.profil_clinique || {};
+  const escP = s => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const splitTagsP = v => {
+    if (Array.isArray(v)) return v.filter(Boolean).slice(0,4);
+    if (typeof v==='string' && v.trim()) return v.split(/[,;•\n]+/).map(s=>s.trim()).filter(Boolean).slice(0,4);
+    return [];
+  };
+  const pcStruct = splitTagsP(pc.structure || pc.structure_psychique || pc.structure_relationnelle);
+  const pcEv     = splitTagsP(pc.evenements || pc.evenements_structurants);
+  const pcRes    = splitTagsP(pc.ressources || pc.ressources_structurantes);
+  const pcConf   = pc.conflit_central || pc.conflit || '';
+  const pcListP = (items, fb) => '<ul style="margin:0;padding-left:16px;font-size:12.5px;line-height:1.6;color:#40403a">'+
+    (items.length?items:fb).map(x=>'<li style="margin-bottom:4px">'+escP(x)+'</li>').join('')+'</ul>';
+  const profilBtcHTML = `
+      <!-- CE QUI STRUCTURE VOTRE FONCTIONNEMENT -->
+      <div style="background:white;border-radius:14px;padding:16px 18px;border:.5px solid rgba(0,0,0,.08)">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#BE401D;margin-bottom:6px">Ce qui structure votre fonctionnement</div>
+        <div style="font-size:12px;color:#555;line-height:1.7;margin-bottom:16px">Au-delà de vos six axes, voici la logique qui semble organiser l'ensemble — ce qui revient, ce qui pèse, ce sur quoi vous appuyer.</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+          <div style="border:1px solid #f0c8c2;border-radius:14px;background:#FCFAF6;padding:16px">
+            <div style="font-size:11px;line-height:1.3;text-transform:uppercase;font-weight:800;letter-spacing:.04em;color:#BE401D;margin-bottom:10px">Votre rapport à vous-même et aux autres</div>
+            ${pcListP(pcStruct, ['Estime de soi vulnérable','Sensibilité au rejet','Vigilance relationnelle'])}
+          </div>
+          <div style="border:1px solid #d8cfee;border-radius:14px;background:#FCFAF6;padding:16px">
+            <div style="font-size:11px;line-height:1.3;text-transform:uppercase;font-weight:800;letter-spacing:.04em;color:#5B4A8B;margin-bottom:10px">Événements structurants</div>
+            ${pcListP(pcEv, ['Événements marquants à préciser','Ruptures ou pertes significatives','Transitions de vie'])}
+          </div>
+          <div style="border:1px solid #efc88f;border-radius:14px;background:#FCFAF6;padding:16px;display:flex;flex-direction:column">
+            <div style="font-size:11px;line-height:1.3;text-transform:uppercase;font-weight:800;letter-spacing:.04em;color:#C66A1D;margin-bottom:10px">Tension centrale</div>
+            <div style="font-size:13px;line-height:1.5;color:#40403a;font-weight:700;margin:auto 0">${escP(pcConf || 'Besoin de sécurité ↔ peur du rejet')}</div>
+          </div>
+          <div style="border:1px solid #c9dfbf;border-radius:14px;background:#FCFAF6;padding:16px">
+            <div style="font-size:11px;line-height:1.3;text-transform:uppercase;font-weight:800;letter-spacing:.04em;color:#4f8146;margin-bottom:10px">Ce sur quoi vous appuyer</div>
+            ${pcListP(pcRes, ['Réflexivité','Verbalisation','Soutien relationnel'])}
+          </div>
+        </div>
+      </div>
+  `;
+
   const html=`<div id="bov" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(26,26,24,.6);z-index:9999;overflow-y:auto;padding:16px" onclick="if(event.target===this)this.remove()">
   <div id="bdoc" style="background:#F7F4EF;max-width:740px;margin:auto;border-radius:20px;overflow:hidden;font-family:Arial,sans-serif">
 
@@ -1793,6 +1833,8 @@ function showBilan(data){
           ${axesResumeHTML}
         </div>
       </div>
+
+      ${profilBtcHTML}
 
       <!-- 6 DIMENSIONS DETAILLEES -->
       <div style="background:white;border-radius:14px;padding:16px 18px;border:.5px solid rgba(0,0,0,.08)">
@@ -2537,7 +2579,7 @@ function reprendreSession(data){
   // Message de reprise
   const d = document.createElement('div');
   d.className = 'msg';
-  d.innerHTML = `<div class="av ai">M</div><div class="bub" style="background:#E3ECD9;border:1px solid #cdd9c0;color:#225031;font-size:13px;line-height:1.7">
+  d.innerHTML = `<div class="av ai">BP</div><div class="bub" style="background:#E3ECD9;border:1px solid #cdd9c0;color:#225031;font-size:13px;line-height:1.7">
     <strong>Session reprise ✓</strong> — Code ${data.code}<br>
     Vous pouvez continuer là où vous vous êtes arrêté.
   </div>`;
