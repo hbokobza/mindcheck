@@ -190,69 +190,37 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px}
 </style>
 </head>
   <!-- SDK Supabase via CDN -->
+<!-- SDK Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- SDK Stripe -->
+<script src="https://js.stripe.com/v3/"></script>
 
-<!-- ÉTAPE 5C — Vérification de session Supabase au chargement -->
-<!-- SDK Supabase via CDN -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<!-- ÉTAPE 5C — Vérification de session Supabase au chargement -->
+<!-- AUTH : vérification silencieuse — pas de redirect, accès libre -->
 <script>
+  window.psee_user = null; // null = visiteur libre, objet = utilisateur payant
   (async function() {
     const SUPABASE_URL = 'https://sbjxaqjgwgrhlannhziw.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_7Mw8B8a0tiPpOt7otl2Vrw_UPIHDrAE';
-
-    if (!window.supabase) {
-      console.error('[psee] Le SDK Supabase n\'a pas chargé');
-      return;
-    }
-
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    const _hash = window.location.hash;
-    if (_hash && (_hash.includes('access_token') || _hash.includes('type=magiclink'))) {
-      await new Promise((resolve) => {
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-          if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') { subscription.unsubscribe(); resolve(); }
-        });
-        setTimeout(resolve, 5000);
-      });
-      try { window.history.replaceState(null, '', window.location.pathname); } catch(e) {}
-    }
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      window.location.replace('/paywall.html');
-      return;
-    }
-
-    const { data: userData, error } = await supabase
+    if (!window.supabase) return;
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) return;
+    const { data: u } = await sb
       .from('users')
       .select('status, subscription_end, subscription_type')
       .eq('email', session.user.email)
       .single();
-
-    if (error || !userData) {
-      console.error('[psee] Utilisateur introuvable:', error);
-      window.location.replace('/paywall.html');
-      return;
+    if (u && u.status === 'active') {
+      const expOk = !u.subscription_end || new Date(u.subscription_end) >= new Date();
+      if (expOk) {
+        window.psee_user = {
+          email: session.user.email,
+          id: session.user.id,
+          subscriptionType: u.subscription_type,
+          subscriptionEnd: u.subscription_end,
+        };
+      }
     }
-
-    if (userData.status !== 'active') {
-      window.location.replace('/paywall.html');
-      return;
-    }
-
-    if (userData.subscription_end && new Date(userData.subscription_end) < new Date()) {
-      window.location.replace('/paywall.html');
-      return;
-    }
-
-    window.psee_user = {
-      email: session.user.email,
-      id: session.user.id,
-      subscriptionType: userData.subscription_type,
-      subscriptionEnd: userData.subscription_end,
-    };
   })();
 </script>
 <body>
@@ -1459,7 +1427,7 @@ async function generateBilan(avecBTB, retryCount){
     const btn=document.createElement('button');
     btn.className='btn-green';btn.style.margin='8px 0 0 36px';
     btn.textContent='Voir & télécharger le bilan →';
-    btn.onclick=()=>showBilan(dataBTC);
+    btn.onclick=()=>{ window._bilanData=dataBTC; showBilan(dataBTC, window.psee_user ? {} : {tier:'decouverte'}); };
     c.appendChild(btn);
 
     if(dataBTB){
@@ -1562,7 +1530,8 @@ const PICTOS = {
   6: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`
 };
 
-function showBilan(data){
+function showBilan(data, opts){
+  const locked = !!(opts && opts.tier === 'decouverte') || (data && data.tier === 'decouverte');
   const date=new Date().toLocaleDateString('fr-FR');
   const radar=buildRadar(data.axes,baselineData);
 
@@ -1770,11 +1739,11 @@ function showBilan(data){
   const profilBtcHTML = `
       <!-- CE QUI STRUCTURE VOTRE FONCTIONNEMENT -->
       <div style="background:white;border-radius:14px;padding:16px 18px;border:.5px solid rgba(0,0,0,.08)">
-        <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#BE401D;margin-bottom:6px">Ce qui structure votre fonctionnement</div>
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#BE401D;margin-bottom:6px">Profil psychique observé</div>
         <div style="font-size:12px;color:#555;line-height:1.7;margin-bottom:16px">Au-delà de vos six axes, voici la logique qui semble organiser l'ensemble — ce qui revient, ce qui pèse, ce sur quoi vous appuyer.</div>
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
           <div style="border:1px solid #f0c8c2;border-radius:14px;background:#FCFAF6;padding:16px">
-            <div style="font-size:11px;line-height:1.3;text-transform:uppercase;font-weight:800;letter-spacing:.04em;color:#BE401D;margin-bottom:10px">Votre rapport à vous-même et aux autres</div>
+            <div style="font-size:11px;line-height:1.3;text-transform:uppercase;font-weight:800;letter-spacing:.04em;color:#BE401D;margin-bottom:10px">Structure psychique et relationnelle</div>
             ${pcListP(pcStruct, ['Estime de soi vulnérable','Sensibilité au rejet','Vigilance relationnelle'])}
           </div>
           <div style="border:1px solid #d8cfee;border-radius:14px;background:#FCFAF6;padding:16px">
@@ -1782,11 +1751,11 @@ function showBilan(data){
             ${pcListP(pcEv, ['Événements marquants à préciser','Ruptures ou pertes significatives','Transitions de vie'])}
           </div>
           <div style="border:1px solid #efc88f;border-radius:14px;background:#FCFAF6;padding:16px;display:flex;flex-direction:column">
-            <div style="font-size:11px;line-height:1.3;text-transform:uppercase;font-weight:800;letter-spacing:.04em;color:#C66A1D;margin-bottom:10px">Tension centrale</div>
+            <div style="font-size:11px;line-height:1.3;text-transform:uppercase;font-weight:800;letter-spacing:.04em;color:#C66A1D;margin-bottom:10px">Conflits</div>
             <div style="font-size:13px;line-height:1.5;color:#40403a;font-weight:700;margin:auto 0">${escP(pcConf || 'Besoin de sécurité ↔ peur du rejet')}</div>
           </div>
           <div style="border:1px solid #c9dfbf;border-radius:14px;background:#FCFAF6;padding:16px">
-            <div style="font-size:11px;line-height:1.3;text-transform:uppercase;font-weight:800;letter-spacing:.04em;color:#4f8146;margin-bottom:10px">Ce sur quoi vous appuyer</div>
+            <div style="font-size:11px;line-height:1.3;text-transform:uppercase;font-weight:800;letter-spacing:.04em;color:#4f8146;margin-bottom:10px">Ressources structurantes</div>
             ${pcListP(pcRes, ['Réflexivité','Verbalisation','Soutien relationnel'])}
           </div>
         </div>
@@ -1833,6 +1802,8 @@ function showBilan(data){
           ${axesResumeHTML}
         </div>
       </div>
+
+      ${locked ? '<div style="position:relative;margin-top:2px"><div style="filter:blur(6px);-webkit-filter:blur(6px);pointer-events:none;user-select:none;max-height:940px;overflow:hidden">' : ''}
 
       ${profilBtcHTML}
 
@@ -1903,6 +1874,25 @@ function showBilan(data){
           </div>
         </div>
       </div>
+      ${locked ? `</div>
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(247,244,239,.05),rgba(247,244,239,.72) 52%,#F7F4EF)"></div>
+      <div style="position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);width:min(440px,90%);background:#fff;border:1px solid #EFE2DC;border-radius:22px;box-shadow:0 24px 60px rgba(33,28,22,.18);padding:30px 28px;text-align:center">
+        <div style="width:46px;height:46px;border-radius:50%;background:rgba(255,75,40,.12);display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF4B28" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10.5" width="16" height="10" rx="2"/><path d="M7.5 10.5V7a4.5 4.5 0 0 1 9 0v3.5"/></svg>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:22px;font-weight:700;color:#211C16;margin-bottom:8px;line-height:1.2">Votre bilan complet vous attend</div>
+        <div style="font-size:14px;color:#5F584E;line-height:1.6;margin-bottom:18px">Vous avez vu votre cartographie. Débloquez le reste de votre bilan.</div>
+        <ul style="list-style:none;padding:0;margin:0 auto 20px;display:grid;gap:8px;text-align:left;max-width:300px">
+          <li style="font-size:13px;color:#40403a;display:flex;gap:9px"><span style="color:#FF4B28;font-weight:700">✓</span>Profil psychique observé</li>
+          <li style="font-size:13px;color:#40403a;display:flex;gap:9px"><span style="color:#FF4B28;font-weight:700">✓</span>Vos 6 dimensions expliquées</li>
+          <li style="font-size:13px;color:#40403a;display:flex;gap:9px"><span style="color:#FF4B28;font-weight:700">✓</span>Forces, vigilances &amp; recommandations</li>
+          <li style="font-size:13px;color:#40403a;display:flex;gap:9px"><span style="color:#FF4B28;font-weight:700">✓</span>Échelles cliniques + orientation</li>
+          <li style="font-size:13px;color:#40403a;display:flex;gap:9px"><span style="color:#FF4B28;font-weight:700">✓</span>PDF conservé à vie</li>
+        </ul>
+        <button onclick="openPaymentModal()" style="width:100%;padding:15px;border:none;border-radius:999px;background:#FF4B28;color:#fff;font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 8px 22px rgba(255,75,40,.28)">Débloquer mon bilan complet · 39 €</button>
+        <div style="font-size:11.5px;color:#938A7C;margin-top:12px">Paiement unique · 100 % confidentiel · PDF à vie</div>
+      </div>
+      </div>` : ''}
 
       <!-- METHODOLOGIE (statique - ajout V2) -->
       <div style="background:#FAF7F2;border-left:3px solid #EFE9DD;border-radius:6px;padding:12px 16px;font-size:10px;color:#6B6B68;line-height:1.7;font-style:italic;font-family:Georgia,serif">
@@ -3051,6 +3041,102 @@ function reprendreParCode(){
 
   console.log("BilanPsy security patch v2 chargé.");
 })();
+</script>
+
+<!-- ======================================================= -->
+<!-- MODULE PAIEMENT STRIPE — EMBEDDED (pas de redirect)    -->
+<!-- ======================================================= -->
+<div id="pay-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:99999;align-items:center;justify-content:center;padding:20px">
+  <div style="background:#fff;border-radius:22px;padding:32px 28px;max-width:440px;width:100%;position:relative;box-shadow:0 32px 80px rgba(0,0,0,.25)">
+    <button onclick="closePaymentModal()" style="position:absolute;top:14px;right:16px;background:none;border:none;font-size:22px;cursor:pointer;color:#999">×</button>
+    <div style="font-size:21px;font-weight:800;color:#211C16;margin-bottom:5px">Débloquer mon bilan complet</div>
+    <div style="font-size:13px;color:#888;margin-bottom:24px">Paiement unique · PDF conservé à vie · Aucun nom sur le document</div>
+    <label style="font-size:12px;font-weight:700;color:#211C16;letter-spacing:.5px;text-transform:uppercase;display:block;margin-bottom:6px">Votre email</label>
+    <input id="pay-email" type="email" placeholder="vous@email.com"
+      style="width:100%;border:1.5px solid #DDD;border-radius:10px;padding:12px 14px;font-size:14px;margin-bottom:18px;box-sizing:border-box;font-family:inherit"
+      onfocus="this.style.borderColor='#FF4B28'" onblur="this.style.borderColor='#DDD'">
+    <label style="font-size:12px;font-weight:700;color:#211C16;letter-spacing:.5px;text-transform:uppercase;display:block;margin-bottom:6px">Paiement</label>
+    <div id="stripe-element" style="border:1.5px solid #DDD;border-radius:10px;padding:14px;margin-bottom:6px;min-height:46px"></div>
+    <div id="pay-msg" style="font-size:12px;color:#c94750;margin-bottom:14px;min-height:18px"></div>
+    <button id="pay-btn" onclick="submitPayment()"
+      style="width:100%;padding:15px;border:none;border-radius:999px;background:#FF4B28;color:#fff;font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 8px 22px rgba(255,75,40,.28)">
+      Payer 39 €
+    </button>
+    <div style="text-align:center;font-size:11px;color:#BBB;margin-top:12px;line-height:1.5">
+      Sécurisé par Stripe · 100 % confidentiel · Votre bilan ne porte jamais votre nom
+    </div>
+  </div>
+</div>
+
+<script>
+const STRIPE_PK = 'pk_live_REMPLACER_PAR_VOTRE_CLE_PUBLIQUE';
+let _stripe=null, _elements=null;
+
+async function openPaymentModal() {
+  const modal = document.getElementById('pay-modal');
+  modal.style.display = 'flex';
+  document.getElementById('pay-msg').textContent = '';
+  if (_stripe) return; // déjà initialisé
+  _stripe = Stripe(STRIPE_PK);
+  let clientSecret;
+  try {
+    const r = await fetch('/api/create-payment-intent', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ amount:3900, currency:'eur' })
+    });
+    ({ clientSecret } = await r.json());
+  } catch(e) {
+    document.getElementById('pay-msg').textContent = 'Erreur de connexion. Réessayez.';
+    return;
+  }
+  _elements = _stripe.elements({ clientSecret, locale:'fr' });
+  _elements.create('payment', { layout:'tabs', wallets:{applePay:'auto',googlePay:'auto'} })
+           .mount('#stripe-element');
+}
+
+function closePaymentModal() {
+  document.getElementById('pay-modal').style.display = 'none';
+}
+
+async function submitPayment() {
+  const email = document.getElementById('pay-email').value.trim();
+  const btn = document.getElementById('pay-btn');
+  const msg = document.getElementById('pay-msg');
+  msg.textContent = '';
+  if (!email || !email.includes('@')) { msg.textContent = 'Email invalide.'; return; }
+  btn.disabled = true; btn.style.opacity = '.6'; btn.textContent = 'Traitement…';
+
+  const { error, paymentIntent } = await _stripe.confirmPayment({
+    elements: _elements,
+    confirmParams: { receipt_email: email },
+    redirect: 'if_required'
+  });
+
+  if (error) {
+    msg.textContent = error.message;
+    btn.disabled = false; btn.style.opacity = '1'; btn.textContent = 'Payer 39 €';
+    return;
+  }
+
+  if (paymentIntent && paymentIntent.status === 'succeeded') {
+    btn.textContent = '✓ Paiement confirmé…';
+    try {
+      await fetch('/api/confirm-payment', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ email, paymentIntentId: paymentIntent.id })
+      });
+    } catch(e) { /* le webhook Stripe prend le relais en cas d'échec */ }
+    window.psee_user = { email, subscriptionType:'checkup' };
+    closePaymentModal();
+    // Ré-afficher le bilan sans verrou
+    const old = document.getElementById('bov'); if (old) old.remove();
+    if (window._bilanData) showBilan(window._bilanData);
+  }
+}
+
+document.getElementById('pay-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('pay-modal')) closePaymentModal();
+});
 </script>
 </body>
 </html>
