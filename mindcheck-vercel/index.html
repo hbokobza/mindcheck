@@ -171,51 +171,59 @@
   }
   .cta-ghost:hover { color: var(--orange); border-color: var(--orange); }
 
-  /* Stats intégrées au hero — colonne verticale à droite */
+  /* Stats hero — fine barre unifiée (forme "ruban", distincte des cartes) */
   .hero-stats {
     position: absolute;
-    bottom: 32px;
+    bottom: 30px;
     left: 48px;
     right: 48px;
     z-index: 2;
-    display: flex; flex-direction: row; gap: 12px;
-    width: auto;
-    justify-content: center;
+    display: inline-flex; flex-direction: row; gap: 0;
+    width: max-content; max-width: calc(100% - 96px);
+    margin: 0 auto;
+    background: rgba(20,18,16,0.42);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.16);
+    border-radius: 999px;
+    padding: 7px 6px;
+    box-shadow: 0 8px 28px rgba(14,15,18,0.22);
   }
   .hero-stat {
-    background: rgba(247,245,239,0.90);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border: 1px solid rgba(255,255,255,0.5);
-    border-radius: 14px;
-    padding: 10px 16px 10px 12px;
-    display: flex; align-items: center; gap: 10px;
-    box-shadow: 0 8px 24px rgba(14,15,18,0.18);
-    transition: transform .15s, background .15s;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 4px 18px;
+    display: flex; align-items: center; gap: 8px;
     flex-shrink: 0;
+    position: relative;
   }
-  .hero-stat:hover { transform: translateY(-2px); background: rgba(247,245,239,0.98); }
+  .hero-stat + .hero-stat::before {
+    content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+    width: 1px; height: 22px; background: rgba(255,255,255,0.18);
+  }
   .hero-stat .ico {
-    width: 34px; height: 34px; border-radius: 9px;
-    background: rgba(255,75,40,0.14); color: var(--orange);
+    width: 22px; height: 22px; border-radius: 0;
+    background: transparent; color: var(--orange);
     display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   }
-  .hero-stat .text { display: flex; flex-direction: column; line-height: 1; }
+  .hero-stat .ico svg { width: 16px; height: 16px; }
+  .hero-stat .text { display: flex; flex-direction: row; align-items: baseline; gap: 6px; line-height: 1; }
   .hero-stat .v {
     font-family: 'Bricolage Grotesque', sans-serif;
-    font-size: 22px; font-weight: 500; line-height: 1;
-    color: var(--ink); letter-spacing: -0.5px;
+    font-size: 15px; font-weight: 600; line-height: 1;
+    color: #FFFFFF; letter-spacing: -0.3px; white-space: nowrap;
   }
   .hero-stat .v em {
-    font-family: 'Instrument Serif', serif; font-style: italic;
-    color: var(--orange); font-weight: 400; margin-right: 1px;
+    font-family: 'Bricolage Grotesque', sans-serif; font-style: normal;
+    color: #FFFFFF; font-weight: 600; margin-right: 0;
   }
-  .hero-stat .v .u { font-size: 13px; color: var(--muted); margin-left: 2px; font-weight: 400; }
+  .hero-stat .v .u { font-size: 12px; color: rgba(255,255,255,0.7); margin-left: 1px; font-weight: 500; }
   .hero-stat .k {
     font-family: 'Inter', sans-serif;
-    font-size: 10.5px; color: var(--muted);
-    letter-spacing: 0.2px; line-height: 1.3;
-    margin-top: 4px;
+    font-size: 11px; color: rgba(255,255,255,0.66);
+    letter-spacing: 0.1px; line-height: 1.2;
+    margin-top: 0; white-space: nowrap;
   }
 
   /* ════════════════════════════════════════════
@@ -272,7 +280,7 @@
     height: 200px; overflow: hidden;
     background: var(--bone-2);
   }
-  .point-card .photo img { width: 100%; height: 100%; object-fit: cover; }
+  .point-card .photo img { width: 100%; height: 100%; min-width: 100%; min-height: 100%; object-fit: cover; object-position: center; display: block; }
   .point-card .photo .n {
     position: absolute; bottom: -8px; right: 20px;
     font-family: 'Instrument Serif', serif; font-style: italic;
@@ -292,6 +300,7 @@
   .point-card .body {
     font-family: 'Bricolage Grotesque', sans-serif;
     font-size: 24px; font-weight: 500; line-height: 1.25;
+    margin-top: auto;
     color: var(--ink); letter-spacing: -0.4px;
     margin: auto 0 0;
   }
@@ -521,6 +530,14 @@
     border-radius: 12px; padding: 11px 0; width: 100%;
     font-family: 'Inter', sans-serif; font-size: 12.5px; font-weight: 600; text-align: center;
   }
+  /* Mini-cartographie 6 axes (aperçu du vrai bilan) */
+  .scr-bilan .mini-axes { display: flex; flex-direction: column; gap: 10px; margin-top: 2px; }
+  .scr-bilan .mx { display: flex; flex-direction: column; gap: 5px; }
+  .scr-bilan .mx .r { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  .scr-bilan .mx .nm { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; color: var(--ink); letter-spacing: -0.1px; }
+  .scr-bilan .mx .st { font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 700; white-space: nowrap; }
+  .scr-bilan .mx .seg { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; }
+  .scr-bilan .mx .seg i { height: 5px; border-radius: 999px; background: #E9E3D7; }
 
   /* Phone 3 — orientation */
   .scr-orient { padding: 6px 16px 16px; display: flex; flex-direction: column; flex: 1; gap: 12px; }
@@ -730,7 +747,7 @@
   .cta-final { background: var(--bone); }
   .cta-final-grid {
     display: grid; grid-template-columns: 1fr;
-    gap: 80px; align-items: center; max-width: 760px; margin: 0 auto;
+    gap: 80px; align-items: center; max-width: 1080px; margin: 0 auto;
   }
   .cta-final-grid .left .features-list {
     margin-top: 32px;
@@ -781,6 +798,55 @@
   .secure-line-big {
     display: inline-flex; align-items: center; gap: 10px; margin-top: 18px;
     font-family: 'Inter', sans-serif; font-size: 12.5px; color: var(--muted-2); letter-spacing: 0.2px;
+  }
+
+  /* --- Grille 3 offres (modèle Pro : cartes claires, recommandée cerclée orange) --- */
+  .tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1140px; margin: 4px auto 0; align-items: stretch; }
+  .tier {
+    position: relative; background: #FFFFFF; border: 1px solid rgba(0,0,0,0.10);
+    border-radius: 24px; padding: 38px 30px 34px; text-align: left;
+    display: flex; flex-direction: column;
+  }
+  .tier.feature { border: 2px solid var(--orange); box-shadow: 0 20px 50px rgba(255,75,40,0.12); }
+  .tier-badge {
+    position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+    background: var(--orange); color: #fff; font-family: 'Inter', sans-serif;
+    font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase;
+    padding: 6px 16px; border-radius: 999px; white-space: nowrap;
+  }
+  .tier-name {
+    font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--orange); margin-bottom: 16px;
+  }
+  .tier-price {
+    font-family: 'Bricolage Grotesque', sans-serif; font-size: 50px; font-weight: 700;
+    line-height: 1; color: var(--ink); margin-bottom: 8px; letter-spacing: -1px;
+    display: flex; align-items: baseline; gap: 4px; white-space: nowrap;
+  }
+  .tier-price .per { font-size: 18px; font-weight: 600; color: var(--muted); letter-spacing: 0; }
+  .tier-tag { font-family: 'Inter', sans-serif; font-size: 14px; color: var(--muted); line-height: 1.65; margin-bottom: 24px; min-height: 62px; }
+  .tier-feats { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 13px; margin: 0 0 28px; flex: 1; }
+  .tier-feats li { font-family: 'Inter', sans-serif; font-size: 14px; color: #4d4c47; line-height: 1.5; padding-left: 26px; position: relative; }
+  .tier-feats li::before { content: "✓"; position: absolute; left: 0; top: 0; color: var(--orange); font-weight: 700; }
+  .tier-feats li.muted { color: var(--muted-2); }
+  .tier-feats li.muted::before { content: "—"; color: var(--muted-2); }
+  .tier-cta {
+    display: block; text-align: center; padding: 15px 24px; border-radius: 30px;
+    font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600; text-decoration: none;
+    transition: transform .15s, box-shadow .15s, background .15s;
+  }
+  .tier-cta.solid { background: var(--orange); color: #fff; box-shadow: 0 8px 22px rgba(255,75,40,0.26); }
+  .tier-cta.solid:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(255,75,40,0.34); }
+  .tier-cta.outline { background: transparent; color: var(--orange); border: 1.5px solid var(--orange); }
+  .tier-cta.outline:hover { background: rgba(255,75,40,0.08); }
+  .tier-note { font-family: 'Inter', sans-serif; font-size: 11.5px; color: var(--muted-2); text-align: center; margin-top: 12px; line-height: 1.4; }
+  .tiers-foot {
+    display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 30px;
+    font-family: 'Inter', sans-serif; font-size: 12.5px; color: var(--muted-2); letter-spacing: 0.2px;
+  }
+  @media (max-width: 860px) {
+    .tiers { grid-template-columns: 1fr; gap: 22px; max-width: 420px; }
+    .tier-tag { min-height: 0; }
   }
   .cta-phones-big {
     display: flex; align-items: center; justify-content: center;
@@ -1024,11 +1090,18 @@
   .hero.hero-no-image .hero-content {
     padding: 24px 48px 120px;
   }
-  .hero.hero-no-image .hero-stat {
-    background: rgba(255,255,255,0.70);
-    border: 1px solid rgba(14,15,18,0.08);
-    box-shadow: 0 12px 30px rgba(14,15,18,0.07);
+  /* Hero sans image : barre claire, texte sombre */
+  .hero.hero-no-image .hero-stats {
+    background: rgba(255,255,255,0.72);
+    border: 1px solid rgba(14,15,18,0.07);
+    box-shadow: 0 10px 30px rgba(14,15,18,0.08);
   }
+  .hero.hero-no-image .hero-stat { background: transparent; border: none; box-shadow: none; }
+  .hero.hero-no-image .hero-stat .v { color: var(--ink); }
+  .hero.hero-no-image .hero-stat .v em { color: var(--ink); }
+  .hero.hero-no-image .hero-stat .v .u { color: var(--muted); }
+  .hero.hero-no-image .hero-stat .k { color: var(--muted); }
+  .hero.hero-no-image .hero-stat + .hero-stat::before { background: rgba(14,15,18,0.12); }
 
   @media (max-width: 900px) {
     .hero.hero-no-image { min-height: auto; }
@@ -1070,6 +1143,9 @@
       grid-template-columns: 1fr 1fr !important;
       gap: 10px !important;
       background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      border-radius: 0 !important;
       padding: 18px 16px 4px !important;
     }
     .hero .hero-stat,
@@ -1077,15 +1153,28 @@
       flex: none !important;
       min-width: 0 !important;
       width: auto !important;
-      padding: 9px 11px !important;
-      gap: 8px !important;
+      padding: 11px 13px !important;
+      gap: 9px !important;
+      background: #FFFFFF !important;
+      border: 1px solid rgba(14,15,18,0.07) !important;
+      border-radius: 14px !important;
       box-shadow: 0 4px 14px rgba(14,15,18,0.08) !important;
     }
-    .hero .hero-stat .ico { width: 28px !important; height: 28px !important; border-radius: 8px !important; }
-    .hero .hero-stat .ico svg { width: 15px !important; height: 15px !important; }
-    .hero .hero-stat .v { font-size: 17px !important; }
-    .hero .hero-stat .v .u { font-size: 11px !important; }
-    .hero .hero-stat .k { font-size: 9.5px !important; }
+    .hero .hero-stat + .hero-stat::before,
+    .hero.hero-no-image .hero-stat + .hero-stat::before { display: none !important; }
+    .hero .hero-stat .ico,
+    .hero.hero-no-image .hero-stat .ico { width: 30px !important; height: 30px !important; border-radius: 8px !important; background: rgba(255,75,40,0.12) !important; }
+    .hero .hero-stat .ico svg { width: 16px !important; height: 16px !important; }
+    .hero .hero-stat .text,
+    .hero.hero-no-image .hero-stat .text { flex-direction: column !important; align-items: flex-start !important; gap: 3px !important; }
+    .hero .hero-stat .v,
+    .hero.hero-no-image .hero-stat .v { font-size: 18px !important; color: var(--ink) !important; }
+    .hero .hero-stat .v em,
+    .hero.hero-no-image .hero-stat .v em { color: var(--ink) !important; }
+    .hero .hero-stat .v .u,
+    .hero.hero-no-image .hero-stat .v .u { font-size: 11px !important; color: var(--muted) !important; }
+    .hero .hero-stat .k,
+    .hero.hero-no-image .hero-stat .k { font-size: 9.5px !important; color: var(--muted) !important; }
   }
 
   /* ════════════════════════════════════════════
@@ -1145,12 +1234,17 @@
   .bm-bars span { height: 6px; border-radius: 999px; background: #E9E3D7; }
   .bm-wide { grid-column: 1 / -1; }
   .bm-trend { display: flex; align-items: flex-end; gap: 7px; height: 70px; padding-top: 6px; }
-  .bm-evo { display: flex; align-items: center; gap: 8px; padding-top: 4px; }
-  .bm-evo-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-  .bm-evo-rows { display: flex; flex-direction: column; gap: 3px; width: 100%; }
-  .bm-evo-rows span { height: 5px; border-radius: 999px; width: 100%; }
+  .bm-evo { display: flex; align-items: flex-start; gap: 10px; padding-top: 4px; }
+  .bm-evo-labels { display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
+  .bm-evo-labels span { font-size: 8.5px; line-height: 9px; height: 9px; color: var(--ink-2); white-space: nowrap; display: flex; align-items: center; }
+  .bm-evo-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 9px; min-width: 0; }
+  .bm-evo-rows { display: flex; flex-direction: column; gap: 4px; width: 100%; }
+  .bm-evo-rows span { height: 9px; border-radius: 999px; width: 100%; background: #E9E3D7; }
   .bm-evo .el { font-size: 9.5px; font-weight: 600; color: var(--muted); }
-  .bm-evo-arrow { color: var(--orange); flex-shrink: 0; display: flex; }
+  .bm-evo-arrow { color: var(--orange); flex-shrink: 0; display: flex; align-items: center; height: 70px; }
+  .bm-evo-legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
+  .bm-evo-legend span { display: inline-flex; align-items: center; gap: 6px; font-family: 'Inter', sans-serif; font-size: 10px; color: var(--ink-2); }
+  .bm-evo-legend i { width: 12px; height: 6px; border-radius: 999px; flex-shrink: 0; }
   .bm-trend .pt { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; }
   .bm-trend .bar { width: 100%; border-radius: 5px 5px 0 0; background: linear-gradient(180deg, var(--orange), #ff7c64); }
   .bm-trend .dt { font-size: 9px; color: var(--muted); }
@@ -1248,7 +1342,6 @@
     <div class="nav-right">
       <span class="lang">FR · EN</span>
       <span class="connect">Se connecter</span>
-      <a href="/app.html" class="cta-pill">Faire le check-up</a>
     </div>
   </nav>
 
@@ -1269,40 +1362,8 @@
       <div class="benefit"><span class="bi"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="7.5" r="3"/><path d="M5 18c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/></svg></span>Trouver le bon accompagnement</div>
     </div>
     <div class="ctas">
-      <a href="/app.html" class="cta-primary">Faire mon check-up · 9 €</a>
-      <a class="cta-ghost" href="#dossier">Voir un exemple de bilan</a>
-    </div>
-  </div>
-
-  <!-- 4 stats intégrées au hero -->
-  <div class="hero-stats">
-    <div class="hero-stat">
-      <div class="ico"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5.5A6 6 0 0 0 5.5 11a6 6 0 0 0 9 5.5"/><path d="M3.5 9h7M3.5 12.5h7"/></svg></div>
-      <div class="text">
-        <span class="v"><em>9</em><span class="u">€</span></span>
-        <span class="k">Accès complet · paiement unique</span>
-      </div>
-    </div>
-    <div class="hero-stat">
-      <div class="ico"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M11 6.5V11l3 2"/></svg></div>
-      <div class="text">
-        <span class="v">15<span class="u">min</span></span>
-        <span class="k">À votre rythme</span>
-      </div>
-    </div>
-    <div class="hero-stat">
-      <div class="ico"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 2 3.5 4.4v6c0 4.3 3.2 8 7.5 9.1 4.3-1.1 7.5-4.8 7.5-9.1v-6L11 2Z"/><path d="M8 11l2.2 2.2L14 9.5"/></svg></div>
-      <div class="text">
-        <span class="v">100<span class="u">%</span></span>
-        <span class="k">Anonyme · données privées</span>
-      </div>
-    </div>
-    <div class="hero-stat">
-      <div class="ico"><svg width="18" height="18" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="16" height="14.5" rx="2"/><path d="M3 9h16M7.5 2.5v4M14.5 2.5v4"/></svg></div>
-      <div class="text">
-        <span class="v">30<span class="u">jours</span></span>
-        <span class="k">Suivi libre inclus</span>
-      </div>
+      <a href="/app.html" class="cta-primary">Faire mon check-up</a>
+      <a class="cta-ghost" href="#cta">Voir les offres</a>
     </div>
   </div>
 </section>
@@ -1358,6 +1419,9 @@
           <div class="bm-block bm-wide">
             <div class="bm-label">Évolution dans le temps</div>
             <div class="bm-evo">
+              <div class="bm-evo-labels">
+                <span>Processus</span><span>Ressources</span><span>Comportements</span><span>Régulation</span><span>Corps</span><span>Environnement</span>
+              </div>
               <div class="bm-evo-col">
                 <div class="bm-evo-rows"><span style="background:#C0564A"></span><span style="background:#C4892E"></span><span style="background:#C4892E"></span><span style="background:#C0564A"></span><span style="background:#C0564A"></span><span style="background:#C4892E"></span></div>
                 <span class="el">Temps 1</span>
@@ -1372,6 +1436,12 @@
                 <div class="bm-evo-rows"><span style="background:#6E9A5C"></span><span style="background:#2F6B43"></span><span style="background:#6E9A5C"></span><span style="background:#6E9A5C"></span><span style="background:#C4892E"></span><span style="background:#6E9A5C"></span></div>
                 <span class="el">Temps 3</span>
               </div>
+            </div>
+            <div class="bm-evo-legend">
+              <span><i style="background:#C0564A"></i>Fragile</span>
+              <span><i style="background:#C4892E"></i>En tension</span>
+              <span><i style="background:#6E9A5C"></i>Stable</span>
+              <span><i style="background:#2F6B43"></i>Solide</span>
             </div>
           </div>
           <div class="bm-block bm-wide">
@@ -1438,7 +1508,7 @@
           <span class="n">03</span>
         </div>
         <div class="text-block">
-          <p class="lead">Une méthode structurée — échelles reconnues, analyse du récit, cartographie en 6 axes — pas une conversation au hasard.</p>
+          <p class="lead">Une méthode structurée : échelles reconnues, analyse du récit, cartographie en 6 axes.</p>
           <p class="body">Un <em>bilan structuré</em> pour faire le point.</p>
         </div>
       </div>
@@ -1517,20 +1587,14 @@
                   <span class="lab">Votre synthèse</span>
                   <span class="badge">PRÊTE</span>
                 </div>
-                <h4 class="hero-h">Plutôt stable,<br>une <em>vigilance</em> à noter.</h4>
-                <div class="score">
-                  <div>
-                    <div class="l">Équilibre global</div>
-                    <div class="sb">Plutôt stable</div>
-                  </div>
-                  <div class="num">7,4<small>/10</small></div>
-                </div>
-                <div class="finding">
-                  <div class="row">
-                    <span class="axe">Émotions</span>
-                    <span class="pill">Vigilance</span>
-                  </div>
-                  <p class="desc">Régulation émotionnelle réduite en période de stress, marquée par une irritabilité et un sommeil fragmenté.</p>
+                <h4 class="hero-h">Vos 6 axes,<br><em>en un coup d'œil.</em></h4>
+                <div class="mini-axes">
+                  <div class="mx"><div class="r"><span class="nm">Processus psychiques</span><span class="st" style="color:#A6701F">En tension</span></div><div class="seg"><i style="background:#C4892E"></i><i style="background:#C4892E"></i><i></i><i></i></div></div>
+                  <div class="mx"><div class="r"><span class="nm">Ressources psychiques</span><span class="st" style="color:#4C7A3D">Stable</span></div><div class="seg"><i style="background:#6E9A5C"></i><i style="background:#6E9A5C"></i><i style="background:#6E9A5C"></i><i></i></div></div>
+                  <div class="mx"><div class="r"><span class="nm">Comportements</span><span class="st" style="color:#A6701F">En tension</span></div><div class="seg"><i style="background:#C4892E"></i><i style="background:#C4892E"></i><i></i><i></i></div></div>
+                  <div class="mx"><div class="r"><span class="nm">Régulation émotionnelle</span><span class="st" style="color:#A23B2B">Fragile</span></div><div class="seg"><i style="background:#C0564A"></i><i></i><i></i><i></i></div></div>
+                  <div class="mx"><div class="r"><span class="nm">Corps</span><span class="st" style="color:#A6701F">En tension</span></div><div class="seg"><i style="background:#C4892E"></i><i style="background:#C4892E"></i><i></i><i></i></div></div>
+                  <div class="mx"><div class="r"><span class="nm">Environnement</span><span class="st" style="color:#4C7A3D">Stable</span></div><div class="seg"><i style="background:#6E9A5C"></i><i style="background:#6E9A5C"></i><i style="background:#6E9A5C"></i><i></i></div></div>
                 </div>
                 <button class="full" disabled>Voir le bilan complet →</button>
               </div>
@@ -1866,33 +1930,63 @@
   <div class="section-inner">
     <div class="cta-final-grid">
       <div class="left">
-        <div class="sec-eyebrow">Faites le point</div>
-        <h2 class="sec-h2">Sur votre<br><em>équilibre psychique.</em></h2>
+        <div class="sec-eyebrow" style="justify-content:center;">Faites le point</div>
+        <h2 class="sec-h2" style="text-align:center;margin-left:auto;margin-right:auto;">Choisissez votre <em>profondeur de lecture.</em></h2>
+        <p class="sec-lede" style="text-align:center;margin:16px auto 44px;max-width:60ch;">Un seul moteur clinique. Vous décidez jusqu'où vous voulez voir — un aperçu, votre bilan complet, ou un suivi dans le temps.</p>
 
-        <div class="features-list">
-          <div class="feature-big"><span class="check"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l3 3L11 4"/></svg></span>Évaluation guidée — 15 min</div>
-          <div class="feature-big"><span class="check"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l3 3L11 4"/></svg></span>Synthèse immédiate</div>
-          <div class="feature-big"><span class="check"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l3 3L11 4"/></svg></span>Accès 30 jours</div>
-          <div class="feature-big"><span class="check"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l3 3L11 4"/></svg></span>Orientation si pertinent</div>
-          <div class="feature-big"><span class="check"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l3 3L11 4"/></svg></span>100 % anonyme</div>
-          <div class="feature-big"><span class="check"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l3 3L11 4"/></svg></span>Sans abonnement</div>
+        <div class="tiers">
+          <!-- Découverte -->
+          <div class="tier">
+            <div class="tier-name">Découverte</div>
+            <div class="tier-price">Gratuit</div>
+            <p class="tier-tag">Un aperçu de votre équilibre psychique, sans carte bancaire.</p>
+            <ul class="tier-feats">
+              <li>Questionnaire court · 5 min</li>
+              <li>Radar 6 axes simplifié</li>
+              <li>Score global + 3 forces / 3 vigilances</li>
+              <li class="muted">Récit clinique, échelles, PDF</li>
+            </ul>
+            <a href="/app.html" class="tier-cta outline">Commencer gratuitement</a>
+            <p class="tier-note">Sans carte bancaire</p>
+          </div>
+
+          <!-- Check-up (recommandé) -->
+          <div class="tier feature">
+            <span class="tier-badge">Recommandé</span>
+            <div class="tier-name">Check-up</div>
+            <div class="tier-price">39€</div>
+            <p class="tier-tag">Votre bilan complet, à vous pour toujours. Paiement unique.</p>
+            <ul class="tier-feats">
+              <li>Récit clinique + analyse des 6 axes</li>
+              <li>Échelles validées (PHQ-9, GAD-7)</li>
+              <li>Forces, vigilances &amp; recommandations</li>
+              <li>PDF conservé à vie</li>
+              <li>Orientation thérapeutique</li>
+            </ul>
+            <a href="/app.html" class="tier-cta solid">Faire mon check-up</a>
+            <p class="tier-note">Paiement unique · 100 % anonyme</p>
+          </div>
+
+          <!-- Plus -->
+          <div class="tier">
+            <div class="tier-name">Check-up Plus</div>
+            <div class="tier-price">9€<span class="per"> / mois</span></div>
+            <p class="tier-tag">Suivez votre évolution dans le temps, à votre rythme.</p>
+            <ul class="tier-feats">
+              <li>Check-ups illimités</li>
+              <li>Historique &amp; comparaisons temporelles</li>
+              <li>Dossier psychique permanent</li>
+              <li>Partage avec votre thérapeute</li>
+              <li>Sans engagement</li>
+            </ul>
+            <a href="/app.html" class="tier-cta outline">Activer le suivi</a>
+            <p class="tier-note">À activer après votre premier bilan</p>
+          </div>
         </div>
 
-        <div class="price-card-big">
-          <div class="price">
-            <span class="val">9</span>
-            <span class="cur">€</span>
-          </div>
-          <div class="price-meta">
-            <div class="t">Accès complet</div>
-            <div class="s">Suivi libre 30 jours · Paiement unique</div>
-          </div>
-          <a href="/app.html" class="cta-big">Commencer maintenant</a>
-        </div>
-
-        <div class="secure-line-big">
+        <div class="tiers-foot">
           <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><rect x="3" y="6" width="7" height="5" rx="1"/><path d="M4.5 6V4a2 2 0 0 1 4 0v2"/></svg>
-          Paiement sécurisé · Sans abonnement · Annulation libre
+          Paiement sécurisé · Le check-up est sans abonnement · Résiliation libre du suivi
         </div>
       </div>
     </div>
@@ -1948,11 +2042,11 @@
       </div>
       <div class="faq-item">
         <button class="faq-q" onclick="toggleFaq(this)">
-          <span class="q-text">Puis-je faire plusieurs suivis ?</span>
+          <span class="q-text">Combien coûte un check-up ?</span>
           <svg class="q-icon" width="24" height="24" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M11 4v14M4 11h14"/></svg>
         </button>
         <div class="faq-a">
-          Oui. Pendant les 30 jours qui suivent votre bilan initial, vous pouvez réaliser autant de suivis libres que vous souhaitez, sans coût supplémentaire. Tout est inclus dans l'offre découverte à 9 €.
+          Vous pouvez commencer gratuitement avec un aperçu (radar simplifié, score et premiers repères), sans carte bancaire. Le <strong>check-up complet est à 39 € en paiement unique</strong> : vous obtenez votre bilan détaillé et son PDF, que vous conservez à vie. Si vous souhaitez ensuite suivre votre évolution dans le temps, l'offre <strong>Check-up Plus à 9 €/mois</strong> débloque les bilans illimités, l'historique et les comparaisons — résiliable librement.
         </div>
       </div>
     </div>
@@ -1991,7 +2085,7 @@
     <div class="footer-col">
       <h4>Contact</h4>
       <ul>
-        <li><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="beddd1d0cadfddcafedcd7d2dfd0cecdc790d8cc">[email&#160;protected]</a></li>
+        <li>contact@bilanpsy.fr</li>
       </ul>
     </div>
   </div>
@@ -2004,7 +2098,7 @@
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
   function toggleFaq(btn) {
     var item = btn.parentElement;
     var wasOpen = item.classList.contains('open');
