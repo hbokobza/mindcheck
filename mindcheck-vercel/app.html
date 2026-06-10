@@ -1425,7 +1425,7 @@ async function generateBilan(avecBTB, retryCount){
     const btn=document.createElement('button');
     btn.className='btn-green';btn.style.margin='8px 0 0 36px';
     btn.textContent='Voir & télécharger le bilan →';
-    btn.onclick=()=>showBilan(dataBTC);
+    btn.onclick=()=>{ window._bilanData=dataBTC; showBilan(dataBTC, window.psee_user ? {} : {tier:'decouverte'}); };
     c.appendChild(btn);
 
     if(dataBTB){
