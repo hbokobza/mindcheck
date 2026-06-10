@@ -189,14 +189,12 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px}
 }
 </style>
 </head>
-  <!-- SDK Supabase via CDN -->
+<!-- SDK Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- SDK Stripe -->
+<script src="https://js.stripe.com/v3/"></script>
 
-<!-- ÉTAPE 5C — Vérification de session Supabase au chargement -->
-<!-- SDK Supabase via CDN -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<!-- ÉTAPE 5C — Vérification de session Supabase au chargement -->
+<!-- Vérification de session Supabase au chargement -->
 <script>
   window.psee_user = null;
   (async function() {
@@ -1887,7 +1885,7 @@ function showBilan(data, opts){
           <li style="font-size:13px;color:#40403a;display:flex;gap:9px"><span style="color:#FF4B28;font-weight:700">✓</span>Échelles cliniques + orientation</li>
           <li style="font-size:13px;color:#40403a;display:flex;gap:9px"><span style="color:#FF4B28;font-weight:700">✓</span>PDF conservé à vie</li>
         </ul>
-        <button onclick="alert('Paiement — bientôt disponible')" style="width:100%;padding:15px;border:none;border-radius:999px;background:#FF4B28;color:#fff;font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 8px 22px rgba(255,75,40,.28)">Débloquer mon bilan complet · 39 €</button>
+        <button onclick="openPaymentModal()" style="width:100%;padding:15px;border:none;border-radius:999px;background:#FF4B28;color:#fff;font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 8px 22px rgba(255,75,40,.28)">Débloquer mon bilan complet</button>
         <div style="font-size:11.5px;color:#938A7C;margin-top:12px">Paiement unique · 100 % confidentiel · PDF à vie</div>
       </div>
       </div>` : ''}
@@ -3039,6 +3037,98 @@ function reprendreParCode(){
 
   console.log("BilanPsy security patch v2 chargé.");
 })();
+</script>
+
+<!-- MODULE PAIEMENT STRIPE -->
+<div id="pay-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:99999;align-items:center;justify-content:center;padding:20px">
+  <div style="background:#fff;border-radius:22px;padding:32px 28px;max-width:440px;width:100%;position:relative;box-shadow:0 32px 80px rgba(0,0,0,.25)">
+    <button onclick="closePaymentModal()" style="position:absolute;top:14px;right:16px;background:none;border:none;font-size:22px;cursor:pointer;color:#999">×</button>
+    <div style="font-size:21px;font-weight:800;color:#211C16;margin-bottom:5px">Débloquer mon bilan complet</div>
+    <div style="font-size:13px;color:#888;margin-bottom:24px">Paiement unique · 39 € · PDF conservé à vie · Aucun nom sur le document</div>
+    <label style="font-size:12px;font-weight:700;color:#211C16;letter-spacing:.5px;text-transform:uppercase;display:block;margin-bottom:6px">Votre email</label>
+    <input id="pay-email" type="email" placeholder="vous@email.com"
+      style="width:100%;border:1.5px solid #DDD;border-radius:10px;padding:12px 14px;font-size:14px;margin-bottom:18px;box-sizing:border-box;font-family:inherit"
+      onfocus="this.style.borderColor='#FF4B28'" onblur="this.style.borderColor='#DDD'">
+    <label style="font-size:12px;font-weight:700;color:#211C16;letter-spacing:.5px;text-transform:uppercase;display:block;margin-bottom:6px">Paiement sécurisé</label>
+    <div id="stripe-element" style="border:1.5px solid #DDD;border-radius:10px;padding:14px;margin-bottom:6px;min-height:46px"></div>
+    <div id="pay-msg" style="font-size:12px;color:#c94750;margin-bottom:14px;min-height:18px"></div>
+    <button id="pay-btn" onclick="submitPayment()"
+      style="width:100%;padding:15px;border:none;border-radius:999px;background:#FF4B28;color:#fff;font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 8px 22px rgba(255,75,40,.28)">
+      Payer 39 €
+    </button>
+    <div style="text-align:center;font-size:11px;color:#BBB;margin-top:12px;line-height:1.5">
+      Sécurisé par Stripe · Confidentiel · Votre bilan ne porte jamais votre nom
+    </div>
+  </div>
+</div>
+
+<script>
+var STRIPE_PK = 'pk_live_REMPLACER_PAR_VOTRE_CLE_PUBLIQUE';
+var _stripe = null, _elements = null;
+
+async function openPaymentModal() {
+  var modal = document.getElementById('pay-modal');
+  modal.style.display = 'flex';
+  document.getElementById('pay-msg').textContent = '';
+  if (_stripe) return;
+  _stripe = Stripe(STRIPE_PK);
+  var clientSecret;
+  try {
+    var r = await fetch('/api/payment', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({action: 'create-intent', amount: 3900, currency: 'eur'})
+    });
+    var j = await r.json();
+    clientSecret = j.clientSecret;
+  } catch(e) {
+    document.getElementById('pay-msg').textContent = 'Erreur de connexion. Réessayez.';
+    return;
+  }
+  _elements = _stripe.elements({clientSecret: clientSecret, locale: 'fr'});
+  _elements.create('payment', {layout: 'tabs', wallets: {applePay: 'auto', googlePay: 'auto'}}).mount('#stripe-element');
+}
+
+function closePaymentModal() {
+  document.getElementById('pay-modal').style.display = 'none';
+}
+
+async function submitPayment() {
+  var email = document.getElementById('pay-email').value.trim();
+  var btn = document.getElementById('pay-btn');
+  var msg = document.getElementById('pay-msg');
+  msg.textContent = '';
+  if (!email || !email.includes('@')) { msg.textContent = 'Email invalide.'; return; }
+  btn.disabled = true; btn.style.opacity = '.6'; btn.textContent = 'Traitement…';
+  var result = await _stripe.confirmPayment({
+    elements: _elements,
+    confirmParams: {receipt_email: email},
+    redirect: 'if_required'
+  });
+  if (result.error) {
+    msg.textContent = result.error.message;
+    btn.disabled = false; btn.style.opacity = '1'; btn.textContent = 'Payer 39 €';
+    return;
+  }
+  if (result.paymentIntent && result.paymentIntent.status === 'succeeded') {
+    btn.textContent = '✓ Paiement confirmé…';
+    try {
+      await fetch('/api/payment', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({action: 'confirm', email: email, paymentIntentId: result.paymentIntent.id})
+      });
+    } catch(e) {}
+    window.psee_user = {email: email, subscriptionType: 'checkup'};
+    closePaymentModal();
+    var old = document.getElementById('bov'); if (old) old.remove();
+    if (window._bilanData) showBilan(window._bilanData);
+  }
+}
+
+document.getElementById('pay-modal').addEventListener('click', function(e) {
+  if (e.target === this) closePaymentModal();
+});
 </script>
 </body>
 </html>
