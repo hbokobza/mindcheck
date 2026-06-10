@@ -224,6 +224,8 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px}
   })();
 </script>
 <body>
+<!-- PROTECTION TEST — retirer avant lancement public -->
+<script>(function(){var PWD='bilanpsy2026',KEY='bp_access';if(sessionStorage.getItem(KEY)==='ok')return;var ok=prompt('Accès test — mot de passe :');if(ok===PWD){sessionStorage.setItem(KEY,'ok');}else{document.body.innerHTML='';alert('Accès refusé.');window.location.replace('about:blank');}})();</script>
 
 <header>
   <div class="logo-wrap">
@@ -3069,7 +3071,7 @@ function reprendreParCode(){
 </div>
 
 <script>
-const STRIPE_PK = pk_live_51TWDxAHI5dE2Y4INfgJzFFImaHLy8jVqbjZSLM2mtISgD9OvnU7mNJBGbzJKjVDFDLJDvK8VbiZQqqcL6WJgxphO00XBcWvIXq
+const STRIPE_PK = 'pk_live_REMPLACER_PAR_VOTRE_CLE_PUBLIQUE';
 var _stripe=null, _elements=null;
 
 async function openPaymentModal() {
