@@ -1348,8 +1348,21 @@
 </head>
 <body>
 <!-- PROTECTION TEST — retirer avant lancement public -->
-<script>(function(){var PWD='bilanpsy2026',KEY='bp_access';if(sessionStorage.getItem(KEY)==='ok')return;var ok=prompt('Accès test — mot de passe :');if(ok===PWD){sessionStorage.setItem(KEY,'ok');}else{document.body.innerHTML='';alert('Accès refusé.');window.location.replace('about:blank');}})();</script>
-
+<div id="bp-gate" style="position:fixed;inset:0;background:#F5F0E8;z-index:999999;display:flex;align-items:center;justify-content:center">
+  <div style="background:white;border-radius:18px;padding:36px 32px;max-width:360px;width:90%;box-shadow:0 8px 40px rgba(0,0,0,.12);text-align:center">
+    <div style="font-size:22px;font-weight:800;color:#1A1A18;margin-bottom:6px">bilanpsy</div>
+    <div style="font-size:13px;color:#888;margin-bottom:24px">Accès réservé aux testeurs</div>
+    <input id="bp-pwd" type="password" placeholder="Mot de passe" autofocus
+      style="width:100%;border:1.5px solid #DDD;border-radius:10px;padding:12px 14px;font-size:15px;box-sizing:border-box;margin-bottom:10px;outline:none"
+      onkeydown="if(event.key==='Enter')checkBP()">
+    <div id="bp-err" style="color:#c94750;font-size:12px;min-height:18px;margin-bottom:10px"></div>
+    <button onclick="checkBP()" style="width:100%;background:#FF4B28;color:white;border:none;border-radius:30px;padding:13px;font-size:15px;font-weight:700;cursor:pointer">Accéder</button>
+  </div>
+</div>
+<script>
+(function(){if(sessionStorage.getItem('bp_access')==='ok'){document.getElementById('bp-gate').remove();}})();
+function checkBP(){var v=document.getElementById('bp-pwd').value;if(v==='bilanpsy2026'){sessionStorage.setItem('bp_access','ok');document.getElementById('bp-gate').remove();}else{document.getElementById('bp-err').textContent='Mot de passe incorrect.';document.getElementById('bp-pwd').value='';document.getElementById('bp-pwd').focus();}}
+</script>
 <!-- ════════════════════════════════════════════
      01 — HERO (with integrated stats)
      ════════════════════════════════════════════ -->
