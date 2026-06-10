@@ -3039,31 +3039,31 @@ function reprendreParCode(){
 })();
 </script>
 
-<!-- MODULE PAIEMENT STRIPE -->
+<!-- MODULE PAIEMENT STRIPE ELEMENTS — EMBEDDED (reste sur le site) -->
 <div id="pay-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:99999;align-items:center;justify-content:center;padding:20px">
   <div style="background:#fff;border-radius:22px;padding:32px 28px;max-width:440px;width:100%;position:relative;box-shadow:0 32px 80px rgba(0,0,0,.25)">
     <button onclick="closePaymentModal()" style="position:absolute;top:14px;right:16px;background:none;border:none;font-size:22px;cursor:pointer;color:#999">×</button>
     <div style="font-size:21px;font-weight:800;color:#211C16;margin-bottom:5px">Débloquer mon bilan complet</div>
-    <div style="font-size:13px;color:#888;margin-bottom:24px">Paiement unique · 39 € · PDF conservé à vie · Aucun nom sur le document</div>
+    <div style="font-size:13px;color:#888;margin-bottom:22px">Paiement unique · 39 € · PDF conservé à vie · Aucun nom</div>
     <label style="font-size:12px;font-weight:700;color:#211C16;letter-spacing:.5px;text-transform:uppercase;display:block;margin-bottom:6px">Votre email</label>
     <input id="pay-email" type="email" placeholder="vous@email.com"
-      style="width:100%;border:1.5px solid #DDD;border-radius:10px;padding:12px 14px;font-size:14px;margin-bottom:18px;box-sizing:border-box;font-family:inherit"
+      style="width:100%;border:1.5px solid #DDD;border-radius:10px;padding:12px 14px;font-size:14px;margin-bottom:16px;box-sizing:border-box;font-family:inherit"
       onfocus="this.style.borderColor='#FF4B28'" onblur="this.style.borderColor='#DDD'">
-    <label style="font-size:12px;font-weight:700;color:#211C16;letter-spacing:.5px;text-transform:uppercase;display:block;margin-bottom:6px">Paiement sécurisé</label>
-    <div id="stripe-element" style="border:1.5px solid #DDD;border-radius:10px;padding:14px;margin-bottom:6px;min-height:46px"></div>
-    <div id="pay-msg" style="font-size:12px;color:#c94750;margin-bottom:14px;min-height:18px"></div>
+    <label style="font-size:12px;font-weight:700;color:#211C16;letter-spacing:.5px;text-transform:uppercase;display:block;margin-bottom:6px">Carte bancaire</label>
+    <div id="stripe-element" style="border:1.5px solid #DDD;border-radius:10px;padding:14px;margin-bottom:8px;min-height:44px;transition:border-color .2s"></div>
+    <div id="pay-msg" style="font-size:12px;color:#c94750;margin-bottom:12px;min-height:16px"></div>
     <button id="pay-btn" onclick="submitPayment()"
       style="width:100%;padding:15px;border:none;border-radius:999px;background:#FF4B28;color:#fff;font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 8px 22px rgba(255,75,40,.28)">
       Payer 39 €
     </button>
     <div style="text-align:center;font-size:11px;color:#BBB;margin-top:12px;line-height:1.5">
-      Sécurisé par Stripe · Confidentiel · Votre bilan ne porte jamais votre nom
+      Sécurisé par Stripe · Vous ne quittez pas le site · Aucun nom sur le bilan
     </div>
   </div>
 </div>
 
 <script>
-var STRIPE_PK = 'pk_live_51TWDxAHI5dE2Y4INfgJzFFImaHLy8jVqbjZSLM2mtISgD9OvnU7mNJBGbzJKjVDFDLJDvK8VbiZQqqcL6WJgxphO00XBcWvIXq'
+var STRIPE_PK = 'pk_test_51TWDxKHX9XAoPuAj3has3j6VCZm5OS6aBivlKkGdFJ3hGUjUUpH5vH98Yieo2hM2LZ1zh48VrDbRlY6iWypFPBNq00qj0C5eDq';
 var _stripe = null, _elements = null;
 
 async function openPaymentModal() {
@@ -3072,7 +3072,6 @@ async function openPaymentModal() {
   document.getElementById('pay-msg').textContent = '';
   if (_stripe) return;
   _stripe = Stripe(STRIPE_PK);
-  var clientSecret;
   try {
     var r = await fetch('/api/payment', {
       method: 'POST',
@@ -3080,13 +3079,14 @@ async function openPaymentModal() {
       body: JSON.stringify({action: 'create-intent', amount: 3900, currency: 'eur'})
     });
     var j = await r.json();
-    clientSecret = j.clientSecret;
+    if (!j.clientSecret) { document.getElementById('pay-msg').textContent = j.error || 'Erreur serveur.'; return; }
+    _elements = _stripe.elements({clientSecret: j.clientSecret, locale: 'fr'});
+    var el = _elements.create('payment', {layout: 'tabs'});
+    el.mount('#stripe-element');
+    document.getElementById('stripe-element').style.borderColor = '#DDD';
   } catch(e) {
     document.getElementById('pay-msg').textContent = 'Erreur de connexion. Réessayez.';
-    return;
   }
-  _elements = _stripe.elements({clientSecret: clientSecret, locale: 'fr'});
-  _elements.create('payment', {layout: 'tabs', wallets: {applePay: 'auto', googlePay: 'auto'}}).mount('#stripe-element');
 }
 
 function closePaymentModal() {
@@ -3111,7 +3111,7 @@ async function submitPayment() {
     return;
   }
   if (result.paymentIntent && result.paymentIntent.status === 'succeeded') {
-    btn.textContent = '✓ Paiement confirmé…';
+    btn.textContent = '✓ Paiement confirmé !';
     try {
       await fetch('/api/payment', {
         method: 'POST',
@@ -3120,11 +3120,105 @@ async function submitPayment() {
       });
     } catch(e) {}
     window.psee_user = {email: email, subscriptionType: 'checkup'};
-    closePaymentModal();
-    var old = document.getElementById('bov'); if (old) old.remove();
-    if (window._bilanData) showBilan(window._bilanData);
+    setTimeout(function() {
+      closePaymentModal();
+      var old = document.getElementById('bov'); if (old) old.remove();
+      if (window._bilanData) showBilan(window._bilanData);
+    }, 800);
   }
 }
+
+document.getElementById('pay-modal').addEventListener('click', function(e) {
+  if (e.target === this) closePaymentModal();
+});
+</script>
+</body>
+</html> style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:99999;align-items:center;justify-content:center;padding:20px">
+  <div style="background:#fff;border-radius:22px;padding:32px 28px;max-width:400px;width:100%;position:relative;box-shadow:0 32px 80px rgba(0,0,0,.25);text-align:center">
+    <button onclick="closePaymentModal()" style="position:absolute;top:14px;right:16px;background:none;border:none;font-size:22px;cursor:pointer;color:#999">×</button>
+    <div style="width:52px;height:52px;border-radius:50%;background:rgba(255,75,40,.1);display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF4B28" stroke-width="1.8"><rect x="4" y="10.5" width="16" height="10" rx="2"/><path d="M7.5 10.5V7a4.5 4.5 0 0 1 9 0v3.5"/></svg>
+    </div>
+    <div style="font-size:20px;font-weight:800;color:#211C16;margin-bottom:8px">Débloquer mon bilan complet</div>
+    <div style="font-size:13px;color:#888;margin-bottom:20px;line-height:1.5">Paiement unique · 39 € · PDF conservé à vie<br>Aucun nom sur le document · 100 % confidentiel</div>
+    <label style="font-size:12px;font-weight:700;color:#211C16;letter-spacing:.5px;text-transform:uppercase;display:block;margin-bottom:6px;text-align:left">Votre email (pour recevoir votre accès)</label>
+    <input id="pay-email" type="email" placeholder="vous@email.com"
+      style="width:100%;border:1.5px solid #DDD;border-radius:10px;padding:12px 14px;font-size:14px;margin-bottom:16px;box-sizing:border-box;font-family:inherit"
+      onfocus="this.style.borderColor='#FF4B28'" onblur="this.style.borderColor='#DDD'">
+    <div id="pay-msg" style="font-size:12px;color:#c94750;margin-bottom:12px;min-height:16px"></div>
+    <button id="pay-btn" onclick="startCheckout()"
+      style="width:100%;padding:15px;border:none;border-radius:999px;background:#FF4B28;color:#fff;font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 8px 22px rgba(255,75,40,.28)">
+      Payer 39 € — Paiement sécurisé
+    </button>
+    <div style="text-align:center;font-size:11px;color:#BBB;margin-top:10px">Vous serez redirigé vers Stripe · Retour automatique après paiement</div>
+  </div>
+</div>
+
+<script>
+function openPaymentModal() {
+  document.getElementById('pay-modal').style.display = 'flex';
+  document.getElementById('pay-msg').textContent = '';
+}
+
+function closePaymentModal() {
+  document.getElementById('pay-modal').style.display = 'none';
+}
+
+async function startCheckout() {
+  var email = document.getElementById('pay-email').value.trim();
+  var btn = document.getElementById('pay-btn');
+  var msg = document.getElementById('pay-msg');
+  msg.textContent = '';
+  if (!email || !email.includes('@')) { msg.textContent = 'Email invalide.'; return; }
+  btn.disabled = true; btn.style.opacity = '.6'; btn.textContent = 'Redirection vers Stripe…';
+
+  // Sauvegarder le bilan en sessionStorage avant de quitter
+  if (window._bilanData) {
+    try { sessionStorage.setItem('bp_bilan_pending', JSON.stringify(window._bilanData)); } catch(e) {}
+  }
+
+  try {
+    var r = await fetch('/api/payment', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ action: 'create-session', email: email, sessionCode: window.sessionCode || '' })
+    });
+    var j = await r.json();
+    if (j.url) {
+      window.location.href = j.url;
+    } else {
+      msg.textContent = j.error || 'Erreur. Réessayez.';
+      btn.disabled = false; btn.style.opacity = '1'; btn.textContent = 'Payer 39 € — Paiement sécurisé';
+    }
+  } catch(e) {
+    msg.textContent = 'Erreur de connexion. Réessayez.';
+    btn.disabled = false; btn.style.opacity = '1'; btn.textContent = 'Payer 39 € — Paiement sécurisé';
+  }
+}
+
+// Détecter le retour après paiement réussi
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  if (params.get('payment') === 'success') {
+    window.psee_user = { email: '', subscriptionType: 'checkup' };
+    history.replaceState(null, '', '/app.html');
+    // Tenter de restaurer le bilan depuis sessionStorage
+    var saved = sessionStorage.getItem('bp_bilan_pending');
+    if (saved) {
+      try {
+        var data = JSON.parse(saved);
+        sessionStorage.removeItem('bp_bilan_pending');
+        window._bilanData = data;
+        // Afficher message de confirmation
+        var msg = document.createElement('div');
+        msg.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#1F4D33;color:#fff;padding:12px 24px;border-radius:30px;font-size:14px;font-weight:600;z-index:99999;box-shadow:0 4px 20px rgba(0,0,0,.2)';
+        msg.textContent = '✓ Paiement confirmé — votre bilan complet est prêt';
+        document.body.appendChild(msg);
+        setTimeout(() => { msg.remove(); showBilan(data); }, 1500);
+      } catch(e) {}
+    }
+  }
+})();
 
 document.getElementById('pay-modal').addEventListener('click', function(e) {
   if (e.target === this) closePaymentModal();
