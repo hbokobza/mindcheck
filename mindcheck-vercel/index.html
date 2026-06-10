@@ -848,6 +848,35 @@
     .tiers { grid-template-columns: 1fr; gap: 22px; max-width: 420px; }
     .tier-tag { min-height: 0; }
   }
+
+  /* --- Démo aperçu Découverte --- */
+  .dec-demo { max-width: 460px; margin: 0 auto 46px; }
+  .dec-cap { text-align: center; font-family: 'Inter', sans-serif; font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+  .dec-frame { background: #FCFAF6; border: 1px solid var(--line); border-radius: 22px; overflow: hidden; box-shadow: 0 24px 60px rgba(33,28,22,0.10); }
+  .dec-rule { height: 3px; background: var(--orange); }
+  .dec-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; background: #EFE9DD; }
+  .dec-wm { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 16px; letter-spacing: -0.02em; color: var(--ink); }
+  .dec-wm .dot { color: var(--orange); }
+  .dec-chip { font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--orange); background: rgba(255,75,40,0.1); padding: 5px 11px; border-radius: 999px; }
+  .dec-visible { padding: 18px; }
+  .dec-vlabel { font-family: 'Inter', sans-serif; font-size: 9.5px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--orange); margin-bottom: 12px; }
+  .dec-axes { display: flex; flex-direction: column; gap: 10px; }
+  .dec-axe .an { display: flex; justify-content: space-between; align-items: baseline; font-size: 12px; color: var(--ink-2); margin-bottom: 5px; }
+  .dec-axe .an b { font-weight: 700; }
+  .dec-bars { display: grid; grid-template-columns: repeat(4,1fr); gap: 3px; }
+  .dec-bars span { height: 6px; border-radius: 999px; background: #E9E3D7; }
+  .dec-lockzone { position: relative; }
+  .dec-blur { filter: blur(5px); pointer-events: none; user-select: none; padding: 0 18px 24px; }
+  .dec-ph { height: 11px; border-radius: 999px; background: #E4DED2; margin-bottom: 9px; }
+  .dec-ph.s { width: 60%; }
+  .dec-grid4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin: 14px 0; }
+  .dec-grid4 div { height: 54px; border-radius: 10px; background: #EDE7DB; }
+  .dec-fade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(252,250,246,0) 0%, rgba(252,250,246,0.75) 55%, #FCFAF6 100%); }
+  .dec-pay { position: absolute; left: 50%; bottom: 16px; transform: translateX(-50%); width: calc(100% - 36px); background: #fff; border: 1px solid #EFE2DC; border-radius: 16px; box-shadow: 0 16px 40px rgba(33,28,22,0.16); padding: 18px 20px; text-align: center; }
+  .dec-pay .lk { width: 38px; height: 38px; border-radius: 50%; background: rgba(255,75,40,0.12); color: var(--orange); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+  .dec-pay .t { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 16px; color: var(--ink); margin-bottom: 4px; }
+  .dec-pay .s { font-family: 'Inter', sans-serif; font-size: 12px; color: var(--muted); line-height: 1.5; margin-bottom: 14px; }
+  .dec-pay .b { display: inline-block; background: var(--orange); color: #fff; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 13px; padding: 11px 22px; border-radius: 999px; text-decoration: none; }
   .cta-phones-big {
     display: flex; align-items: center; justify-content: center;
     position: relative;
@@ -1318,6 +1347,8 @@
 </style>
 </head>
 <body>
+<!-- PROTECTION TEST — retirer avant lancement public -->
+<script>(function(){var PWD='bilanpsy2026',KEY='bp_access';if(sessionStorage.getItem(KEY)==='ok')return;var ok=prompt('Accès test — mot de passe :');if(ok===PWD){sessionStorage.setItem(KEY,'ok');}else{document.body.innerHTML='';alert('Accès refusé.');window.location.replace('about:blank');}})();</script>
 
 <!-- ════════════════════════════════════════════
      01 — HERO (with integrated stats)
@@ -1934,6 +1965,41 @@
         <h2 class="sec-h2" style="text-align:center;margin-left:auto;margin-right:auto;">Choisissez votre <em>profondeur de lecture.</em></h2>
         <p class="sec-lede" style="text-align:center;margin:16px auto 44px;max-width:60ch;">Un seul moteur clinique. Vous décidez jusqu'où vous voulez voir — un aperçu, votre bilan complet, ou un suivi dans le temps.</p>
 
+        <!-- DÉMO : aperçu Découverte (gratuit) -->
+        <div class="dec-demo">
+          <p class="dec-cap">Voici ce que révèle l'aperçu <strong>gratuit</strong> — le bilan complet se débloque à 39&nbsp;€.</p>
+          <div class="dec-frame">
+            <div class="dec-rule"></div>
+            <div class="dec-head">
+              <span class="dec-wm">bilanpsy<span class="dot">.</span></span>
+              <span class="dec-chip">Aperçu Découverte</span>
+            </div>
+            <div class="dec-visible">
+              <div class="dec-vlabel">Votre cartographie · 6 axes</div>
+              <div class="dec-axes">
+                <div class="dec-axe"><div class="an"><span>Structure psychique</span><b style="color:#8C620F">Tension</b></div><div class="dec-bars"><span style="background:#C4892E"></span><span style="background:#C4892E"></span><span></span><span></span></div></div>
+                <div class="dec-axe"><div class="an"><span>Ressources psychiques</span><b style="color:#4C7A3D">Stable</b></div><div class="dec-bars"><span style="background:#6E9A5C"></span><span style="background:#6E9A5C"></span><span style="background:#6E9A5C"></span><span></span></div></div>
+                <div class="dec-axe"><div class="an"><span>Régulation émotionnelle</span><b style="color:#A23B2B">Fragile</b></div><div class="dec-bars"><span style="background:#C0564A"></span><span></span><span></span><span></span></div></div>
+              </div>
+            </div>
+            <div class="dec-lockzone">
+              <div class="dec-blur" aria-hidden="true">
+                <div class="dec-vlabel">Profil psychique observé</div>
+                <div class="dec-grid4"><div></div><div></div><div></div><div></div></div>
+                <div class="dec-ph"></div><div class="dec-ph"></div><div class="dec-ph s"></div>
+                <div class="dec-ph"></div><div class="dec-ph s"></div>
+              </div>
+              <div class="dec-fade"></div>
+              <div class="dec-pay">
+                <span class="lk"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10.5" width="16" height="10" rx="2"/><path d="M7.5 10.5V7a4.5 4.5 0 0 1 9 0v3.5"/></svg></span>
+                <div class="t">Votre bilan complet vous attend</div>
+                <div class="s">Profil psychique, 6 dimensions expliquées, échelles cliniques &amp; orientation.</div>
+                <a href="/app.html" class="b">Débloquer · 39 €</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="tiers">
           <!-- Découverte -->
           <div class="tier">
@@ -1947,7 +2013,7 @@
               <li class="muted">Récit clinique, échelles, PDF</li>
             </ul>
             <a href="/app.html" class="tier-cta outline">Commencer gratuitement</a>
-            <p class="tier-note">Sans carte bancaire</p>
+            <p class="tier-note">Anonyme · sans carte bancaire</p>
           </div>
 
           <!-- Check-up (recommandé) -->
@@ -1964,7 +2030,7 @@
               <li>Orientation thérapeutique</li>
             </ul>
             <a href="/app.html" class="tier-cta solid">Faire mon check-up</a>
-            <p class="tier-note">Paiement unique · 100 % anonyme</p>
+            <p class="tier-note">Paiement unique · 100 % confidentiel</p>
           </div>
 
           <!-- Plus -->
@@ -2028,7 +2094,7 @@
           <svg class="q-icon" width="24" height="24" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M11 4v14M4 11h14"/></svg>
         </button>
         <div class="faq-a">
-          Oui, votre confidentialité est notre priorité. Le check-up est 100 % anonyme. Vos données sont hébergées en France, chiffrées, et vous gardez le contrôle complet de votre profil. Vous pouvez le supprimer à tout moment.
+          Votre <strong>aperçu gratuit est anonyme</strong> : aucune donnée personnelle, pas de carte bancaire — juste un code de session. Dès que vous débloquez votre bilan complet, le paiement crée votre accès : vos données deviennent <strong>confidentielles et pseudonymisées</strong> — votre bilan reste identifié par un code, jamais par votre nom. Tout est hébergé en France, chiffré, et vous gardez le contrôle complet : suppression possible à tout moment.
         </div>
       </div>
       <div class="faq-item">
