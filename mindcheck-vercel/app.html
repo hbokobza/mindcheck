@@ -3080,9 +3080,9 @@ async function openPaymentModal() {
   _stripe = Stripe(STRIPE_PK);
   let clientSecret;
   try {
-    const r = await fetch('/api/create-payment-intent', {
+    const r = await fetch('/api/payment', {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ amount:3900, currency:'eur' })
+      body: JSON.stringify({ action:'create-intent', amount:3900, currency:'eur' })
     });
     ({ clientSecret } = await r.json());
   } catch(e) {
@@ -3121,9 +3121,9 @@ async function submitPayment() {
   if (paymentIntent && paymentIntent.status === 'succeeded') {
     btn.textContent = '✓ Paiement confirmé…';
     try {
-      await fetch('/api/confirm-payment', {
+      await fetch('/api/payment', {
         method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ email, paymentIntentId: paymentIntent.id })
+        body: JSON.stringify({ action:'confirm', email, paymentIntentId: paymentIntent.id })
       });
     } catch(e) { /* le webhook Stripe prend le relais en cas d'échec */ }
     window.psee_user = { email, subscriptionType:'checkup' };
