@@ -6,7 +6,7 @@
 // Variables d'environnement Vercel :
 //   STRIPE_SECRET_KEY
 //   SUPABASE_URL
-//   SUPABASE_SERVICE_KEY
+//   SUPABASE_SERVICE_ROLE_KEY
 
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
@@ -54,7 +54,7 @@ export default async function handler(req, res) {
     // Créer / activer le compte Supabase
     const sb = createClient(
       process.env.SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_KEY
+      process.env.SUPABASE_SERVICE_ROLE_KEY
     );
     const tempPwd = Math.random().toString(36).slice(-8) + 'Aa1!';
     const { error: authErr } = await sb.auth.admin.createUser({
