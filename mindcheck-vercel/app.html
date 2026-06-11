@@ -3039,54 +3039,93 @@ function reprendreParCode(){
 })();
 </script>
 
-<!-- MODULE PAIEMENT STRIPE ELEMENTS — EMBEDDED (reste sur le site) -->
+<!-- MODULE PAIEMENT STRIPE ELEMENTS -->
 <div id="pay-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:99999;align-items:center;justify-content:center;padding:20px">
-  <div style="background:#fff;border-radius:22px;padding:32px 28px;max-width:440px;width:100%;position:relative;box-shadow:0 32px 80px rgba(0,0,0,.25)">
-    <button onclick="closePaymentModal()" style="position:absolute;top:14px;right:16px;background:none;border:none;font-size:22px;cursor:pointer;color:#999">×</button>
-    <div style="font-size:21px;font-weight:800;color:#211C16;margin-bottom:5px">Débloquer mon bilan complet</div>
-    <div style="font-size:13px;color:#888;margin-bottom:22px">Paiement unique · 39 € · PDF conservé à vie · Aucun nom</div>
+  <div style="background:#fff;border-radius:22px;padding:28px;max-width:440px;width:100%;position:relative;box-shadow:0 32px 80px rgba(0,0,0,.25);max-height:90vh;overflow-y:auto">
+    <button onclick="closePaymentModal()" style="position:sticky;top:0;float:right;background:none;border:none;font-size:22px;cursor:pointer;color:#999;z-index:1">×</button>
+    <div style="font-size:20px;font-weight:800;color:#211C16;margin-bottom:4px">Choisissez votre accès</div>
+    <div style="font-size:12px;color:#aaa;margin-bottom:18px">Aucun nom sur le document · 100 % confidentiel</div>
+
+    <!-- Sélecteur de plan -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px">
+      <div id="plan-checkup" onclick="selectPlan('checkup')" style="border:2px solid #FF4B28;border-radius:12px;padding:14px;cursor:pointer;background:#FFF9F8">
+        <div style="font-size:10px;font-weight:700;color:#FF4B28;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Check-up</div>
+        <div style="font-size:22px;font-weight:800;color:#211C16">39 €</div>
+        <div style="font-size:11px;color:#888;margin-top:2px">Paiement unique</div>
+        <div style="font-size:10px;color:#aaa;margin-top:2px">PDF conservé à vie</div>
+      </div>
+      <div id="plan-plus" onclick="selectPlan('plus')" style="border:1.5px solid #DDD;border-radius:12px;padding:14px;cursor:pointer;background:#fff">
+        <div style="font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Check-up Plus</div>
+        <div style="font-size:22px;font-weight:800;color:#211C16">9 €<span style="font-size:12px;font-weight:400;color:#888">/mois</span></div>
+        <div style="font-size:11px;color:#888;margin-top:2px">Bilans illimités</div>
+        <div style="font-size:10px;color:#aaa;margin-top:2px">Sans engagement</div>
+      </div>
+    </div>
+
     <label style="font-size:12px;font-weight:700;color:#211C16;letter-spacing:.5px;text-transform:uppercase;display:block;margin-bottom:6px">Votre email</label>
     <input id="pay-email" type="email" placeholder="vous@email.com"
       style="width:100%;border:1.5px solid #DDD;border-radius:10px;padding:12px 14px;font-size:14px;margin-bottom:16px;box-sizing:border-box;font-family:inherit"
       onfocus="this.style.borderColor='#FF4B28'" onblur="this.style.borderColor='#DDD'">
-    <label style="font-size:12px;font-weight:700;color:#211C16;letter-spacing:.5px;text-transform:uppercase;display:block;margin-bottom:6px">Carte bancaire</label>
-    <div id="stripe-element" style="border:1.5px solid #DDD;border-radius:10px;padding:14px;margin-bottom:8px;min-height:44px;transition:border-color .2s"></div>
+    <label style="font-size:12px;font-weight:700;color:#211C16;letter-spacing:.5px;text-transform:uppercase;display:block;margin-bottom:6px">Paiement sécurisé</label>
+    <div id="stripe-element" style="border:1.5px solid #DDD;border-radius:10px;padding:14px;margin-bottom:8px;min-height:44px"></div>
     <div id="pay-msg" style="font-size:12px;color:#c94750;margin-bottom:12px;min-height:16px"></div>
     <button id="pay-btn" onclick="submitPayment()"
       style="width:100%;padding:15px;border:none;border-radius:999px;background:#FF4B28;color:#fff;font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 8px 22px rgba(255,75,40,.28)">
       Payer 39 €
     </button>
-    <div style="text-align:center;font-size:11px;color:#BBB;margin-top:12px;line-height:1.5">
-      Sécurisé par Stripe · Vous ne quittez pas le site · Aucun nom sur le bilan
+    <div style="text-align:center;font-size:11px;color:#BBB;margin-top:10px;line-height:1.5">
+      Sécurisé par Stripe · Vous restez sur le site · Aucun nom sur le bilan
     </div>
   </div>
 </div>
 
 <script>
 var STRIPE_PK = 'pk_test_51TWDxKHX9XAoPuAj3has3j6VCZm5OS6aBivlKkGdFJ3hGUjUUpH5vH98Yieo2hM2LZ1zh48VrDbRlY6iWypFPBNq00qj0C5eDq';
-var _stripe = null, _elements = null;
+var _stripe = null, _elements = null, _selectedPlan = 'checkup', _subId = null;
 
-async function openPaymentModal() {
-  var modal = document.getElementById('pay-modal');
-  modal.style.display = 'flex';
+function selectPlan(plan) {
+  _selectedPlan = plan;
+  _stripe = null; _elements = null; _subId = null;
+  var cc = document.getElementById('plan-checkup');
+  var pc = document.getElementById('plan-plus');
+  if (plan === 'checkup') {
+    cc.style.border = '2px solid #FF4B28'; cc.style.background = '#FFF9F8';
+    pc.style.border = '1.5px solid #DDD'; pc.style.background = '#fff';
+    document.getElementById('pay-btn').textContent = 'Payer 39 €';
+  } else {
+    pc.style.border = '2px solid #FF4B28'; pc.style.background = '#FFF9F8';
+    cc.style.border = '1.5px solid #DDD'; cc.style.background = '#fff';
+    document.getElementById('pay-btn').textContent = "S\'abonner · 9 €/mois";
+  }
+  document.getElementById('stripe-element').innerHTML = '';
   document.getElementById('pay-msg').textContent = '';
-  if (_stripe) return;
-  _stripe = Stripe(STRIPE_PK);
+  loadStripeElement();
+}
+
+async function loadStripeElement() {
+  if (!_stripe) _stripe = Stripe(STRIPE_PK);
   try {
+    var body = _selectedPlan === 'checkup'
+      ? {action: 'create-intent', amount: 3900, currency: 'eur'}
+      : {action: 'create-subscription'};
     var r = await fetch('/api/payment', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({action: 'create-intent', amount: 3900, currency: 'eur'})
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body)
     });
     var j = await r.json();
     if (!j.clientSecret) { document.getElementById('pay-msg').textContent = j.error || 'Erreur serveur.'; return; }
+    if (j.subscriptionId) _subId = j.subscriptionId;
     _elements = _stripe.elements({clientSecret: j.clientSecret, locale: 'fr'});
-    var el = _elements.create('payment', {layout: 'tabs'});
-    el.mount('#stripe-element');
-    document.getElementById('stripe-element').style.borderColor = '#DDD';
+    _elements.create('payment', {layout: 'tabs'}).mount('#stripe-element');
   } catch(e) {
     document.getElementById('pay-msg').textContent = 'Erreur de connexion. Réessayez.';
   }
+}
+
+async function openPaymentModal() {
+  document.getElementById('pay-modal').style.display = 'flex';
+  document.getElementById('pay-msg').textContent = '';
+  if (!_elements) await loadStripeElement();
 }
 
 function closePaymentModal() {
@@ -3107,19 +3146,24 @@ async function submitPayment() {
   });
   if (result.error) {
     msg.textContent = result.error.message;
-    btn.disabled = false; btn.style.opacity = '1'; btn.textContent = 'Payer 39 €';
+    btn.disabled = false; btn.style.opacity = '1';
+    btn.textContent = _selectedPlan === 'checkup' ? 'Payer 39 €' : "S'abonner · 9 €/mois";
     return;
   }
   if (result.paymentIntent && result.paymentIntent.status === 'succeeded') {
     btn.textContent = '✓ Paiement confirmé !';
     try {
       await fetch('/api/payment', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({action: 'confirm', email: email, paymentIntentId: result.paymentIntent.id})
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          action: 'confirm', email: email,
+          paymentIntentId: result.paymentIntent.id,
+          subscriptionId: _subId,
+          plan: _selectedPlan
+        })
       });
     } catch(e) {}
-    window.psee_user = {email: email, subscriptionType: 'checkup'};
+    window.psee_user = {email: email, subscriptionType: _selectedPlan === 'plus' ? 'checkup_plus' : 'checkup'};
     setTimeout(function() {
       closePaymentModal();
       var old = document.getElementById('bov'); if (old) old.remove();
