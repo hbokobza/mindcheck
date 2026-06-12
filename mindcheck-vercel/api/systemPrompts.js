@@ -531,6 +531,7 @@ LE JSON DOIT CONTENIR EXACTEMENT CES CHAMPS, DANS CET ORDRE :
   "mecanismes_transdiagnostiques": [
     { "processus": "string. Nom technique (rumination, évitement expérientiel, auto-critique, intolérance à l'incertitude, dérégulation émotionnelle, désengagement comportemental, hypervigilance somatique, isolement relationnel).", "salience": 0-3, "boucle_courte": "string. UNE LIGNE OBLIGATOIREMENT. Format symbolique avec flèches Unicode → et symbole ↓ pour les baisses. Maximum 60 caractères. Exemple : 'rumination → sommeil ↓ → fatigue → rumination'." }
   ],
+  "hypotheses_cliniques": ["string. Hypothèse clinique formulée en langage clinique descriptif, jamais comme diagnostic ferme. Format : une phrase courte. Exemples valides : 'Organisation auto-critique chronique avec difficulté d auto-validation — les accomplissements ne consolident pas l estime de soi.', 'Trauma relationnel développemental probable — honte chronique et hypervigilance interpersonnelle comme séquelles possibles.', 'Attachement insécure probable — pattern approche-retrait suggérant difficulté à concilier besoin de lien et peur de dépendance.', 'Syndrome de l imposteur cliniquement saillant.', 'Dysrégulation émotionnelle chronique avec recours à des stratégies d évitement de court terme.', 'Somatisation probable de la charge psychique non contenue.' Inclure 4 à 6 hypothèses ancrées dans les signaux réels du récit. Ne jamais fabriquer une hypothèse sans signal correspondant."],
   "pistes_exploration": ["string. Piste neutre théoriquement. Ex : 'Les processus identifiés suggèrent une exploration centrée sur la rumination et l auto-critique.'", "string. Ex : 'Une attention particulière à l isolement relationnel paraît pertinente au regard des signaux convergents.'", "string. Ex : 'Le thérapeute pourra apprécier l opportunité d approfondir l axe somatique au regard de l hypervigilance signalée.'"],
   "themes_attention": [
     { "titre": "string. Titre court du thème (max 60 caractères). Style descriptif observationnel, JAMAIS prescriptif. INTERDICTION ABSOLUE de termes nosographiques DSM/CIM (voir filtre nosographique). Exemples ACCEPTABLES : 'Boucle rumination–sommeil–fatigue', 'Perte de plaisir et retrait progressif', 'Retrait relationnel et non-communication', 'Auto-exigence et culpabilité', 'Tonalité anxieuse diffuse avec hypervigilance', 'Idéation passive et lassitude existentielle'. Exemples INTERDITS : 'Anhédonie et platitude affective' (anhédonie = terme DSM), 'Anxiété généralisée' (= TAG DSM), 'Trouble dépressif' (= terme nosographique), 'Interrompre la rumination' (prescriptif).", "manifestations": "string. UNE PHRASE COURTE de MAX 25 mots. Ce qui est observé dans le récit, en langage clinique condensé, sans terme nosographique DSM/CIM. JAMAIS plusieurs phrases.", "observation_clinique": "string. UNE PHRASE COURTE de MAX 25 mots. Note réflexive sur le thème : temporalité, structure, logique d'auto-entretien. INTERDICTION ABSOLUE de termes nosographiques DSM/CIM (voir filtre). JAMAIS d'action proposée." }
@@ -609,6 +610,33 @@ INTERDIT (jargon LIWC, technique) :
 "Pronoms 1ère pers. : élevés, focus auto-centré. Absolutistes : modérés. Valence : négative. Temporalité : présent + contre-factuels. Langage intérieur : évaluatif, monologique."
 INTERDIT (trop long, plusieurs paragraphes) :
 "Densité très élevée de pronoms de première personne (je, moi, mon). Récit centré sur expérience interne, auto-observation constante. Cette prévalence, couplée à la tonalité négative, peut indiquer un focus ruminatif auto-critique typique des états dépressifs..."
+
+REGLES SUR hypotheses_cliniques (NOUVEAU — V3.5)
+Ce champ est OBLIGATOIRE dans le bilan BTB. C est le saut qualitatif central : le moteur hypothétise, pas seulement décrit.
+Le clinicien reste seul décideur — ce sont des hypothèses, jamais des diagnostics.
+
+4 à 6 hypothèses, hiérarchisées par pertinence clinique. Chaque hypothèse = une phrase courte.
+Vocabulaire clinique partagé par tous les courants — ni exclusivement psychanalytique ni exclusivement TCC.
+
+FAMILLES À COUVRIR si les signaux sont présents :
+- Organisation auto-critique chronique : si auto-critique + impossibilité d intégrer les compliments + culpabilité réparatrice
+  → "Organisation auto-critique chronique avec difficulté d auto-validation — les accomplissements ne consolident pas l estime de soi."
+- Trauma relationnel : si harcèlement + rupture brutale + figure parentale peu sécurisante
+  → "Trauma relationnel développemental probable — honte chronique et hypervigilance interpersonnelle comme séquelles possibles."
+- Attachement insécure : si oscillation proximité-distance + retrait émotionnel + peur de dépendre
+  → "Attachement insécure probable — pattern approche-retrait suggérant difficulté à concilier besoin de lien et peur de dépendance."
+- Dysrégulation émotionnelle chronique : si labilité affective + déconnexion + alcool
+  → "Dysrégulation émotionnelle chronique avec recours à des stratégies de régulation de court terme."
+- Somatisation : si manifestations somatiques diffuses + bilan médical normal
+  → "Somatisation probable de la charge psychique non contenue — le corps comme zone de décharge."
+- Syndrome de l imposteur : si réussite objective + minimisation systématique + peur d être découvert
+  → "Syndrome de l imposteur cliniquement saillant — réussite externe constamment invalidée par auto-critique interne."
+
+INTERDITS :
+- Jamais de diagnostic ferme (pas de PTSD, TPL, TDM)
+- Jamais de méthode thérapeutique nommée
+- Jamais d hypothèse sans signal dans le récit
+- Jamais de jargon exclusivement psychanalytique (Moi, Surmoi, Ça)
 
 REGLES SUR mecanismes_transdiagnostiques (FORMAT V3 SIMPLIFIE)
 - 0 à 4 processus identifiés (MAXIMUM 4 — c'est une LIMITE STRICTE pour préserver la mise en page) parmi les 8 : rumination, évitement expérientiel, auto-critique, intolérance à l'incertitude, dérégulation émotionnelle, désengagement comportemental, hypervigilance somatique, isolement relationnel.
@@ -735,6 +763,10 @@ Avant de retourner le JSON, RELIS chaque champ et vérifie ces plafonds :
 - ressources_observees.intro : 1 phrase, MAX 25 mots
 - ressources_observees.elements : MAX 3 entrées
 - ressources_observees.elements[].detail : 1 phrase, MAX 20 mots
+
+VÉRIFICATION hypotheses_cliniques OBLIGATOIRE :
+Avant d émettre, vérifier que hypotheses_cliniques contient 4 à 6 éléments ancrés dans le récit.
+Aucun diagnostic ferme. Aucune méthode thérapeutique. Aucune hypothèse inventée sans signal.
 
 VÉRIFICATION NOSOGRAPHIQUE OBLIGATOIRE (V3.4) :
 Relis l'ensemble du JSON et vérifie qu'aucun terme nosographique DSM/CIM direct ne s'y trouve :
