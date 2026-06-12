@@ -665,7 +665,7 @@ const responseText = JSON.stringify(result.payload);
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 4096,
+        max_tokens: 8192, // Augmenté V3.5 — BtC JSON enrichi peut dépasser 4096 (actions tronqué)
         system: resolveSystemPrompt(mode, triggeredModules, passationContext),
         messages: messages
       })
@@ -961,7 +961,7 @@ async function callHaikuJson(systemPrompt, userMessages) {
     },
     body: JSON.stringify({
       model: 'claude-haiku-4-5-20251001',
-      max_tokens: 16000, // Augmente pour bilans BtoB enrichis V3.5 (profil_clinique + analyse_linguistique — anciennement 8192, tronqué à 26997 chars)
+      max_tokens: 8192, // Augmente pour bilans BtoB qui sont denses (anciennement 4096, parfois tronques)
       system: systemPrompt,
       messages: userMessages
     })
