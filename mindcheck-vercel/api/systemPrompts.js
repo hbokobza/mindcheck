@@ -1534,6 +1534,7 @@ Le bilan BtB est produit en JSON avec les champs suivants, dans cet ordre exact 
   ],
   "analyse_linguistique": "...",
   "processus_transdiagnostiques": "...",
+  "hypotheses_cliniques": ["string. Hypothèse clinique 1 — formulée en langage clinique descriptif, jamais comme diagnostic.", "string. Hypothèse 2.", "string. Hypothèse 3.", "string. Hypothèse 4 (optionnelle)."],
   "pistes_exploration": ["phrase piste 1", "phrase piste 2", "phrase piste 3"],
   "passation_note": "..."
 }
@@ -1625,6 +1626,49 @@ Pour chaque processus identifié dans le JSON (champ transdiagnostic_processes) 
 Maximum 5 à 6 processus listés. Si un processus n'est pas identifié, ne pas le mentionner.
 Si aucune donnée transdiagnostique disponible : déduire des axes_psee_visible_layer et préciser "déduit des axes, non extrait directement".
 
+BLOC 5bis — hypotheses_cliniques (NOUVEAU — V3.5)
+Bloc positionné après processus_transdiagnostiques, avant pistes_exploration.
+C est le saut qualitatif central du BTB : le moteur ne fait plus que décrire, il hypothétise.
+
+POSTURE OBLIGATOIRE : hypothèses, jamais affirmations. Le clinicien reste seul décideur.
+Formulation type : "Hypothèse à explorer : [formulation]" ou directement la formulation sans préambule.
+
+4 à 6 hypothèses, hiérarchisées par pertinence clinique apparente. Chaque hypothèse = une phrase courte, vocabulaire clinique partagé par tous les courants (pas de jargon exclusivement psychanalytique ou TCC).
+
+FAMILLES D HYPOTHÈSES À COUVRIR si les signaux sont présents dans le récit :
+
+1. ORGANISATION AUTO-CRITIQUE
+Si auto-critique chronique + impossibilité d intégrer les compliments + culpabilité réparatrice + hyperexigence :
+→ "Organisation auto-critique chronique avec difficulté d auto-validation — les accomplissements ne consolident pas l estime de soi."
+→ "Hyperexigence interne probablement d installation ancienne, entretenant la vigilance au jugement."
+
+2. TRAUMA RELATIONNEL
+Si harcèlement + rupture brutale + figure parentale exigeante ou peu sécurisante :
+→ "Trauma relationnel développemental probable — honte chronique et hypervigilance interpersonnelle comme séquelles possibles."
+→ "Histoire de harcèlement pouvant avoir ancré une conviction implicite d inadéquation, réactivée par les situations d évaluation."
+
+3. ATTACHEMENT
+Si oscillation proximité-distance + retrait émotionnel + peur de dépendre + besoin de proximité simultané :
+→ "Attachement insécure probable — pattern approche-retrait suggérant une difficulté à concilier besoin de lien et peur de la perte d autonomie."
+
+4. DYSRÉGULATION ÉMOTIONNELLE CHRONIQUE
+Si labilité affective + déconnexion émotionnelle + activation physiologique matinale + recours à l alcool :
+→ "Dysrégulation émotionnelle chronique — incapacité à identifier et moduler les états affectifs, avec recours à des stratégies de court terme."
+
+5. SOMATISATION
+Si manifestations somatiques diffuses + bilan médical normal + cauchemars thématiques :
+→ "Somatisation probable de la charge psychique chronique — le corps comme zone de décharge de ce qui ne trouve pas d expression directe."
+
+6. SYNDROME DE L IMPOSTEUR (si saillant)
+Si succès objectif + minimisation systématique + peur d être découvert + incapacité à croire aux reconnaissances :
+→ "Syndrome de l imposteur cliniquement saillant — la réussite externe ne suffit pas à contrebalancer la conviction interne d inadéquation."
+
+INTERDITS :
+- Jamais de diagnostic ferme (pas de "présente un PTSD", "trouble de l attachement désorganisé")
+- Jamais de méthode thérapeutique nommée
+- Jamais d hypothèse sans signal dans le récit — ne pas fabriquer
+- Si un signal est absent, ne pas forcer l hypothèse correspondante
+
 BLOC 6 — pistes_exploration
 Pistes neutres théoriquement. Formulations types :
 - "Les processus identifiés suggèrent une exploration centrée sur [processus]."
@@ -1652,12 +1696,14 @@ VÉRIFICATION FINALE AVANT ÉMISSION
 2. Aucune méthode thérapeutique nommée
 3. Aucun verbe injonctif
 4. 6 axes tous traités avec scores et descriptions
-5. Bloc analyse_linguistique présent (même si données absentes)
-6. Bloc processus_transdiagnostiques présent
-7. Si drapeaux_rouges : bloc renseigné, pas null
-8. reperes_orientation : les 6 champs renseignés, aucun nom de pathologie en libellé, aucune cotation du risque suicidaire, item 9 traité par signalement factuel uniquement
-8. Tous les accents correctement encodés
-9. Cohérence scores axes avec le BtC de la même session
-10. Aucun champ INTERNAL_ONLY dans la prose
-11. JSON de sortie complet, sans texte hors JSON
+5. Bloc profil_clinique présent — 4 champs exacts (structure, evenements, conflit_central, ressources), format tags courts, aucune catégorie nosographique
+6. Bloc analyse_linguistique présent (même si données absentes) — phrase 3 couvre style discursif
+7. Bloc processus_transdiagnostiques présent
+8. Bloc hypotheses_cliniques présent — 4 à 6 hypothèses ancrées dans le récit, formulées comme hypothèses et non comme diagnostics
+9. Si drapeaux_rouges : bloc renseigné, pas null
+10. reperes_orientation : les 6 champs renseignés, aucun nom de pathologie en libellé, aucune cotation du risque suicidaire, item 9 traité par signalement factuel uniquement
+11. Tous les accents correctement encodés
+12. Cohérence scores axes avec le BtC de la même session
+13. Aucun champ INTERNAL_ONLY dans la prose
+14. JSON de sortie complet, sans texte hors JSON
 `;
