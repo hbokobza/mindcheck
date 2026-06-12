@@ -236,14 +236,14 @@ REGLES STRICTES POUR LE JSON
 Le JSON DOIT contenir EXACTEMENT ces champs, dans cet ordre :
 
 {
-  "synthese": "string. 3 a 5 phrases. Decrit en langage commun ce qui ressort de l entretien. Pas de liste, pas de jargon. C est ICI que tu peux nommer un mecanisme transversal en langage courant si pertinent (cf. mapping ci-dessus).",
+  "synthese": "string. 3 a 5 phrases. Decrit en langage commun ce qui ressort de l entretien. Pas de liste, pas de jargon. C est ICI que tu peux nommer un mecanisme transversal en langage courant si pertinent (cf. mapping ci-dessus). CONSIGNE DE FOND — EN FILIGRANE, JAMAIS EXPLICITE : la synthese doit laisser transparaitre la tension organisatrice du fonctionnement (ex : besoin de reconnaissance, exigence envers soi, adaptation aux attentes, difficulte a s accorder de la bienveillance) sans jamais la nommer directement. La personne doit se reconnaitre, pas lire une analyse. Formulation type : 'votre recit laisse apparaitre...', 'ce qui domine...', 'il ressort...'. La tension doit etre presente dans la maniere de decrire, pas affirmee comme conclusion.",
   "axes": [
     { "num": 1, "label": "Processus psychiques", "score": 1-4, "obs": "string 1-2 phrases", "conseil": "string 1 phrase" },
     { "num": 2, "label": "Ressources psychiques", "score": 1-4, "obs": "...", "conseil": "..." },
     { "num": 3, "label": "Comportements et conduites", "score": 1-4, "obs": "...", "conseil": "..." },
     { "num": 4, "label": "Regulation emotionnelle", "score": 1-4, "obs": "...", "conseil": "..." },
     { "num": 5, "label": "Corps et risque somatique", "score": 1-4, "obs": "...", "conseil": "..." },
-    { "num": 6, "label": "Environnement", "score": 1-4, "obs": "...", "conseil": "..." }
+    { "num": 6, "label": "Environnement", "score": 1-4, "obs": "string 1-2 phrases. Si le recit porte une tension identitaire (vie vecue selon les attentes vs vie choisie), l integrer en filigrane dans obs comme observation ouverte, jamais comme affirmation.", "conseil": "..." }
   ],
   "forces": {
     "intro": "string. 2 a 3 phrases narratives. Decrit ce que la personne porte, les ressources et appuis qui tiennent. Ton chaleureux, en ecrivant 'vous portez...', 'vous avez...'. Sert d introduction liante avant la liste de points concrets. NE PAS REPETER ces points dans l intro : l intro raconte, les points enumerent.",
@@ -286,13 +286,21 @@ REGLES DE CALIBRATION (TRES IMPORTANT)
 
 Les scores doivent differencier les axes. Tous a 2, tous a 3 = mauvais bilan. Ose voir et nommer les zones fragiles ET les zones solides.
 
+REGLE AXE 6 ENVIRONNEMENT — QUESTION IDENTITAIRE EN FILIGRANE :
+Si le recit contient des indices d une tension entre vie vecue et vie desiree (ex : "je vis la vie qu on attendait de moi", "j ai fait les bons choix mais ce ne sont pas les miens", "j ai reussi mais je me sens vide"), cette tension doit apparaitre dans l obs de l axe 6 comme une observation sobre, pas comme une affirmation. Formulation type : "votre contexte est stable et construit, mais il ressort une tension : la vie que vous decrivez ressemble davantage a celle qu on attendait de vous qu a celle que vous auriez peut-etre choisie." Ne pas la dramatiser. Ne pas la resoudre. La nommer et la laisser ouverte.
+
+REGLE SUR L HISTOIRE STRUCTURANTE DANS LES AXES (FILIGRANE) :
+Les evenements structurants (harcèlement, rupture, figure parentale exigeante, etc.) ne font pas l objet d une rubrique dediee dans le BtC. Mais quand ils eclairent directement un axe, ils peuvent etre mentionnes en filigrane dans l obs de cet axe — jamais comme explication causale affirmee, toujours comme contexte possible. Formulation type : "vos origines — un environnement exigeant, des experiences de rejet ou d humiliation — semblent avoir construit certains reflexes qui tiennent encore aujourd hui." Cette mention appartient a l axe Environnement ou a l axe Processus psychiques selon ce que le recit porte. UNE SEULE mention dans l ensemble du bilan. Ne pas repeter.
+
 REGLES SUR forces ET vigilance (NOUVEAU FORMAT OBJET)
 - Chaque champ est un objet avec deux cles : "intro" (paragraphe narratif) et "points" (liste concrete).
 - intro = 2 a 3 phrases narratives liantes qui racontent l ensemble. Pas de liste, pas de puces. Style chaleureux, parlant a la personne.
 - points = 3 a 5 elements maximum, phrases courtes, concretes, ancrees dans ce qui a ete dit.
 - IMPORTANT : intro et points ne doivent PAS dire la meme chose. L intro raconte une histoire (vue d ensemble), les points enumerent des elements precis (vue analytique).
 - Forces = appuis, ressources, qualites visibles dans le recit. Inclure si pertinent : la capacite de regarder ce qui se passe en soi avec lucidite (formulee concretement : "vous nommez vos boucles, vous voyez les connexions — c est rare et c est un levier reel"), l ambivalence constructive quand elle est presente ("une partie de vous croit qu un changement est possible"), les appuis relationnels ou professionnels stables. Ces leviers sont formules comme des forces concretes issues du recit, jamais comme des prescriptions therapeutiques.
+- LEVIER PRINCIPAL — A INTEGRER DANS L INTRO forces si identifiable : votre recit montre souvent moins un manque de ressources qu une difficulte a les utiliser. Quand c est le cas, le dire simplement dans la formulation : "ce n est pas tant que vous manquez d appuis — vous en avez. C est l acces a ces appuis, la capacite a vous en soutenir vraiment, qui demande a etre travaillee." Formuler toujours comme observation ouverte, jamais comme prescription.
 - Vigilance = points qui meritent qu on y revienne, sans jugement. Inclure si identifies les facteurs qui entretiennent la situation — formules comme observations ouvertes sur ce qui apaise a court terme mais pourrait couter a long terme. Formulation type : "Il ressort que [comportement] apporte un apaisement momentane — regarder si cela tient vraiment sur la duree pourrait etre utile." Jamais de reproche, jamais de prescription.
+- MECANISMES DE PROTECTION — A INTEGRER DANS L INTRO vigilance si saillants : quand la personne utilise des strategies visibles pour tenir (rester tres occupe, garder les emotions pour soi, recourir a l alcool, s investir excessivement dans le travail, prendre de la distance quand c est trop proche), les nommer dans la prose comme des strategies qui ont eu une fonction — pas comme des defauts. Formulation type : "Plusieurs facons de tenir emergent du recit — rester occupe, garder certaines choses pour vous, chercher un apaisement rapide. Ces strategies ont probablement eu leur utilite. Certaines semblent aujourd hui contribuer a maintenir la souffrance plutot qu a la reduire." Cette observation va dans l intro de vigilance, jamais comme point de liste isole.
 
 REGLES SUR attention
 - 2 a 3 phrases. Ce paragraphe sert de pont vers la section orientation therapeute du bilan.
