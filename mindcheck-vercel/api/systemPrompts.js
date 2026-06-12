@@ -520,10 +520,10 @@ LE JSON DOIT CONTENIR EXACTEMENT CES CHAMPS, DANS CET ORDRE :
     { "num": 6, "label": "Environnement", "score": 1-4, "manifestations": "...", "systemes": "..." }
   ],
   "profil_clinique": {
-    "symptomes_histoire": "string. 2 à 3 phrases. Ce que la personne amène : symptômes présentés, depuis quand, contexte d installation (progressif ou déclencheur identifié). Point d entrée clinique — le présent avant tout.",
-    "structure_fonctionnement": "string. 2 à 3 phrases. Mode de fonctionnement habituel observable dans le récit : (1) style d attachement formulé phénoménologiquement sans nommer la catégorie (ex : forte vigilance aux signaux de rejet, tendance à s appuyer peu sur les autres en situation de stress) ; (2) défenses dominantes observées, 3 à 5, nommées en termes descriptifs cliniques (ex : rationalisation, retrait relationnel, surinvestissement occupationnel, contrôle, déni partiel) ; (3) croyance centrale si identifiable, formulée comme : il ressort une conviction implicite que... INTERDIT : Moi/Surmoi/Ça, structure névrotique/borderline, fixations.",
-    "conflits_desequilibres": "string. 1 à 2 phrases. Tension centrale : conflit principal formulé comme polarité (besoin ↔ peur). Facteurs qui maintiennent le déséquilibre identifiés dans le récit.",
-    "ressources_leviers": "string. 1 à 2 phrases. Appuis observables : capacités réflexives, soutien relationnel, stabilité externe, désir de changement, ambivalence constructive. Formulé comme observations, jamais comme prescriptions."
+    "structure": "string. 3 à 4 tags courts séparés par des virgules. Ce qu on observe du mode de fonctionnement psychique et relationnel. Format tags uniquement : ex. 'Rumination auto-critique, Sensibilité au rejet, Contrôle de l image, Hyperexigence envers soi'. INTERDIT : phrases longues, jargon nosographique (névrotique, borderline), Moi/Surmoi/Ça.",
+    "evenements": "string. 3 à 4 tags courts séparés par des virgules. Éléments d histoire structurants identifiés dans le récit. Format tags uniquement : ex. 'Harcèlement scolaire, Rupture à 25 ans, Père exigeant, Charge professionnelle croissante'. Si non précisés dans le récit : 'Événements à préciser en consultation'.",
+    "conflit_central": "string. UNE SEULE phrase courte formulée comme polarité. Format obligatoire : 'Besoin de X ↔ peur de Y'. Ex : 'Besoin de reconnaissance ↔ peur d être découvert insuffisant'. MAX 10 mots.",
+    "ressources": "string. 3 à 4 tags courts séparés par des virgules. Appuis observés dans le récit. Format tags uniquement : ex. 'Capacité réflexive, Investissement familial, Ambivalence constructive, Stabilité professionnelle'."
   },
   "analyse_linguistique": {
     "synthese": "string. EXACTEMENT 3 phrases courtes en français clinique STANDARD ET ACCESSIBLE (pas de jargon LIWC). MAX 70 mots au total. Structure OBLIGATOIRE : (1) auto-centrage et tonalité émotionnelle dominante ; (2) temporalité et rapport au passé/présent/futur ; (3) style du discours intérieur — monologique (boucle fermée) ou dialogique (capacité à se nuancer), évaluatif (jugements sur soi) ou explicatif (recherche de sens). Si des thèmes ont été approchés allusivement puis mis à distance, le signaler : ce qui n est pas dit a autant de valeur clinique. INTERDIT : jargon LIWC ('pronoms 1ère pers. élevés', 'valence négative', etc.)."
@@ -563,20 +563,28 @@ REGLES SUR synthese_clinique (CHAMP CENTRAL — V3 — RÈGLE STRICTE)
 - INTERDIT : "configuration syndromique majeure", "tableau dépressif sévère", "présentation syndromique X". Préférer "dimension X observée", "tableau évocateur de Y".
 - AVANT D'ÉCRIRE : compte tes phrases. Si tu en as plus de 5, RECOMMENCE en plus court.
 
-REGLES SUR profil_clinique (NOUVEAU CHAMP — V3.5)
-Ce champ est OBLIGATOIRE. Il est positionné après les 6 axes dans le JSON, avant analyse_linguistique.
-4 rubriques dans cet ordre, formulées en vocabulaire clinique descriptif :
+REGLES SUR profil_clinique (CHAMP CRITIQUE — V3.5)
+Ce champ est OBLIGATOIRE et PRIORITAIRE. Le front l affiche comme 4 cards visuelles. Si les champs sont mal nommés ou en texte long, le front affiche des valeurs statiques génériques — le bilan perd toute valeur.
 
-1. symptomes_histoire : ce que la personne amène aujourd hui — symptômes, plainte principale, depuis quand, événement déclencheur ou installation progressive. Partir du présent, pas de l histoire ancienne.
-2. structure_fonctionnement : comment la personne fonctionne habituellement. Couvrir : (a) style d attachement observable SANS nommer la catégorie diagnostique (formuler ce qu on observe : forte vigilance au rejet, peu de recours aux autres, etc.) ; (b) 3 à 5 défenses dominantes en termes descriptifs cliniques (rationalisation, retrait, surinvestissement occupationnel, contrôle, déni partiel, masquage social...) ; (c) croyance centrale si identifiable en une phrase synthétique.
-3. conflits_desequilibres : tension centrale formulée comme polarité (besoin ↔ peur). Facteurs d entretien observés.
-4. ressources_leviers : appuis observables pour un travail. Formulé comme observations factuelles, jamais comme prescriptions.
+4 champs EXACTEMENT, noms EXACTS à respecter :
 
-INTERDITS pour profil_clinique :
-- Jargon psychanalytique strict (Moi, Surmoi, Ça, fixations orale/anale/phallique, stades)
-- Catégories nosographiques (structure névrotique, borderline, psychotique)
-- Formulations prescriptives (à explorer, à travailler, à mobiliser)
-- Chiffres ou scores inventés
+1. "structure" : 3 à 4 tags courts séparés par des virgules. Ce qu on observe du mode de fonctionnement psychique et relationnel depuis le récit. Chaque tag = 2 à 5 mots maximum. Exemples valides : "Rumination auto-critique, Sensibilité au rejet, Contrôle de l image, Hyperexigence envers soi". JAMAIS de phrase longue. JAMAIS de jargon nosographique.
+
+2. "evenements" : 3 à 4 tags courts séparés par des virgules. Éléments d histoire structurants identifiés dans le récit. Chaque tag = 2 à 5 mots. Exemples : "Harcèlement scolaire, Rupture à 25 ans, Père exigeant". Si non précisés dans le récit, écrire : "Événements à préciser en consultation".
+
+3. "conflit_central" : UNE SEULE phrase, format OBLIGATOIRE : "Besoin de X ↔ peur de Y". MAX 10 mots. Exemples valides : "Besoin de reconnaissance ↔ peur d être insuffisant", "Besoin de sécurité ↔ peur du rejet". JAMAIS de phrase longue.
+
+4. "ressources" : 3 à 4 tags courts séparés par des virgules. Appuis observés dans le récit. Chaque tag = 2 à 5 mots. Exemples : "Capacité réflexive, Investissement familial, Ambivalence constructive".
+
+FORMAT OBLIGATOIRE — tags, pas de texte :
+BIEN : "Rumination auto-critique, Sensibilité au rejet, Masquage social"
+INTERDIT : "La personne présente une rumination marquée sur ses erreurs passées et une sensibilité importante au rejet..."
+
+INTERDITS :
+- Jargon psychanalytique strict (Moi, Surmoi, Ça, fixations, stades)
+- Catégories nosographiques (névrotique, borderline, psychotique)
+- Phrases longues dans les champs structure/evenements/ressources
+- Tout autre nom de champ que structure, evenements, conflit_central, ressources
 
 REGLES SUR analyse_linguistique (FORMAT 3 PHRASES PROSE — V3.5)
 - Section secondaire — affichée en encart compact (pas un bloc principal du bilan).
@@ -717,7 +725,7 @@ Avant de retourner le JSON, RELIS chaque champ et vérifie ces plafonds :
 - synthese_clinique : 3 à 5 phrases courtes (max 25 mots/phrase)
 - axes[].manifestations : 1 phrase, MAX 30 mots
 - axes[].systemes : 1 phrase, MAX 30 mots
-- profil_clinique : 4 rubriques présentes (symptomes_histoire, structure_fonctionnement, conflits_desequilibres, ressources_leviers). Aucun jargon psychanalytique strict, aucune catégorie nosographique.
+- profil_clinique : 4 champs EXACTS présents (structure, evenements, conflit_central, ressources). Format tags courts pour structure/evenements/ressources. Format 'Besoin de X ↔ peur de Y' pour conflit_central. JAMAIS de texte long dans ces champs.
 - analyse_linguistique.synthese : EXACTEMENT 3 phrases, MAX 70 mots au total, en français clinique standard accessible (pas de jargon LIWC). Phrase 3 couvre le style discursif (monologique/dialogique, évaluatif/explicatif, thèmes évités).
 - mecanismes_transdiagnostiques : MAX 4 entrées
 - mecanismes_transdiagnostiques[].boucle_courte : MAX 60 caractères
