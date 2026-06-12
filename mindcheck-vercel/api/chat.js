@@ -961,7 +961,7 @@ async function callHaikuJson(systemPrompt, userMessages) {
     },
     body: JSON.stringify({
       model: 'claude-haiku-4-5-20251001',
-      max_tokens: 8192, // Augmente pour bilans BtoB qui sont denses (anciennement 4096, parfois tronques)
+      max_tokens: 16000, // Augmente pour bilans BtoB enrichis V3.5 (profil_clinique + analyse_linguistique — anciennement 8192, tronqué à 26997 chars)
       system: systemPrompt,
       messages: userMessages
     })
