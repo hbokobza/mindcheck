@@ -249,6 +249,7 @@ Le JSON DOIT contenir EXACTEMENT ces champs, dans cet ordre :
     "intro": "string. 2 a 3 phrases narratives. Decrit ce que la personne porte, les ressources et appuis qui tiennent. Ton chaleureux, en ecrivant 'vous portez...', 'vous avez...'. Sert d introduction liante avant la liste de points concrets. NE PAS REPETER ces points dans l intro : l intro raconte, les points enumerent.",
     "points": ["string courte et concrete 1", "string courte et concrete 2", "..."]
   },
+  "levier": "string. OBLIGATOIRE. 2 a 3 phrases. Repond a la question : par ou pourrait commencer un changement reel pour cette personne ? Ce bloc ne liste pas les ressources (c est le role de forces) — il identifie le levier de transformation principal. Formulation type : 'Ce qui ressort, c est moins un manque de ressources qu une difficulte a y acceder vraiment. Vous comprenez beaucoup de choses sur vous-meme — transformer cette lucidite en experience vecue, en mouvement concret, apparait comme le levier principal.' OU : 'Le levier n est pas dans un effort supplementaire — vous en faites deja beaucoup. C est dans la qualite de la relation a vous-meme que quelque chose pourrait s ouvrir.' Ce paragraphe doit etre ancre dans le recit reel, pas generique. TON : direct, chaleureux, jamais prescriptif.",
   "vigilance": {
     "intro": "string. 2 a 3 phrases narratives. Decrit ce qui pese, ce qui demande de l energie pour etre tenu, ce qui fatigue. Ton sobre, sans dramatiser. Sert d introduction liante avant la liste de points concrets. NE PAS REPETER ces points dans l intro : l intro raconte, les points enumerent.",
     "points": ["string courte et concrete 1", "string courte et concrete 2", "..."]
@@ -530,7 +531,7 @@ LE JSON DOIT CONTENIR EXACTEMENT CES CHAMPS, DANS CET ORDRE :
   "profil_clinique": {
     "structure": "string. 3 à 4 tags courts séparés par des virgules. Ce qu on observe du mode de fonctionnement psychique et relationnel. Format tags uniquement : ex. 'Rumination auto-critique, Sensibilité au rejet, Contrôle de l image, Hyperexigence envers soi'. INTERDIT : phrases longues, jargon nosographique (névrotique, borderline), Moi/Surmoi/Ça.",
     "evenements": "string. 3 à 4 tags courts séparés par des virgules. Éléments d histoire structurants identifiés dans le récit. Format tags uniquement : ex. 'Harcèlement scolaire, Rupture à 25 ans, Père exigeant, Charge professionnelle croissante'. Si non précisés dans le récit : 'Événements à préciser en consultation'.",
-    "conflit_central": "string. UNE SEULE phrase courte formulée comme polarité. Format obligatoire : 'Besoin de X ↔ peur de Y'. Ex : 'Besoin de reconnaissance ↔ peur d être découvert insuffisant'. MAX 10 mots.",
+    "conflit_central": "string. UNE SEULE phrase courte formulée comme polarité. Format OBLIGATOIRE : 'Besoin de X ↔ peur de Y'. MAX 10 mots. ANCRÉ DANS LE RÉCIT — nommer la tension organisatrice réelle, pas une formule générique. Ex : 'Besoin de reconnaissance ↔ peur d être découvert insuffisant', 'Authenticité ↔ adaptation aux attentes', 'Désir personnel ↔ besoin d être accepté'.",
     "ressources": "string. 3 à 4 tags courts séparés par des virgules. Appuis observés dans le récit. Format tags uniquement : ex. 'Capacité réflexive, Investissement familial, Ambivalence constructive, Stabilité professionnelle'."
   },
   "analyse_linguistique": {
@@ -581,7 +582,7 @@ Ce champ est OBLIGATOIRE et PRIORITAIRE. Le front l affiche comme 4 cards visuel
 
 2. "evenements" : 3 à 4 tags courts séparés par des virgules. Éléments d histoire structurants identifiés dans le récit. Chaque tag = 2 à 5 mots. Exemples : "Harcèlement scolaire, Rupture à 25 ans, Père exigeant". Si non précisés dans le récit, écrire : "Événements à préciser en consultation".
 
-3. "conflit_central" : UNE SEULE phrase, format OBLIGATOIRE : "Besoin de X ↔ peur de Y". MAX 10 mots. Exemples valides : "Besoin de reconnaissance ↔ peur d être insuffisant", "Besoin de sécurité ↔ peur du rejet". JAMAIS de phrase longue.
+3. "conflit_central" : UNE SEULE phrase, format OBLIGATOIRE : "Besoin de X ↔ peur de Y". MAX 10 mots. Le conflit doit être ANCRÉ DANS LE RÉCIT RÉEL — il doit nommer la tension organisatrice centrale que la personne a effectivement exprimée, pas une formule générique. INTERDIT : recycler "Besoin de sécurité ↔ peur du rejet" si le récit ne porte pas cette tension comme dominante. Exemples valides selon les récits : "Besoin de reconnaissance ↔ peur d être découvert insuffisant", "Désir personnel ↔ besoin d être accepté", "Authenticité ↔ adaptation aux attentes", "Besoin de proximité ↔ peur de la dépendance", "Besoin de valeur ↔ peur du jugement". Choisir la formulation qui capture le plus précisément la tension centrale du récit. JAMAIS de phrase longue.
 
 4. "ressources" : 3 à 4 tags courts séparés par des virgules. Appuis observés dans le récit. Chaque tag = 2 à 5 mots. Exemples : "Capacité réflexive, Investissement familial, Ambivalence constructive".
 
