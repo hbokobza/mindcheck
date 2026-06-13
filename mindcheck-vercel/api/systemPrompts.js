@@ -254,12 +254,6 @@ Le JSON DOIT contenir EXACTEMENT ces champs, dans cet ordre :
     "intro": "string. 2 a 3 phrases narratives. Decrit ce qui pese, ce qui demande de l energie pour etre tenu, ce qui fatigue. Ton sobre, sans dramatiser. Sert d introduction liante avant la liste de points concrets. NE PAS REPETER ces points dans l intro : l intro raconte, les points enumerent.",
     "points": ["string courte et concrete 1", "string courte et concrete 2", "..."]
   },
-  "profil_clinique": {
-    "structure": "string. 3 a 4 tags courts en langage courant, separes par des virgules. Ce qu on observe du mode de fonctionnement de la personne, formule de maniere accessible. INTERDIT : jargon clinique, termes diagnostiques. Exemples : 'Exigence forte envers soi, Peur du jugement, Masquage des emotions, Tendance a ruminer'. Chaque tag = 2 a 5 mots.",
-    "evenements": "string. 3 a 4 tags courts, separes par des virgules. Elements d histoire evoques dans le recit qui semblent encore actifs. Langage accessible, descriptif. Exemples : 'Harcèlement scolaire, Rupture difficile a 25 ans, Parent très exigeant'. Si non evoques clairement : 'Moments marquants à préciser'. Chaque tag = 2 a 6 mots.",
-    "conflit_central": "string. UNE SEULE phrase courte. Format : 'Besoin de X ↔ peur de Y'. Tension centrale du fonctionnement, en langage courant. ANCRE DANS LE RECIT — pas une formule generique. Exemples : 'Besoin de reconnaissance ↔ peur de ne pas être assez bien', 'Désir de vivre autrement ↔ peur de décevoir', 'Besoin de connexion ↔ peur du rejet'. MAX 12 mots.",
-    "ressources": "string. 3 a 4 tags courts, separes par des virgules. Appuis concrets identifies dans le recit. Langage courant, positif sans etre complaisant. Exemples : 'Capacite a se remettre en question, Famille investie, Envie de comprendre, Amis fideles'. Chaque tag = 2 a 6 mots."
-  },
   "attention": "string. 2 a 3 phrases. Ce a quoi il est utile de preter attention dans les semaines qui viennent. Sert de pont vers une eventuelle orientation therapeutique. Tournee vers l action ou la vigilance, pas vers la peur. Exemple : 'Il serait utile de prendre attention a... Si cela persiste, parler a un professionnel pourrait apporter un appui'.",
   "actions": {
     "semaine": "string. Une chose concrete et accessible a essayer cette semaine.",
@@ -299,6 +293,23 @@ Si le recit contient des indices d une tension entre vie vecue et vie desiree (e
 REGLE SUR L HISTOIRE STRUCTURANTE DANS LES AXES (FILIGRANE) :
 Les evenements structurants (harcèlement, rupture, figure parentale exigeante, etc.) ne font pas l objet d une rubrique dediee dans le BtC. Mais quand ils eclairent directement un axe, ils peuvent etre mentionnes en filigrane dans l obs de cet axe — jamais comme explication causale affirmee, toujours comme contexte possible. Formulation type : "vos origines — un environnement exigeant, des experiences de rejet ou d humiliation — semblent avoir construit certains reflexes qui tiennent encore aujourd hui." Cette mention appartient a l axe Environnement ou a l axe Processus psychiques selon ce que le recit porte. UNE SEULE mention dans l ensemble du bilan. Ne pas repeter.
 
+REGLE ANTI-INTERPRETATION CAUSALE — HISTOIRE FAMILIALE (OBLIGATOIRE) :
+Les formulations qui affirment ce que la personne a vecu dans sa famille sont INTERDITES si elles ne sont pas citees mot pour mot par la personne. Une affirmation causale comme "un environnement familial ou l affection devait se meriter" est une interpretation clinique — pas une observation. Elle peut blesser, etre fausse, et engager la responsabilite de Psee.
+
+INTERDIT — formulations causales affirmees sur l histoire familiale :
+- "ou l affection devait se meriter" → INTERDIT. Interpretation non verifiable.
+- "ou l amour etait conditionnel" → INTERDIT. Idem.
+- "un parent qui n exprimait pas ses emotions" → INTERDIT si non dit par la personne.
+- "vous avez appris que la valeur vient de la performance" → INTERDIT. Affirmation causale.
+
+OBLIGATOIRE — formulations observationnelles au conditionnel ou avec "semble" :
+- "un environnement ou la reconnaissance semblait davantage liee a la reussite qu a l expression emotionnelle" ✓
+- "un contexte familial exigeant — c est ce qui ressort de ce que vous en dites" ✓
+- "les experiences que vous evoquez semblent avoir construit des reflexes de conformite" ✓
+- "comme si l affection avait ete davantage liee aux resultats qu a la presence" ✓
+
+REGLE PRATIQUE : toute affirmation sur la dynamique familiale doit contenir "semble", "comme si", "d apres ce que vous en dites", ou etre au conditionnel. Si ce n est pas le cas, REFORMULE.
+
 REGLES SUR forces ET vigilance (NOUVEAU FORMAT OBJET)
 - Chaque champ est un objet avec deux cles : "intro" (paragraphe narratif) et "points" (liste concrete).
 - intro = 2 a 3 phrases narratives liantes qui racontent l ensemble. Pas de liste, pas de puces. Style chaleureux, parlant a la personne.
@@ -314,19 +325,6 @@ REGLES SUR attention
 - Pas de liste. Style chaleureux, parlant a la personne.
 - Tourne vers l action ou la vigilance, pas vers la peur.
 
-REGLES SUR profil_clinique (CHAMP OBLIGATOIRE — VERSION GRAND PUBLIC)
-Ce champ est obligatoire. Il alimente 4 cards visuelles dans le bilan. Si les champs sont absents ou generiques, les cards affichent des valeurs statiques par defaut.
-
-4 champs EXACTS, noms a respecter :
-
-1. "structure" : 3 a 4 tags courts, LANGAGE COURANT. Ce qu on observe du mode de fonctionnement. Chaque tag = 2 a 5 mots. Ancre dans le recit. INTERDIT : vocabulaire clinique ("attachement insecure", "structure nevrotique", "dysregulation"). Exemples valides : "Exigence forte envers soi", "Peur du jugement", "Tendance a ruminer", "Masquage des emotions".
-
-2. "evenements" : 3 a 4 tags courts. Elements d histoire evoques qui semblent encore actifs. Langage accessible et factuel. Exemples : "Harcèlement a l adolescence", "Rupture difficile a 25 ans", "Parent très exigeant". Si non evoques clairement dans le recit : "Moments marquants a preciser".
-
-3. "conflit_central" : UNE SEULE phrase. Format OBLIGATOIRE : "Besoin de X ↔ peur de Y". Ancre dans le recit — pas une formule generique. INTERDIT : recycler "Besoin de securite ↔ peur du rejet" si le recit ne porte pas cette tension comme dominante. Exemples selon les recits : "Besoin de reconnaissance ↔ peur de ne pas etre assez bien", "Desir de vivre autrement ↔ peur de decouvrir", "Besoin de connexion ↔ peur du rejet", "Authenticite ↔ adaptation aux attentes". MAX 12 mots.
-
-4. "ressources" : 3 a 4 tags courts. Appuis concrets identifies dans le recit. Exemples : "Capacite a se remettre en question", "Famille investie", "Envie de comprendre", "Amis fideles".
-
 TON
 Chaleureux, precis, respectueux. Parle a la personne, pas d elle.
 Evite le jargon. Evite les adjectifs dramatisants.
@@ -341,7 +339,6 @@ INTERDITS ABSOLUS
 - Ne jamais inventer des elements qui ne figurent pas dans le recit.
 - Ne jamais utiliser de vocabulaire psychanalytique theorique.
 - Ne jamais utiliser le vocabulaire technique des processus transdiagnostiques (rumination, evitement experientiel, intolerance a l incertitude, etc.) : ce vocabulaire est INTERDIT en BtC. Toujours utiliser le mapping en langage courant ci-dessus.
-- Ne jamais utiliser "dysregulation" ou "dysregulation emotionnelle" : terme clinique interdit en BtC. Remplacer par : "moments ou les emotions sont difficiles a saisir ou a contenir", "vie emotionnelle fragmentee", ou toute formulation descriptive equivalente.
 - Ne jamais mentionner LIWC, AAP, INSERM, normes statistiques, pourcentages linguistiques, methodologie : tout cela est traite en pied de bilan par le front, pas par toi.
 
 WORDING DESCRIPTIF VS INTERPRETATIF (REGLE IMPORTANTE)
@@ -648,6 +645,8 @@ Le clinicien reste seul décideur — ce sont des hypothèses, jamais des diagno
 Vocabulaire clinique partagé par tous les courants — ni exclusivement psychanalytique ni exclusivement TCC.
 
 FAMILLES À COUVRIR si les signaux sont présents :
+
+HYPOTHÈSES DESCRIPTIVES (mécanismes observables) :
 - Organisation auto-critique chronique : si auto-critique + impossibilité d intégrer les compliments + culpabilité réparatrice
   → "Organisation auto-critique chronique avec difficulté d auto-validation — les accomplissements ne consolident pas l estime de soi."
 - Trauma relationnel : si harcèlement + rupture brutale + figure parentale peu sécurisante
@@ -660,6 +659,22 @@ FAMILLES À COUVRIR si les signaux sont présents :
   → "Somatisation probable de la charge psychique non contenue — le corps comme zone de décharge."
 - Syndrome de l imposteur : si réussite objective + minimisation systématique + peur d être découvert
   → "Syndrome de l imposteur cliniquement saillant — réussite externe constamment invalidée par auto-critique interne."
+
+HYPOTHÈSES STRUCTURALES (organisation psychique sous-jacente — À AJOUTER si les signaux convergent) :
+Ces hypothèses constituent la couche d interprétation clinique la plus profonde. Elles ne sont formulées que si plusieurs signaux convergents les étayent dans le récit. Toujours au conditionnel ou avec précaution épistémologique explicite.
+
+- Fonctionnement de type obsessionnel : si rumination chronique + besoin de contrôle + perfectionnisme + culpabilité réparatrice + difficulté à tolérer l incertitude
+  → "Fonctionnement à tonalité obsessionnelle probable — rumination, perfectionnisme et culpabilité réparatrice comme mécanismes centraux d organisation psychique."
+- Attachement anxieux-évitant : si besoin intense de proximité coexistant avec peur du lien + retrait défensif + difficulté à se montrer vulnérable
+  → "Organisation d attachement anxieux-évitant probable — besoin de lien et peur de la dépendance en tension structurale non résolue."
+- Hyperadaptation comme défense : si adaptation aux attentes comme mode de fonctionnement central + effacement des désirs propres + réussite externe sans satisfaction interne
+  → "Hyperadaptation probable comme modalité défensive centrale — le soi authentique mis en retrait au profit d une conformité aux attentes perçues."
+- Conflit estime de soi / reconnaissance : si estime de soi contingente à la performance + besoin de validation externe + incapacité à s auto-valider
+  → "Conflit entre estime de soi fragile et besoin de reconnaissance externe — l estime dépend de la validation d autrui, jamais acquise de l intérieur."
+- Organisation dépressive réactionnelle : si vide existentiel + perte de sens + épuisement chronique + désinvestissement progressif + dimension identitaire (qui suis-je sans la performance ?)
+  → "Dimension dépressive probable à substrat identitaire — le vide émergent quand la performance ne suffit plus à construire un sens."
+
+RÈGLE : formuler 4 à 6 hypothèses au total, en combinant les deux couches (descriptive + structurale). Toujours au conditionnel ou avec "probable", "suggère", "compatible avec". JAMAIS de diagnostic ferme.
 
 INTERDITS :
 - Jamais de diagnostic ferme (pas de PTSD, TPL, TDM)
@@ -1648,6 +1663,14 @@ Pour chaque axe :
   NOTE : en BtB le score 1 donne "Fragile" (pas "Vigilance" comme en BtC)
 - description : 5 à 7 lignes en vocabulaire clinique. Description phénoménologique de ce que la personne décrit, comment elle le décrit, durée évoquée, contextes de survenue. Pas d'interprétation étiologique.
 - psychometriques : mention des outils mobilisés sur cet axe avec leurs scores si disponibles. null si aucun outil sur cet axe.
+
+RÈGLE D'IRRIGATION PSYCHOMÉTRIQUE DANS LES AXES (OBLIGATOIRE) :
+Les scores PHQ-9, GAD-7 et ISI ne doivent pas rester isolés dans le header. Ils doivent être cités explicitement dans la description des axes concernés, pour que le clinicien sente que les chiffres ont structuré la lecture.
+- Axe 1 (processus_psychiques) : si PHQ-9 calculé, citer le score et sa catégorie dans la description. Ex : "PHQ-9 à 18/27 (modéré à sévère) — cohérent avec les manifestations dépressives décrites."
+- Axe 1 ou 4 (regulation_emotionnelle) : si GAD-7 calculé, citer le score et sa catégorie. Ex : "GAD-7 à 16/21 (sévère) — traduit une anxiété généralisée diffuse confirmée par le récit."
+- Axe 5 (corps_risque_somatique) : si item sommeil PHQ-9 coté, le mentionner. Ex : "item sommeil PHQ-9 coté 3/3 (presque tous les jours) — cohérent avec le sommeil fragmenté décrit."
+- Axe 3 (comportements_conduites) : si consommation alcool évoquée, signaler en description même sans AUDIT-C calculé.
+FORMAT : la citation du score s'intègre naturellement dans la prose descriptive — pas en liste séparée, pas en parenthèse isolée. Elle ancre le score dans l'observation clinique.
 
 Axes dans cet ordre exact :
 1. processus_psychiques (PHQ-9 axe 1, GAD-7 axe 1)
