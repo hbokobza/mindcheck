@@ -1834,6 +1834,12 @@ function showBilan(data, opts){
         </div>
       </div>
 
+      <!-- LEVIER PRINCIPAL -->
+      ${data.levier ? `<div style="border-radius:24px;padding:24px 28px;border:1px solid #d4cfc8;background:#F0EBE3;margin-top:0">
+        <div style="font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:#6B5E4E;margin-bottom:14px;font-weight:700">Votre principal levier</div>
+        <div style="font-size:14px;color:#2e2a24;line-height:1.75;font-family:Georgia,serif;font-style:italic">${data.levier}</div>
+      </div>` : ''}
+
       <!-- INDICATEURS PSYCHOMETRIQUES -->
       ${indicateursHTML}
 
