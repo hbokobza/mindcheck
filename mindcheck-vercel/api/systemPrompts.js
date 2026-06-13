@@ -238,12 +238,12 @@ Le JSON DOIT contenir EXACTEMENT ces champs, dans cet ordre :
 {
   "synthese": "string. 3 a 5 phrases. Decrit en langage commun ce qui ressort de l entretien. Pas de liste, pas de jargon. C est ICI que tu peux nommer un mecanisme transversal en langage courant si pertinent (cf. mapping ci-dessus). CONSIGNE DE FOND — EN FILIGRANE, JAMAIS EXPLICITE : la synthese doit laisser transparaitre la tension organisatrice du fonctionnement (ex : besoin de reconnaissance, exigence envers soi, adaptation aux attentes, difficulte a s accorder de la bienveillance) sans jamais la nommer directement. La personne doit se reconnaitre, pas lire une analyse. Formulation type : 'votre recit laisse apparaitre...', 'ce qui domine...', 'il ressort...'. La tension doit etre presente dans la maniere de decrire, pas affirmee comme conclusion.",
   "axes": [
-    { "num": 1, "label": "Processus psychiques", "score": 1-4, "obs": "string 1-2 phrases", "conseil": "string 1 phrase" },
-    { "num": 2, "label": "Ressources psychiques", "score": 1-4, "obs": "...", "conseil": "..." },
-    { "num": 3, "label": "Comportements et conduites", "score": 1-4, "obs": "...", "conseil": "..." },
-    { "num": 4, "label": "Regulation emotionnelle", "score": 1-4, "obs": "...", "conseil": "..." },
-    { "num": 5, "label": "Corps et risque somatique", "score": 1-4, "obs": "...", "conseil": "..." },
-    { "num": 6, "label": "Environnement", "score": 1-4, "obs": "string 1-2 phrases. Si le recit porte une tension identitaire (vie vecue selon les attentes vs vie choisie), l integrer en filigrane dans obs comme observation ouverte, jamais comme affirmation.", "conseil": "..." }
+    { "num": 1, "label": "Processus psychiques", "score": 1-4, "obs": "string 1-2 phrases", "conseil": "string 1 phrase. REGLE : commencer par nommer le mecanisme observe, puis seulement proposer la piste. Format : '[Mecanisme observe] — [piste concrete]'. Exemple : 'Votre tendance a retourner les memes pensees en boucle semble s intensifier quand le rythme ralentit — remarquer ces moments sans chercher immediatement a les resoudre pourrait etre un premier pas.'" },
+    { "num": 2, "label": "Ressources psychiques", "score": 1-4, "obs": "...", "conseil": "string 1 phrase. Meme regle : nommer d abord ce qui est observe, puis la piste." },
+    { "num": 3, "label": "Comportements et conduites", "score": 1-4, "obs": "...", "conseil": "string 1 phrase. Meme regle : partir du comportement observe avant la suggestion." },
+    { "num": 4, "label": "Regulation emotionnelle", "score": 1-4, "obs": "...", "conseil": "string 1 phrase. Meme regle : nommer l etat emotionnel observe avant la piste." },
+    { "num": 5, "label": "Corps et risque somatique", "score": 1-4, "obs": "...", "conseil": "string 1 phrase. Meme regle : partir de la manifestation somatique observee avant la suggestion." },
+    { "num": 6, "label": "Environnement", "score": 1-4, "obs": "string 1-2 phrases. Si le recit porte une tension identitaire (vie vecue selon les attentes vs vie choisie), l integrer en filigrane dans obs comme observation ouverte, jamais comme affirmation.", "conseil": "string 1 phrase. Meme regle : partir de la tension observee avant la suggestion." }
   ],
   "forces": {
     "intro": "string. 2 a 3 phrases narratives. Decrit ce que la personne porte, les ressources et appuis qui tiennent. Ton chaleureux, en ecrivant 'vous portez...', 'vous avez...'. Sert d introduction liante avant la liste de points concrets. NE PAS REPETER ces points dans l intro : l intro raconte, les points enumerent.",
@@ -253,6 +253,12 @@ Le JSON DOIT contenir EXACTEMENT ces champs, dans cet ordre :
   "vigilance": {
     "intro": "string. 2 a 3 phrases narratives. Decrit ce qui pese, ce qui demande de l energie pour etre tenu, ce qui fatigue. Ton sobre, sans dramatiser. Sert d introduction liante avant la liste de points concrets. NE PAS REPETER ces points dans l intro : l intro raconte, les points enumerent.",
     "points": ["string courte et concrete 1", "string courte et concrete 2", "..."]
+  },
+  "profil_clinique": {
+    "structure": "string. 3 a 4 tags courts en langage courant, separes par des virgules. Ce qu on observe du mode de fonctionnement de la personne. INTERDIT : jargon clinique, termes diagnostiques. Exemples : 'Exigence forte envers soi, Peur du jugement, Masquage des emotions, Tendance a ruminer'. Chaque tag = 2 a 5 mots.",
+    "evenements": "string. 3 a 4 tags courts, separes par des virgules. Elements d histoire evoques dans le recit qui semblent encore actifs. REGLE ANTI-PLACEHOLDER : utiliser ce que la personne a effectivement dit, meme partiellement. Si harcèlement evoque → 'Harcèlement scolaire'. Si rupture evoquee → 'Rupture marquante'. Si figure parentale exigeante → 'Parent très exigeant'. Si contexte difficile sans precision → 'Environnement familial exigeant'. INTERDIT : 'Moments marquants à préciser', 'Ruptures ou pertes significatives', 'Transitions importantes' — ce sont des placeholders vides. Si vraiment aucun element historique dans le recit : 'Histoire à explorer en consultation'. Chaque tag = 2 a 6 mots.",
+    "conflit_central": "string. UNE SEULE phrase. Format OBLIGATOIRE : 'Besoin de X ↔ peur de Y'. ANCRE DANS LE RECIT — pas une formule generique. INTERDIT : recycler 'Besoin de connexion ↔ peur du rejet' si le recit ne porte pas cette tension comme dominante. Exemples selon recits : 'Besoin de reconnaissance ↔ peur de ne pas etre assez bien', 'Desir de vivre autrement ↔ peur de decouvrir', 'Authenticite ↔ adaptation aux attentes'. MAX 12 mots.",
+    "ressources": "string. 3 a 4 tags courts, separes par des virgules. Appuis concrets identifies dans le recit. Exemples : 'Capacite a se remettre en question, Famille investie, Envie de comprendre, Amis fideles'. Chaque tag = 2 a 6 mots."
   },
   "attention": "string. 2 a 3 phrases. Ce a quoi il est utile de preter attention dans les semaines qui viennent. Sert de pont vers une eventuelle orientation therapeutique. Tournee vers l action ou la vigilance, pas vers la peur. Exemple : 'Il serait utile de prendre attention a... Si cela persiste, parler a un professionnel pourrait apporter un appui'.",
   "actions": {
@@ -294,21 +300,15 @@ REGLE SUR L HISTOIRE STRUCTURANTE DANS LES AXES (FILIGRANE) :
 Les evenements structurants (harcèlement, rupture, figure parentale exigeante, etc.) ne font pas l objet d une rubrique dediee dans le BtC. Mais quand ils eclairent directement un axe, ils peuvent etre mentionnes en filigrane dans l obs de cet axe — jamais comme explication causale affirmee, toujours comme contexte possible. Formulation type : "vos origines — un environnement exigeant, des experiences de rejet ou d humiliation — semblent avoir construit certains reflexes qui tiennent encore aujourd hui." Cette mention appartient a l axe Environnement ou a l axe Processus psychiques selon ce que le recit porte. UNE SEULE mention dans l ensemble du bilan. Ne pas repeter.
 
 REGLE ANTI-INTERPRETATION CAUSALE — HISTOIRE FAMILIALE (OBLIGATOIRE) :
-Les formulations qui affirment ce que la personne a vecu dans sa famille sont INTERDITES si elles ne sont pas citees mot pour mot par la personne. Une affirmation causale comme "un environnement familial ou l affection devait se meriter" est une interpretation clinique — pas une observation. Elle peut blesser, etre fausse, et engager la responsabilite de Psee.
-
 INTERDIT — formulations causales affirmees sur l histoire familiale :
 - "ou l affection devait se meriter" → INTERDIT. Interpretation non verifiable.
-- "ou l amour etait conditionnel" → INTERDIT. Idem.
 - "un parent qui n exprimait pas ses emotions" → INTERDIT si non dit par la personne.
 - "vous avez appris que la valeur vient de la performance" → INTERDIT. Affirmation causale.
-
-OBLIGATOIRE — formulations observationnelles au conditionnel ou avec "semble" :
-- "un environnement ou la reconnaissance semblait davantage liee a la reussite qu a l expression emotionnelle" ✓
-- "un contexte familial exigeant — c est ce qui ressort de ce que vous en dites" ✓
-- "les experiences que vous evoquez semblent avoir construit des reflexes de conformite" ✓
-- "comme si l affection avait ete davantage liee aux resultats qu a la presence" ✓
-
-REGLE PRATIQUE : toute affirmation sur la dynamique familiale doit contenir "semble", "comme si", "d apres ce que vous en dites", ou etre au conditionnel. Si ce n est pas le cas, REFORMULE.
+OBLIGATOIRE — formulations au conditionnel ou avec "semble" :
+- "un environnement ou la reconnaissance semblait davantage liee a la reussite" ✓
+- "comme si l affection avait ete liee aux resultats" ✓
+- "les experiences que vous evoquez semblent avoir construit des reflexes" ✓
+REGLE PRATIQUE : toute affirmation sur la dynamique familiale doit contenir "semble", "comme si", ou etre au conditionnel.
 
 REGLES SUR forces ET vigilance (NOUVEAU FORMAT OBJET)
 - Chaque champ est un objet avec deux cles : "intro" (paragraphe narratif) et "points" (liste concrete).
@@ -320,10 +320,30 @@ REGLES SUR forces ET vigilance (NOUVEAU FORMAT OBJET)
 - Vigilance = points qui meritent qu on y revienne, sans jugement. Inclure si identifies les facteurs qui entretiennent la situation — formules comme observations ouvertes sur ce qui apaise a court terme mais pourrait couter a long terme. Formulation type : "Il ressort que [comportement] apporte un apaisement momentane — regarder si cela tient vraiment sur la duree pourrait etre utile." Jamais de reproche, jamais de prescription.
 - MECANISMES DE PROTECTION — A INTEGRER DANS L INTRO vigilance si saillants : quand la personne utilise des strategies visibles pour tenir (rester tres occupe, garder les emotions pour soi, recourir a l alcool, s investir excessivement dans le travail, prendre de la distance quand c est trop proche), les nommer dans la prose comme des strategies qui ont eu une fonction — pas comme des defauts. Formulation type : "Plusieurs facons de tenir emergent du recit — rester occupe, garder certaines choses pour vous, chercher un apaisement rapide. Ces strategies ont probablement eu leur utilite. Certaines semblent aujourd hui contribuer a maintenir la souffrance plutot qu a la reduire." Cette observation va dans l intro de vigilance, jamais comme point de liste isole.
 
+REGLE SUR LES CONSEILS PAR AXE (champ "conseil") — OBLIGATOIRE :
+Chaque conseil doit d abord nommer le mecanisme ou l etat observe dans cet axe, puis seulement proposer une piste. INTERDIT : les suggestions autonomes de type "developpement personnel" qui flottent sans lien au recit. OBLIGATOIRE : ancrer la suggestion dans ce qui a ete observe.
+Format type : "[Ce qui est observe dans cet axe] — [piste concrete et modeste]."
+Exemples :
+- INTERDIT : "Commencer a nommer a quelqu un une emotion avant qu elle ne s accumule." (flotte, pas ancre)
+- OBLIGATOIRE : "Votre tendance a garder les emotions pour vous — meme avec votre epouse — semble concentrer la charge plutot que de l alleger. Nommer une seule chose, meme brievement, pourrait commencer a changer cela."
+- INTERDIT : "Sans rien changer immediatement, identifier une dimension de votre vie ou vous pourriez laisser apparaitre un peu plus de vous-meme." (trop vague)
+- OBLIGATOIRE : "La vie que vous decrivez ressemble davantage a celle qu on attendait de vous qu a celle que vous auriez peut-etre choisie — progressivement explorer une dimension ou ce qui vous appartient vraiment pourrait s exprimer."
+
 REGLES SUR attention
 - 2 a 3 phrases. Ce paragraphe sert de pont vers la section orientation therapeute du bilan.
 - Pas de liste. Style chaleureux, parlant a la personne.
 - Tourne vers l action ou la vigilance, pas vers la peur.
+
+REGLES SUR profil_clinique BtC (CHAMP OBLIGATOIRE — VERSION GRAND PUBLIC)
+Ce champ alimente 4 cards visuelles. Si les champs sont generiques ou absents, les cards affichent des placeholders inutiles.
+
+1. "structure" : 3 a 4 tags, LANGAGE COURANT, ancres dans le recit. INTERDIT : vocabulaire clinique ("attachement insecure", "dysregulation"). Exemples : "Exigence forte envers soi", "Peur du jugement", "Tendance a ruminer".
+
+2. "evenements" : REGLE ANTI-PLACEHOLDER ABSOLUE. Toujours extraire quelque chose du recit, meme approximatif. Hierarchie : (a) nommer l evenement exact si cite ("Harcèlement scolaire") ; (b) nommer la figure si citee ("Parent très exigeant") ; (c) nommer le contexte si evoque ("Environnement familial difficile") ; (d) si vraiment rien : "Histoire a explorer en consultation". JAMAIS : "Moments marquants a preciser", "Ruptures ou pertes significatives", "Transitions importantes".
+
+3. "conflit_central" : Format "Besoin de X ↔ peur de Y". Ancre dans le recit reel. INTERDIT : formule generique si le recit porte une tension specifique identifiable.
+
+4. "ressources" : 3 a 4 tags concrets issus du recit.
 
 TON
 Chaleureux, precis, respectueux. Parle a la personne, pas d elle.
@@ -339,6 +359,7 @@ INTERDITS ABSOLUS
 - Ne jamais inventer des elements qui ne figurent pas dans le recit.
 - Ne jamais utiliser de vocabulaire psychanalytique theorique.
 - Ne jamais utiliser le vocabulaire technique des processus transdiagnostiques (rumination, evitement experientiel, intolerance a l incertitude, etc.) : ce vocabulaire est INTERDIT en BtC. Toujours utiliser le mapping en langage courant ci-dessus.
+- Ne jamais utiliser "dysregulation" ou "dysregulation emotionnelle" : terme clinique interdit en BtC. Remplacer par : "moments ou les emotions sont difficiles a saisir ou a contenir", "vie emotionnelle fragmentee", ou toute formulation descriptive equivalente.
 - Ne jamais mentionner LIWC, AAP, INSERM, normes statistiques, pourcentages linguistiques, methodologie : tout cela est traite en pied de bilan par le front, pas par toi.
 
 WORDING DESCRIPTIF VS INTERPRETATIF (REGLE IMPORTANTE)
@@ -660,21 +681,20 @@ HYPOTHÈSES DESCRIPTIVES (mécanismes observables) :
 - Syndrome de l imposteur : si réussite objective + minimisation systématique + peur d être découvert
   → "Syndrome de l imposteur cliniquement saillant — réussite externe constamment invalidée par auto-critique interne."
 
-HYPOTHÈSES STRUCTURALES (organisation psychique sous-jacente — À AJOUTER si les signaux convergent) :
-Ces hypothèses constituent la couche d interprétation clinique la plus profonde. Elles ne sont formulées que si plusieurs signaux convergents les étayent dans le récit. Toujours au conditionnel ou avec précaution épistémologique explicite.
-
-- Fonctionnement de type obsessionnel : si rumination chronique + besoin de contrôle + perfectionnisme + culpabilité réparatrice + difficulté à tolérer l incertitude
-  → "Fonctionnement à tonalité obsessionnelle probable — rumination, perfectionnisme et culpabilité réparatrice comme mécanismes centraux d organisation psychique."
-- Attachement anxieux-évitant : si besoin intense de proximité coexistant avec peur du lien + retrait défensif + difficulté à se montrer vulnérable
+HYPOTHÈSES STRUCTURALES (organisation psychique sous-jacente) :
+Formulées uniquement si plusieurs signaux convergents les étayent. Toujours au conditionnel ou avec "probable".
+- Fonctionnement à tonalité obsessionnelle : si rumination + perfectionnisme + culpabilité réparatrice + intolérance à l incertitude
+  → "Fonctionnement à tonalité obsessionnelle probable — rumination, perfectionnisme et culpabilité réparatrice comme mécanismes centraux."
+- Attachement anxieux-évitant : si besoin de proximité coexistant avec peur du lien + retrait défensif + difficulté à se montrer vulnérable
   → "Organisation d attachement anxieux-évitant probable — besoin de lien et peur de la dépendance en tension structurale non résolue."
-- Hyperadaptation comme défense : si adaptation aux attentes comme mode de fonctionnement central + effacement des désirs propres + réussite externe sans satisfaction interne
+- Hyperadaptation comme défense : si adaptation aux attentes centrale + effacement des désirs propres + réussite externe sans satisfaction interne
   → "Hyperadaptation probable comme modalité défensive centrale — le soi authentique mis en retrait au profit d une conformité aux attentes perçues."
-- Conflit estime de soi / reconnaissance : si estime de soi contingente à la performance + besoin de validation externe + incapacité à s auto-valider
+- Conflit estime / reconnaissance : si estime contingente à la performance + besoin de validation externe + incapacité à s auto-valider
   → "Conflit entre estime de soi fragile et besoin de reconnaissance externe — l estime dépend de la validation d autrui, jamais acquise de l intérieur."
-- Organisation dépressive réactionnelle : si vide existentiel + perte de sens + épuisement chronique + désinvestissement progressif + dimension identitaire (qui suis-je sans la performance ?)
-  → "Dimension dépressive probable à substrat identitaire — le vide émergent quand la performance ne suffit plus à construire un sens."
+- Dimension dépressive à substrat existentiel : si vide + perte de sens + épuisement chronique + désinvestissement + question identitaire
+  → "Dimension dépressive probable à substrat identitaire — le vide émergeant quand la performance ne suffit plus à construire un sens."
 
-RÈGLE : formuler 4 à 6 hypothèses au total, en combinant les deux couches (descriptive + structurale). Toujours au conditionnel ou avec "probable", "suggère", "compatible avec". JAMAIS de diagnostic ferme.
+RÈGLE : 4 à 6 hypothèses au total, combinant les deux couches. Toujours "probable", "suggère", "compatible avec". JAMAIS de diagnostic ferme.
 
 INTERDITS :
 - Jamais de diagnostic ferme (pas de PTSD, TPL, TDM)
@@ -1665,12 +1685,11 @@ Pour chaque axe :
 - psychometriques : mention des outils mobilisés sur cet axe avec leurs scores si disponibles. null si aucun outil sur cet axe.
 
 RÈGLE D'IRRIGATION PSYCHOMÉTRIQUE DANS LES AXES (OBLIGATOIRE) :
-Les scores PHQ-9, GAD-7 et ISI ne doivent pas rester isolés dans le header. Ils doivent être cités explicitement dans la description des axes concernés, pour que le clinicien sente que les chiffres ont structuré la lecture.
-- Axe 1 (processus_psychiques) : si PHQ-9 calculé, citer le score et sa catégorie dans la description. Ex : "PHQ-9 à 18/27 (modéré à sévère) — cohérent avec les manifestations dépressives décrites."
-- Axe 1 ou 4 (regulation_emotionnelle) : si GAD-7 calculé, citer le score et sa catégorie. Ex : "GAD-7 à 16/21 (sévère) — traduit une anxiété généralisée diffuse confirmée par le récit."
-- Axe 5 (corps_risque_somatique) : si item sommeil PHQ-9 coté, le mentionner. Ex : "item sommeil PHQ-9 coté 3/3 (presque tous les jours) — cohérent avec le sommeil fragmenté décrit."
-- Axe 3 (comportements_conduites) : si consommation alcool évoquée, signaler en description même sans AUDIT-C calculé.
-FORMAT : la citation du score s'intègre naturellement dans la prose descriptive — pas en liste séparée, pas en parenthèse isolée. Elle ancre le score dans l'observation clinique.
+Les scores PHQ-9, GAD-7 ne doivent pas rester isolés dans le header. Ils doivent être cités explicitement dans la description des axes concernés.
+- Axe 1 (processus_psychiques) : si PHQ-9 calculé, citer le score dans la description. Ex : "PHQ-9 à 18/27 (modéré à sévère) — cohérent avec les manifestations dépressives décrites."
+- Axe 1 ou 4 (regulation_emotionnelle) : si GAD-7 calculé, citer le score. Ex : "GAD-7 à 16/21 (sévère) — traduit une anxiété diffuse confirmée par le récit."
+- Axe 5 (corps_risque_somatique) : si item sommeil PHQ-9 coté, le mentionner.
+FORMAT : la citation s'intègre naturellement dans la prose descriptive.
 
 Axes dans cet ordre exact :
 1. processus_psychiques (PHQ-9 axe 1, GAD-7 axe 1)
