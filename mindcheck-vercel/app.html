@@ -2290,6 +2290,20 @@ function showBilanBTB(data){
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px">${mecanismeCards}</div>
     </section>` : '';
 
+  // === HYPOTHÈSES CLINIQUES (V3.5 — couche structurale) ===
+  const hypothesesArr = (data.hypotheses_cliniques || []).slice(0, 6);
+  const hypothesesHTML = hypothesesArr.length ? `
+    <section style="margin:18px 24px 0;background:#F5F0F8;border:1px solid #D8CAE8;border-radius:18px;padding:24px">
+      <div style="font-size:12px;letter-spacing:0.32em;color:#5B4A8B;font-weight:800;text-transform:uppercase;margin-bottom:16px">Hypothèses cliniques</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        ${hypothesesArr.map((h, i) => `
+          <div style="display:flex;align-items:flex-start;gap:12px;background:white;border:1px solid #D8CAE8;border-radius:12px;padding:13px 16px">
+            <span style="flex-shrink:0;width:22px;height:22px;border-radius:50%;background:#EDE8F5;color:#5B4A8B;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;margin-top:1px">${i + 1}</span>
+            <p style="margin:0;font-size:13px;color:#2A2228;line-height:1.6;font-style:italic">${escapeHTML(h)}</p>
+          </div>`).join('')}
+      </div>
+    </section>` : '';
+
   // === PISTES D'EXPLORATION (REPÈRES D'ORIENTATION POUR LE THÉRAPEUTE) ===
   const _pistesRaw = data.pistes_exploration || data.reperes_orientation || data.pistes_d_exploration;
   const _pistesArr = Array.isArray(_pistesRaw) ? _pistesRaw : (typeof _pistesRaw === 'string' && _pistesRaw ? [_pistesRaw] : []);
@@ -2471,6 +2485,7 @@ function showBilanBTB(data){
     ${matriceHTML}
     ${systemesHTML}
     ${mecanismesHTML}
+    ${hypothesesHTML}
     ${redflagsHTML}
     ${pistesHTML}
     ${pointsAttentionHTML}
