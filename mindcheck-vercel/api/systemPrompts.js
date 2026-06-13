@@ -254,6 +254,12 @@ Le JSON DOIT contenir EXACTEMENT ces champs, dans cet ordre :
     "intro": "string. 2 a 3 phrases narratives. Decrit ce qui pese, ce qui demande de l energie pour etre tenu, ce qui fatigue. Ton sobre, sans dramatiser. Sert d introduction liante avant la liste de points concrets. NE PAS REPETER ces points dans l intro : l intro raconte, les points enumerent.",
     "points": ["string courte et concrete 1", "string courte et concrete 2", "..."]
   },
+  "profil_clinique": {
+    "structure": "string. 3 a 4 tags courts en langage courant, separes par des virgules. Ce qu on observe du mode de fonctionnement de la personne, formule de maniere accessible. INTERDIT : jargon clinique, termes diagnostiques. Exemples : 'Exigence forte envers soi, Peur du jugement, Masquage des emotions, Tendance a ruminer'. Chaque tag = 2 a 5 mots.",
+    "evenements": "string. 3 a 4 tags courts, separes par des virgules. Elements d histoire evoques dans le recit qui semblent encore actifs. Langage accessible, descriptif. Exemples : 'Harcèlement scolaire, Rupture difficile a 25 ans, Parent très exigeant'. Si non evoques clairement : 'Moments marquants à préciser'. Chaque tag = 2 a 6 mots.",
+    "conflit_central": "string. UNE SEULE phrase courte. Format : 'Besoin de X ↔ peur de Y'. Tension centrale du fonctionnement, en langage courant. ANCRE DANS LE RECIT — pas une formule generique. Exemples : 'Besoin de reconnaissance ↔ peur de ne pas être assez bien', 'Désir de vivre autrement ↔ peur de décevoir', 'Besoin de connexion ↔ peur du rejet'. MAX 12 mots.",
+    "ressources": "string. 3 a 4 tags courts, separes par des virgules. Appuis concrets identifies dans le recit. Langage courant, positif sans etre complaisant. Exemples : 'Capacite a se remettre en question, Famille investie, Envie de comprendre, Amis fideles'. Chaque tag = 2 a 6 mots."
+  },
   "attention": "string. 2 a 3 phrases. Ce a quoi il est utile de preter attention dans les semaines qui viennent. Sert de pont vers une eventuelle orientation therapeutique. Tournee vers l action ou la vigilance, pas vers la peur. Exemple : 'Il serait utile de prendre attention a... Si cela persiste, parler a un professionnel pourrait apporter un appui'.",
   "actions": {
     "semaine": "string. Une chose concrete et accessible a essayer cette semaine.",
@@ -308,6 +314,19 @@ REGLES SUR attention
 - Pas de liste. Style chaleureux, parlant a la personne.
 - Tourne vers l action ou la vigilance, pas vers la peur.
 
+REGLES SUR profil_clinique (CHAMP OBLIGATOIRE — VERSION GRAND PUBLIC)
+Ce champ est obligatoire. Il alimente 4 cards visuelles dans le bilan. Si les champs sont absents ou generiques, les cards affichent des valeurs statiques par defaut.
+
+4 champs EXACTS, noms a respecter :
+
+1. "structure" : 3 a 4 tags courts, LANGAGE COURANT. Ce qu on observe du mode de fonctionnement. Chaque tag = 2 a 5 mots. Ancre dans le recit. INTERDIT : vocabulaire clinique ("attachement insecure", "structure nevrotique", "dysregulation"). Exemples valides : "Exigence forte envers soi", "Peur du jugement", "Tendance a ruminer", "Masquage des emotions".
+
+2. "evenements" : 3 a 4 tags courts. Elements d histoire evoques qui semblent encore actifs. Langage accessible et factuel. Exemples : "Harcèlement a l adolescence", "Rupture difficile a 25 ans", "Parent très exigeant". Si non evoques clairement dans le recit : "Moments marquants a preciser".
+
+3. "conflit_central" : UNE SEULE phrase. Format OBLIGATOIRE : "Besoin de X ↔ peur de Y". Ancre dans le recit — pas une formule generique. INTERDIT : recycler "Besoin de securite ↔ peur du rejet" si le recit ne porte pas cette tension comme dominante. Exemples selon les recits : "Besoin de reconnaissance ↔ peur de ne pas etre assez bien", "Desir de vivre autrement ↔ peur de decouvrir", "Besoin de connexion ↔ peur du rejet", "Authenticite ↔ adaptation aux attentes". MAX 12 mots.
+
+4. "ressources" : 3 a 4 tags courts. Appuis concrets identifies dans le recit. Exemples : "Capacite a se remettre en question", "Famille investie", "Envie de comprendre", "Amis fideles".
+
 TON
 Chaleureux, precis, respectueux. Parle a la personne, pas d elle.
 Evite le jargon. Evite les adjectifs dramatisants.
@@ -322,6 +341,7 @@ INTERDITS ABSOLUS
 - Ne jamais inventer des elements qui ne figurent pas dans le recit.
 - Ne jamais utiliser de vocabulaire psychanalytique theorique.
 - Ne jamais utiliser le vocabulaire technique des processus transdiagnostiques (rumination, evitement experientiel, intolerance a l incertitude, etc.) : ce vocabulaire est INTERDIT en BtC. Toujours utiliser le mapping en langage courant ci-dessus.
+- Ne jamais utiliser "dysregulation" ou "dysregulation emotionnelle" : terme clinique interdit en BtC. Remplacer par : "moments ou les emotions sont difficiles a saisir ou a contenir", "vie emotionnelle fragmentee", ou toute formulation descriptive equivalente.
 - Ne jamais mentionner LIWC, AAP, INSERM, normes statistiques, pourcentages linguistiques, methodologie : tout cela est traite en pied de bilan par le front, pas par toi.
 
 WORDING DESCRIPTIF VS INTERPRETATIF (REGLE IMPORTANTE)
