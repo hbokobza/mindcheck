@@ -165,6 +165,28 @@ function buildBTBEmailHTML(btb, praticienNom, sessionCode) {
 </body></html>`;
 }
 
+async function handleGetBilan(req, res) {
+  const { sessionCode } = req.query || req.body || {};
+  if (!sessionCode) {
+    return res.status(400).json({ error: 'sessionCode requis' });
+  }
+  try {
+    const supabase = createSupabaseClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+    const { data, error } = await supabase
+      .from('clinical_extractions')
+      .select('btb_json, created_at')
+      .eq('session_code', sessionCode)
+      .single();
+    if (error || !data) {
+      return res.status(404).json({ error: 'Bilan introuvable' });
+    }
+    return res.status(200).json({ btb: data.btb_json, created_at: data.created_at });
+  } catch(err) {
+    console.error('[get-bilan] Erreur:', err);
+    return res.status(500).json({ error: err.message });
+  }
+}
+
 async function handleSendBTB(req, res) {
   const { cliniqueCode, btbData, sessionCode } = req.body;
   if (!cliniqueCode || !btbData) {
@@ -181,12 +203,56 @@ async function handleSendBTB(req, res) {
     if (!praticien.actif) return res.status(403).json({ error: 'Code praticien désactivé' });
 
     const btb = typeof btbData === 'string' ? JSON.parse(btbData) : btbData;
-    const emailHTML = buildBTBEmailHTML(btb, praticien.nom, sessionCode || 'N/A');
+    const code = sessionCode || ('BP-' + Date.now().toString(36).toUpperCase());
+
+    // 1. Stocker le JSON BTB dans clinical_extractions pour accès ultérieur
+    const { error: insertError } = await supabase
+      .from('clinical_extractions')
+      .insert({
+        session_code: code,
+        praticien_code: cliniqueCode,
+        btb_json: btb,
+        created_at: new Date().toISOString()
+      });
+    if (insertError) {
+      console.warn('[send-btb] Supabase insert warning (non-bloquant):', insertError.message);
+    }
+
+    // 2. Construire le lien d'accès au bilan complet
+    const bilanUrl = `https://bilanpsy.fr/bilan-clinique.html?session=${encodeURIComponent(code)}`;
+    const now = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+    // 3. Email sobre avec lien vers le bilan complet
+    const emailHTML = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#F0EBE3;font-family:'Helvetica Neue',Arial,sans-serif">
+<div style="max-width:600px;margin:32px auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.08)">
+  <div style="background:#1A2E1A;padding:24px 32px">
+    <div style="font-size:22px;font-weight:700;color:#fff">bilanpsy<span style="color:#FF4B28">.</span> <span style="font-size:13px;font-weight:400;color:#AAC4AA">PRO</span></div>
+    <div style="font-size:12px;color:#AAC4AA;margin-top:4px">Nouveau bilan clinique disponible · ${now}</div>
+  </div>
+  <div style="padding:32px">
+    <p style="font-size:15px;color:#1A1A18;margin:0 0 16px">Bonjour ${praticien.nom},</p>
+    <p style="font-size:14px;color:#444;line-height:1.7;margin:0 0 28px">Un nouveau bilan BilanPsy est disponible pour votre prochain rendez-vous. Le bilan complet (cartographie 6 axes, profil clinique, mécanismes, pistes d'exploration) est accessible en cliquant sur le bouton ci-dessous.</p>
+    <div style="text-align:center;margin:0 0 32px">
+      <a href="${bilanUrl}" style="display:inline-block;background:#1A2E1A;color:#fff;text-decoration:none;padding:14px 32px;border-radius:8px;font-size:15px;font-weight:600;letter-spacing:0.2px">Consulter le bilan complet →</a>
+    </div>
+    <div style="background:#F7F4EF;border-radius:8px;padding:14px 18px;font-size:12px;color:#888;line-height:1.6">
+      Code session : <strong style="color:#1A1A18;font-family:monospace">${code}</strong><br>
+      Lien direct : <a href="${bilanUrl}" style="color:#4A7C59">${bilanUrl}</a>
+    </div>
+    <div style="margin-top:28px;padding-top:20px;border-top:1px solid #EDE8E0">
+      <p style="font-size:11px;color:#888;line-height:1.6;margin:0">Ce bilan est un outil d'aide à la lecture pré-consultation, à visée observationnelle. Il ne pose aucun diagnostic et ne se substitue pas à votre évaluation clinique.</p>
+      <p style="font-size:11px;color:#BB8866;margin:8px 0 0 0">BilanPsy n'est pas un service d'urgence — en cas de crise active, le 3114 et le 15 sont les recours appropriés.</p>
+    </div>
+  </div>
+</div>
+<div style="text-align:center;padding:16px;font-size:11px;color:#888">BilanPsy · Usage strictement professionnel et confidentiel · bilanpsy.fr</div>
+</body></html>`;
 
     const emailResponse = await resendClient.emails.send({
       from: 'BilanPsy <bilan@bilanpsy.fr>',
       to: [praticien.email],
-      subject: `BilanPsy Pro — Bilan clinique · ${sessionCode || new Date().toLocaleDateString('fr-FR')}`,
+      subject: `BilanPsy Pro — Nouveau bilan clinique · ${code}`,
       html: emailHTML
     });
 
@@ -195,7 +261,7 @@ async function handleSendBTB(req, res) {
       return res.status(500).json({ error: 'Erreur envoi email' });
     }
 
-    console.log(`[send-btb] BTB envoyé à ${praticien.email} · session ${sessionCode}`);
+    console.log(`[send-btb] BTB envoyé à ${praticien.email} · session ${code}`);
     return res.status(200).json({ success: true, praticienNom: praticien.nom });
   } catch(err) {
     console.error('[send-btb] Erreur:', err);
@@ -328,11 +394,14 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: { message: 'Method not allowed' } });
   }
 
-  // ---- Route mode clinique BTB ----
+  // ---- Routes mode clinique ----
   if (req.body && req.body.mode === 'send_btb') {
     return handleSendBTB(req, res);
   }
-  // ---- Fin route clinique ----
+  if ((req.query && req.query.mode === 'get_bilan') || (req.body && req.body.mode === 'get_bilan')) {
+    return handleGetBilan(req, res);
+  }
+  // ---- Fin routes clinique ----
 
   const ip = (req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || 'unknown')
     .toString()
