@@ -723,10 +723,11 @@ function showCliniqueMerci(praticienNom) {
 
 async function envoyerBTBPraticien(btbData, sessionCodeVal) {
   try {
-    const response = await fetch('/api/send-btb', {
+    const response = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        mode: 'send_btb',
         cliniqueCode: cliniqueCode,
         btbData: btbData,
         sessionCode: sessionCodeVal || sessionCode || ''
