@@ -56,9 +56,10 @@ function buildBTBEmailHTML(btb, praticienNom, sessionCode) {
   const axes = btb.axes || [];
   const profil = btb.profil_clinique || {};
   const mecanismes = btb.mecanismes_transdiagnostiques || [];
-  const hypotheses = btb.hypotheses_cliniques || [];
-  const reperes = btb.reperes_orientation || {};
-  const ressources = btb.ressources_observees || {};
+  const pistes = btb.pistes_exploration || [];
+  const themes = btb.themes_attention || [];
+  const ressourcesObs = btb.ressources_observees || {};
+  const analyseLing = btb.analyse_linguistique || {};
   const now = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
   const axesHTML = axes.map(axe => `
@@ -73,17 +74,39 @@ function buildBTBEmailHTML(btb, praticienNom, sessionCode) {
   const tagHTML = (str, color) => (str || '').split(',').map(t => t.trim()).filter(Boolean)
     .map(t => `<span style="display:inline-block;margin:3px 4px 3px 0;padding:3px 10px;border-radius:12px;font-size:12px;background:${color}15;color:${color};border:1px solid ${color}30">${t}</span>`).join('');
 
+  // Mécanismes transdiagnostiques — nouveau format (processus / salience / boucle_courte)
+  const salienceLabel = s => s >= 3 ? 'élevée' : s >= 2 ? 'modérée' : 'faible';
   const mecanismesHTML = mecanismes.map(m => `
     <div style="margin-bottom:10px;padding:10px 14px;background:#F7F4EF;border-radius:8px;border-left:3px solid #E8943A">
-      <div style="font-size:13px;font-weight:600;color:#1A1A18">${m.nom || ''} <span style="font-weight:400;font-size:12px;color:#888">— ${m.saillance || ''}</span></div>
+      <div style="font-size:13px;font-weight:600;color:#1A1A18">${m.processus || m.nom || ''} <span style="font-weight:400;font-size:12px;color:#888">— saillance ${salienceLabel(m.salience ?? m.saillance)}</span></div>
       <div style="font-size:12px;color:#5A5A58;margin-top:3px">${m.boucle_courte || ''}</div>
     </div>`).join('');
 
-  const hypothesesHTML = hypotheses.map(h => `
-    <div style="margin-bottom:8px;padding:8px 14px;background:#EEF4F7;border-radius:6px;font-size:13px;color:#1A1A18;border-left:3px solid #4A90A4">${h}</div>`).join('');
+  // Pistes d'exploration
+  const pistesHTML = pistes.length > 0 ? pistes.map(p => `
+    <li style="margin-bottom:10px;font-size:13px;color:#1A1A18;line-height:1.6">${p}</li>`).join('') : '';
 
-  const reperesHTML = Object.values(reperes).filter(v => v && typeof v === 'string' && v.length > 5)
-    .map(v => `<li style="margin-bottom:8px;font-size:13px;color:#1A1A18">${v}</li>`).join('');
+  // Thèmes d'attention
+  const themesHTML = themes.map(t => `
+    <div style="margin-bottom:14px;padding:12px 16px;background:#F7F4EF;border-radius:8px;border-left:3px solid #C04A1A">
+      <div style="font-size:13px;font-weight:600;color:#1A1A18;margin-bottom:4px">${t.titre || ''}</div>
+      <div style="font-size:12px;color:#5A5A58;margin-bottom:3px">${t.manifestations || ''}</div>
+      <div style="font-size:12px;color:#888;font-style:italic">${t.observation_clinique || ''}</div>
+    </div>`).join('');
+
+  // Ressources observées
+  const resElements = (ressourcesObs.elements || []).map(e => `
+    <div style="margin-bottom:10px;padding:10px 14px;background:#EEF7EE;border-radius:8px;border-left:3px solid #4A7C59">
+      <div style="font-size:13px;font-weight:600;color:#1A4A2E">${e.titre || ''}</div>
+      <div style="font-size:12px;color:#5A5A58;margin-top:3px">${e.detail || ''}</div>
+    </div>`).join('');
+
+  // Analyse linguistique
+  const lingHTML = analyseLing.synthese ? `
+    <div style="margin-bottom:28px">
+      <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;color:#888;text-transform:uppercase;margin-bottom:10px">Analyse linguistique implicite</div>
+      <div style="font-size:13px;color:#1A1A18;line-height:1.7;padding:14px;background:#F7F4EF;border-radius:8px">${analyseLing.synthese}</div>
+    </div>` : '';
 
   return `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"></head>
 <body style="margin:0;padding:0;background:#F0EBE3;font-family:'Helvetica Neue',Arial,sans-serif">
@@ -94,10 +117,12 @@ function buildBTBEmailHTML(btb, praticienNom, sessionCode) {
   </div>
   <div style="padding:32px">
     <div style="margin-bottom:24px;padding:12px 16px;background:#F7F4EF;border-radius:8px;font-size:13px;color:#5A5A58">À l'attention de <strong style="color:#1A1A18">${praticienNom}</strong> — Bilan transmis automatiquement via BilanPsy</div>
+
     <div style="margin-bottom:28px">
       <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;color:#888;text-transform:uppercase;margin-bottom:10px">Synthèse clinique</div>
       <div style="font-size:14px;color:#1A1A18;line-height:1.7;font-style:italic;padding:16px;background:#F7F4EF;border-radius:8px;border-left:3px solid #4A7C59">${btb.synthese_clinique || btb.synthese || ''}</div>
     </div>
+
     <div style="margin-bottom:28px">
       <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;color:#888;text-transform:uppercase;margin-bottom:10px">Cartographie 6 axes</div>
       <table style="width:100%;border-collapse:collapse;background:#F7F4EF;border-radius:8px;overflow:hidden">
@@ -109,6 +134,7 @@ function buildBTBEmailHTML(btb, praticienNom, sessionCode) {
         <tbody>${axesHTML}</tbody>
       </table>
     </div>
+
     <div style="margin-bottom:28px">
       <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;color:#888;text-transform:uppercase;margin-bottom:10px">Profil clinique observé</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
@@ -118,9 +144,17 @@ function buildBTBEmailHTML(btb, praticienNom, sessionCode) {
         <div style="padding:14px;background:#F7F4EF;border-radius:8px"><div style="font-size:11px;font-weight:600;color:#1A4A2E;text-transform:uppercase;margin-bottom:8px">Ressources structurantes</div>${tagHTML(profil.ressources, '#1A4A2E')}</div>
       </div>
     </div>
+
+    ${lingHTML}
+
     ${mecanismes.length > 0 ? `<div style="margin-bottom:28px"><div style="font-size:10px;font-weight:600;letter-spacing:0.1em;color:#888;text-transform:uppercase;margin-bottom:10px">Mécanismes transdiagnostiques</div>${mecanismesHTML}</div>` : ''}
-    ${hypotheses.length > 0 ? `<div style="margin-bottom:28px"><div style="font-size:10px;font-weight:600;letter-spacing:0.1em;color:#888;text-transform:uppercase;margin-bottom:10px">Hypothèses cliniques à explorer</div>${hypothesesHTML}</div>` : ''}
-    ${reperesHTML ? `<div style="margin-bottom:28px"><div style="font-size:10px;font-weight:600;letter-spacing:0.1em;color:#888;text-transform:uppercase;margin-bottom:10px">Repères d'orientation</div><ul style="margin:0;padding:16px 16px 16px 32px;background:#F7F4EF;border-radius:8px">${reperesHTML}</ul></div>` : ''}
+
+    ${pistes.length > 0 ? `<div style="margin-bottom:28px"><div style="font-size:10px;font-weight:600;letter-spacing:0.1em;color:#888;text-transform:uppercase;margin-bottom:10px">Pistes d'exploration</div><ul style="margin:0;padding:16px 16px 16px 32px;background:#F7F4EF;border-radius:8px">${pistesHTML}</ul></div>` : ''}
+
+    ${themes.length > 0 ? `<div style="margin-bottom:28px"><div style="font-size:10px;font-weight:600;letter-spacing:0.1em;color:#888;text-transform:uppercase;margin-bottom:10px">Points d'attention</div>${themesHTML}</div>` : ''}
+
+    ${resElements ? `<div style="margin-bottom:28px"><div style="font-size:10px;font-weight:600;letter-spacing:0.1em;color:#888;text-transform:uppercase;margin-bottom:10px">Ressources observées</div>${resElements}</div>` : ''}
+
     <div style="margin-top:32px;padding-top:20px;border-top:1px solid #EDE8E0">
       <p style="font-size:11px;color:#888;line-height:1.6;margin:0">Ce bilan combine : psychométrie validée (PHQ-9, GAD-7, PSS-10), analyse linguistique implicite (INSERM/Paris-Cité), paradigme AAP (JMIR Mental Health, 2026). Outil d'aide à la lecture pré-consultation, visée observationnelle. Ne pose aucun diagnostic. Ne se substitue pas à l'évaluation clinique du praticien.</p>
       <p style="font-size:11px;color:#BB8866;margin:10px 0 0 0">BilanPsy n'est pas un service d'urgence — en cas de crise active, le 3114 et le 15 sont les recours appropriés.</p>
