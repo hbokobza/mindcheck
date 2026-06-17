@@ -57,6 +57,10 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px}
 .axes{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;justify-content:center}
 .ax{font-size:12px;padding:6px 14px;border-radius:18px;border:1px solid rgba(26,74,46,0.12);background:transparent;color:#9A9892;font-weight:400;letter-spacing:0.1px;transition:all 0.25s ease}
 .ax.lit{background:rgba(255,75,40,0.08);color:#FF4B28;font-weight:500;border-color:#FF4B28}
+#clinique-progress{display:none;padding:10px 16px 0;font-size:12px;color:#6B6B68}
+#clinique-progress-bar-wrap{background:#EDE8E0;border-radius:6px;height:6px;margin-top:6px;overflow:hidden}
+#clinique-progress-bar{height:6px;background:#1A2E1A;border-radius:6px;width:0%;transition:width 0.5s ease}
+#clinique-progress-label{font-size:11px;color:#888;margin-top:4px}
 .mode-row{display:flex;gap:8px;margin-bottom:12px}
 .mb{padding:7px 20px;border-radius:24px;border:1px solid #D8D8D0;background:white;color:#666;cursor:pointer;font-family:inherit;font-size:13px}
 .mb.on{background:#1A1A18;color:white;border-color:#1A1A18;font-weight:500}
@@ -276,6 +280,11 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px}
     <span class="ax" id="a3">Régulation émotionnelle</span>
     <span class="ax" id="a4">Corps & risque somatique</span>
     <span class="ax" id="a6">Environnement</span>
+  </div>
+  <!-- Barre de progression clinique (visible uniquement en mode ?clinique=CODE) -->
+  <div id="clinique-progress">
+    <div id="clinique-progress-label">Dimensions explorées : <span id="clinique-progress-count">0</span> / 6</div>
+    <div id="clinique-progress-bar-wrap"><div id="clinique-progress-bar"></div></div>
   </div>
   <div class="err" id="err"></div>
   <div id="s3-welcome">Qu'est-ce qui se passe pour vous en ce moment ?</div>
@@ -705,7 +714,19 @@ function initCliniqueMode() {
     const btnReprendre = document.getElementById('btn-reprendre-session');
     if (btnBilan) btnBilan.style.display = 'none';
     if (btnReprendre) btnReprendre.style.display = 'none';
+    // Afficher la barre de progression
+    const prog = document.getElementById('clinique-progress');
+    if (prog) prog.style.display = 'block';
   }, 300);
+}
+
+function updateCliniqueProgress() {
+  const total = document.querySelectorAll('.ax').length;
+  const lit = document.querySelectorAll('.ax.lit').length;
+  const bar = document.getElementById('clinique-progress-bar');
+  const count = document.getElementById('clinique-progress-count');
+  if (bar) bar.style.width = Math.round((lit/total)*100) + '%';
+  if (count) count.textContent = lit;
 }
 
 function showCliniqueMerci(praticienNom) {
@@ -877,6 +898,8 @@ function updateAxes(s){
       if(k.includes(key)){
         // Mise à jour UI
         document.getElementById(axMap[key]).classList.add('lit');
+        // Mise à jour barre de progression clinique
+        if (cliniqueMode) updateCliniqueProgress();
         // Mise à jour état couverture — on marque au moins "partiel" si mentionné par le modèle
         if(couvertureAxes[key] && couvertureAxes[key].statut === "non_couvert"){
           couvertureAxes[key].statut = "partiel";
@@ -975,9 +998,13 @@ async function processInput(text,src){
       if(passationCursor >= passationQueue.length){
         // Fin de la passation : tous les items couverts. On lance le bilan.
         rmDots();
-        addMsg('ai', "Merci pour vos réponses. Je prépare maintenant votre check-up complet.");
         passationActive = false;
         updatePassationBanner();
+        if (cliniqueMode) {
+          addMsg('ai', "Merci pour vos réponses. L'analyse est en cours — cela peut prendre 30 à 60 secondes. Vous pouvez fermer cet onglet, votre praticien recevra le bilan automatiquement.");
+        } else {
+          addMsg('ai', "Merci pour vos réponses. Je prépare maintenant votre check-up complet.");
+        }
         setTimeout(()=>generateBilan(cliniqueMode), 1000);
         return;
       }
@@ -1424,18 +1451,50 @@ async function runClinicalExtraction() {
 
 async function generateBilan(avecBTB, retryCount){
   retryCount = retryCount || 0;
-  console.log('[PSEE-DEBUG] generateBilan ENTRY | avecBTB=', avecBTB, '| retryCount=', retryCount, '| hist.length=', hist.length);
+  console.log('[PSEE-DEBUG] generateBilan ENTRY | avecBTB=', avecBTB, '| cliniqueMode=', cliniqueMode, '| retryCount=', retryCount, '| hist.length=', hist.length);
 
+  // MODE CLINIQUE : séquentiel BTB uniquement — évite le rate limit
+  // Pas de BtC, pas de runClinicalExtraction en parallèle
+  if (cliniqueMode) {
+    document.querySelectorAll('.ax').forEach(el => el.classList.add('lit'));
+    showDots();
+    try {
+      const msgs = [...hist,{role:'user',content:'Génère le bilan JSON maintenant selon la structure demandée.'}];
+      const rawBTB = await callAPI(msgs, 'bilan_btb');
+      rmDots();
+      let dataBTB = null;
+      try {
+        const m = rawBTB.match(/\{[\s\S]*\}/);
+        dataBTB = JSON.parse(m ? m[0] : rawBTB.replace(/```json|```/g,'').trim());
+      } catch(e) {
+        console.warn('[clinique] BTB parse error:', e.message);
+        if (retryCount < 2) {
+          addMsg('ai', 'Préparation du bilan en cours, encore un instant…');
+          setTimeout(() => generateBilan(true, retryCount+1), 3000);
+          return;
+        }
+        showCliniqueMerci(null);
+        return;
+      }
+      await envoyerBTBPraticien(dataBTB, sessionCode);
+    } catch(e) {
+      console.error('[clinique] generateBilan error:', e.message);
+      rmDots();
+      if (retryCount < 2) {
+        setTimeout(() => generateBilan(true, retryCount+1), 4000);
+        return;
+      }
+      showCliniqueMerci(null);
+    }
+    return;
+  }
+
+  // MODE STANDARD
   // Lancer l'extraction clinique V1.3 en background (fire-and-forget)
-  // Ne bloque pas le bilan classique. Tourne en parallèle.
-  // Seulement au premier appel (pas sur les retry du bilan)
   if (retryCount === 0) {
     runClinicalExtraction(); // pas de await — exécution parallèle
   }
 
-  // Forcer l'allumage des 6 axes : si le bilan se genere, c'est que les 6 axes
-  // ont ete suffisamment couverts (la decision est cote serveur). On evite
-  // l'incoherence visuelle ou un axe reste pale alors que le bilan le score.
   document.querySelectorAll('.ax').forEach(el => el.classList.add('lit'));
 
   showDots();
