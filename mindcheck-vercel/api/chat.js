@@ -127,7 +127,7 @@ function buildBTBEmailHTML(btb, praticienNom, sessionCode) {
     </div>
   </div>
 </div>
-<div style="text-align:center;padding:16px;font-size:11px;color:#888">BilanPsy · Usage strictement professionnel et confidentiel · psee.fr</div>
+<div style="text-align:center;padding:16px;font-size:11px;color:#888">BilanPsy · Usage strictement professionnel et confidentiel · bilanpsy.fr</div>
 </body></html>`;
 }
 
@@ -150,7 +150,7 @@ async function handleSendBTB(req, res) {
     const emailHTML = buildBTBEmailHTML(btb, praticien.nom, sessionCode || 'N/A');
 
     const emailResponse = await resendClient.emails.send({
-      from: 'BilanPsy <bilan@psee.fr>',
+      from: 'BilanPsy <bilan@bilanpsy.fr>',
       to: [praticien.email],
       subject: `BilanPsy Pro — Bilan clinique · ${sessionCode || new Date().toLocaleDateString('fr-FR')}`,
       html: emailHTML
