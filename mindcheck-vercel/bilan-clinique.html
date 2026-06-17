@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BilanPsy Pro — Bilan clinique</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',Arial,sans-serif;background:#F7F4EF;color:#1A1A18;min-height:100vh}
+.header{background:#1A2E1A;padding:20px 32px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.logo{font-size:22px;font-weight:700;color:#fff;letter-spacing:-0.5px}
+.logo span{color:#FF4B28}
+.logo-pro{font-size:12px;font-weight:400;color:#AAC4AA;margin-left:6px}
+.header-meta{font-size:12px;color:#AAC4AA}
+.main{max-width:800px;margin:0 auto;padding:32px 20px}
+.card{background:white;border-radius:12px;padding:24px;margin-bottom:20px;border:1px solid rgba(0,0,0,0.07)}
+.section-label{font-size:10px;font-weight:600;letter-spacing:0.1em;color:#888;text-transform:uppercase;margin-bottom:12px}
+.synthese{font-size:15px;color:#1A1A18;line-height:1.8;font-style:italic;padding:18px 20px;background:#F7F4EF;border-radius:8px;border-left:3px solid #4A7C59}
+.axes-table{width:100%;border-collapse:collapse;background:#F7F4EF;border-radius:8px;overflow:hidden}
+.axes-table th{padding:10px 12px;text-align:left;font-size:11px;color:#888;font-weight:600;text-transform:uppercase;background:#EDE8E0}
+.axes-table td{padding:10px 12px;font-size:13px;color:#1A1A18;border-bottom:1px solid #EDE8E0;vertical-align:top}
+.score-badge{display:inline-block;padding:3px 12px;border-radius:12px;font-size:12px;font-weight:600;white-space:nowrap}
+.profil-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.profil-cell{padding:14px;background:#F7F4EF;border-radius:8px}
+.profil-cell-title{font-size:11px;font-weight:600;text-transform:uppercase;margin-bottom:8px}
+.tag{display:inline-block;margin:3px 4px 3px 0;padding:3px 10px;border-radius:12px;font-size:12px}
+.conflit-cell{grid-column:1/-1;padding:14px;background:#F7F4EF;border-radius:8px;border:1px solid #E8943A40}
+.mecanisme{margin-bottom:10px;padding:12px 14px;background:#F7F4EF;border-radius:8px;border-left:3px solid #E8943A}
+.mecanisme-title{font-size:13px;font-weight:600;color:#1A1A18}
+.mecanisme-saillance{font-weight:400;font-size:12px;color:#888}
+.mecanisme-boucle{font-size:12px;color:#5A5A58;margin-top:4px}
+.piste{margin-bottom:10px;padding-left:16px;font-size:13px;color:#1A1A18;line-height:1.7;border-left:3px solid #4A7C59;padding:10px 14px;background:#F7F4EF;border-radius:0 8px 8px 0}
+.theme{margin-bottom:14px;padding:12px 16px;background:#F7F4EF;border-radius:8px;border-left:3px solid #C04A1A}
+.theme-title{font-size:13px;font-weight:600;color:#1A1A18;margin-bottom:4px}
+.theme-manif{font-size:12px;color:#5A5A58;margin-bottom:3px}
+.theme-obs{font-size:12px;color:#888;font-style:italic}
+.ressource{margin-bottom:10px;padding:12px 14px;background:#EEF7EE;border-radius:8px;border-left:3px solid #4A7C59}
+.ressource-title{font-size:13px;font-weight:600;color:#1A4A2E}
+.ressource-detail{font-size:12px;color:#5A5A58;margin-top:4px}
+.ling-card{padding:16px;background:#F7F4EF;border-radius:8px;font-size:13px;color:#1A1A18;line-height:1.7}
+.radar-wrap{display:flex;justify-content:center;margin-bottom:12px}
+.btn-pdf{display:inline-flex;align-items:center;gap:8px;background:#1A2E1A;color:white;border:none;border-radius:8px;padding:12px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;text-decoration:none}
+.btn-pdf:hover{background:#243d24}
+.footer-note{font-size:11px;color:#888;line-height:1.6;margin-top:8px}
+.footer-urgence{font-size:11px;color:#BB8866;margin-top:6px}
+.loading{text-align:center;padding:80px 20px;color:#888}
+.error-box{background:#FFF0EE;border:1px solid #FFCCC0;border-radius:8px;padding:20px;text-align:center;color:#C04A1A}
+@media print{
+  .header{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .btn-pdf{display:none}
+  .no-print{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="logo">bilanpsy<span>.</span><span class="logo-pro">PRO</span></div>
+    <div class="header-meta">BILAN CLINIQUE — Aide à la lecture pré-consultation · <span id="header-code">—</span> · <span id="header-date">—</span></div>
+  </div>
+  <a class="btn-pdf no-print" onclick="window.print()" href="#" style="text-decoration:none">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    Imprimer / PDF
+  </a>
+</div>
+
+<div class="main" id="main-content">
+  <div class="loading" id="loading">
+    <div style="font-size:15px;color:#888;margin-bottom:8px">Chargement du bilan…</div>
+    <div style="font-size:12px;color:#aaa">Récupération des données cliniques</div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// HELPERS SCORE
+// ============================================================
+const SCORE_META = {
+  1: { label: 'Fragile',      color: '#C0564A', bg: '#F1DED9' },
+  2: { label: 'En tension',   color: '#C4892E', bg: '#F4E8CC' },
+  3: { label: 'En attention', color: '#6E9A5C', bg: '#E3ECD9' },
+  4: { label: 'Stable',       color: '#2F6B43', bg: '#E3ECD9' }
+};
+function getScoreMeta(s){ return SCORE_META[Math.max(1,Math.min(4,Math.round(s||2)))]; }
+function scoreColor(s){ return getScoreMeta(s).color; }
+function scoreLabel(s){ return getScoreMeta(s).label; }
+function scoreBg(s){ return getScoreMeta(s).bg; }
+
+function escapeHTML(s){
+  return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ============================================================
+// RADAR BTB
+// ============================================================
+function buildRadarBTB(axes){
+  const S=260,cx=130,cy=130,maxR=80,n=6,maxVal=4;
+  function pt(i,v){const a=(i*2*Math.PI/n)-Math.PI/2,d=(Math.min(v,maxVal)/maxVal)*maxR;return[cx+d*Math.cos(a),cy+d*Math.sin(a)];}
+  let grid='',lines='',dots='',labels='';
+  [1,2,3,4].forEach(ring=>{
+    const pts=axes.map((_,i)=>pt(i,ring).join(',')).join(' ');
+    grid+=`<polygon points="${pts}" fill="none" stroke="#DDD5C8" stroke-width="${ring===4?1:.4}"/>`;
+  });
+  for(let i=0;i<n;i++){const[x,y]=pt(i,maxVal);lines+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#DDD5C8" stroke-width=".5"/>"`;}
+  const dataPts=axes.map((ax,i)=>pt(i,ax.score||2).join(',')).join(' ');
+  axes.forEach((ax,i)=>{
+    const[x,y]=pt(i,ax.score||2),col=scoreColor(ax.score||2);
+    dots+=`<circle cx="${x}" cy="${y}" r="5" fill="${col}" stroke="white" stroke-width="1.5"/>`;
+    const a=(i*2*Math.PI/n)-Math.PI/2,lx=cx+(maxR+26)*Math.cos(a),ly=cy+(maxR+26)*Math.sin(a);
+    const anch=lx<cx-10?'end':lx>cx+10?'start':'middle';
+    const words=ax.label.split(' ');const mid=Math.ceil(words.length/2);
+    const l1=words.slice(0,mid).join(' '),l2=words.slice(mid).join(' ');
+    labels+=l2
+      ?`<text text-anchor="${anch}" font-size="9" font-family="Arial" fill="#211C16" font-weight="700"><tspan x="${lx}" y="${ly-3}">${l1}</tspan><tspan x="${lx}" dy="10">${l2}</tspan></text>`
+      :`<text x="${lx}" y="${ly+3}" text-anchor="${anch}" font-size="9" font-family="Arial" fill="#211C16" font-weight="700">${l1}</text>`;
+  });
+  return`<svg width="${S}" height="${S}" viewBox="0 0 ${S} ${S}" overflow="visible">${grid}${lines}<polygon points="${dataPts}" fill="rgba(31,58,77,0.10)" stroke="#211C16" stroke-width="1.8" stroke-linejoin="round"/>${dots}${labels}</svg>`;
+}
+
+// ============================================================
+// RENDER BTB
+// ============================================================
+function renderBTB(data, sessionCode){
+  const date = new Date().toLocaleDateString('fr-FR');
+  document.getElementById('header-code').textContent = sessionCode || '—';
+  document.getElementById('header-date').textContent = date;
+
+  const axes = data.axes || [];
+  const profil = data.profil_clinique || {};
+  const mecanismes = data.mecanismes_transdiagnostiques || [];
+  const pistes = data.pistes_exploration || [];
+  const themes = data.themes_attention || [];
+  const ressObs = data.ressources_observees || {};
+  const ling = data.analyse_linguistique || {};
+  const saillanceLabel = s => s>=3?'élevée':s>=2?'modérée':'faible';
+
+  const tagHTML = (str, color) => (str||'').split(',').map(t=>t.trim()).filter(Boolean)
+    .map(t=>`<span class="tag" style="background:${color}15;color:${color};border:1px solid ${color}30">${escapeHTML(t)}</span>`).join('');
+
+  const axesRows = axes.map(ax=>{
+    const m = getScoreMeta(ax.score||2);
+    return `<tr>
+      <td style="font-weight:500">${escapeHTML(ax.label||ax.num)}</td>
+      <td><span class="score-badge" style="background:${m.bg};color:${m.color}">${m.label}</span></td>
+      <td style="color:#5A5A58;font-size:12px">${escapeHTML(ax.manifestations||'')}</td>
+    </tr>`;
+  }).join('');
+
+  const mecanismesHTML = mecanismes.map(m=>`
+    <div class="mecanisme">
+      <div class="mecanisme-title">${escapeHTML(m.processus||m.nom||'')} <span class="mecanisme-saillance">— saillance ${saillanceLabel(m.salience??m.saillance??0)}</span></div>
+      <div class="mecanisme-boucle">${escapeHTML(m.boucle_courte||'')}</div>
+    </div>`).join('');
+
+  const pistesHTML = pistes.map(p=>`<div class="piste">${escapeHTML(p)}</div>`).join('');
+
+  const themesHTML = themes.map(t=>`
+    <div class="theme">
+      <div class="theme-title">${escapeHTML(t.titre||'')}</div>
+      <div class="theme-manif">${escapeHTML(t.manifestations||'')}</div>
+      <div class="theme-obs">${escapeHTML(t.observation_clinique||'')}</div>
+    </div>`).join('');
+
+  const resElements = (ressObs.elements||[]).map(e=>`
+    <div class="ressource">
+      <div class="ressource-title">${escapeHTML(e.titre||'')}</div>
+      <div class="ressource-detail">${escapeHTML(e.detail||'')}</div>
+    </div>`).join('');
+
+  const html = `
+    <!-- DESTINATAIRE -->
+    <div class="card" style="background:#F7F4EF;border:none;padding:14px 18px;font-size:13px;color:#5A5A58">
+      Bilan clinique confidentiel · Usage professionnel exclusif
+    </div>
+
+    <!-- SYNTHÈSE -->
+    <div class="card">
+      <div class="section-label">Synthèse clinique</div>
+      <div class="synthese">${escapeHTML(data.synthese_clinique||data.synthese||'—')}</div>
+    </div>
+
+    <!-- RADAR + 6 AXES -->
+    <div class="card">
+      <div class="section-label">Cartographie 6 axes</div>
+      <div class="radar-wrap">${buildRadarBTB(axes)}</div>
+      <table class="axes-table">
+        <thead><tr>
+          <th>Axe</th><th>Score</th><th>Manifestations</th>
+        </tr></thead>
+        <tbody>${axesRows}</tbody>
+      </table>
+    </div>
+
+    <!-- PROFIL CLINIQUE -->
+    <div class="card">
+      <div class="section-label">Profil clinique observé</div>
+      <div class="profil-grid">
+        <div class="profil-cell">
+          <div class="profil-cell-title" style="color:#4D3728">Structure psychique</div>
+          ${tagHTML(profil.structure,'#4D3728')}
+        </div>
+        <div class="profil-cell">
+          <div class="profil-cell-title" style="color:#4A5728">Événements structurants</div>
+          ${tagHTML(profil.evenements,'#4A5728')}
+        </div>
+        <div class="conflit-cell">
+          <div class="profil-cell-title" style="color:#7A4010">Conflit central</div>
+          <div style="font-size:14px;font-weight:600;color:#1A1A18;margin-top:4px">${escapeHTML(profil.conflit_central||'—')}</div>
+        </div>
+        <div class="profil-cell" style="grid-column:1/-1">
+          <div class="profil-cell-title" style="color:#1A4A2E">Ressources structurantes</div>
+          ${tagHTML(profil.ressources,'#1A4A2E')}
+        </div>
+      </div>
+    </div>
+
+    ${ling.synthese ? `
+    <!-- ANALYSE LINGUISTIQUE -->
+    <div class="card">
+      <div class="section-label">Analyse linguistique implicite</div>
+      <div class="ling-card">${escapeHTML(ling.synthese)}</div>
+    </div>` : ''}
+
+    ${mecanismes.length>0 ? `
+    <!-- MÉCANISMES -->
+    <div class="card">
+      <div class="section-label">Mécanismes transdiagnostiques</div>
+      ${mecanismesHTML}
+    </div>` : ''}
+
+    ${pistes.length>0 ? `
+    <!-- PISTES -->
+    <div class="card">
+      <div class="section-label">Pistes d'exploration</div>
+      ${pistesHTML}
+    </div>` : ''}
+
+    ${themes.length>0 ? `
+    <!-- THÈMES ATTENTION -->
+    <div class="card">
+      <div class="section-label">Points d'attention</div>
+      ${themesHTML}
+    </div>` : ''}
+
+    ${resElements ? `
+    <!-- RESSOURCES -->
+    <div class="card">
+      <div class="section-label">Ressources observées</div>
+      <div style="font-size:12px;color:#888;margin-bottom:12px">${escapeHTML(ressObs.intro||'')}</div>
+      ${resElements}
+    </div>` : ''}
+
+    <!-- MÉTHODOLOGIE -->
+    <div class="card" style="background:#F7F4EF;border:none">
+      <p class="footer-note">Ce bilan combine : psychométrie validée (PHQ-9, GAD-7, PSS-10), analyse linguistique implicite (INSERM/Paris-Cité), paradigme AAP (JMIR Mental Health, 2026). Outil d'aide à la lecture pré-consultation, visée observationnelle. Ne pose aucun diagnostic. Ne se substitue pas à l'évaluation clinique du praticien.</p>
+      <p class="footer-urgence">BilanPsy n'est pas un service d'urgence — en cas de crise active, le 3114 et le 15 sont les recours appropriés.</p>
+    </div>
+  `;
+
+  document.getElementById('main-content').innerHTML = html;
+}
+
+// ============================================================
+// CHARGEMENT DEPUIS SUPABASE
+// ============================================================
+async function loadBilan(){
+  const params = new URLSearchParams(window.location.search);
+  const sessionCode = params.get('session');
+
+  if(!sessionCode){
+    document.getElementById('main-content').innerHTML = `<div class="error-box">Lien invalide — code session manquant.</div>`;
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mode: 'get_bilan', sessionCode })
+    });
+
+    if(!res.ok) throw new Error('Erreur réseau ' + res.status);
+    const result = await res.json();
+    if(!result || !result.btb){
+      document.getElementById('main-content').innerHTML = `<div class="error-box">Bilan introuvable. Le lien a peut-être expiré ou est incorrect.</div>`;
+      return;
+    }
+
+    const btbJson = typeof result.btb === 'string' ? JSON.parse(result.btb) : result.btb;
+    renderBTB(btbJson, sessionCode);
+
+  } catch(err){
+    console.error('[bilan-clinique] Erreur chargement:', err);
+    document.getElementById('main-content').innerHTML = `<div class="error-box">Erreur de chargement du bilan. Réessayez dans quelques instants.</div>`;
+  }
+}
+
+loadBilan();
+</script>
+</body>
+</html>
