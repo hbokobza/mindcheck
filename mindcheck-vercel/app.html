@@ -293,7 +293,7 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px}
   <div style="padding:20px 16px 6px;display:flex;flex-direction:row;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center">
 
     <!-- Bouton secondaire : reprendre une session interrompue -->
-    <button onclick="toggleReprise()" style="background:transparent;border:1px solid rgba(26,74,46,0.2);border-radius:24px;padding:10px 22px;font-family:inherit;font-size:13px;font-weight:400;cursor:pointer;color:#6B6B68;display:flex;align-items:center;justify-content:center;gap:6px;letter-spacing:0;transition:all 0.2s">
+    <button id="btn-reprendre-session" onclick="toggleReprise()" style="background:transparent;border:1px solid rgba(26,74,46,0.2);border-radius:24px;padding:10px 22px;font-family:inherit;font-size:13px;font-weight:400;cursor:pointer;color:#6B6B68;display:flex;align-items:center;justify-content:center;gap:6px;letter-spacing:0;transition:all 0.2s">
       ↩ Reprendre une session interrompue
     </button>
 
@@ -311,7 +311,7 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px}
     </div>
 
     <!-- Bouton principal -->
-    <button onclick="demanderBilan()" style="background:#FF4B28;color:white;border:none;border-radius:24px;padding:11px 26px;font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;letter-spacing:0;transition:background 0.2s">
+    <button id="btn-demander-bilan" onclick="demanderBilan()" style="background:#FF4B28;color:white;border:none;border-radius:24px;padding:11px 26px;font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;letter-spacing:0;transition:background 0.2s">
       Générer ma synthèse →
     </button>
 
@@ -692,13 +692,20 @@ function initCliniqueMode() {
   const banner = document.createElement('div');
   banner.id = 'clinique-banner';
   banner.style.cssText = 'background:#1A2E1A;color:white;padding:12px 20px;font-size:13px;line-height:1.5;text-align:center;position:fixed;top:0;left:0;right:0;z-index:200;';
-  banner.innerHTML = '<strong>Questionnaire confidentiel</strong> — Votre praticien vous invite à compléter ce bilan avant votre prochain rendez-vous. Répondez librement et honnêtement. Cela prend environ 15 minutes.';
+  banner.innerHTML = '<strong>Questionnaire confidentiel</strong> \u2014 Ce questionnaire a \u00e9t\u00e9 pr\u00e9par\u00e9 par votre praticien. R\u00e9pondez librement, il n\u2019y a pas de bonne ou mauvaise r\u00e9ponse. Selon la richesse de vos r\u00e9ponses, l\u2019\u00e9change prendra entre 10 et 20 minutes \u2014 l\u2019assistant vous guidera jusqu\u2019\u00e0 ce que toutes les dimensions soient couvertes.';
   document.body.prepend(banner);
-  document.body.style.paddingTop = '48px';
-  // Masquer éléments commerciaux
+  document.body.style.paddingTop = '52px';
+  // Masquer elements commerciaux
   ['#marketplace-section','#pricing-section','.footer-commercial','.btn-upgrade'].forEach(sel => {
     document.querySelectorAll(sel).forEach(el => el.style.display = 'none');
   });
+  // Masquer les boutons d'action patient — cloture automatique en mode clinique
+  setTimeout(() => {
+    const btnBilan = document.getElementById('btn-demander-bilan');
+    const btnReprendre = document.getElementById('btn-reprendre-session');
+    if (btnBilan) btnBilan.style.display = 'none';
+    if (btnReprendre) btnReprendre.style.display = 'none';
+  }, 300);
 }
 
 function showCliniqueMerci(praticienNom) {
