@@ -971,7 +971,7 @@ async function processInput(text,src){
         addMsg('ai', "Merci pour vos réponses. Je prépare maintenant votre check-up complet.");
         passationActive = false;
         updatePassationBanner();
-        setTimeout(()=>generateBilan(false), 1000);
+        setTimeout(()=>generateBilan(cliniqueMode), 1000);
         return;
       }
 
@@ -1030,7 +1030,7 @@ async function processInput(text,src){
       } else {
         // Pas de modules a passer : bilan direct
         addMsg('ai',"Merci pour ce partage. Je prépare votre synthèse…");
-        setTimeout(()=>promptEnrichissement(()=>generateBilan(false)),1200);
+        setTimeout(()=>promptEnrichissement(()=>generateBilan(cliniqueMode)),1200);
       }
     } else {
       console.log('[PSEE-DEBUG] PATH = CONTINUE | display.length=', clean.length);
@@ -1089,7 +1089,7 @@ async function startPassationFinale(){
     console.log('[PSEE-DEBUG] PASSATION skipped entirely (full coverage)');
     addMsg('ai', "Merci pour ce que vous avez partagé. J'ai tous les éléments dont j'ai besoin pour préparer votre synthèse.");
     hist.push({ role: 'assistant', content: "Merci pour ce que vous avez partagé. J'ai tous les éléments dont j'ai besoin pour préparer votre synthèse." });
-    setTimeout(() => promptEnrichissement(() => generateBilan(false)), 1500);
+    setTimeout(() => promptEnrichissement(() => generateBilan(cliniqueMode)), 1500);
     return;
   }
 
@@ -1124,7 +1124,7 @@ async function startPassationFinale(){
     // Aucun item residuel : bilan direct
     addMsg('ai', "Merci pour ce que vous avez partagé. J'ai tous les éléments dont j'ai besoin pour préparer votre synthèse.");
     hist.push({ role: 'assistant', content: "Merci pour ce que vous avez partagé. J'ai tous les éléments dont j'ai besoin pour préparer votre synthèse." });
-    setTimeout(()=>promptEnrichissement(()=>generateBilan(false)), 1500);
+    setTimeout(()=>promptEnrichissement(()=>generateBilan(cliniqueMode)), 1500);
     return;
   }
 
@@ -1283,7 +1283,7 @@ function demanderBilan(){
 
   hist.push({role:'user', content:'Je souhaite générer ma synthèse maintenant.'});
   addMsg('ai', "Bien sûr. Je prépare votre synthèse à partir de ce que vous avez partagé…");
-  setTimeout(()=>promptEnrichissement(()=>generateBilan(false)), 800);
+  setTimeout(()=>promptEnrichissement(()=>generateBilan(cliniqueMode)), 800);
 }
 
 function promptEnrichissement(nextAction){
@@ -1604,7 +1604,7 @@ const PICTOS = {
 };
 
 function showBilan(data, opts){
-  const locked = !!(opts && opts.tier === 'decouverte') || (data && data.tier === 'decouverte');
+  const locked = cliniqueMode ? false : (!!(opts && opts.tier === 'decouverte') || (data && data.tier === 'decouverte'));
   const date=new Date().toLocaleDateString('fr-FR');
   const radar=buildRadar(data.axes,baselineData);
 
