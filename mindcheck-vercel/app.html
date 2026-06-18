@@ -1015,7 +1015,23 @@ async function processInput(text,src){
       updatePassationBanner();
       const raw = await callAPI(hist, 'passation_finale', { passationContext: ctx });
       rmDots();
-      const clean = raw.trim();
+      // Nettoyer systématiquement les marqueurs techniques (ne jamais les afficher)
+      const clean = raw.replace(/AXES:\[[^\]]*\]/g,'').replace(/COMPLET:\[[^\]]*\]/g,'').trim();
+      // Si l'IA signale la fin (COMPLET:oui) au lieu de poser un item : lancer le bilan
+      const cpMatch = raw.match(/COMPLET:\[?(oui|non)\]?/i);
+      if (cpMatch && cpMatch[1].toLowerCase() === 'oui') {
+        passationActive = false;
+        updatePassationBanner();
+        if (clean.length > 0) addMsg('ai', clean);
+        if (cliniqueMode) {
+          addMsg('ai', "Merci pour vos réponses. L'analyse est en cours — cela peut prendre 30 à 60 secondes. Vous pouvez fermer cet onglet, votre praticien recevra le bilan automatiquement.");
+        } else {
+          addMsg('ai', "Merci pour vos réponses. Je prépare maintenant votre check-up complet.");
+        }
+        hist.push({role:'assistant', content: raw});
+        setTimeout(()=>generateBilan(cliniqueMode), 1000);
+        return;
+      }
       addMsg('ai', clean);
       hist.push({role:'assistant', content: raw});
       autoSaveSession();
