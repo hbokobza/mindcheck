@@ -992,6 +992,24 @@ async function processInput(text,src){
   // de poser l'item suivant. Sinon on declenche le bilan.
   if(passationActive){
     try{
+      // Validation : la reponse doit correspondre a l'echelle de passation.
+      // Si le patient pose une question ou repond hors-echelle, on NE fait PAS
+      // avancer le curseur — on redemande l'item courant. Evite que l'IA parte
+      // en roue libre ou saute des items.
+      const reponseEchelle = estReponseEchelleValide(text);
+      if(!reponseEchelle){
+        console.log('[PSEE-DEBUG] PASSATION reponse hors-echelle, on redemande l item courant');
+        const currentItem = passationQueue[passationCursor];
+        const ctxRedemande = { moduleId: currentItem.moduleId, currentItemIndex: currentItem.itemIdx };
+        const rawR = await callAPI(hist, 'passation_finale', { passationContext: ctxRedemande, reformuler: true });
+        rmDots();
+        const cleanR = rawR.replace(/AXES:\[[^\]]*\]/g,'').replace(/COMPLET:\[[^\]]*\]/g,'').trim();
+        addMsg('ai', cleanR || "Pour cette question, vous pouvez repondre simplement par : jamais, quelques jours, plus de la moitie des jours, ou presque tous les jours.");
+        hist.push({role:'assistant', content: rawR});
+        autoSaveSession();
+        return;
+      }
+
       passationCursor++;
       console.log('[PSEE-DEBUG] PASSATION cursor advanced to', passationCursor, '/', passationQueue.length);
 
@@ -1108,6 +1126,36 @@ async function processInput(text,src){
 // aborde (regle de securite cote serveur). Sur un cas type Fanny, on tombe
 // typiquement de 16 questions a 3-7 questions, voire 0 si la collecte est
 // tres riche -> bilan direct sans passation.
+// Valide qu'une reponse patient correspond a une echelle de passation
+// (PHQ-9 / GAD-7 : jamais/quelques jours/plus de la moitie/presque tous les jours ;
+//  PSS-10 : jamais/presque jamais/parfois/assez souvent/tres souvent).
+// Tolere les variantes courtes et les chiffres 0-4. Rejette les questions et
+// les phrases longues hors-echelle pour ne pas faire avancer le curseur a tort.
+function estReponseEchelleValide(text){
+  const t = (text || '').toLowerCase().trim();
+  if(!t) return false;
+  // Une question explicite n'est jamais une reponse d'echelle
+  if(t.includes('?')) return false;
+  // Chiffres 0 a 4 (echelle Likert)
+  if(/^[0-4]$/.test(t)) return true;
+  // Termes d'echelle acceptes (couvre PHQ/GAD/PSS + variantes naturelles)
+  const termes = [
+    'jamais','presque jamais','rarement','parfois','quelque','quelques jours',
+    'assez souvent','souvent','tres souvent','très souvent','tout le temps',
+    'plus de la moitie','plus de la moitié','presque tous','tous les jours',
+    'pas du tout','un peu','moderement','modérément','beaucoup','enormement','énormément',
+    'oui','non','plutot oui','plutôt oui','plutot non','plutôt non','ni oui ni non',
+    'moyen','moyennement','occasionnellement','frequemment','fréquemment','constamment'
+  ];
+  if(termes.some(term => t.includes(term))) return true;
+  // Reponse tres courte (1-3 mots) sans ponctuation interrogative : on tolere
+  // (ex: "ca va", "bof", "plutot bien") — Haiku interpretera.
+  const motsCount = t.split(/\s+/).length;
+  if(motsCount <= 3) return true;
+  // Sinon : phrase longue hors-echelle (probablement une question ou une remarque)
+  return false;
+}
+
 async function startPassationFinale(){
   // 1. AUDIT PRE-PASSATION : interroge le serveur pour savoir quels items
   //    sont deja couverts par le transcript.
