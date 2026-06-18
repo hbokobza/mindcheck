@@ -319,7 +319,8 @@ function resolveSystemPrompt(mode, triggeredModules = [], passationContext = nul
 // Construit dynamiquement le prompt passation_finale en injectant le contexte
 // du module en cours (PHQ-9 / GAD-7 / PSS-10) et de l'item courant.
 function buildPassationFinalePrompt(ctx) {
-  if (!ctx || !ctx.moduleId || !ctx.currentItemIndex && ctx.currentItemIndex !== 0) {
+  const hasValidIndex = ctx && typeof ctx.currentItemIndex === 'number' && ctx.currentItemIndex >= 0;
+  if (!ctx || !ctx.moduleId || !hasValidIndex) {
     // Fallback : on retourne le prompt brut (Haiku saura repondre raisonnablement)
     return PASSATION_FINALE_SYS;
   }
@@ -450,11 +451,23 @@ export default async function handler(req, res) {
   const state = normalizeSessionState(sessionState);
 
   // 1. Classification securite du dernier message utilisateur
+  // En mode passation_finale, les reponses du patient sont des reponses d'echelle
+  // (jamais, quelques jours, ok, etc.) qui ne doivent PAS etre classees empty/
+  // out_of_scope/abusive — sinon la passation est court-circuitee par un message
+  // generique au lieu de poser l'item suivant. On ne garde que la detection de
+  // crise (critical), qui reste prioritaire meme en passation.
   let category = 'normal';
-  if (mode === 'collecte' || mode === 'passation_finale' || !mode) {
+  if (mode === 'collecte' || !mode) {
     const lastUserMsg = [...messages].reverse().find(m => m.role === 'user');
     if (lastUserMsg && typeof lastUserMsg.content === 'string') {
       category = classifyInput(lastUserMsg.content);
+    }
+  } else if (mode === 'passation_finale') {
+    // En passation : on ne classe que pour detecter une crise, rien d'autre.
+    const lastUserMsg = [...messages].reverse().find(m => m.role === 'user');
+    if (lastUserMsg && typeof lastUserMsg.content === 'string') {
+      const c = classifyInput(lastUserMsg.content);
+      if (c === 'critical') category = 'critical';
     }
   }
 
