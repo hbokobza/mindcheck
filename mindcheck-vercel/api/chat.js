@@ -174,13 +174,15 @@ async function handleGetBilan(req, res) {
     const supabase = createSupabaseClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
     const { data, error } = await supabase
       .from('clinical_extractions')
-      .select('btb_json, created_at')
-      .eq('session_code', sessionCode)
+      .select('json_clinical, created_at')
+      .eq('session_id', sessionCode)
+      .order('created_at', { ascending: false })
+      .limit(1)
       .single();
     if (error || !data) {
       return res.status(404).json({ error: 'Bilan introuvable' });
     }
-    return res.status(200).json({ btb: data.btb_json, created_at: data.created_at });
+    return res.status(200).json({ btb: data.json_clinical, created_at: data.created_at });
   } catch(err) {
     console.error('[get-bilan] Erreur:', err);
     return res.status(500).json({ error: err.message });
@@ -204,18 +206,28 @@ async function handleSendBTB(req, res) {
 
     const btb = typeof btbData === 'string' ? JSON.parse(btbData) : btbData;
     const code = sessionCode || ('BP-' + Date.now().toString(36).toUpperCase());
+    const nowISO = new Date().toISOString();
 
-    // 1. Stocker le JSON BTB dans clinical_extractions pour accès ultérieur
+    // 1. Stocker le JSON BTB dans clinical_extractions (colonnes natives).
+    //    Toutes les colonnes NOT NULL sont remplies explicitement.
     const { error: insertError } = await supabase
       .from('clinical_extractions')
       .insert({
-        session_code: code,
+        extraction_id: code + '-btb',
+        session_id: code,
+        json_clinical: btb,
+        schema_version: 'btb-clinique-v1',
+        model_used: 'claude-haiku-4-5-20251001',
+        structural_conformity: true,
+        extracted_at: nowISO,
+        is_test_case: String(cliniqueCode).startsWith('BP-TEST-'),
         praticien_code: cliniqueCode,
-        btb_json: btb,
-        created_at: new Date().toISOString()
+        user_id: null
       });
     if (insertError) {
-      console.warn('[send-btb] Supabase insert warning (non-bloquant):', insertError.message);
+      console.error('[send-btb] Supabase insert ERREUR:', insertError.message);
+      // Bloquant : sans stockage, le praticien ne pourra pas consulter le bilan
+      return res.status(500).json({ error: 'Stockage du bilan impossible', debug: insertError.message });
     }
 
     // 2. Construire le lien d'accès au bilan complet
