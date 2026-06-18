@@ -166,7 +166,10 @@ function buildBTBEmailHTML(btb, praticienNom, sessionCode) {
 }
 
 async function handleGetBilan(req, res) {
-  const { sessionCode } = req.query || req.body || {};
+  // Lire sessionCode depuis le body en priorité (POST JSON), puis query en fallback.
+  // Bug corrigé : `req.query || req.body` retournait toujours req.query (objet vide
+  // mais truthy), ce qui faisait échouer la lecture quand sessionCode est dans le body.
+  const sessionCode = (req.body && req.body.sessionCode) || (req.query && req.query.sessionCode) || null;
   if (!sessionCode) {
     return res.status(400).json({ error: 'sessionCode requis' });
   }
