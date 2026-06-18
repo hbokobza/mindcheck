@@ -908,7 +908,9 @@ const responseText = JSON.stringify(result.payload);
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
         max_tokens: 8192, // Augmenté V3.5 — BtC JSON enrichi peut dépasser 4096 (actions tronqué)
-        system: resolveSystemPrompt(mode, triggeredModules, passationContext),
+        // Prompt caching : le prompt système de collecte est mis en cache 5 min,
+        // réduisant la consommation tokens/min sur toute la durée de la conversation.
+        system: [{ type: 'text', text: resolveSystemPrompt(mode, triggeredModules, passationContext), cache_control: { type: 'ephemeral' } }],
         messages: messages
       })
     });
@@ -1204,7 +1206,10 @@ async function callHaikuJson(systemPrompt, userMessages) {
     body: JSON.stringify({
       model: 'claude-haiku-4-5-20251001',
       max_tokens: 16000, // Augmente pour bilans BtoB enrichis V3.5 (anciennement 8192, tronqué à ~27000 chars)
-      system: systemPrompt,
+      // Prompt caching : le prompt système (~24K chars BILAN_BTB_SYS) est mis en
+      // cache 5 min côté Anthropic. Les appels suivants ne le recomptent plus dans
+      // la limite tokens/min, ce qui évite le dépassement du rate limit.
+      system: [{ type: 'text', text: systemPrompt, cache_control: { type: 'ephemeral' } }],
       messages: userMessages
     })
   });
@@ -1278,7 +1283,9 @@ async function callSonnetJson(systemPrompt, userMessages) {
     body: JSON.stringify({
       model: 'claude-sonnet-4-5-20251022',
       max_tokens: 16000,
-      system: systemPrompt,
+      // Prompt caching : le prompt système est mis en cache 5 min côté Anthropic
+      // pour ne plus le recompter dans la limite tokens/min sur les appels suivants.
+      system: [{ type: 'text', text: systemPrompt, cache_control: { type: 'ephemeral' } }],
       messages: userMessages
     })
   });
