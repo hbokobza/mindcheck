@@ -840,6 +840,16 @@ function startSession(m){
   document.getElementById('s3').classList.remove('hidden');
   mode = 'text';
 
+  // MODE CLINIQUE : init systematique (l'ecran s2 peut etre saute), et JAMAIS
+  // de reprise de session — chaque patient part toujours d'une session neuve.
+  if(cliniqueMode){
+    initCliniqueMode();
+    window._savedSession = null;
+    try { localStorage.removeItem('mc_session_pause'); } catch(e){}
+    hist.push({role:'assistant',content:"Je vous ecoute.\nAXES:[] COMPLET:[non]"});
+    return;
+  }
+
   // Proposer de reprendre une session sauvegardée
   if(window._savedSession){
     const data = window._savedSession;
@@ -2822,6 +2832,9 @@ function reprendreParCode(){
 // Vérifier au démarrage si une session sauvegardée existe
 (function checkPause(){
   try{
+    // En mode clinique : jamais de reprise de session. Chaque patient est neuf.
+    const params = new URLSearchParams(window.location.search);
+    if(params.get('clinique')) return;
     const saved = localStorage.getItem('mc_session_pause');
     if(!saved) return;
     const data = JSON.parse(saved);
