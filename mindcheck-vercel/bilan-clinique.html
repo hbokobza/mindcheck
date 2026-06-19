@@ -6,296 +6,689 @@
 <title>BilanPsy Pro — Bilan clinique</title>
 <meta name="robots" content="noindex,nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'DM Sans',Arial,sans-serif;background:#F7F4EF;color:#1A1A18;min-height:100vh}
-.header{background:#1A2E1A;padding:20px 32px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
-.logo{font-size:22px;font-weight:700;color:#fff;letter-spacing:-0.5px}
-.logo span{color:#FF4B28}
-.logo-pro{font-size:12px;font-weight:400;color:#AAC4AA;margin-left:6px}
-.header-meta{font-size:12px;color:#AAC4AA}
-.main{max-width:800px;margin:0 auto;padding:32px 20px}
-.card{background:white;border-radius:12px;padding:24px;margin-bottom:20px;border:1px solid rgba(0,0,0,0.07)}
-.section-label{font-size:10px;font-weight:600;letter-spacing:0.1em;color:#888;text-transform:uppercase;margin-bottom:12px}
-.synthese{font-size:15px;color:#1A1A18;line-height:1.8;font-style:italic;padding:18px 20px;background:#F7F4EF;border-radius:8px;border-left:3px solid #4A7C59}
-.axes-table{width:100%;border-collapse:collapse;background:#F7F4EF;border-radius:8px;overflow:hidden}
-.axes-table th{padding:10px 12px;text-align:left;font-size:11px;color:#888;font-weight:600;text-transform:uppercase;background:#EDE8E0}
-.axes-table td{padding:10px 12px;font-size:13px;color:#1A1A18;border-bottom:1px solid #EDE8E0;vertical-align:top}
-.score-badge{display:inline-block;padding:3px 12px;border-radius:12px;font-size:12px;font-weight:600;white-space:nowrap}
-.profil-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.profil-cell{padding:14px;background:#F7F4EF;border-radius:8px}
-.profil-cell-title{font-size:11px;font-weight:600;text-transform:uppercase;margin-bottom:8px}
-.tag{display:inline-block;margin:3px 4px 3px 0;padding:3px 10px;border-radius:12px;font-size:12px}
-.conflit-cell{grid-column:1/-1;padding:14px;background:#F7F4EF;border-radius:8px;border:1px solid #E8943A40}
-.mecanisme{margin-bottom:10px;padding:12px 14px;background:#F7F4EF;border-radius:8px;border-left:3px solid #E8943A}
-.mecanisme-title{font-size:13px;font-weight:600;color:#1A1A18}
-.mecanisme-saillance{font-weight:400;font-size:12px;color:#888}
-.mecanisme-boucle{font-size:12px;color:#5A5A58;margin-top:4px}
-.piste{margin-bottom:10px;padding-left:16px;font-size:13px;color:#1A1A18;line-height:1.7;border-left:3px solid #4A7C59;padding:10px 14px;background:#F7F4EF;border-radius:0 8px 8px 0}
-.theme{margin-bottom:14px;padding:12px 16px;background:#F7F4EF;border-radius:8px;border-left:3px solid #C04A1A}
-.theme-title{font-size:13px;font-weight:600;color:#1A1A18;margin-bottom:4px}
-.theme-manif{font-size:12px;color:#5A5A58;margin-bottom:3px}
-.theme-obs{font-size:12px;color:#888;font-style:italic}
-.ressource{margin-bottom:10px;padding:12px 14px;background:#EEF7EE;border-radius:8px;border-left:3px solid #4A7C59}
-.ressource-title{font-size:13px;font-weight:600;color:#1A4A2E}
-.ressource-detail{font-size:12px;color:#5A5A58;margin-top:4px}
-.ling-card{padding:16px;background:#F7F4EF;border-radius:8px;font-size:13px;color:#1A1A18;line-height:1.7}
-.radar-wrap{display:flex;justify-content:center;margin-bottom:12px}
-.btn-pdf{display:inline-flex;align-items:center;gap:8px;background:#1A2E1A;color:white;border:none;border-radius:8px;padding:12px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;text-decoration:none}
-.btn-pdf:hover{background:#243d24}
-.footer-note{font-size:11px;color:#888;line-height:1.6;margin-top:8px}
-.footer-urgence{font-size:11px;color:#BB8866;margin-top:6px}
-.loading{text-align:center;padding:80px 20px;color:#888}
-.error-box{background:#FFF0EE;border:1px solid #FFCCC0;border-radius:8px;padding:20px;text-align:center;color:#C04A1A}
+body{font-family:'DM Sans',Arial,sans-serif;background:#F7F4EF;color:#211C16;min-height:100vh}
+#page-content{max-width:900px;margin:0 auto;padding:24px 16px 60px}
+.loading,.error-box{max-width:700px;margin:60px auto;text-align:center;padding:40px 20px}
+.error-box{background:#FFF0EE;border:1px solid #FFCCC0;border-radius:8px;color:#C04A1A;font-size:15px}
+.loading{color:#888}
 @media print{
-  .header{-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .btn-pdf{display:none}
-  .no-print{display:none}
+  *,*::before,*::after{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+  body{background:#F7F4EF}
+  button{display:none !important}
+  @page{margin:.4cm}
 }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div>
-    <div class="logo">bilanpsy<span>.</span><span class="logo-pro">PRO</span></div>
-    <div class="header-meta">BILAN CLINIQUE — Aide à la lecture pré-consultation · <span id="header-code">—</span> · <span id="header-date">—</span></div>
-  </div>
-  <a class="btn-pdf no-print" onclick="window.print()" href="#" style="text-decoration:none">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-    Imprimer / PDF
-  </a>
-</div>
-
-<div class="main" id="main-content">
+<div id="page-content">
   <div class="loading" id="loading">
-    <div style="font-size:15px;color:#888;margin-bottom:8px">Chargement du bilan…</div>
+    <div style="font-size:15px;margin-bottom:8px">Chargement du bilan…</div>
     <div style="font-size:12px;color:#aaa">Récupération des données cliniques</div>
   </div>
 </div>
 
 <script>
-// ============================================================
-// HELPERS SCORE
-// ============================================================
+// sessionCode + baselineData globaux (utilises par les fonctions reprises de app.html)
+let sessionCode = '';
+let baselineData = null;
+
+// Constantes globales reprises telles quelles de app.html (dependances de showBilanBTB)
 const SCORE_META = {
-  1: { label: 'Fragile',      color: '#C0564A', bg: '#F1DED9' },
-  2: { label: 'En tension',   color: '#C4892E', bg: '#F4E8CC' },
-  3: { label: 'En attention', color: '#6E9A5C', bg: '#E3ECD9' },
-  4: { label: 'Stable',       color: '#2F6B43', bg: '#E3ECD9' }
+  1: { label: "Fragile",    color: "#C0564A", bg: "#F1DED9" },
+  2: { label: "En tension", color: "#C4892E", bg: "#F4E8CC" },
+  3: { label: "Stable",     color: "#6E9A5C", bg: "#E3ECD9" },
+  4: { label: "Solide",     color: "#2F6B43", bg: "#D6E4D3" }
 };
-function getScoreMeta(s){ return SCORE_META[Math.max(1,Math.min(4,Math.round(s||2)))]; }
+function getScoreMeta(s){ return SCORE_META[Math.max(1,Math.min(4,Math.round(s)))] || {label:"—",color:"#CFC8BC",bg:"#F0EDE8"}; }
 function scoreColor(s){ return getScoreMeta(s).color; }
 function scoreLabel(s){ return getScoreMeta(s).label; }
-function scoreBg(s){ return getScoreMeta(s).bg; }
+function scoreBg(s){    return getScoreMeta(s).bg; }
+// niv zones : le modèle envoie 0-1=vert, 2=jaune, 3=orange, 4=rouge → converti en score 1-4
+function nivMeta(n){ const sc = n<=1?4:n===2?3:n===3?2:1; return getScoreMeta(sc); }
+function nivColor(n){ return nivMeta(n).color; }
+function nivLabel(n){ return nivMeta(n).label; }
 
-function escapeHTML(s){
-  return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
 
-// ============================================================
-// RADAR BTB
-// ============================================================
-function buildRadarBTB(axes){
-  const S=260,cx=130,cy=130,maxR=80,n=6,maxVal=4;
-  function pt(i,v){const a=(i*2*Math.PI/n)-Math.PI/2,d=(Math.min(v,maxVal)/maxVal)*maxR;return[cx+d*Math.cos(a),cy+d*Math.sin(a)];}
-  let grid='',lines='',dots='',labels='';
-  [1,2,3,4].forEach(ring=>{
-    const pts=axes.map((_,i)=>pt(i,ring).join(',')).join(' ');
-    grid+=`<polygon points="${pts}" fill="none" stroke="#DDD5C8" stroke-width="${ring===4?1:.4}"/>`;
-  });
-  for(let i=0;i<n;i++){const[x,y]=pt(i,maxVal);lines+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#DDD5C8" stroke-width=".5"/>"`;}
-  const dataPts=axes.map((ax,i)=>pt(i,ax.score||2).join(',')).join(' ');
-  axes.forEach((ax,i)=>{
-    const[x,y]=pt(i,ax.score||2),col=scoreColor(ax.score||2);
-    dots+=`<circle cx="${x}" cy="${y}" r="5" fill="${col}" stroke="white" stroke-width="1.5"/>`;
-    const a=(i*2*Math.PI/n)-Math.PI/2,lx=cx+(maxR+26)*Math.cos(a),ly=cy+(maxR+26)*Math.sin(a);
-    const anch=lx<cx-10?'end':lx>cx+10?'start':'middle';
-    const words=ax.label.split(' ');const mid=Math.ceil(words.length/2);
-    const l1=words.slice(0,mid).join(' '),l2=words.slice(mid).join(' ');
-    labels+=l2
-      ?`<text text-anchor="${anch}" font-size="9" font-family="Arial" fill="#211C16" font-weight="700"><tspan x="${lx}" y="${ly-3}">${l1}</tspan><tspan x="${lx}" dy="10">${l2}</tspan></text>`
-      :`<text x="${lx}" y="${ly+3}" text-anchor="${anch}" font-size="9" font-family="Arial" fill="#211C16" font-weight="700">${l1}</text>`;
-  });
-  return`<svg width="${S}" height="${S}" viewBox="0 0 ${S} ${S}" overflow="visible">${grid}${lines}<polygon points="${dataPts}" fill="rgba(31,58,77,0.10)" stroke="#211C16" stroke-width="1.8" stroke-linejoin="round"/>${dots}${labels}</svg>`;
-}
+const PSEE_PRO_LOGO_WHITE = `<span style="display:inline-flex;align-items:flex-end;gap:0;line-height:0"><img src="data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iaGVpZ2h0OjMycHg7d2lkdGg6YXV0bztkaXNwbGF5OmJsb2NrIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDI4My40NiA3MC44NyI+IDxkZWZzPiA8c3R5bGU+IC5zdDAgeyBmaWxsOiAjZmZmOyB9IDwvc3R5bGU+IDwvZGVmcz4gPHBhdGggY2xhc3M9InN0MCIgZD0iTTI3LjE4LDU2LjUxYy0yLjEyLDAtMy45Ny0uNDctNS41Ny0xLjQyLTEuNi0uOTQtMi45My0yLjM1LTMuOTgtNC4yMi0xLjA2LTEuODctMS44NS00LjE3LTIuMzYtNi45MWgtLjQ5djExLjU1SDQuODJWNS45aDExLjQzdjEwLjk5YzAsMS4yOC0uMDYsMi42NS0uMTgsNC4xMS0uMTIsMS40Ni0uMjgsMi45OC0uNDksNC41NC0uMjEsMS41Ni0uNDYsMy4xNC0uNzQsNC43NWguNjNjLjQyLTMuMTIsMS4xNy01LjY1LDIuMjYtNy41OSwxLjA4LTEuOTQsMi40Ny0zLjM1LDQuMTYtNC4yNSwxLjY5LS45LDMuNjItMS4zNSw1Ljc4LTEuMzUsMi43NywwLDUuMTkuNzEsNy4yMywyLjEzLDIuMDQsMS40MiwzLjYzLDMuNTQsNC43Niw2LjM4czEuNjksNi40LDEuNjksMTAuN2MwLDQuNTgtLjYyLDguMzYtMS44NywxMS4zNC0xLjI1LDIuOTgtMi45NCw1LjItNS4wOCw2LjY2cy00LjU1LDIuMi03LjIzLDIuMlpNMjMuMTYsNDcuMzdjMS40MSwwLDIuNjEtLjQ2LDMuNi0xLjM4Ljk5LS45MiwxLjc0LTIuMTUsMi4yNi0zLjY5LjUyLTEuNTQuNzgtMy4yMy43OC01LjA3cy0uMjQtMy41Ny0uNzEtNS4xN2MtLjQ3LTEuNjEtMS4yLTIuOTEtMi4xOS0zLjktLjk5LS45OS0yLjIzLTEuNDktMy43NC0xLjQ5LS42NiwwLTEuMzMuMTItMi4wMS4zNS0uNjguMjQtMS4zMi42LTEuOSwxLjEtLjU5LjUtMS4xMiwxLjEzLTEuNTksMS45MS0uNDcuNzgtLjg1LDEuNzMtMS4xMywyLjg0cy0uNDIsMi4zNy0uNDIsMy43OXYuNWMwLDEuNzUuMiwzLjI2LjYsNC41NC40LDEuMjguOTMsMi4zNCwxLjU5LDMuMTlzMS40MSwxLjQ4LDIuMjYsMS44OGMuODUuNCwxLjcyLjYsMi42MS42WiIvPiA8cGF0aCBjbGFzcz0ic3QwIiBkPSJNNTIuODUsMTUuNGMtMi4xNiwwLTMuODItLjQ2LTQuOTctMS4zOC0xLjE1LS45Mi0xLjczLTIuMjYtMS43My00cy41Ny0zLjE1LDEuNzMtNC4wOGMxLjE1LS45MiwyLjgxLTEuMzgsNC45Ny0xLjM4czMuODkuNDcsNS4wNCwxLjQyYzEuMTUuOTUsMS43MywyLjI5LDEuNzMsNC4wNHMtLjU4LDMuMDItMS43MywzLjk3Yy0xLjE1Ljk1LTIuODMsMS40Mi01LjA0LDEuNDJaTTQ3LjIxLDU1LjUyVjE4LjA5aDExLjQzdjM3LjQzaC0xMS40M1oiLz4gPHBhdGggY2xhc3M9InN0MCIgZD0iTTY1LjQ4LDU1LjUyVjUuOWgxMS40M3Y0OS42MmgtMTEuNDNaIi8+IDxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik05My41NSw1Ni41MWMtMS44OCwwLTMuNjctLjMzLTUuMzYtLjk5cy0zLjA4LTEuNzQtNC4xNi0zLjIzYy0xLjA4LTEuNDktMS42Mi0zLjQ5LTEuNjItNS45OSwwLTIuMzEuNDUtNC4xOSwxLjM0LTUuNjQuODktMS40NCwyLjA5LTIuNiwzLjYtMy40NywxLjUtLjg3LDMuMTUtMS41Myw0Ljk0LTEuOTgsMS43OS0uNDUsMy41NS0uODQsNS4yOS0xLjE3LDIuNDUtLjQ3LDQuMjgtLjg1LDUuNS0xLjEzczIuMDYtLjYxLDIuNS0uOTljLjQ1LS4zOC42Ny0uOS42Ny0xLjU2LDAtMS4zNy0uNTEtMi40MS0xLjUyLTMuMTItMS4wMS0uNzEtMi4zNC0xLjA2LTMuOTgtMS4wNi0xLjA0LDAtMi4wNy4xOS0zLjEuNTctMS4wNC4zOC0xLjg4LDEuMDUtMi41NCwyLjAyLS42Ni45Ny0uOTYsMi4zNS0uOTIsNC4xNWwtMTAuMTYtLjcxYy0uMDktMi45OC4zNS01LjQ1LDEuMzQtNy40MS45OS0xLjk2LDIuMzQtMy41LDQuMDYtNC42MSwxLjcyLTEuMTEsMy42LTEuOSw1LjY0LTIuMzgsMi4wNC0uNDcsNC4wOC0uNzEsNi4xLS43MSwzLjcyLDAsNi43Ny43LDkuMTcsMi4wOSwyLjQsMS40LDQuMTcsMy40LDUuMzMsNi4wMywxLjE1LDIuNjIsMS43Myw1LjgsMS43Myw5LjUzdjIwLjc3aC05Ljg4di0xMC43aC0uNDJjLS4xOSwyLjEzLS44OCw0LjA4LTIuMDgsNS44NS0xLjIsMS43Ny0yLjc3LDMuMTktNC43Miw0LjI1LTEuOTUsMS4wNi00LjIsMS42LTYuNzQsMS42Wk05OC4yOCw0OC4xNWMuOCwwLDEuNjYtLjE1LDIuNTctLjQ2czEuNzktLjgyLDIuNjEtMS41MmMuODItLjcxLDEuNDktMS42OSwyLjAxLTIuOTRzLjc4LTIuOC43OC00LjY0di0xLjdsMS45LS4yMWMtLjM4LjYxLTEsMS4xMS0xLjg3LDEuNDlzLTEuODUuNjctMi45My44OGMtMS4wOC4yMS0yLjE4LjQzLTMuMjguNjQtMS4xLjIxLTIuMTMuNS0zLjA3Ljg1LS45NC4zNS0xLjcuODMtMi4yOSwxLjQycy0uODgsMS40MS0uODgsMi40NGMwLDEuMjMuNDMsMi4xNiwxLjMxLDIuOC44Ny42NCwxLjkyLjk2LDMuMTQuOTZaIi8+IDxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0xMjMuODEsNTUuNTJWMTguMDloOS42NnYxNS4yNGguNTZjLjI4LTMuNjkuODktNi43MiwxLjgzLTkuMTFzMi4yOC00LjE3LDQuMDItNS4zNWMxLjc0LTEuMTgsMy45NS0xLjc3LDYuNjMtMS43Nyw0LjA0LDAsNy4wOSwxLjM1LDkuMTMsNC4wNCwyLjA1LDIuNjksMy4wNyw2LjcxLDMuMDcsMTIuMDV2MjIuMzNoLTExLjQzdi0yMC44NGMwLTIuNTUtLjM5LTQuNDctMS4xNi01Ljc0LS43OC0xLjI4LTIuMDEtMS45MS0zLjctMS45MS0xLjQxLDAtMi42Ni41LTMuNzQsMS40OS0xLjA4Ljk5LTEuOTMsMi42LTIuNTQsNC44MnMtLjkyLDUuMi0uOTIsOC45M3YxMy4yNmgtMTEuNDNaIi8+IDxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0xNjUuMjEsNjYuMDFWMTguMDloMTAuMDJ2MTEuNTZoLjQ5Yy41Mi0yLjc5LDEuMjktNS4xMiwyLjMzLTYuOTgsMS4wNC0xLjg3LDIuMzYtMy4yNiwzLjk5LTQuMTgsMS42Mi0uOTIsMy41OC0xLjM4LDUuODktMS4zOCwyLjkxLDAsNS40Ljc0LDcuNDQsMi4yM3MzLjYsMy42OSw0LjY2LDYuNTljMS4wNiwyLjkxLDEuNTksNi40OSwxLjU5LDEwLjc0LDAsNC41OC0uNiw4LjM0LTEuOCwxMS4yNy0xLjIsMi45My0yLjgzLDUuMDktNC45LDYuNDktMi4wNywxLjM5LTQuNDIsMi4wOS03LjA1LDIuMDktMi4xMiwwLTMuOTgtLjQ1LTUuNjEtMS4zNXMtMi45Ni0yLjI4LTQuMDItNC4xNWMtMS4wNi0xLjg2LTEuOC00LjIyLTIuMjItNy4wNWgtLjYzYy4yMywxLjM3LjQ1LDIuOC42Myw0LjI5cy4zNCwyLjk2LjQ2LDQuNGMuMTIsMS40NC4xOCwyLjgyLjE4LDQuMTV2OS4yMmgtMTEuNDNaTTE4My41NSw0Ny4wOWMxLjUsMCwyLjc0LS40NywzLjctMS40Mi45Ni0uOTQsMS42Ny0yLjE5LDIuMTItMy43Mi40NS0xLjU0LjY3LTMuMTUuNjctNC44NiwwLTEuODktLjI1LTMuNi0uNzQtNS4xNHMtMS4yMi0yLjc2LTIuMTktMy42OS0yLjE1LTEuMzgtMy41Ni0xLjM4Yy0uODksMC0xLjc2LjItMi42MS42LS44NS40LTEuNiwxLjAyLTIuMjYsMS44NC0uNjYuODMtMS4xOSwxLjg4LTEuNTksMy4xNS0uNCwxLjI4LS42LDIuODEtLjYsNC42MXYuNDNjMCwxLjQyLjE0LDIuNjUuNDIsMy42OS4yOCwxLjA0LjY2LDEuOTQsMS4xMywyLjY5LjQ3Ljc2LDEuMDEsMS4zNywxLjYyLDEuODQuNjEuNDcsMS4yNS44MiwxLjksMS4wMy42Ni4yMSwxLjMyLjMyLDEuOTcuMzJaIi8+IDxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0yMjMuNzUsNTYuNTFjLTIuNDksMC00LjgxLS4yNS02Ljk1LS43NC0yLjE0LS41LTQtMS4yOS01LjU3LTIuMzgtMS41OC0xLjA5LTIuNzctMi41NC0zLjYtNC4zNi0uODItMS44Mi0xLjE2LTQuMDMtMS4wMi02LjYzbDkuOTUtLjg1Yy4wOSwxLjU2LjQ1LDIuODUsMS4wNiwzLjg2czEuNDYsMS43NiwyLjU0LDIuMjNjMS4wOC40NywyLjQuNzEsMy45NS43MSwxLjQ2LDAsMi43MS0uMjUsMy43Ny0uNzQsMS4wNi0uNSwxLjU5LTEuMzMsMS41OS0yLjUyLDAtLjYxLS4xOS0xLjEyLS41Ni0xLjUyLS4zOC0uNC0xLjA3LS43OC0yLjA4LTEuMTRzLTIuNDgtLjc3LTQuNDEtMS4yNGMtMi40LS42MS00LjU2LTEuMjMtNi40OS0xLjg0LTEuOTMtLjYxLTMuNTgtMS4zNS00Ljk0LTIuMi0xLjM2LS44NS0yLjQtMS45LTMuMS0zLjE1LS43LTEuMjUtMS4wNi0yLjgtMS4wNi00LjY0LDAtMi42LjY5LTQuODEsMi4wOC02LjYzczMuMy0zLjIxLDUuNzUtNC4xOGMyLjQ1LS45Nyw1LjI2LTEuNDUsOC40Ni0xLjQ1LDIuODcsMCw1LjU1LjQ1LDguMDQsMS4zNSwyLjQ5LjksNC40NSwyLjM2LDUuODksNC40LDEuNDMsMi4wMywxLjk2LDQuNzMsMS41OSw4LjA4bC05LjczLjkyYy4xNC0xLjM3LS4wNS0yLjU0LS41Ni0zLjUxLS41Mi0uOTctMS4yNy0xLjctMi4yNi0yLjItLjk5LS41LTIuMTgtLjc0LTMuNi0uNzQtMS42LDAtMi44My4yOS0zLjcuODgtLjg3LjU5LTEuMywxLjM0LTEuMywyLjIzLDAsLjcxLjI3LDEuMzEuODEsMS44MS41NC41LDEuMzkuOTIsMi41NCwxLjI4czIuNjUuNzQsNC40OCwxLjE3YzEuNi4zMywzLjI3Ljc2LDUuMDEsMS4yOCwxLjc0LjUyLDMuMzYsMS4yMiw0Ljg3LDIuMDlzMi43MywyLjAyLDMuNjcsMy40NGMuOTQsMS40MiwxLjQxLDMuMjEsMS40MSw1LjM5LDAsMi4zMS0uNjMsNC4zNS0xLjksNi4xcy0zLjEzLDMuMS01LjU3LDQuMDRjLTIuNDUuOTUtNS40NSwxLjQyLTkuMDMsMS40MloiLz4gPHBhdGggY2xhc3M9InN0MCIgZD0iTTI1OC44Nyw2Ni41OGMtMS40MSwwLTIuOTYtLjEyLTQuNjYtLjM1LTEuNjktLjI0LTMuMzktLjYxLTUuMDgtMS4xMy0xLjY5LS41Mi0zLjI3LTEuMTgtNC43My0xLjk5bDIuNjEtMTEuNTVjMS42OSwxLjYxLDMuNTgsMi43NCw1LjY4LDMuNCwyLjA5LjY2LDMuOTYuOTksNS42MS45OSwyLjMsMCw0LjI0LS40Niw1LjgyLTEuMzhzMi43Ni0yLjI3LDMuNTYtNC4wNGMuOC0xLjc3LDEuMi0zLjk0LDEuMi02LjQ5di02LjUyaC0uNjNjLS4wOSwzLjMxLS42Miw2LjAxLTEuNTksOC4xMi0uOTYsMi4xLTIuMjcsMy42NS0zLjkyLDQuNjQtMS42NS45OS0zLjU1LDEuNDktNS43MSwxLjQ5LTIuNjgsMC00LjktLjY4LTYuNjctMi4wNi0xLjc2LTEuMzctMy4wOS0zLjQzLTMuOTgtNi4xNy0uODktMi43NC0xLjM0LTYuMTctMS4zNC0xMC4yOHYtMTUuMTdoMTEuMzZ2MTIuMmMwLDQuMDIuNDIsNi45NSwxLjI3LDguNzlzMi4xOSwyLjc2LDQuMDIsMi43NmMuOTQsMCwxLjc3LS4yNSwyLjUtLjc0LjczLS41LDEuMzMtMS4yNSwxLjgtMi4yNy40Ny0xLjAxLjgyLTIuMjksMS4wNi0zLjgzLjIzLTEuNTQuMzUtMy4zMi4zNS01LjM1di0xMS41NmgxMS4zNXYyNi4zN2MwLDIuNTUtLjI2LDQuOTUtLjc3LDcuMi0uNTIsMi4yNS0xLjI5LDQuMjgtMi4zMyw2LjEtMS4wNCwxLjgyLTIuMzQsMy4zOS0zLjkyLDQuNzEtMS41OCwxLjMyLTMuNDMsMi4zNC01LjU3LDMuMDUtMi4xNC43MS00LjU3LDEuMDYtNy4zLDEuMDZaIi8+IDwvc3ZnPg==" style="height:32px;width:auto;display:block" alt="bilanpsy"><span style="color:#FF4B28;font-size:28px;font-family:Arial,sans-serif;font-weight:900;line-height:1;align-self:flex-end;margin-left:1px;margin-bottom:5px">.</span></span>`;
 
-// ============================================================
-// RENDER BTB
-// ============================================================
-function renderBTB(data, sessionCode){
+
+// ========================================================================
+// FONCTIONS DE RENDU BTB — extraites telles quelles de app.html (showBilanBTB
+// + printBilanBTB) pour un rendu IDENTIQUE au bilan de reference PS-YC8X-9Z4R.
+// Seule adaptation : insertion dans #page-content au lieu d'une overlay modale.
+// ========================================================================
+function showBilanBTB(data){
   const date = new Date().toLocaleDateString('fr-FR');
-  document.getElementById('header-code').textContent = sessionCode || '—';
-  document.getElementById('header-date').textContent = date;
 
-  const axes = data.axes || [];
-  const profil = data.profil_clinique || {};
-  const mecanismes = data.mecanismes_transdiagnostiques || [];
-  const pistes = data.pistes_exploration || [];
-  const themes = data.themes_attention || [];
-  const ressObs = data.ressources_observees || {};
-  const ling = data.analyse_linguistique || {};
-  const saillanceLabel = s => s>=3?'élevée':s>=2?'modérée':'faible';
+  // ============================================================
+  // SHOW BILAN BTB v3 WELLNESS SAFE
+  // Architecture matchant la maquette V7 :
+  // - Têtière bleu marine (identique V2)
+  // - Scores psychométriques 3 cards horizontales (PHQ/GAD/PSS)
+  //   avec alerte item 9 ambre (observationnelle, pas prescriptive)
+  // - Synthèse clinique en card bleu très clair (pas marine plein)
+  // - Cartographie radar + barres segmentées 6 axes
+  // - Matrice psychosomatique 6 axes (manifestations + systèmes)
+  // - Analyse linguistique implicite (5 sous-champs + observations)
+  // - Mécanismes transdiagnostiques en cards compactes
+  //   (avec boucle_courte symbolique)
+  // - Points d'attention en grid 2x2 (4 thèmes + card item 9
+  //   en pleine largeur si présent)
+  // - Ressources observées en pleine largeur (intro + 3 cards)
+  // - Méthodologie + Footer
+  //
+  // Compatibilité ascendante : si data contient encore les anciens
+  // champs V2 (axes_therapeutiques, redflags, lecture_clinique),
+  // ils sont ignorés silencieusement.
+  // ============================================================
 
-  const tagHTML = (str, color) => (str||'').split(',').map(t=>t.trim()).filter(Boolean)
-    .map(t=>`<span class="tag" style="background:${color}15;color:${color};border:1px solid ${color}30">${escapeHTML(t)}</span>`).join('');
+  // === HELPERS ===
+  function getScoreMetaSafe(sc) {
+    const safe = Math.max(1, Math.min(4, Math.round(sc || 2)));
+    return { score: safe, ...SCORE_META[safe] };
+  }
 
-  const axesRows = axes.map(ax=>{
-    const m = getScoreMeta(ax.score||2);
-    return `<tr>
-      <td style="font-weight:500">${escapeHTML(ax.label||ax.num)}</td>
-      <td><span class="score-badge" style="background:${m.bg};color:${m.color}">${m.label}</span></td>
-      <td style="color:#5A5A58;font-size:12px">${escapeHTML(ax.manifestations||'')}</td>
-    </tr>`;
+  function escapeHTML(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  // === SCORES PSYCHOMÉTRIQUES (CORRIGÉ V3.1) ===
+  // data.indicateurs est un TABLEAU côté serveur (cf showBilan BtC),
+  // pas un objet keyé par PHQ9/GAD7/PSS10.
+  // Chaque entrée a la structure : {id, score, max, items_couverts, items_total, label, ...}
+  const indicateurs = Array.isArray(data.indicateurs) ? data.indicateurs : [];
+
+  // Métadonnées identiques à celles de showBilan BtC
+  const PSYCHO_META_BTB = {
+    PHQ9: {
+      code: 'PHQ-9',
+      name: 'Patient Health Questionnaire',
+      periode: 'Sévérité dépressive · 14 derniers jours',
+      thresholds: [
+        { max: 4,  color: '#2F6B43', bg: '#E3ECD9', label: 'minimal' },
+        { max: 9,  color: '#6E9A5C', bg: '#E3ECD9', label: 'léger' },
+        { max: 14, color: '#C4892E', bg: '#F4E8CC', label: 'modéré' },
+        { max: 19, color: '#C4892E', bg: '#F1DED9', label: 'modéré à sévère' },
+        { max: 27, color: '#C0564A', bg: '#F1DED9', label: 'sévère' }
+      ]
+    },
+    GAD7: {
+      code: 'GAD-7',
+      name: 'Generalized Anxiety Disorder Scale',
+      periode: 'Anxiété généralisée · 14 derniers jours',
+      thresholds: [
+        { max: 4,  color: '#2F6B43', bg: '#E3ECD9', label: 'minimale' },
+        { max: 9,  color: '#6E9A5C', bg: '#E3ECD9', label: 'légère' },
+        { max: 14, color: '#C4892E', bg: '#F4E8CC', label: 'modérée' },
+        { max: 21, color: '#C0564A', bg: '#F1DED9', label: 'sévère' }
+      ]
+    },
+    PSS10: {
+      code: 'PSS-10',
+      name: 'Perceived Stress Scale',
+      periode: 'Stress perçu · dernier mois',
+      thresholds: [
+        { max: 13, color: '#2F6B43', bg: '#E3ECD9', label: 'faible' },
+        { max: 26, color: '#C4892E', bg: '#F4E8CC', label: 'modéré' },
+        { max: 40, color: '#C0564A', bg: '#F1DED9', label: 'élevé' }
+      ]
+    }
+  };
+
+  function getBandBTB(moduleId, score) {
+    const meta = PSYCHO_META_BTB[moduleId];
+    if (!meta) return { color: '#8a897f', bg: '#f0eee9', label: '—' };
+    return meta.thresholds.find(t => score <= t.max) || meta.thresholds[meta.thresholds.length - 1];
+  }
+
+  // Reconstitution d'un mapping {PHQ9, GAD7, PSS10} à partir du tableau
+  const indMap = {};
+  indicateurs.forEach(ind => { if (ind && ind.id) indMap[ind.id] = ind; });
+  const phq = indMap.PHQ9;
+  const gad = indMap.GAD7;
+  const pss = indMap.PSS10;
+
+  // Détection item 9 PHQ-9 (idéation suicidaire) - posture observationnelle wellness
+  const item9Present = data.item9_present === true ||
+    (phq && phq.itemScores && Number(phq.itemScores[8]) >= 1) ||
+    (phq && phq.score != null && phq.score >= 15);
+
+  const item9AlertHTML = item9Present ? `
+    <div style="margin-top:10px;background:#fff7e0;border-left:4px solid #d8a24a;border-radius:6px;padding:9px 11px;color:#7c5a0f;font-size:11px;line-height:1.45">
+      <b>Item 9 — point d'attention</b><br>
+      Score ≥ 1 sur l'item relatif aux idées de mort ou d'auto-dommage. Observation à intégrer à votre lecture clinique.
+    </div>` : '';
+
+  // Card uniforme pour les 3 instruments — utilise les mêmes seuils colorés que le BtC
+  function scorePsychoCardBTB(moduleId, ind, alertHTML) {
+    const meta = PSYCHO_META_BTB[moduleId];
+    if (!ind || ind.score == null) {
+      return `<div style="padding:18px;border:1px dashed #d8d6cf;border-radius:14px;background:#fafaf7;color:#999;font-style:italic;font-size:12px;display:flex;flex-direction:column;gap:6px;min-height:130px;justify-content:center;text-align:center">
+        <div style="color:#211C16;font-weight:800;font-style:normal;font-size:14px;font-family:Georgia,serif">${meta ? meta.code : moduleId}</div>
+        <div>Non calculable<br><span style="font-size:10px">couverture insuffisante</span></div>
+      </div>`;
+    }
+    const score = ind.score;
+    const max = ind.max || meta.thresholds[meta.thresholds.length - 1].max;
+    const band = getBandBTB(moduleId, score);
+    const fillPct = Math.round((score / max) * 100);
+    const itemsCovered = ind.items_couverts || 0;
+    const itemsTotal = ind.items_total || 0;
+    const isPartial = itemsTotal > 0 && itemsCovered < itemsTotal;
+    const labelText = isPartial ? `${band.label} (estimation indicative)` : band.label;
+    const couvNote = itemsTotal > 0 ? `${itemsCovered}/${itemsTotal} items couverts par le récit` : '';
+
+    return `
+      <div style="padding:18px 18px 16px;border:1px solid #e5e6e0;border-radius:14px;background:#fbfbfa;display:flex;flex-direction:column;gap:8px;min-height:130px">
+        <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
+          <div style="flex:1;min-width:0">
+            <div style="color:#211C16;font-weight:800;font-size:17px;font-family:Georgia,serif">${meta.code}</div>
+            <div style="color:#666;font-size:11px;margin-top:1px">${escapeHTML(meta.name)}</div>
+            <div style="color:#888;font-size:10px;margin-top:3px;font-style:italic">${escapeHTML(meta.periode)}</div>
+          </div>
+          <div style="color:#211C16;font-size:28px;font-weight:800;line-height:1;flex-shrink:0">${score}<span style="font-size:13px;color:#666;font-weight:600">/${max}</span></div>
+        </div>
+        <div style="height:7px;background:#eee;border-radius:999px;margin:4px 0;overflow:hidden">
+          <div style="height:100%;background:${band.color};border-radius:999px;width:${fillPct}%"></div>
+        </div>
+        <span style="display:inline-block;padding:5px 11px;border-radius:999px;background:${band.bg};color:${band.color};font-weight:800;font-size:11px;align-self:flex-start">${escapeHTML(labelText)}</span>
+        ${couvNote ? `<div style="font-size:10px;color:#888;font-style:italic;margin-top:2px">${escapeHTML(couvNote)}</div>` : ''}
+        ${alertHTML || ''}
+      </div>`;
+  }
+
+  const phqCard = scorePsychoCardBTB('PHQ9', phq, item9AlertHTML);
+  const gadCard = scorePsychoCardBTB('GAD7', gad, '');
+  const pssCard = scorePsychoCardBTB('PSS10', pss, '');
+
+  // === SYNTHÈSE CLINIQUE EN BLEU CLAIR ===
+  const syntheseHTML = `
+    <section style="margin:24px 24px 0;padding:24px 28px;background:#EEF4F8;border:1px solid #D4E2EF;border-left:4px solid #EFE9DD;border-radius:18px">
+      <div style="font-size:12px;letter-spacing:0.32em;color:#211C16;font-weight:800;text-transform:uppercase;margin-bottom:14px">Synthèse clinique &amp; orientation</div>
+      <p style="font-family:Georgia,serif;font-style:italic;font-size:18px;line-height:1.55;margin:0;color:#1F2D38">${escapeHTML(data.synthese_clinique || data.synthese || '')}</p>
+    </section>`;
+
+  // === CARTOGRAPHIE + BARRES SEGMENTÉES PAR AXE ===
+  // Radar SVG simple à 6 axes
+  const axesArr = (data.axes || []).slice(0, 6);
+  axesArr.forEach(ax => {
+    if (ax && /processus psychiques/i.test(String(ax.label || ''))) {
+      ax.label = 'Structure psychique et relationnelle';
+    }
+  });
+  while (axesArr.length < 6) axesArr.push({ score: 2, label: '—', manifestations: '', systemes: '' });
+
+  // Calcul des points du polygone (radar)
+  function radarPoint(idx, score) {
+    // 6 axes, angle = -90° + idx * 60° (en haut, sens horaire)
+    const angle = (-90 + idx * 60) * Math.PI / 180;
+    const r = (score / 4) * 100;
+    return [Math.round(r * Math.cos(angle) * 100) / 100, Math.round(r * Math.sin(angle) * 100) / 100];
+  }
+  const radarPoints = axesArr.map((ax, i) => radarPoint(i, Math.max(1, Math.min(4, ax.score || 2))));
+  const radarPolygon = radarPoints.map(p => p.join(',')).join(' ');
+  const radarColors = axesArr.map(ax => {
+    const s = Math.max(1, Math.min(4, Math.round(ax.score || 2)));
+    return SCORE_META[s].color;
+  });
+
+  // SVG du radar (compact pour le grid) — viewBox élargi pour ne pas tronquer les labels
+  const radarSVG = `
+    <svg viewBox="-160 -135 320 280" width="240" height="220" aria-label="Radar" style="max-width:100%;height:auto">
+      <polygon points="0,-100 86.6,-50 86.6,50 0,100 -86.6,50 -86.6,-50" fill="none" stroke="#dbcdb7" stroke-width="0.7"/>
+      <polygon points="0,-66 57.2,-33 57.2,33 0,66 -57.2,33 -57.2,-33" fill="none" stroke="#e8ded0" stroke-width="0.7"/>
+      <polygon points="0,-33 28.6,-16.5 28.6,16.5 0,33 -28.6,16.5 -28.6,-16.5" fill="none" stroke="#e8ded0" stroke-width="0.7"/>
+      <line x1="0" y1="0" x2="0" y2="-100" stroke="#e8ded0" stroke-width="0.5"/>
+      <line x1="0" y1="0" x2="86.6" y2="-50" stroke="#e8ded0" stroke-width="0.5"/>
+      <line x1="0" y1="0" x2="86.6" y2="50" stroke="#e8ded0" stroke-width="0.5"/>
+      <line x1="0" y1="0" x2="0" y2="100" stroke="#e8ded0" stroke-width="0.5"/>
+      <line x1="0" y1="0" x2="-86.6" y2="50" stroke="#e8ded0" stroke-width="0.5"/>
+      <line x1="0" y1="0" x2="-86.6" y2="-50" stroke="#e8ded0" stroke-width="0.5"/>
+      <polygon points="${radarPolygon}" fill="rgba(31,58,77,0.18)" stroke="#211C16" stroke-width="2" stroke-linejoin="round"/>
+      ${radarPoints.map((p, i) => `<circle cx="${p[0]}" cy="${p[1]}" r="6" fill="${radarColors[i]}"/>`).join('')}
+      <g fill="#211C16" font-weight="800" font-size="10" font-family="Arial">
+        <text x="0" y="-121" text-anchor="middle">Structure</text><text x="0" y="-109" text-anchor="middle">relationnelle</text>
+        <text x="105" y="-55" text-anchor="start">Ressources</text>
+        <text x="105" y="63" text-anchor="start">Comportements</text>
+        <text x="0" y="125" text-anchor="middle">Régulation</text>
+        <text x="-105" y="63" text-anchor="end">Corps</text>
+        <text x="-105" y="-55" text-anchor="end">Environnement</text>
+      </g>
+    </svg>`;
+
+  // Barres segmentées 6 axes (style maquette V7)
+  const axesSegHTML = axesArr.map(ax => {
+    const sc = Math.max(1, Math.min(4, Math.round(ax.score || 2)));
+    const meta = getScoreMetaSafe(sc);
+    // 4 segments : rouge / orange / vert clair / vert foncé
+    const segColors = ['#d76f74', '#dfa24c', '#9cbe65', '#4f8a5b'];
+    const segs = [1,2,3,4].map(i =>
+      `<span style="height:9px;border-radius:999px;background:${i <= sc ? segColors[i-1] : '#e5eee4'}"></span>`
+    ).join('');
+    return `
+      <div style="margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">
+          <span style="font-weight:800;font-size:14px;color:#1f1f1c">${escapeHTML(ax.label)}</span>
+          <span style="font-weight:700;font-size:11px;color:${meta.color}">${meta.label}</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px">${segs}</div>
+      </div>`;
   }).join('');
 
-  const mecanismesHTML = mecanismes.map(m=>`
-    <div class="mecanisme">
-      <div class="mecanisme-title">${escapeHTML(m.processus||m.nom||'')} <span class="mecanisme-saillance">— saillance ${saillanceLabel(m.salience??m.saillance??0)}</span></div>
-      <div class="mecanisme-boucle">${escapeHTML(m.boucle_courte||'')}</div>
-    </div>`).join('');
+  const cartographieHTML = `
+    <section style="margin:18px 24px 0;display:grid;grid-template-columns:1fr 1.1fr;gap:18px">
+      <div style="background:white;border:1px solid #e5e6e0;border-radius:18px;padding:22px">
+        <div style="font-size:12px;letter-spacing:0.32em;color:#BE401D;font-weight:800;text-transform:uppercase;margin-bottom:6px">Cartographie clinique</div>
+        <div style="color:#6b6b6b;font-size:12px;margin-bottom:6px">Échelle 1 (Fragile) à 4 (Solide)</div>
+        <div style="display:flex;align-items:center;justify-content:center;min-height:260px">${radarSVG}</div>
+      </div>
+      <div style="background:white;border:1px solid #e5e6e0;border-radius:18px;padding:22px">
+        <div style="font-size:12px;letter-spacing:0.32em;color:#BE401D;font-weight:800;text-transform:uppercase;margin-bottom:14px">Synthèse par axe</div>
+        ${axesSegHTML}
+      </div>
+    </section>`;
 
-  const pistesHTML = pistes.map(p=>`<div class="piste">${escapeHTML(p)}</div>`).join('');
 
-  const themesHTML = themes.map(t=>`
-    <div class="theme">
-      <div class="theme-title">${escapeHTML(t.titre||'')}</div>
-      <div class="theme-manif">${escapeHTML(t.manifestations||'')}</div>
-      <div class="theme-obs">${escapeHTML(t.observation_clinique||'')}</div>
-    </div>`).join('');
+  // === PROFIL CLINIQUE OBSERVÉ — 4 CARTES COMPACTES ===
+  const pc = data.profil_clinique || {};
+  function splitTags(v) {
+    if (Array.isArray(v)) return v.filter(Boolean).slice(0, 4);
+    if (typeof v === 'string' && v.trim()) return v.split(/[,;•\n]+/).map(s => s.trim()).filter(Boolean).slice(0, 4);
+    return [];
+  }
+  const pcStructure = splitTags(pc.structure || pc.structure_psychique || pc.structure_relationnelle);
+  const pcEvents = splitTags(pc.evenements || pc.evenements_structurants);
+  const pcResources = splitTags(pc.ressources || pc.ressources_structurantes);
+  const pcConflict = pc.conflit_central || pc.conflit || '';
 
-  const resElements = (ressObs.elements||[]).map(e=>`
-    <div class="ressource">
-      <div class="ressource-title">${escapeHTML(e.titre||'')}</div>
-      <div class="ressource-detail">${escapeHTML(e.detail||'')}</div>
-    </div>`).join('');
+  function profileList(items, fallback) {
+    const arr = items.length ? items : fallback;
+    return '<ul style="margin:0;padding-left:16px;font-size:12.5px;line-height:1.55;color:#333">' +
+      arr.map(x => '<li>' + escapeHTML(x) + '</li>').join('') +
+      '</ul>';
+  }
 
-  const html = `
-    <!-- DESTINATAIRE -->
-    <div class="card" style="background:#F7F4EF;border:none;padding:14px 18px;font-size:13px;color:#5A5A58">
-      Bilan clinique confidentiel · Usage professionnel exclusif
-    </div>
-
-    <!-- SYNTHÈSE -->
-    <div class="card">
-      <div class="section-label">Synthèse clinique</div>
-      <div class="synthese">${escapeHTML(data.synthese_clinique||data.synthese||'—')}</div>
-    </div>
-
-    <!-- RADAR + 6 AXES -->
-    <div class="card">
-      <div class="section-label">Cartographie 6 axes</div>
-      <div class="radar-wrap">${buildRadarBTB(axes)}</div>
-      <table class="axes-table">
-        <thead><tr>
-          <th>Axe</th><th>Score</th><th>Manifestations</th>
-        </tr></thead>
-        <tbody>${axesRows}</tbody>
-      </table>
-    </div>
-
-    <!-- PROFIL CLINIQUE -->
-    <div class="card">
-      <div class="section-label">Profil clinique observé</div>
-      <div class="profil-grid">
-        <div class="profil-cell">
-          <div class="profil-cell-title" style="color:#4D3728">Structure psychique</div>
-          ${tagHTML(profil.structure,'#4D3728')}
+  const profilCliniqueHTML = `
+    <section style="margin:18px 24px 0;background:white;border:1px solid #e5e6e0;border-radius:18px;padding:24px">
+      <div style="font-size:12px;letter-spacing:0.32em;color:#BE401D;font-weight:800;text-transform:uppercase;margin-bottom:16px">Profil clinique observé</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">
+        <div style="border:1px solid #f0c8c2;border-radius:14px;background:#fff;padding:16px">
+          <div style="font-size:12px;line-height:1.25;text-transform:uppercase;font-weight:900;color:#BE401D;margin-bottom:10px">Structure psychique et relationnelle</div>
+          ${profileList(pcStructure, ['Estime de soi vulnérable','Sensibilité au rejet','Vigilance relationnelle'])}
         </div>
-        <div class="profil-cell">
-          <div class="profil-cell-title" style="color:#4A5728">Événements structurants</div>
-          ${tagHTML(profil.evenements,'#4A5728')}
+        <div style="border:1px solid #d8cfee;border-radius:14px;background:#fff;padding:16px">
+          <div style="font-size:12px;line-height:1.25;text-transform:uppercase;font-weight:900;color:#5B4A8B;margin-bottom:10px">Événements structurants</div>
+          ${profileList(pcEvents, ['Événements marquants à préciser','Ruptures ou pertes significatives','Transitions de vie'])}
         </div>
-        <div class="conflit-cell">
-          <div class="profil-cell-title" style="color:#7A4010">Conflit central</div>
-          <div style="font-size:14px;font-weight:600;color:#1A1A18;margin-top:4px">${escapeHTML(profil.conflit_central||'—')}</div>
+        <div style="border:1px solid #efc88f;border-radius:14px;background:#fff;padding:16px;text-align:center">
+          <div style="font-size:12px;line-height:1.25;text-transform:uppercase;font-weight:900;color:#C66A1D;margin-bottom:12px">Conflit central</div>
+          <div style="font-size:13px;line-height:1.55;color:#333;font-weight:700">${escapeHTML(pcConflict || 'Besoin de sécurité ↔ peur du rejet')}</div>
         </div>
-        <div class="profil-cell" style="grid-column:1/-1">
-          <div class="profil-cell-title" style="color:#1A4A2E">Ressources structurantes</div>
-          ${tagHTML(profil.ressources,'#1A4A2E')}
+        <div style="border:1px solid #c9dfbf;border-radius:14px;background:#fff;padding:16px">
+          <div style="font-size:12px;line-height:1.25;text-transform:uppercase;font-weight:900;color:#4f8146;margin-bottom:10px">Ressources structurantes</div>
+          ${profileList(pcResources, ['Réflexivité','Verbalisation','Soutien relationnel'])}
         </div>
       </div>
+    </section>`;
+
+  // === MATRICE PSYCHOSOMATIQUE 6 AXES ===
+  const matriceLignes = axesArr.map(ax => {
+    const sc = Math.max(1, Math.min(4, Math.round(ax.score || 2)));
+    const pillBg = sc === 1 ? '#fde7e8' : sc === 2 ? '#fff0cf' : sc === 3 ? '#e9f3df' : '#dff0e1';
+    const pillCol = sc === 1 ? '#c94750' : sc === 2 ? '#be7a17' : sc === 3 ? '#4f8146' : '#2f6f3e';
+    return `
+      <div style="display:contents">
+        <div style="padding:16px 16px;border-right:1px solid #e5e6e0;border-bottom:1px solid #e5e6e0;background:#fff;font-weight:800;font-size:14px;line-height:1.2;display:flex;align-items:center">${escapeHTML(ax.label)}</div>
+        <div style="padding:16px 16px;border-right:1px solid #e5e6e0;border-bottom:1px solid #e5e6e0;background:#fff;text-align:center"><span style="display:inline-flex;align-items:center;justify-content:center;height:26px;min-width:50px;border-radius:999px;font-weight:900;font-size:12px;background:${pillBg};color:${pillCol}">${sc}/4</span></div>
+        <div style="padding:16px 16px;border-right:1px solid #e5e6e0;border-bottom:1px solid #e5e6e0;background:#fff;font-size:13px;line-height:1.5;color:#333">${escapeHTML(ax.manifestations || ax.obs || '—')}</div>
+        <div style="padding:16px 16px;border-bottom:1px solid #e5e6e0;background:#fff;font-size:13px;line-height:1.5;color:#333">${escapeHTML(ax.systemes || '—')}</div>
+      </div>`;
+  }).join('');
+
+  const matriceHTML = `
+    <section style="margin:18px 24px 0;background:white;border:1px solid #e5e6e0;border-radius:18px;padding:24px">
+      <div style="font-size:12px;letter-spacing:0.32em;color:#BE401D;font-weight:800;text-transform:uppercase;margin-bottom:16px">Matrice psychosomatique — 6 axes BilanPsy</div>
+      <div class="matrix-scroll"><div class="matrix-grid" style="display:grid;grid-template-columns:170px 70px 1fr 1fr;border-top:1px solid #e5e6e0;border-left:1px solid #e5e6e0;overflow:hidden;border-radius:12px">
+        <div style="padding:12px 16px;background:#6E6456;color:white;font-weight:900;text-transform:uppercase;font-size:11px;letter-spacing:0.04em;border-right:1px solid rgba(255,255,255,0.15)">Axe</div>
+        <div style="padding:12px 16px;background:#6E6456;color:white;font-weight:900;text-transform:uppercase;font-size:11px;letter-spacing:0.04em;border-right:1px solid rgba(255,255,255,0.15)">Score</div>
+        <div style="padding:12px 16px;background:#6E6456;color:white;font-weight:900;text-transform:uppercase;font-size:11px;letter-spacing:0.04em;border-right:1px solid rgba(255,255,255,0.15)">Manifestations cliniques</div>
+        <div style="padding:12px 16px;background:#6E6456;color:white;font-weight:900;text-transform:uppercase;font-size:11px;letter-spacing:0.04em">Lecture fonctionnelle / systèmes</div>
+        ${matriceLignes}
+      </div></div>
+    </section>`;
+
+  // === ANALYSE LINGUISTIQUE IMPLICITE — V3.3 ULTRA COMPACTE ===
+  // Format inline avec mini-tags + 1 phrase de synthèse
+  // Section secondaire : densité visuelle minimale, lecture optionnelle
+  const al = data.analyse_linguistique;
+  const linguTags = [];
+  if (al) {
+    if (al.pronoms_je) linguTags.push({ label: 'Pronoms 1<sup>ère</sup> pers.', value: al.pronoms_je });
+    if (al.marqueurs_absolutistes) linguTags.push({ label: 'Absolutistes', value: al.marqueurs_absolutistes });
+    if (al.valence_emotionnelle) linguTags.push({ label: 'Valence', value: al.valence_emotionnelle });
+    if (al.temporalite_dominante) linguTags.push({ label: 'Temporalité', value: al.temporalite_dominante });
+    if (al.langage_interieur) linguTags.push({ label: 'Langage intérieur', value: al.langage_interieur });
+  }
+  const analyseLinguistiqueHTML = al && linguTags.length > 0 ? `
+    <section style="margin:18px 24px 0;background:#fafaf7;border:1px solid #e5e6e0;border-radius:14px;padding:14px 18px">
+      <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:8px">
+        <div style="font-size:10px;letter-spacing:0.32em;color:#211C16;font-weight:800;text-transform:uppercase">Analyse linguistique</div>
+        <div style="font-size:10px;color:#888;font-style:italic">Marqueurs implicites du récit</div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px 14px;margin-bottom:8px">
+        ${linguTags.map(t => `
+          <div style="font-size:11px;color:#333;line-height:1.4">
+            <span style="color:#211C16;font-weight:700">${t.label}</span>
+            <span style="color:#888;margin:0 3px">·</span>
+            <span>${escapeHTML(t.value)}</span>
+          </div>`).join('')}
+      </div>
+      ${al.observations ? `
+        <div style="font-size:11.5px;color:#3a4a35;line-height:1.5;font-style:italic;font-family:Georgia,serif;padding-top:8px;border-top:0.5px dashed rgba(0,0,0,0.08)">
+          ${escapeHTML(al.observations)}
+        </div>` : ''}
+    </section>` : '';
+
+  // === MÉCANISMES TRANSDIAGNOSTIQUES (CARDS COMPACTES AVEC BOUCLE COURTE) ===
+  // Limité à 5 mécanismes maximum pour préserver le grid (sinon le 5e tombe seul sur la 2e ligne)
+  // V3.6 BtC : remplacement des dots numériques (saillance 0-3) par une qualification textuelle
+  // wellness-safe ("saillance élevée / modérée / discrète"). La donnée 0-3 reste en backend
+  // pour le tri par saillance, mais ne s'affiche jamais.
+  const mecanismes = (data.mecanismes_transdiagnostiques || [])
+    .slice()
+    .sort((a, b) => (b.salience || 0) - (a.salience || 0))
+    .slice(0, 5);
+
+  // Mapping saillance numérique → qualification textuelle wellness-safe
+  function qualSaillance(s) {
+    const n = Math.max(0, Math.min(3, s || 0));
+    if (n >= 3) return { label: 'saillance élevée',  color: '#14562e', bg: '#E3ECD9' };
+    if (n === 2) return { label: 'saillance modérée', color: '#EFE9DD', bg: '#E3ECD9' };
+    return         { label: 'saillance discrète', color: '#6b6b63', bg: '#f0eee9' };
+  }
+
+  const mecanismeCards = mecanismes.map(m => {
+    const q = qualSaillance(m.salience);
+    return `
+      <div style="border:1px solid #e5e6e0;border-radius:14px;padding:16px;background:white">
+        <div style="font-size:15px;font-weight:900;margin-bottom:8px;color:#1f1f1c">${escapeHTML(m.processus || '')}</div>
+        <div style="font-size:13px;line-height:1.5;color:#333;min-height:42px">${escapeHTML(m.boucle_courte || m.mecanisme_circulaire || '')}</div>
+        <div style="margin-top:12px">
+          <span style="display:inline-block;padding:4px 10px;border-radius:999px;background:${q.bg};color:${q.color};font-weight:700;font-size:11px;letter-spacing:0.3px">${q.label}</span>
+        </div>
+      </div>`;
+  }).join('');
+
+  const mecanismesHTML = mecanismes.length ? `
+    <section style="margin:18px 24px 0;background:white;border:1px solid #e5e6e0;border-radius:18px;padding:24px">
+      <div style="font-size:12px;letter-spacing:0.32em;color:#BE401D;font-weight:800;text-transform:uppercase;margin-bottom:16px">Mécanismes transdiagnostiques identifiés</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px">${mecanismeCards}</div>
+    </section>` : '';
+
+  // === HYPOTHÈSES CLINIQUES (V3.5 — couche structurale) ===
+  const hypothesesArr = (data.hypotheses_cliniques || []).slice(0, 6);
+  const hypothesesHTML = hypothesesArr.length ? `
+    <section style="margin:18px 24px 0;background:#F5F0F8;border:1px solid #D8CAE8;border-radius:18px;padding:24px">
+      <div style="font-size:12px;letter-spacing:0.32em;color:#5B4A8B;font-weight:800;text-transform:uppercase;margin-bottom:16px">Hypothèses cliniques</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        ${hypothesesArr.map((h, i) => `
+          <div style="display:flex;align-items:flex-start;gap:12px;background:white;border:1px solid #D8CAE8;border-radius:12px;padding:13px 16px">
+            <span style="flex-shrink:0;width:22px;height:22px;border-radius:50%;background:#EDE8F5;color:#5B4A8B;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;margin-top:1px">${i + 1}</span>
+            <p style="margin:0;font-size:13px;color:#2A2228;line-height:1.6;font-style:italic">${escapeHTML(h)}</p>
+          </div>`).join('')}
+      </div>
+    </section>` : '';
+
+  // === PISTES D'EXPLORATION (REPÈRES D'ORIENTATION POUR LE THÉRAPEUTE) ===
+  const _pistesRaw = data.pistes_exploration || data.reperes_orientation || data.pistes_d_exploration;
+  const _pistesArr = Array.isArray(_pistesRaw) ? _pistesRaw : (typeof _pistesRaw === 'string' && _pistesRaw ? [_pistesRaw] : []);
+  const pistesHTML = _pistesArr.length ? '<section style="margin:18px 24px 0;background:white;border:1px solid #e5e6e0;border-radius:18px;padding:24px"><div style="font-size:12px;letter-spacing:0.32em;color:#BE401D;font-weight:800;text-transform:uppercase;margin-bottom:16px">Repères d\'orientation</div><div>' + _pistesArr.map(function(p){ return '<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid #e5e6e0;"><div style="flex-shrink:0;width:6px;height:6px;border-radius:50%;background:#BE401D;margin-top:6px;"></div><p style="margin:0;font-size:13px;color:#333;line-height:1.6;">' + escapeHTML(p) + '</p></div>'; }).join('') + '</div></section>' : '';
+  // === POINTS D'ATTENTION (FUSION : 4 thèmes en grid 2x2 + card item 9 en pleine largeur si présent) ===
+  // V3 : data.themes_attention remplace data.axes_therapeutiques V2.
+  // Compatibilité : si themes_attention absent, on tente axes_therapeutiques (ancien format)
+  const themes = (data.themes_attention || []).slice(0, 4);
+
+  const themesCards = themes.map(t => `
+    <div style="border:1px solid #e5e6e0;border-radius:14px;background:white;padding:18px">
+      <h3 style="margin:0 0 11px;color:#211C16;font-size:15px;font-weight:800">${escapeHTML(t.titre || '')}</h3>
+      <p style="margin:6px 0;font-size:13px;color:#333;line-height:1.5"><b>Manifestations :</b> ${escapeHTML(t.manifestations || '')}</p>
+      <p style="margin:6px 0;font-size:13px;color:#333;line-height:1.5"><b>Observation clinique :</b> ${escapeHTML(t.observation_clinique || '')}</p>
+    </div>`).join('');
+
+  // Card item 9 en pleine largeur (sous le grid des 4 thèmes), seulement si item9_present
+  const item9CardHTML = item9Present ? `
+    <div style="grid-column:span 2;background:#fff8ec;border:1px solid #ecd29b;border-radius:14px;padding:18px">
+      <h3 style="margin:0 0 8px;color:#7c5a0f;font-size:15px;font-weight:800">Score à l'item 9 du PHQ-9 ≥ 1</h3>
+      <p style="margin:0;font-size:13px;color:#5b410e;line-height:1.5">Idées passives de mort ou d'auto-dommage évoquées dans le récit. Élément présent dans la conversation, à intégrer à votre lecture clinique.</p>
+    </div>` : '';
+
+  const pointsAttentionHTML = (themes.length || item9Present) ? `
+    <section style="margin:18px 24px 0;background:#fffaf0;border:1px solid #f0d090;border-radius:18px;padding:24px">
+      <div style="font-size:12px;letter-spacing:0.32em;color:#7c5a0f;font-weight:800;text-transform:uppercase;margin-bottom:16px">Points d'attention</div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px">
+        ${themesCards}
+        ${item9CardHTML}
+      </div>
+    </section>` : '';
+
+  // === RESSOURCES OBSERVÉES — V3.3 COMPACT (3 cards max, intro discrète) ===
+  const ressources = data.ressources_observees;
+  let ressourcesHTML = '';
+  if (ressources && (ressources.intro || (ressources.elements && ressources.elements.length))) {
+    const ressItems = (ressources.elements || []).slice(0, 3).map(e => `
+      <div style="background:white;border:1px solid #d7ece0;border-radius:12px;padding:12px 14px">
+        <h3 style="margin:0 0 5px;color:#BE401D;font-size:13px;font-weight:800;line-height:1.3">${escapeHTML(e.titre || '')}</h3>
+        <p style="margin:0;font-size:11.5px;color:#333;line-height:1.5">${escapeHTML(e.detail || '')}</p>
+      </div>`).join('');
+    ressourcesHTML = `
+      <section style="margin:18px 24px 0;background:#f3faf5;border:1px solid #cee2d5;border-radius:14px;padding:16px 18px">
+        <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:${ressources.intro ? '8' : '12'}px">
+          <div style="font-size:10px;letter-spacing:0.32em;color:#BE401D;font-weight:800;text-transform:uppercase">Ressources observées</div>
+          ${ressources.intro ? `<div style="font-size:11px;color:#3a4a35;font-style:italic;flex:1;min-width:200px">${escapeHTML(ressources.intro)}</div>` : ''}
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px">${ressItems}</div>
+      </section>`;
+  } else if (data.forces && (data.forces.intro || (data.forces.points && data.forces.points.length))) {
+    // Fallback compatibilité ancien format V2 (limité à 3)
+    const points = (data.forces.points || []).slice(0, 3).map(p =>
+      `<div style="background:white;border:1px solid #d7ece0;border-radius:12px;padding:12px 14px;font-size:11.5px;color:#333;line-height:1.5">${escapeHTML(p)}</div>`
+    ).join('');
+    ressourcesHTML = `
+      <section style="margin:18px 24px 0;background:#f3faf5;border:1px solid #cee2d5;border-radius:14px;padding:16px 18px">
+        <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:${data.forces.intro ? '8' : '12'}px">
+          <div style="font-size:10px;letter-spacing:0.32em;color:#BE401D;font-weight:800;text-transform:uppercase">Ressources observées</div>
+          ${data.forces.intro ? `<div style="font-size:11px;color:#3a4a35;font-style:italic;flex:1;min-width:200px">${escapeHTML(data.forces.intro)}</div>` : ''}
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px">${points}</div>
+      </section>`;
+  }
+
+  // === RED FLAGS — SIGNAUX D'ALERTE CLINIQUE ===
+  const redflagsArr = (data.redflags || []).slice(0, 6);
+  const redflagsHTML = redflagsArr.length ? `
+    <section style="margin:18px 24px 0;background:#fff5f5;border:1px solid #f0c8c2;border-radius:18px;padding:24px">
+      <div style="font-size:12px;letter-spacing:0.32em;color:#c94750;font-weight:800;text-transform:uppercase;margin-bottom:16px">Signaux d'alerte</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        ${redflagsArr.map(f => {
+          const isHaute = (f.priorite || '').toLowerCase().includes('haute');
+          const bg    = isHaute ? '#fff0f0' : '#fff8ec';
+          const bord  = isHaute ? '#f0b8b8' : '#ecd29b';
+          const col   = isHaute ? '#c94750' : '#7c5a0f';
+          const pillBg= isHaute ? '#fde7e8' : '#fef3d7';
+          return `
+            <div style="display:flex;align-items:flex-start;gap:12px;background:${bg};border:1px solid ${bord};border-radius:12px;padding:14px 16px">
+              <span style="flex-shrink:0;display:inline-block;padding:3px 10px;border-radius:999px;background:${pillBg};color:${col};font-size:11px;font-weight:700;margin-top:2px">${escapeHTML(f.priorite || '')}</span>
+              <div>
+                <div style="font-size:13px;font-weight:800;color:${col};margin-bottom:3px">${escapeHTML(f.titre || '')}</div>
+                <div style="font-size:12.5px;color:#555;line-height:1.5">${escapeHTML(f.detail || '')}</div>
+              </div>
+            </div>`;
+        }).join('')}
+      </div>
+    </section>` : '';
+
+  // === SYSTÈMES BIOLOGIQUES IMPLIQUÉS ===
+  const systemesArr = (data.systemes || []).slice(0, 5);
+  function niveauColorSys(couleur, niveau) {
+    const s = ((couleur || '') + ' ' + (niveau || '')).toLowerCase();
+    if (s.includes('rouge') || s.includes('hyperactiv') || s.includes('fragile') || s.includes('sévèr'))
+      return { bg: '#fde7e8', col: '#c94750', border: '#f0b8b8' };
+    if (s.includes('orange') || s.includes('sollicit') || s.includes('modérément') || s.includes('impliq'))
+      return { bg: '#fff0cf', col: '#be7a17', border: '#e8c97a' };
+    if (s.includes('vert') || s.includes('stable') || s.includes('équilibr'))
+      return { bg: '#e9f3df', col: '#4f8146', border: '#b4d4a0' };
+    return { bg: '#f0eee9', col: '#6b6b63', border: '#d8d4ce' };
+  }
+  const systemesHTML = systemesArr.length ? `
+    <section style="margin:18px 24px 0;background:white;border:1px solid #e5e6e0;border-radius:18px;padding:24px">
+      <div style="font-size:12px;letter-spacing:0.32em;color:#BE401D;font-weight:800;text-transform:uppercase;margin-bottom:16px">Analyse des systèmes biologiques impliqués</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:12px">
+        ${systemesArr.map(s => {
+          const c = niveauColorSys(s.couleur, s.niveau);
+          return `
+            <div style="border:1px solid ${c.border};border-radius:14px;background:white;padding:14px">
+              <div style="font-size:12.5px;font-weight:900;color:#1f1f1c;margin-bottom:7px;line-height:1.3">${escapeHTML(s.nom || '')}</div>
+              <div style="margin-bottom:8px"><span style="display:inline-block;padding:3px 9px;border-radius:999px;background:${c.bg};color:${c.col};font-size:11px;font-weight:700">${escapeHTML(s.niveau || '')}</span></div>
+              <div style="font-size:11.5px;color:#555;line-height:1.45">${escapeHTML(s.description || '')}</div>
+            </div>`;
+        }).join('')}
+      </div>
+    </section>` : '';
+
+  // === CONCLUSION ET PRONOSTIC ===
+  const conclusionHTML = data.conclusion ? `
+    <section style="margin:18px 24px 0;background:#f5f0ea;border:1px solid #e0d5c5;border-radius:18px;padding:24px">
+      <div style="font-size:12px;letter-spacing:0.32em;color:#BE401D;font-weight:800;text-transform:uppercase;margin-bottom:12px">Conclusion et pronostic</div>
+      <div style="font-size:13.5px;color:#2A2A28;line-height:1.85;font-style:italic;font-family:Georgia,serif">${escapeHTML(data.conclusion)}</div>
+    </section>` : '';
+
+  // === CITATIONS DES OUTILS PSYCHOMÉTRIQUES ===
+  const citationsHTML = `
+    <div style="margin:14px 24px 0;font-size:11px;color:#777;font-style:italic;text-align:center">
+      PHQ-9 : Kroenke, Spitzer &amp; Williams (2001) · GAD-7 : Spitzer, Kroenke, Williams &amp; Löwe (2006) · PSS-10 : Cohen, Kamarck &amp; Mermelstein (1983)
+    </div>`;
+
+  // === MÉTHODOLOGIE (statique, wellness safe) ===
+  const methodologieHTML = `
+    <div style="margin:18px 24px 0;background:#EFE9DD;border-left:4px solid #FF4B28;border-radius:8px;padding:16px 20px">
+      <div style="font-size:11px;font-weight:800;color:#BE401D;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px">Méthodologie</div>
+      <div style="font-size:11px;color:#4A4A45;line-height:1.6;font-style:italic;font-family:Georgia,serif">
+        Ce bilan combine trois méthodes : (1) le scoring d'échelles psychométriques validées internationalement (PHQ-9, GAD-7, PSS-10), (2) une analyse linguistique implicite inspirée des recherches récentes en linguistique clinique menées à l'INSERM et à l'Université Paris-Cité, (3) le paradigme AAP (Automated Assessment Paradigm — JMIR Mental Health, 2026). Il s'agit d'un outil d'<b style="font-style:normal">aide à la lecture pré-consultation</b>, à visée observationnelle. Il ne pose aucun diagnostic, ne formule aucune recommandation thérapeutique, et ne se substitue pas à l'évaluation clinique du praticien — qui reste seul décisionnaire.
+      </div>
+      <div style="margin-top:8px;padding-top:8px;border-top:0.5px dashed rgba(0,0,0,0.1);font-size:10px;color:#6B6B68;font-style:italic;line-height:1.6">
+        Note : un bilan généré pour la même personne à des moments différents peut présenter des variations dans la formulation et le calibrage des scores d'axes. Ces variations sont attendues et reflètent à la fois la nature non-déterministe de l'IA et la richesse différente des récits selon le moment. Les zones de fragilité identifiées et les mécanismes centraux restent en revanche stables d'une session à l'autre, ce qui permet une lecture longitudinale fiable.
+      </div>
+    </div>`;
+
+  // === FOOTER FINAL ===
+  const footerHTML = `
+    <div style="margin:18px 24px 0;font-size:11px;color:#aaa;text-align:center;line-height:1.6;border-top:1px solid #ddd;padding-top:14px">
+      Ce bilan est généré par IA à partir d'un récit collecté via BilanPsy. Usage strictement professionnel et confidentiel.<br>
+      BilanPsy n'est pas un service d'urgence — en cas de crise active, le 3114 et le 15 sont les recours appropriés.
+    </div>`;
+
+  // === ASSEMBLAGE FINAL ===
+  const html = `<div id="btb-ov" style="padding:0">
+  <div id="btb-doc" style="background:#f5f6f2;max-width:880px;margin:auto;border-radius:20px;overflow:hidden;font-family:Inter,Arial,sans-serif;color:#202020">
+
+    <!-- TÊTIÈRE espresso chaud (identité BilanPsy Pro) -->
+    <header style="background:#6E6456;color:#fff;padding:34px 40px 26px;border-radius:0 0 24px 24px">
+      <div style="display:flex;align-items:flex-end;gap:11px">${PSEE_PRO_LOGO_WHITE}<span style="font-family:'DM Sans',Arial,sans-serif;font-weight:600;font-size:15px;letter-spacing:1.6px;text-transform:uppercase;color:#FFE3D9;transform:translateY(-7px)">Pro</span></div>
+      <div style="color:#EDE6DB;text-transform:uppercase;letter-spacing:0.05em;margin-top:16px;font-size:12px">Document confidentiel — usage professionnel exclusif</div>
+      <div style="font-size:18px;font-weight:700;margin-top:4px">BILAN CLINIQUE — Aide à la lecture pré-consultation</div>
+      <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap">
+        <span style="border-radius:999px;padding:6px 18px;background:rgba(255,255,255,0.16);border:1px solid rgba(255,255,255,0.23);font-weight:700;font-size:12px">Code : ${escapeHTML(sessionCode || '—')}</span>
+        <span style="border-radius:999px;padding:6px 18px;background:rgba(255,255,255,0.16);border:1px solid rgba(255,255,255,0.23);font-weight:700;font-size:12px">Date : ${date}</span>
+        <span style="border-radius:999px;padding:6px 18px;background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.5);color:#FBF4EC;font-weight:700;font-size:12px">Confidentiel praticien</span>
+      </div>
+    </header>
+
+    <!-- SCORES PSYCHOMÉTRIQUES -->
+    <section style="margin:24px 24px 0;background:white;border:1px solid #e5e6e0;border-radius:18px;padding:22px">
+      <div style="font-size:12px;letter-spacing:0.32em;color:#BE401D;font-weight:800;text-transform:uppercase;margin-bottom:14px">Instruments psychométriques — scores chiffrés</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+        ${phqCard}
+        ${gadCard}
+        ${pssCard}
+      </div>
+    </section>
+    ${citationsHTML}
+
+    ${syntheseHTML}
+    ${cartographieHTML}
+    ${profilCliniqueHTML}
+    ${matriceHTML}
+    ${systemesHTML}
+    ${mecanismesHTML}
+    ${hypothesesHTML}
+    ${redflagsHTML}
+    ${pistesHTML}
+    ${pointsAttentionHTML}
+    ${ressourcesHTML}
+    ${conclusionHTML}
+    ${analyseLinguistiqueHTML}
+    ${methodologieHTML}
+    ${footerHTML}
+
+    <!-- BOUTONS -->
+    <div style="display:flex;gap:10px;justify-content:center;padding:18px 0 22px">
+      <button onclick="printBilanBTB()" style="background:#6E6456;color:white;border:none;border-radius:30px;padding:11px 26px;font-family:Arial;font-size:13px;font-weight:600;cursor:pointer">Télécharger en PDF</button>
+      <button onclick="document.getElementById('btb-ov').remove()" style="background:transparent;color:#6E6456;border:1.5px solid #6E6456;border-radius:30px;padding:11px 26px;font-family:Arial;font-size:13px;font-weight:600;cursor:pointer">Fermer</button>
     </div>
 
-    ${ling.synthese ? `
-    <!-- ANALYSE LINGUISTIQUE -->
-    <div class="card">
-      <div class="section-label">Analyse linguistique implicite</div>
-      <div class="ling-card">${escapeHTML(ling.synthese)}</div>
-    </div>` : ''}
+  </div>
+</div>`;
 
-    ${mecanismes.length>0 ? `
-    <!-- MÉCANISMES -->
-    <div class="card">
-      <div class="section-label">Mécanismes transdiagnostiques</div>
-      ${mecanismesHTML}
-    </div>` : ''}
-
-    ${pistes.length>0 ? `
-    <!-- PISTES -->
-    <div class="card">
-      <div class="section-label">Pistes d'exploration</div>
-      ${pistesHTML}
-    </div>` : ''}
-
-    ${themes.length>0 ? `
-    <!-- THÈMES ATTENTION -->
-    <div class="card">
-      <div class="section-label">Points d'attention</div>
-      ${themesHTML}
-    </div>` : ''}
-
-    ${resElements ? `
-    <!-- RESSOURCES -->
-    <div class="card">
-      <div class="section-label">Ressources observées</div>
-      <div style="font-size:12px;color:#888;margin-bottom:12px">${escapeHTML(ressObs.intro||'')}</div>
-      ${resElements}
-    </div>` : ''}
-
-    <!-- MÉTHODOLOGIE -->
-    <div class="card" style="background:#F7F4EF;border:none">
-      <p class="footer-note">Ce bilan combine : psychométrie validée (PHQ-9, GAD-7, PSS-10), analyse linguistique implicite (INSERM/Paris-Cité), paradigme AAP (JMIR Mental Health, 2026). Outil d'aide à la lecture pré-consultation, visée observationnelle. Ne pose aucun diagnostic. Ne se substitue pas à l'évaluation clinique du praticien.</p>
-      <p class="footer-urgence">BilanPsy n'est pas un service d'urgence — en cas de crise active, le 3114 et le 15 sont les recours appropriés.</p>
-    </div>
-  `;
-
-  document.getElementById('main-content').innerHTML = html;
+  document.getElementById('page-content').innerHTML = html;
 }
 
-// ============================================================
-// CHARGEMENT DEPUIS SUPABASE
-// ============================================================
+
+function printBilanBTB(){
+  const inner = document.getElementById('btb-doc').innerHTML;
+  const w = window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Bilan BTB BilanPsy — ${sessionCode}</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=swap" rel="stylesheet"><style>*,*::before,*::after{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;color-adjust:exact !important}body{margin:0;background:#F7F4EF;font-family:'DM Sans',Arial,sans-serif;color:#211C16}button{display:none !important}table{width:100%;border-collapse:collapse}th{background:#211C16;color:white;padding:8px 10px;text-align:left;font-size:10px}td{padding:8px 10px;border-bottom:1px solid #EEECE8;vertical-align:top}@media print{@page{margin:.4cm}html,body{background:#F7F4EF !important}div{break-inside:avoid;page-break-inside:avoid}h1,h2,h3,h4{break-after:avoid;page-break-after:avoid}}</style></head><body><div style="max-width:760px;margin:auto;padding:16px">${inner}</div></body></html>`);
+  w.document.close();
+  setTimeout(()=>w.print(), 1500);
+}
+
+
+// ========================================================================
+// CHARGEMENT DU BILAN DEPUIS L'API
+// ========================================================================
 async function loadBilan(){
   const params = new URLSearchParams(window.location.search);
-  const sessionCode = params.get('session');
-
-  if(!sessionCode){
-    document.getElementById('main-content').innerHTML = `<div class="error-box">Lien invalide — code session manquant.</div>`;
+  const code = params.get('session');
+  if(!code){
+    document.getElementById('page-content').innerHTML = '<div class="error-box">Lien invalide — code session manquant.</div>';
     return;
   }
+  sessionCode = code;
 
   try {
     const res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mode: 'get_bilan', sessionCode })
+      body: JSON.stringify({ mode: 'get_bilan', sessionCode: code })
     });
-
-    if(!res.ok) throw new Error('Erreur réseau ' + res.status);
+    if(!res.ok) throw new Error('HTTP ' + res.status);
     const result = await res.json();
     if(!result || !result.btb){
-      document.getElementById('main-content').innerHTML = `<div class="error-box">Bilan introuvable. Le lien a peut-être expiré ou est incorrect.</div>`;
+      document.getElementById('page-content').innerHTML = '<div class="error-box">Bilan introuvable. Le lien a peut-etre expire ou est incorrect.</div>';
       return;
     }
-
-    const btbJson = typeof result.btb === 'string' ? JSON.parse(result.btb) : result.btb;
-    renderBTB(btbJson, sessionCode);
-
+    const data = typeof result.btb === 'string' ? JSON.parse(result.btb) : result.btb;
+    showBilanBTB(data);
   } catch(err){
-    console.error('[bilan-clinique] Erreur chargement:', err);
-    document.getElementById('main-content').innerHTML = `<div class="error-box">Erreur de chargement du bilan. Réessayez dans quelques instants.</div>`;
+    console.error('[bilan-clinique] Erreur:', err);
+    document.getElementById('page-content').innerHTML = '<div class="error-box">Erreur de chargement du bilan. Reessayez dans quelques instants.</div>';
   }
 }
 
