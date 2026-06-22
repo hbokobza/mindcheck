@@ -911,6 +911,14 @@ function addMsg(role,text,cls){
   const bCls=role==='u'?'u':(cls||'ai');
   d.innerHTML=`<div class="av ${role==='u'?'u':'ai'}">${role==='u'?'Vous':'BP'}</div><div class="bub ${bCls}">${text.replace(/\n/g,'<br>')}</div>`;
   c.appendChild(d);c.scrollTop=c.scrollHeight;
+  // Bouton secours BTB : afficher apres 8 echanges utilisateur en mode clinique
+  if (cliniqueMode && role === 'ai') {
+    const echanges = hist.filter(m => m.role === 'user').length;
+    if (echanges >= 8) {
+      const secours = document.getElementById('clinique-secours');
+      if (secours) secours.style.display = 'block';
+    }
+  }
 }
 
 function showDots(){
@@ -1548,7 +1556,14 @@ async function runClinicalExtraction() {
   }
 }
 
+let _bilanEnCours = false;
 async function generateBilan(avecBTB, retryCount){
+  // Verrou anti-boucle : un seul generateBilan actif a la fois
+  if (_bilanEnCours) {
+    console.warn('[PSEE-DEBUG] generateBilan deja en cours — appel ignore');
+    return;
+  }
+  _bilanEnCours = true;
   retryCount = retryCount || 0;
   console.log('[PSEE-DEBUG] generateBilan ENTRY | avecBTB=', avecBTB, '| cliniqueMode=', cliniqueMode, '| retryCount=', retryCount, '| hist.length=', hist.length);
 
@@ -1569,9 +1584,11 @@ async function generateBilan(avecBTB, retryCount){
         console.warn('[clinique] BTB parse error:', e.message);
         if (retryCount < 2) {
           addMsg('ai', 'Préparation du bilan en cours, encore un instant…');
+          _bilanEnCours = false;
           setTimeout(() => generateBilan(true, retryCount+1), 3000);
           return;
         }
+        _bilanEnCours = false;
         showCliniqueMerci(null);
         return;
       }
@@ -1580,11 +1597,14 @@ async function generateBilan(avecBTB, retryCount){
       console.error('[clinique] generateBilan error:', e.message);
       rmDots();
       if (retryCount < 2) {
+        _bilanEnCours = false;
         setTimeout(() => generateBilan(true, retryCount+1), 4000);
         return;
       }
+      _bilanEnCours = false;
       showCliniqueMerci(null);
     }
+    _bilanEnCours = false;
     return;
   }
 
