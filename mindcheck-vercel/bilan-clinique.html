@@ -221,7 +221,7 @@ function showBilanBTB(data){
   const axesArr = (data.axes || []).slice(0, 6);
   axesArr.forEach(ax => {
     if (ax && /processus psychiques/i.test(String(ax.label || ''))) {
-      ax.label = 'Structure psychique et relationnelle';
+      ax.label = 'Processus psychiques';
     }
   });
   while (axesArr.length < 6) axesArr.push({ score: 2, label: '—', manifestations: '', systemes: '' });
