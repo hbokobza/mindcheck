@@ -770,7 +770,7 @@ async function cliniqueSecoursEnvoi() {
     await generateBilan(true);
   } catch(e) {
     console.error('[clinique-secours] Erreur:', e);
-    if (btn) { btn.disabled = false; btn.textContent = '⚠ Réessayer l'envoi manuel.'; }
+    if (btn) { btn.disabled = false; btn.textContent = '⚠ Réessayer l\'envoi manuel.'; }
   }
 }
 
