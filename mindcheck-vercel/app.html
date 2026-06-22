@@ -274,7 +274,7 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px}
 
 <div id="s3" class="hidden">
   <div class="axes">
-    <span class="ax" id="a1">Structure psychique & relationnelle</span>
+    <span class="ax" id="a1">Processus psychiques</span>
     <span class="ax" id="a2">Ressources psychiques</span>
     <span class="ax" id="a5">Comportements & conduites</span>
     <span class="ax" id="a3">Régulation émotionnelle</span>
@@ -349,7 +349,7 @@ const PSEE_PRO_LOGO_WHITE = `<img src="assets/logos/bilanpsy-pro-reserve.svg" al
 // ============================================================
 const AXES_SPEC = {
   processus: {
-    label: "Structure psychique et relationnelle",
+    label: "Processus psychiques",
     needed: ["phenomene","frequence_intensite","temporalite","retentissement","exemple"],
     relances: [
       "Avez-vous du mal a arreter certaines pensees ?",
@@ -464,7 +464,7 @@ Objectif par axe : obtenir nature / intensite / frequence / anciennete / retenti
 Une seule question a la fois. Jamais deux dans le meme message.
 Commence par un premier message qui pose simplement le cadre en deux temps, sans theatraliser : (1) une phrase d'accueil chaleureuse mais sobre qui rappelle ce qu'on va faire ensemble (un echange d'environ quinze minutes pour faire le point sur six dimensions de votre equilibre, sans bonne ou mauvaise reponse), (2) une invitation ouverte a commencer la ou la personne le souhaite — ce qui la traverse en ce moment, ce qui l'a poussee a venir, ou simplement comment elle va aujourd'hui. Pas d'effusions, pas de formules d'accueil therapeutiques. Pas de "qu'est-ce qui vous amene ?" sec. La premiere prise de parole doit donner envie de parler, pas mettre face a une consigne.
 
-AXE 1 — STRUCTURE PSYCHIQUE ET RELATIONNELLE
+AXE 1 — PROCESSUS PSYCHIQUES
 Q1 : Comment fonctionne votre esprit en ce moment : plutot clair, encombre, ralenti, agite, envahi ?
 Q2 : Avez-vous l'impression de tourner autour des memes pensees, d'anticiper le pire, de douter beaucoup, ou d'avoir du mal a prendre du recul sur ce qui vous traverse ?
 Relances si reponse insuffisante :
@@ -522,7 +522,7 @@ REGLES DE CONDUITE
 - Si la personne pose une question sur elle-meme : reponds "Ce check-up va justement permettre d'y voir plus clair." puis continue.
 - Si demande de diagnostic ou avis medical : "Je ne suis pas en mesure de repondre a ca — c'est le role d'un professionnel de sante." puis continue.
 - Si hors cadre : recentre bienveillamment vers le check-up sans commenter.
-- Note mentalement les chevauchements entre axes (ex : rumination = structure psychique et relationnelle ET comportements).
+- Note mentalement les chevauchements entre axes (ex : rumination = processus psychiques ET comportements).
 - Si la personne s'etend longuement : reformule en une phrase et passe a la question suivante.
 
 DETECTION DE CRISE — PRIORITE ABSOLUE
@@ -571,7 +571,7 @@ STRUCTURE JSON EXACTE (réponds UNIQUEMENT avec ce JSON, sans texte avant/après
 {
   "synthese": "2-3 phrases claires, sobres et accessibles qui décrivent ce que la personne traverse. Ton neutre et bienveillant. Aucun mot pathologisant. Décrire un état actuel, pas une condition permanente.",
   "axes": [
-    {"num":1,"label":"Structure psychique et relationnelle","score":2,"obs":"observation simple et compréhensible, formulée pour un non-clinicien, 1-2 phrases max","conseil":"piste concrète, légère, réaliste, sans injonction médicale","documentation":"suffisante|partielle|insuffisante","confiance":"haute|moderee|faible","manques":[]},
+    {"num":1,"label":"Processus psychiques","score":2,"obs":"observation simple et compréhensible, formulée pour un non-clinicien, 1-2 phrases max","conseil":"piste concrète, légère, réaliste, sans injonction médicale","documentation":"suffisante|partielle|insuffisante","confiance":"haute|moderee|faible","manques":[]},
     {"num":2,"label":"Ressources psychiques","score":3,"obs":"...","conseil":"...","documentation":"suffisante|partielle|insuffisante","confiance":"haute|moderee|faible","manques":[]},
     {"num":3,"label":"Comportements & conduites","score":2,"obs":"...","conseil":"...","documentation":"suffisante|partielle|insuffisante","confiance":"haute|moderee|faible","manques":[]},
     {"num":4,"label":"Régulation émotionnelle","score":1,"obs":"...","conseil":"...","documentation":"suffisante|partielle|insuffisante","confiance":"haute|moderee|faible","manques":[]},
@@ -772,7 +772,7 @@ async function envoyerBTBPraticien(btbData, sessionCodeVal) {
 
 const BILAN_SYS_BTB = `Tu es l'IA d'analyse clinique BilanPsy. Genere un bilan JSON pour le therapeute. Reponds UNIQUEMENT avec du JSON valide, sans texte avant ou apres, sans markdown. Textes courts max 120 caracteres par champ. Pas d'apostrophes dans les valeurs JSON, utilise des guillemets ou reformule.
 
-Structure: {"synthese":"synthese clinique 2 phrases","axes":[{"num":1,"label":"Structure psychique et relationnelle","score":2,"manifestations":"description courte","systemes":"Psychique","lecture":"lecture clinique courte"},{"num":2,"label":"Ressources psychiques","score":3,"manifestations":"...","systemes":"SNC","lecture":"..."},{"num":3,"label":"Comportements et conduites","score":2,"manifestations":"...","systemes":"SNC, SNA","lecture":"..."},{"num":4,"label":"Regulation emotionnelle","score":1,"manifestations":"...","systemes":"Psychique, SNA","lecture":"..."},{"num":5,"label":"Corps et risque somatique","score":2,"manifestations":"...","systemes":"SNA","lecture":"..."},{"num":6,"label":"Environnement","score":3,"manifestations":"...","systemes":"Modulateur","lecture":"..."}],"systemes":[{"nom":"Systeme Psychique","niveau":"Moderement atteint","couleur":"orange","description":"analyse courte"},{"nom":"SNC","niveau":"Sollicite","couleur":"orange","description":"analyse courte"},{"nom":"SNA","niveau":"Hyperactive","couleur":"rouge","description":"analyse courte"},{"nom":"Systeme Immunitaire","niveau":"Implique","couleur":"orange","description":"analyse courte"},{"nom":"Terrain genetique","niveau":"Possible","couleur":"gris","description":"analyse courte"}],"redflags":[{"priorite":"haute","titre":"titre signal","detail":"description courte"},{"priorite":"moyenne","titre":"titre signal 2","detail":"description courte"}],"axes_therapeutiques":[{"titre":"axe 1","cible":"cible principale","indications":"indications courtes"},{"titre":"axe 2","cible":"cible 2","indications":"indications courtes"}],"profil_clinique":{"structure":"3 tags courts","evenements":"3 tags courts","conflit_central":"besoin central ↔ peur centrale","ressources":"3 tags courts"},"conclusion":"conclusion et pronostic 2 phrases","forces":["ressource 1","ressource 2","ressource 3"],"vigilance":["point 1","point 2","point 3"]}
+Structure: {"synthese":"synthese clinique 2 phrases","axes":[{"num":1,"label":"Processus psychiques","score":2,"manifestations":"description courte","systemes":"Psychique","lecture":"lecture clinique courte"},{"num":2,"label":"Ressources psychiques","score":3,"manifestations":"...","systemes":"SNC","lecture":"..."},{"num":3,"label":"Comportements et conduites","score":2,"manifestations":"...","systemes":"SNC, SNA","lecture":"..."},{"num":4,"label":"Regulation emotionnelle","score":1,"manifestations":"...","systemes":"Psychique, SNA","lecture":"..."},{"num":5,"label":"Corps et risque somatique","score":2,"manifestations":"...","systemes":"SNA","lecture":"..."},{"num":6,"label":"Environnement","score":3,"manifestations":"...","systemes":"Modulateur","lecture":"..."}],"systemes":[{"nom":"Systeme Psychique","niveau":"Moderement atteint","couleur":"orange","description":"analyse courte"},{"nom":"SNC","niveau":"Sollicite","couleur":"orange","description":"analyse courte"},{"nom":"SNA","niveau":"Hyperactive","couleur":"rouge","description":"analyse courte"},{"nom":"Systeme Immunitaire","niveau":"Implique","couleur":"orange","description":"analyse courte"},{"nom":"Terrain genetique","niveau":"Possible","couleur":"gris","description":"analyse courte"}],"redflags":[{"priorite":"haute","titre":"titre signal","detail":"description courte"},{"priorite":"moyenne","titre":"titre signal 2","detail":"description courte"}],"axes_therapeutiques":[{"titre":"axe 1","cible":"cible principale","indications":"indications courtes"},{"titre":"axe 2","cible":"cible 2","indications":"indications courtes"}],"profil_clinique":{"structure":"3 tags courts","evenements":"3 tags courts","conflit_central":"besoin central ↔ peur centrale","ressources":"3 tags courts"},"conclusion":"conclusion et pronostic 2 phrases","forces":["ressource 1","ressource 2","ressource 3"],"vigilance":["point 1","point 2","point 3"]}
 
 Scores 0-4 entiers uniquement. Dans mecanismes_transdiagnostiques, ajouter si pertinent un item "Conflit relationnel central" en formulation non diagnostique.`;
 
@@ -2295,7 +2295,7 @@ function showBilanBTB(data){
   const axesArr = (data.axes || []).slice(0, 6);
   axesArr.forEach(ax => {
     if (ax && /processus psychiques/i.test(String(ax.label || ''))) {
-      ax.label = 'Structure psychique et relationnelle';
+      ax.label = 'Processus psychiques';
     }
   });
   while (axesArr.length < 6) axesArr.push({ score: 2, label: '—', manifestations: '', systemes: '' });
