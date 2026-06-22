@@ -21,5 +21,17 @@
         { "key": "Access-Control-Allow-Origin", "value": "*" }
       ]
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "pro.bilanpsy.fr" }],
+      "destination": "/pro/index.html"
+    },
+    {
+      "source": "/app",
+      "has": [{ "type": "host", "value": "pro.bilanpsy.fr" }],
+      "destination": "/pro/app.html"
+    }
   ]
 }
