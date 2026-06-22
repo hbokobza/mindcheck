@@ -61,6 +61,9 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px}
 #clinique-progress-bar-wrap{background:#EDE8E0;border-radius:6px;height:6px;margin-top:6px;overflow:hidden}
 #clinique-progress-bar{height:6px;background:#1A2E1A;border-radius:6px;width:0%;transition:width 0.5s ease}
 #clinique-progress-label{font-size:11px;color:#888;margin-top:4px}
+#clinique-secours{display:none;text-align:center;padding:10px 0 0}
+#clinique-secours button{background:none;border:none;font-family:inherit;font-size:11px;color:#B0A99F;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:4px 8px}
+#clinique-secours button:hover{color:#6B6B68}
 .mode-row{display:flex;gap:8px;margin-bottom:12px}
 .mb{padding:7px 20px;border-radius:24px;border:1px solid #D8D8D0;background:white;color:#666;cursor:pointer;font-family:inherit;font-size:13px}
 .mb.on{background:#1A1A18;color:white;border-color:#1A1A18;font-weight:500}
@@ -285,6 +288,9 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px}
   <div id="clinique-progress">
     <div id="clinique-progress-label">Dimensions explorées : <span id="clinique-progress-count">0</span> / 6</div>
     <div id="clinique-progress-bar-wrap"><div id="clinique-progress-bar"></div></div>
+  </div>
+  <div id="clinique-secours">
+    <button onclick="cliniqueSecoursEnvoi()">&#9888; L'&eacute;change ne se termine pas&nbsp;? Cliquez ici pour envoyer manuellement votre bilan.</button>
   </div>
   <div class="err" id="err"></div>
   <div id="s3-welcome">Qu'est-ce qui se passe pour vous en ce moment ?</div>
@@ -537,7 +543,7 @@ CLOTURE
 Tu continues l'entretien aussi longtemps que la personne souhaite partager. L'utilisateur peut choisir de generer sa synthese a tout moment via le bouton prevu. Si la personne dit qu'elle a fini ou veut la synthese, tu confirmes et tu clos.
 Les 6 axes obligatoires sont : processus, ressources, comportements, emotions, corps, environnement.
 Si un axe manque encore, pose naturellement la question d'ouverture de cet axe avant de clore.
-Tu mets COMPLET:oui quand la personne demande explicitement sa synthese ou quand les 6 axes sont tous couverts.
+Tu mets COMPLET:oui quand la personne demande explicitement sa synthese ou quand les 6 axes sont tous couverts ou quand la personne signale qu'elle a fini de partager ("j'ai tout dit", "c'est bon", "vous pouvez envoyer", "je dois partir", "ca vous suffit", "c'est tout", "envoyez au medecin", "transmettez" ou toute formulation equivalente indiquant qu'elle ne veut pas continuer).
 Quand les 6 axes sont couverts et que tu as obtenu pour chacun : nature + intensite + frequence + anciennete + retentissement :
 Dire exactement : "Merci pour ce que vous avez partage. Je prepare votre synthese."
 Derniere ligne toujours : AXES:[axes couverts separes par virgules] COMPLET:[oui/non]
@@ -721,6 +727,12 @@ function initCliniqueMode() {
 }
 
 function updateCliniqueProgress() {
+  // Afficher le bouton de secours apres 8 echanges en mode clinique
+  const echanges = hist.filter(m => m.role === 'user').length;
+  if (cliniqueMode && echanges >= 8) {
+    const secours = document.getElementById('clinique-secours');
+    if (secours) secours.style.display = 'block';
+  }
   const total = document.querySelectorAll('.ax').length;
   const lit = document.querySelectorAll('.ax.lit').length;
   const bar = document.getElementById('clinique-progress-bar');
@@ -747,6 +759,19 @@ function showCliniqueMerci(praticienNom) {
     <div style="font-size:12px;color:#999;padding-top:20px;border-top:1px solid #E8E3DC">Ce questionnaire est strictement confidentiel. Vos réponses n'ont été transmises qu'à votre praticien.</div>
   </div>`;
   document.body.appendChild(merci);
+}
+
+async function cliniqueSecoursEnvoi() {
+  if (!cliniqueMode) return;
+  const btn = document.querySelector('#clinique-secours button');
+  if (btn) { btn.disabled = true; btn.textContent = 'Envoi en cours…'; }
+  try {
+    addMsg('ai', "Je prépare votre bilan. Cela peut prendre 30 à 60 secondes — ne fermez pas cet onglet.");
+    await generateBilan(true);
+  } catch(e) {
+    console.error('[clinique-secours] Erreur:', e);
+    if (btn) { btn.disabled = false; btn.textContent = '⚠ Réessayer l'envoi manuel.'; }
+  }
 }
 
 async function envoyerBTBPraticien(btbData, sessionCodeVal) {
