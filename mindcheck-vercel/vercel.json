@@ -24,14 +24,9 @@
   ],
   "rewrites": [
     {
-      "source": "/",
+      "source": "/(.*)",
       "has": [{ "type": "host", "value": "pro.bilanpsy.fr" }],
       "destination": "/pro/index.html"
-    },
-    {
-      "source": "/app",
-      "has": [{ "type": "host", "value": "pro.bilanpsy.fr" }],
-      "destination": "/pro/app.html"
     }
   ]
 }
