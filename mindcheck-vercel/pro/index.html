@@ -372,6 +372,8 @@ function handleLogin() {
       // Stocker le token et rediriger vers l'espace pro
       sessionStorage.setItem('pro_token', data.token);
       sessionStorage.setItem('pro_email', email);
+      sessionStorage.setItem('pro_nom', data.praticienNom || '');
+      sessionStorage.setItem('pro_code', data.praticienCode || '');
       window.location.href = '/pro/app.html';
     } else {
       err.textContent = data.error || 'Identifiants incorrects.';
