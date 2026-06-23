@@ -24,7 +24,12 @@
   ],
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/",
+      "has": [{ "type": "host", "value": "pro.bilanpsy.fr" }],
+      "destination": "/pro/index.html"
+    },
+    {
+      "source": "/index.html",
       "has": [{ "type": "host", "value": "pro.bilanpsy.fr" }],
       "destination": "/pro/index.html"
     }
