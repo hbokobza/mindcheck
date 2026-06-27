@@ -1697,7 +1697,8 @@ async function generateBilan(avecBTB, retryCount){
     }
 
     c.scrollTop=c.scrollHeight;
-  }catch(e){rmDots();showErr('Erreur bilan : '+e.message);}
+  }catch(e){rmDots();_bilanEnCours=false;showErr('Erreur bilan : '+e.message);return;}
+  _bilanEnCours=false;
 }
 
 // ── Nouveau système de couleurs unifié ──────────────────────────
