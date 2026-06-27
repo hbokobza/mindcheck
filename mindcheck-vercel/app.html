@@ -1388,6 +1388,7 @@ async function submitText(){
   // Mot de passe admin
   if(t === 'pseeadmin00'){
     if(hist.length === 0){showErr('Lancez une conversation avant de generer le bilan.');return;}
+    _bilanEnCours = false;
     generateBilan(true);
     return;
   }
@@ -2795,6 +2796,7 @@ document.getElementById('inp').addEventListener('keydown',e=>{
       document.getElementById('inp').value='';
       document.getElementById('inp').style.height='auto';
       if(hist.length === 0){showErr('Lancez une conversation.');return;}
+      _bilanEnCours = false;
       generateBilan(true);
       return;
     }
