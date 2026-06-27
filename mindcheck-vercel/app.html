@@ -1566,6 +1566,8 @@ async function generateBilan(avecBTB, retryCount){
   }
   _bilanEnCours = true;
   retryCount = retryCount || 0;
+  const btnSynthese = document.getElementById('btn-demander-bilan');
+  if (btnSynthese) { btnSynthese.disabled = true; btnSynthese.style.opacity = '0.4'; btnSynthese.style.cursor = 'not-allowed'; }
   console.log('[PSEE-DEBUG] generateBilan ENTRY | avecBTB=', avecBTB, '| cliniqueMode=', cliniqueMode, '| retryCount=', retryCount, '| hist.length=', hist.length);
 
   // MODE CLINIQUE : séquentiel BTB uniquement — évite le rate limit
