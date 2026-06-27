@@ -1388,7 +1388,8 @@ async function submitText(){
   // Mot de passe admin
   if(t === 'pseeadmin00'){
     if(hist.length === 0){showErr('Lancez une conversation avant de generer le bilan.');return;}
-    resetBilanVerrou();
+    _bilanEnCours = false;
+    _bilanAdminOverride = true;
     generateBilan(true);
     return;
   }
@@ -1558,6 +1559,7 @@ async function runClinicalExtraction() {
 }
 
 let _bilanEnCours = false;
+let _bilanAdminOverride = false;
 function resetBilanVerrou(){
   _bilanEnCours = false;
   var btn = document.getElementById('btn-demander-bilan');
@@ -1565,10 +1567,11 @@ function resetBilanVerrou(){
 }
 async function generateBilan(avecBTB, retryCount){
   // Verrou anti-boucle : un seul generateBilan actif a la fois
-  if (_bilanEnCours) {
+  if (_bilanEnCours && !_bilanAdminOverride) {
     console.warn('[PSEE-DEBUG] generateBilan deja en cours — appel ignore');
     return;
   }
+  _bilanAdminOverride = false;
   _bilanEnCours = true;
   retryCount = retryCount || 0;
   const btnSynthese = document.getElementById('btn-demander-bilan');
@@ -2803,7 +2806,8 @@ document.getElementById('inp').addEventListener('keydown',e=>{
       document.getElementById('inp').value='';
       document.getElementById('inp').style.height='auto';
       if(hist.length === 0){showErr('Lancez une conversation.');return;}
-      resetBilanVerrou();
+      _bilanEnCours = false;
+      _bilanAdminOverride = true;
       generateBilan(true);
       return;
     }
