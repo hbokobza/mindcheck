@@ -1622,7 +1622,8 @@ async function generateBilan(avecBTB, retryCount){
 
   // MODE STANDARD
   // Lancer l'extraction clinique V1.3 en background (fire-and-forget)
-  if (retryCount === 0) {
+  // Ne pas lancer en mode admin (avecBTB=true / pseeadmin00) pour éviter les conflits
+  if (retryCount === 0 && !avecBTB) {
     runClinicalExtraction(); // pas de await — exécution parallèle
   }
 
